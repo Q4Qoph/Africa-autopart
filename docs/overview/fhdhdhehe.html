@@ -1,0 +1,2811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Africa Autopart – Enterprise Spare Parts Sourcing Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   AFRICA AUTOPART – PROTOTYPE v1.0
+   Design: Industrial-Emerald / Enterprise Automotive
+   Developer note: Replace CSS vars with design tokens when
+   integrating into production design system.
+   ============================================================ */
+
+:root {
+  --green: #00C853;
+  --green-dark: #00933C;
+  --green-deep: #006B2B;
+  --green-glow: rgba(0,200,83,0.18);
+  --green-neon: #39FF88;
+  --ink: #07110A;
+  --ink-2: #0F1F13;
+  --ink-3: #162219;
+  --card: #111C14;
+  --card-2: #162019;
+  --border: rgba(0,200,83,0.15);
+  --border-light: rgba(255,255,255,0.07);
+  --text: #E8F0E9;
+  --text-muted: #7A9A80;
+  --text-dim: #3D5942;
+  --white: #FFFFFF;
+  --amber: #FFB300;
+  --red: #FF4444;
+  --blue: #2979FF;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-green: 0 0 40px rgba(0,200,83,0.12);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --nav-h: 68px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--ink);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--ink-2); }
+::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 3px; }
+
+/* ── Utilities ── */
+.container { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--green); }
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+.section-sub {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 560px;
+  line-height: 1.7;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tag-green { background: rgba(0,200,83,0.15); color: var(--green); border: 1px solid rgba(0,200,83,0.3); }
+.tag-amber { background: rgba(255,179,0,0.12); color: var(--amber); border: 1px solid rgba(255,179,0,0.25); }
+.tag-blue { background: rgba(41,121,255,0.12); color: var(--blue); border: 1px solid rgba(41,121,255,0.25); }
+.tag-red { background: rgba(255,68,68,0.12); color: var(--red); border: 1px solid rgba(255,68,68,0.25); }
+.tag-dark { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border-light); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--green);
+  color: var(--ink);
+}
+.btn-primary:hover { background: var(--green-neon); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,200,83,0.3); }
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-light);
+}
+.btn-outline:hover { border-color: var(--green); color: var(--green); background: var(--green-glow); }
+.btn-ghost {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.09); color: var(--text); }
+.btn-sm { padding: 7px 14px; font-size: 13px; }
+.btn-lg { padding: 15px 30px; font-size: 16px; border-radius: 10px; }
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+.card-2 {
+  background: var(--card-2);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+/* ── Divider ── */
+.divider { border: none; border-top: 1px solid var(--border-light); margin: 0; }
+
+/* ── Section spacing ── */
+section { padding: 96px 0; }
+
+/* ══════════════════════════════════════════════════════════
+   NAV
+   ══════════════════════════════════════════════════════════ */
+#navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  height: var(--nav-h);
+  background: rgba(7,17,10,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  margin-right: 40px;
+  flex-shrink: 0;
+}
+.nav-logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--green);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--white);
+  line-height: 1;
+}
+.nav-logo-text span { color: var(--green); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 13px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.nav-lang {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.nav-lang:hover { color: var(--text); }
+
+/* ══════════════════════════════════════════════════════════
+   HERO
+   ══════════════════════════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  padding-top: calc(var(--nav-h) + 60px);
+  padding-bottom: 60px;
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(0,200,83,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,200,83,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,200,83,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,83,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 80% 70% at 60% 40%, black 0%, transparent 70%);
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.hero-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,200,83,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(0,200,83,0); }
+}
+.hero-eyebrow-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--green);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--white);
+  margin-bottom: 24px;
+}
+.hero-title .accent { color: var(--green); }
+.hero-title .line2 { display: block; }
+.hero-desc {
+  color: var(--text-muted);
+  font-size: 17px;
+  line-height: 1.75;
+  margin-bottom: 32px;
+  max-width: 520px;
+}
+.hero-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-light);
+}
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--white);
+}
+.hero-stat-num span { color: var(--green); }
+.hero-stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Hero right: dashboard card stack */
+.hero-visual {
+  position: relative;
+  height: 500px;
+}
+.hero-card {
+  position: absolute;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), var(--shadow-green);
+  backdrop-filter: blur(4px);
+  transition: transform 0.4s ease;
+}
+.hero-card:hover { transform: translateY(-4px) !important; }
+.hero-card-main {
+  width: 340px;
+  top: 20px;
+  right: 0;
+  z-index: 3;
+}
+.hero-card-2 {
+  width: 280px;
+  top: 180px;
+  right: 60px;
+  z-index: 2;
+  transform: rotate(-2deg);
+}
+.hero-card-3 {
+  width: 260px;
+  top: 310px;
+  right: 10px;
+  z-index: 1;
+  transform: rotate(1.5deg);
+}
+.hc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.hc-title { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text); }
+.hc-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; }
+.hc-label { color: var(--text-muted); }
+.hc-val { color: var(--white); font-weight: 600; }
+.hc-val.green { color: var(--green); }
+.hc-progress-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; margin: 12px 0; overflow: hidden; }
+.hc-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dark), var(--green)); border-radius: 2px; }
+.hc-mini-list { display: flex; flex-direction: column; gap: 6px; }
+.hc-mini-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+}
+.hc-mini-item .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.hc-mini-item .dot.g { background: var(--green); }
+.hc-mini-item .dot.a { background: var(--amber); }
+.hc-mini-item .dot.b { background: var(--blue); }
+
+/* ══════════════════════════════════════════════════════════
+   HOW IT WORKS
+   ══════════════════════════════════════════════════════════ */
+#how-it-works { background: var(--ink-2); }
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  position: relative;
+  margin-top: 60px;
+}
+.steps-grid::before {
+  content: '';
+  position: absolute;
+  top: 32px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green-dark), var(--green), var(--green-dark), transparent);
+}
+.step-card {
+  text-align: center;
+  padding: 0 16px;
+  position: relative;
+}
+.step-num {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--green-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--green);
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 20px rgba(0,200,83,0.15);
+  transition: all 0.3s;
+}
+.step-card:hover .step-num { background: var(--green); color: var(--ink); border-color: var(--green); box-shadow: 0 0 30px rgba(0,200,83,0.4); }
+.step-icon { font-size: 24px; margin-bottom: 12px; display: block; }
+.step-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+.step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* ══════════════════════════════════════════════════════════
+   REQUEST FORM
+   ══════════════════════════════════════════════════════════ */
+#request-form { background: var(--ink); }
+.request-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  margin-top: 48px;
+}
+.form-section-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+  -webkit-appearance: none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text-dim); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--green); background: rgba(0,200,83,0.04); }
+.form-group select { cursor: pointer; }
+.form-group select option { background: var(--ink-3); color: var(--text); }
+.form-group textarea { resize: vertical; min-height: 90px; }
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 28px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255,255,255,0.02);
+}
+.upload-zone:hover { border-color: var(--green); background: var(--green-glow); }
+.upload-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+.upload-text { font-size: 13px; color: var(--text-muted); }
+.upload-text strong { color: var(--green); }
+.upload-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+/* Request Preview Panel */
+.preview-panel { position: sticky; top: calc(var(--nav-h) + 20px); }
+.preview-inner {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.preview-header {
+  background: linear-gradient(135deg, var(--green-deep), var(--green-dark));
+  padding: 20px;
+}
+.preview-header-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: white; }
+.preview-header-sub { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 3px; }
+.preview-body { padding: 20px; }
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+.preview-row:last-child { border-bottom: none; }
+.preview-row .pl { color: var(--text-muted); flex-shrink: 0; width: 120px; }
+.preview-row .pv { color: var(--white); font-weight: 500; text-align: right; font-family: var(--font-mono); font-size: 12px; }
+.preview-id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--green);
+  background: rgba(0,200,83,0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+.success-state {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-icon { font-size: 52px; margin-bottom: 16px; }
+.success-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+.success-desc { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+.success-ref { font-family: var(--font-mono); color: var(--green); font-size: 16px; margin: 12px 0; }
+
+/* ══════════════════════════════════════════════════════════
+   QUOTATION COMPARISON
+   ══════════════════════════════════════════════════════════ */
+#quotation { background: var(--ink-2); }
+.quote-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+  margin: 32px 0 28px;
+}
+.quote-tab {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+}
+.quote-tab.active { background: var(--green); color: var(--ink); }
+.quote-tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.06); }
+
+.quotes-request-bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.qrb-item { font-size: 13px; }
+.qrb-label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+.qrb-val { color: var(--white); font-weight: 600; }
+.qrb-divider { width: 1px; height: 36px; background: var(--border-light); flex-shrink: 0; }
+
+.quotes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.quote-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s;
+  position: relative;
+}
+.quote-card:hover { border-color: var(--green); box-shadow: var(--shadow-green); transform: translateY(-3px); }
+.quote-card.featured { border-color: var(--green); }
+.quote-badge-strip {
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+.strip-oem { background: linear-gradient(90deg, #003D1A, #006B2B); color: #00FF88; }
+.strip-aftermarket { background: linear-gradient(90deg, #1A2A00, #2D4A00); color: #8FD600; }
+.strip-used { background: linear-gradient(90deg, #2A1A00, #4A3000); color: var(--amber); }
+.quote-body { padding: 20px; }
+.quote-supplier {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.supplier-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.supplier-name { font-weight: 700; font-size: 14px; color: var(--white); }
+.supplier-country { font-size: 12px; color: var(--text-muted); }
+.stars { color: var(--amber); font-size: 12px; letter-spacing: 1px; }
+.quote-price {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--white);
+  margin: 16px 0 4px;
+}
+.quote-price .currency { font-size: 16px; color: var(--text-muted); }
+.quote-price-note { font-size: 12px; color: var(--text-muted); }
+.quote-details { margin: 16px 0; display: flex; flex-direction: column; gap: 7px; }
+.qd-row { display: flex; justify-content: space-between; font-size: 12px; }
+.qd-label { color: var(--text-muted); }
+.qd-val { color: var(--text); font-weight: 500; }
+.qd-val.green { color: var(--green); }
+.quote-footer {
+  padding: 0 20px 20px;
+  display: flex;
+  gap: 8px;
+}
+.best-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.bb-quality { background: rgba(0,200,83,0.2); color: var(--green); border: 1px solid rgba(0,200,83,0.3); }
+.bb-price { background: rgba(255,179,0,0.15); color: var(--amber); border: 1px solid rgba(255,179,0,0.3); }
+.bb-speed { background: rgba(41,121,255,0.15); color: var(--blue); border: 1px solid rgba(41,121,255,0.3); }
+
+/* ══════════════════════════════════════════════════════════
+   ORDER TRACKING
+   ══════════════════════════════════════════════════════════ */
+#tracking { background: var(--ink); }
+.tracking-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; margin-top: 48px; }
+.map-placeholder {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.map-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(0,200,83,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,83,0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.map-route {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-route svg { width: 100%; height: 100%; }
+.map-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+}
+.track-order-info {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.toi-item { font-size: 13px; }
+.toi-label { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; }
+.toi-val { color: var(--white); font-weight: 600; }
+.toi-val.green { color: var(--green); }
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 20px;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-light);
+}
+.tl-item.done::after { background: var(--green-dark); }
+.tl-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--card-2);
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+  z-index: 1;
+  transition: all 0.3s;
+}
+.tl-item.done .tl-dot { background: var(--green); border-color: var(--green); color: var(--ink); }
+.tl-item.active .tl-dot { background: var(--card-2); border-color: var(--green); color: var(--green); box-shadow: 0 0 0 4px rgba(0,200,83,0.15); animation: pulse-tl 2s infinite; }
+@keyframes pulse-tl { 0%,100% { box-shadow: 0 0 0 4px rgba(0,200,83,0.15); } 50% { box-shadow: 0 0 0 8px rgba(0,200,83,0.05); } }
+.tl-content { flex: 1; padding-top: 4px; }
+.tl-title { font-size: 14px; font-weight: 600; color: var(--white); }
+.tl-item.pending .tl-title { color: var(--text-muted); }
+.tl-time { font-size: 11px; color: var(--text-dim); font-family: var(--font-mono); margin-top: 2px; }
+.tl-detail { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+.tracking-sidebar {}
+.eta-card {
+  background: linear-gradient(135deg, var(--green-deep), var(--green-dark));
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.eta-card::before {
+  content: '🚚';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 48px;
+  opacity: 0.2;
+}
+.eta-label { font-size: 12px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.eta-date { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: white; margin-bottom: 4px; }
+.eta-status { font-size: 13px; color: rgba(255,255,255,0.75); }
+.tracking-progress { margin-bottom: 20px; }
+.tp-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+.tp-label { color: var(--text-muted); }
+.tp-pct { color: var(--green); font-weight: 700; font-family: var(--font-mono); }
+.tp-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+.tp-fill { height: 100%; background: linear-gradient(90deg, var(--green-dark), var(--green), var(--green-neon)); border-radius: 4px; transition: width 1s ease; }
+.shipment-info {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.si-row { display: flex; justify-content: space-between; font-size: 13px; }
+.si-label { color: var(--text-muted); }
+.si-val { color: var(--text); font-weight: 500; }
+
+/* ══════════════════════════════════════════════════════════
+   SUPPLIER FEED
+   ══════════════════════════════════════════════════════════ */
+#supplier-feed { background: var(--ink-2); }
+.feed-layout { display: grid; grid-template-columns: 260px 1fr 260px; gap: 24px; margin-top: 48px; }
+.feed-sidebar-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 16px; }
+.supplier-groups { display: flex; flex-direction: column; gap: 8px; }
+.sg-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.sg-item:hover { border-color: var(--green); color: var(--text); }
+.sg-icon { font-size: 18px; }
+.sg-name { flex: 1; }
+.sg-count { font-family: var(--font-mono); font-size: 11px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 100px; }
+.feed-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.feed-filter {
+  padding: 5px 13px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+}
+.feed-filter.active { background: var(--green); color: var(--ink); border-color: var(--green); }
+.feed-filter:hover:not(.active) { border-color: var(--green); color: var(--green); }
+.feed-posts { display: flex; flex-direction: column; gap: 16px; }
+.post-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  transition: all 0.2s;
+}
+.post-card:hover { border-color: var(--border); }
+.post-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.post-avatar {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.post-meta-name { font-weight: 700; font-size: 14px; color: var(--white); }
+.post-meta-sub { font-size: 12px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
+.post-meta-sub .sep { opacity: 0.3; }
+.post-content { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 14px; }
+.post-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.post-actions { display: flex; gap: 12px; align-items: center; padding-top: 12px; border-top: 1px solid var(--border-light); }
+.post-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.post-action-btn:hover { color: var(--green); background: rgba(0,200,83,0.08); }
+.rfq-thread {
+  background: rgba(0,200,83,0.04);
+  border: 1px solid rgba(0,200,83,0.15);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.rfq-thread-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+.rfq-reply { font-size: 12px; color: var(--text-muted); padding: 6px 0; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; }
+.rfq-reply:last-child { border-bottom: none; }
+.rfq-reply-name { color: var(--text); font-weight: 600; }
+.feed-right-col { display: flex; flex-direction: column; gap: 16px; }
+.trusted-suppliers-widget {}
+.ts-list { display: flex; flex-direction: column; gap: 10px; }
+.ts-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.ts-avatar { width: 34px; height: 34px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.ts-name { color: var(--white); font-weight: 600; font-size: 13px; }
+.ts-country { color: var(--text-muted); font-size: 11px; }
+.ts-rating { font-size: 11px; color: var(--amber); margin-left: auto; }
+
+/* ══════════════════════════════════════════════════════════
+   SERVICES
+   ══════════════════════════════════════════════════════════ */
+#services { background: var(--ink); }
+.services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 56px; }
+.service-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 28px 22px;
+  transition: all 0.3s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,200,83,0.04), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.service-card:hover { border-color: var(--green); transform: translateY(-4px); box-shadow: var(--shadow-green); }
+.service-card:hover::before { opacity: 1; }
+.service-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--green-deep), rgba(0,147,60,0.3));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(0,200,83,0.2);
+}
+.service-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+.service-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARDS
+   ══════════════════════════════════════════════════════════ */
+#dashboards { background: var(--ink-2); }
+.dashboard-tabs-nav {
+  display: flex;
+  gap: 4px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+  margin: 36px 0 32px;
+}
+.dash-tab {
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.dash-tab.active { background: var(--green); color: var(--ink); }
+.dash-tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.05); }
+.dash-panel { display: none; }
+.dash-panel.active { display: block; }
+.dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.dash-kpi {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.kpi-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.kpi-val { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--white); }
+.kpi-val.green { color: var(--green); }
+.kpi-change { font-size: 12px; color: var(--green); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+.kpi-change.red { color: var(--red); }
+.dash-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.mini-table th { text-align: left; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; padding: 8px 12px; border-bottom: 1px solid var(--border-light); font-weight: 600; }
+.mini-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text); }
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tr:hover td { background: rgba(255,255,255,0.02); }
+.status-pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.sp-active { background: rgba(0,200,83,0.15); color: var(--green); }
+.sp-pending { background: rgba(255,179,0,0.12); color: var(--amber); }
+.sp-transit { background: rgba(41,121,255,0.12); color: var(--blue); }
+
+/* ══════════════════════════════════════════════════════════
+   KPI / TRUST
+   ══════════════════════════════════════════════════════════ */
+#trust { background: var(--ink); }
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: 56px;
+  margin-bottom: 56px;
+}
+.kpi-strip-item {
+  padding: 32px 24px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.kpi-strip-item:last-child { border-right: none; }
+.kpi-strip-item:hover { background: rgba(0,200,83,0.04); }
+.kpi-strip-num {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--white);
+}
+.kpi-strip-num .accent { color: var(--green); }
+.kpi-strip-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.testimonial-card {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: all 0.3s;
+}
+.testimonial-card:hover { border-color: var(--border); box-shadow: var(--shadow); }
+.testimonial-stars { color: var(--amber); font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+.testimonial-quote { font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.ta-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+}
+.ta-name { font-weight: 700; font-size: 14px; color: var(--white); }
+.ta-role { font-size: 12px; color: var(--text-muted); }
+
+/* ══════════════════════════════════════════════════════════
+   BECOME A SUPPLIER
+   ══════════════════════════════════════════════════════════ */
+#become-supplier { background: var(--ink-2); }
+.supplier-layout { display: grid; grid-template-columns: 1fr 400px; gap: 56px; align-items: start; margin-top: 56px; }
+.benefits-list { display: flex; flex-direction: column; gap: 20px; }
+.benefit-item { display: flex; gap: 16px; }
+.benefit-icon {
+  width: 44px; height: 44px;
+  background: rgba(0,200,83,0.1);
+  border: 1px solid rgba(0,200,83,0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.benefit-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.benefit-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+.onboard-form-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: sticky;
+  top: calc(var(--nav-h) + 20px);
+}
+.onboard-form-header {
+  background: linear-gradient(135deg, var(--green-deep), var(--green-dark));
+  padding: 24px;
+}
+.onboard-form-header h3 { font-family: var(--font-display); font-size: 20px; font-weight: 800; color: white; }
+.onboard-form-header p { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 4px; }
+.onboard-form-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.onboard-form-note { font-size: 12px; color: var(--text-dim); text-align: center; margin-top: 8px; }
+
+/* ══════════════════════════════════════════════════════════
+   PAYMENT
+   ══════════════════════════════════════════════════════════ */
+#payment { background: var(--ink); }
+.payment-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 56px; }
+.payment-stage {
+  background: var(--card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.payment-stage:hover { border-color: var(--green); box-shadow: var(--shadow-green); }
+.ps-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ps-step-num {
+  width: 28px; height: 28px;
+  background: var(--green);
+  color: var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.ps-header-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--white); }
+.ps-body { padding: 20px; }
+.invoice-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 13px;
+}
+.invoice-line { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.invoice-line:last-child { border-bottom: none; font-weight: 700; color: var(--white); }
+.invoice-label { color: var(--text-muted); }
+.pay-methods { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.pay-method {
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.order-summary-card {
+  background: rgba(0,200,83,0.05);
+  border: 1px solid rgba(0,200,83,0.15);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 13px;
+}
+.os-line { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
+.os-label { color: var(--text-muted); }
+.os-val { color: var(--text); font-weight: 600; }
+.os-val.green { color: var(--green); }
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════ */
+#footer {
+  background: var(--ink-3);
+  border-top: 1px solid var(--border-light);
+  padding: 64px 0 32px;
+}
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
+.footer-brand-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin: 16px 0 20px; max-width: 280px; }
+.social-links { display: flex; gap: 8px; }
+.social-btn {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.social-btn:hover { background: rgba(0,200,83,0.12); border-color: var(--green); }
+.footer-col-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 16px; }
+.footer-links { display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { font-size: 14px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--green); }
+.footer-bottom {
+  border-top: 1px solid var(--border-light);
+  padding-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-contact { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.fc-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
+.fc-item strong { color: var(--text); }
+
+/* ══════════════════════════════════════════════════════════
+   MODAL
+   ══════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+  animation: modal-in 0.25s ease;
+}
+@keyframes modal-in { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: none; } }
+.modal-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--white); }
+.modal-close {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: all 0.2s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+.modal-body { padding: 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-light); display: flex; gap: 10px; justify-content: flex-end; }
+
+/* Notification toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--card);
+  border: 1px solid var(--green);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(0,200,83,0.15);
+  z-index: 3000;
+  transform: translateX(120%);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 280px;
+}
+.toast.show { transform: translateX(0); }
+.toast-icon { font-size: 20px; }
+
+/* Section header centered */
+.section-header-center { text-align: center; margin-bottom: 0; }
+.section-header-center .section-label { justify-content: center; }
+.section-header-center .section-label::before { display: none; }
+.section-header-center::after { content: ''; display: none; }
+.section-header-center .section-sub { margin: 0 auto; }
+
+/* ── Animations on scroll ── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ══════════════════════════════════════════════════════════
+   MISC
+   ══════════════════════════════════════════════════════════ */
+.mobile-nav-toggle { display: none; }
+
+@media (max-width: 1100px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .steps-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .steps-grid::before { display: none; }
+  .request-layout { grid-template-columns: 1fr; }
+  .preview-panel { position: static; }
+  .quotes-grid { grid-template-columns: 1fr; }
+  .tracking-layout { grid-template-columns: 1fr; }
+  .feed-layout { grid-template-columns: 1fr; }
+  .feed-sidebar-left, .feed-right-col { display: none; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid { grid-template-columns: repeat(2, 1fr); }
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .supplier-layout { grid-template-columns: 1fr; }
+  .payment-layout { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 640px) {
+  section { padding: 64px 0; }
+  .services-grid { grid-template-columns: 1fr; }
+  .dash-grid { grid-template-columns: 1fr 1fr; }
+  .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr; }
+  .dash-two-col { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     NAVIGATION
+     ══════════════════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="scrollTo('hero')">
+      <div class="nav-logo-icon">🔧</div>
+      <div>
+        <div class="nav-logo-text">Africa<span>Auto</span>part</div>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how-it-works" onclick="smoothScroll(event,'how-it-works')">How It Works</a></li>
+      <li><a href="#quotation" onclick="smoothScroll(event,'quotation')">Compare Quotes</a></li>
+      <li><a href="#tracking" onclick="smoothScroll(event,'tracking')">Track Order</a></li>
+      <li><a href="#supplier-feed" onclick="smoothScroll(event,'supplier-feed')">Supplier Network</a></li>
+      <li><a href="#services" onclick="smoothScroll(event,'services')">Services</a></li>
+      <li><a href="#become-supplier" onclick="smoothScroll(event,'become-supplier')">Become a Supplier</a></li>
+    </ul>
+    <div class="nav-actions">
+      <span class="nav-lang">🌐 EN / AR</span>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('loginModal')">Login</button>
+      <button class="btn btn-ghost btn-sm" onclick="openModal('loginModal')">Register</button>
+      <button class="btn btn-primary btn-sm" onclick="smoothScroll(event,'request-form')">⚙️ Request a Part</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">
+          <div class="hero-dot"></div>
+          <span class="hero-eyebrow-text">Africa & Saudi Arabia · OEM · Aftermarket · Second-Hand</span>
+        </div>
+        <h1 class="hero-title">
+          Enterprise Spare Parts
+          <span class="accent"><span class="line2">Sourcing Platform</span></span>
+        </h1>
+        <p class="hero-desc">
+          Africa Autopart connects buyers with verified suppliers across Africa and Saudi Arabia — delivering OEM, aftermarket, and second-hand parts with real-time tracking, competitive quoting, and secure platform payments.
+        </p>
+        <div class="hero-features">
+          <span class="tag tag-green">✓ OEM Parts</span>
+          <span class="tag tag-green">✓ Aftermarket</span>
+          <span class="tag tag-green">✓ Second-Hand</span>
+          <span class="tag tag-dark">🌍 32 Countries</span>
+          <span class="tag tag-dark">🔒 Escrow Payments</span>
+          <span class="tag tag-dark">📦 Live Tracking</span>
+        </div>
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" onclick="smoothScroll(event,'request-form')">⚙️ Request Spare Part</button>
+          <button class="btn btn-outline btn-lg" onclick="smoothScroll(event,'tracking')">📍 Track Order</button>
+          <button class="btn btn-ghost btn-lg" onclick="smoothScroll(event,'become-supplier')">🤝 Become a Supplier</button>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">14<span>K+</span></div>
+            <div class="hero-stat-label">Parts Sourced</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">620<span>+</span></div>
+            <div class="hero-stat-label">Verified Suppliers</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">32<span></span></div>
+            <div class="hero-stat-label">Countries Served</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">98<span>%</span></div>
+            <div class="hero-stat-label">Delivery Success</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <!-- Sourcing Request Card -->
+        <div class="hero-card hero-card-main">
+          <div class="hc-header">
+            <span class="hc-title">⚙️ Active Sourcing Request</span>
+            <span class="tag tag-green" style="font-size:10px;">LIVE</span>
+          </div>
+          <div class="hc-row"><span class="hc-label">Part</span><span class="hc-val">Alternator – Toyota Hilux</span></div>
+          <div class="hc-row"><span class="hc-label">Type</span><span class="hc-val">OEM / Aftermarket</span></div>
+          <div class="hc-row"><span class="hc-label">Responses</span><span class="hc-val green">7 Quotes Received</span></div>
+          <div class="hc-row"><span class="hc-label">Best Price</span><span class="hc-val">USD 148</span></div>
+          <div class="hc-progress-bar"><div class="hc-progress-fill" style="width:72%"></div></div>
+          <div style="font-size:11px;color:var(--text-muted)">Supplier Matching: 72% complete</div>
+        </div>
+        <!-- Quotation card -->
+        <div class="hero-card hero-card-2">
+          <div class="hc-header">
+            <span class="hc-title">📊 Quotation Comparison</span>
+          </div>
+          <div class="hc-mini-list">
+            <div class="hc-mini-item"><span class="dot g"></span>OEM – KE Auto Parts · $229<span class="tag tag-green" style="margin-left:auto;font-size:9px;">Best Quality</span></div>
+            <div class="hc-mini-item"><span class="dot a"></span>Aftermarket – SparePro KE · $148<span class="tag tag-amber" style="margin-left:auto;font-size:9px;">Best Price</span></div>
+            <div class="hc-mini-item"><span class="dot b"></span>Used – GulfParts SA · $89<span class="tag tag-blue" style="margin-left:auto;font-size:9px;">Fastest</span></div>
+          </div>
+        </div>
+        <!-- Delivery Card -->
+        <div class="hero-card hero-card-3">
+          <div class="hc-header">
+            <span class="hc-title">🚚 Delivery Status</span>
+            <span class="tag tag-blue" style="font-size:10px;">IN TRANSIT</span>
+          </div>
+          <div class="hc-row"><span class="hc-label">From</span><span class="hc-val">Jeddah, KSA</span></div>
+          <div class="hc-row"><span class="hc-label">To</span><span class="hc-val">Nairobi, Kenya</span></div>
+          <div class="hc-row"><span class="hc-label">ETA</span><span class="hc-val green">Apr 14, 2026</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     HOW IT WORKS
+     ══════════════════════════════════════════════════════════ -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Process</div>
+      <h2 class="section-title">How Africa Autopart Works</h2>
+      <p class="section-sub">A five-step enterprise sourcing flow from part request to door delivery — transparent, trackable, and trusted.</p>
+    </div>
+    <div class="steps-grid reveal" style="transition-delay:0.15s">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <span class="step-icon">📋</span>
+        <div class="step-title">Submit Request</div>
+        <div class="step-desc">Customer submits vehicle details, part name, condition preference, and urgency. Supports image uploads and VIN lookup.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <span class="step-icon">🔔</span>
+        <div class="step-title">Suppliers Respond</div>
+        <div class="step-desc">Verified suppliers across Africa and KSA receive the RFQ and submit competitive offers within hours.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <span class="step-icon">⚖️</span>
+        <div class="step-title">Compare & Select</div>
+        <div class="step-desc">Customer reviews OEM, aftermarket, and used options — comparing price, warranty, delivery time, and supplier rating.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <span class="step-icon">💳</span>
+        <div class="step-title">Secure Payment</div>
+        <div class="step-desc">Funds held in platform escrow. Supplier is paid upon confirmed delivery. Supports bank transfer, mobile money, and card.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <span class="step-icon">📦</span>
+        <div class="step-title">Live Tracking</div>
+        <div class="step-desc">Africa Autopart coordinates logistics, customs, and last-mile delivery with real-time updates at every stage.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SPARE PARTS REQUEST FORM
+     ══════════════════════════════════════════════════════════ -->
+<section id="request-form">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Part Request</div>
+      <h2 class="section-title">Submit a Part Request</h2>
+      <p class="section-sub">Fill in your vehicle and part details. Our platform will match you with verified suppliers within minutes.</p>
+    </div>
+    <div class="request-layout reveal" style="transition-delay:0.1s">
+      <!-- Form -->
+      <div>
+        <div class="card">
+          <div class="form-section-title">🚗 Vehicle Information</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Vehicle Make</label>
+              <select id="f-make" onchange="updatePreview()">
+                <option value="">Select Make</option>
+                <option>Toyota</option><option>Nissan</option><option>Mitsubishi</option>
+                <option>Mercedes-Benz</option><option>Land Rover</option><option>Ford</option>
+                <option>Hyundai</option><option>Isuzu</option><option>Volkswagen</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Model</label>
+              <select id="f-model" onchange="updatePreview()">
+                <option value="">Select Model</option>
+                <option>Hilux</option><option>Land Cruiser</option><option>Corolla</option>
+                <option>Prado</option><option>Patrol</option><option>Navara</option>
+                <option>Pajero</option><option>D-Max</option><option>Ranger</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Year</label>
+              <select id="f-year" onchange="updatePreview()">
+                <option value="">Year</option>
+                <option>2024</option><option>2023</option><option>2022</option>
+                <option>2021</option><option>2020</option><option>2019</option>
+                <option>2018</option><option>2017</option><option>2016</option>
+                <option>2015</option><option>2010-2014</option><option>Pre-2010</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Engine Type</label>
+              <select id="f-engine" onchange="updatePreview()">
+                <option value="">Select Engine</option>
+                <option>2.4L Diesel (2GD-FTV)</option>
+                <option>2.8L Diesel (1GD-FTV)</option>
+                <option>4.0L V6 (1GR-FE)</option>
+                <option>2.7L Petrol (2TR-FE)</option>
+                <option>3.0L Diesel (5L-E)</option>
+                <option>2.0L Turbo Diesel</option>
+              </select>
+            </div>
+            <div class="form-group form-full">
+              <label>VIN / Chassis Number (Optional)</label>
+              <input type="text" id="f-vin" placeholder="e.g. KUN26-1234567" onchange="updatePreview()">
+            </div>
+          </div>
+
+          <div class="form-section-title">⚙️ Part Details</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Part Name</label>
+              <input type="text" id="f-part" placeholder="e.g. Alternator, Brake Pads" onchange="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label>Part Number (OEM/Ref)</label>
+              <input type="text" id="f-partnum" placeholder="e.g. 27060-0L050" onchange="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label>Condition Preference</label>
+              <select id="f-cond" onchange="updatePreview()">
+                <option value="">Any Condition</option>
+                <option value="oem">OEM – Original Equipment</option>
+                <option value="aftermarket">Aftermarket – Quality Brand</option>
+                <option value="used">Second-Hand / Used</option>
+                <option value="any">Open to All Options</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Urgency</label>
+              <select id="f-urgency" onchange="updatePreview()">
+                <option>Standard (7–14 days)</option>
+                <option>Express (3–5 days)</option>
+                <option>Urgent (1–2 days)</option>
+              </select>
+            </div>
+            <div class="form-group form-full">
+              <label>Additional Description</label>
+              <textarea id="f-desc" placeholder="Describe the problem, symptoms, or specific requirements..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-section-title">🌍 Delivery & Contact</div>
+          <div class="form-grid form-grid-3">
+            <div class="form-group">
+              <label>Country</label>
+              <select id="f-country" onchange="updatePreview()">
+                <option value="">Select Country</option>
+                <option>Kenya</option><option>Ethiopia</option><option>Tanzania</option>
+                <option>Uganda</option><option>Nigeria</option><option>Ghana</option>
+                <option>South Africa</option><option>Egypt</option><option>Sudan</option>
+                <option>Saudi Arabia</option><option>Senegal</option><option>Cameroon</option>
+                <option>Djibouti</option><option>Somalia</option><option>Mozambique</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Phone / WhatsApp</label>
+              <input type="tel" id="f-phone" placeholder="+254 700 000 000" onchange="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="f-email" placeholder="your@email.com" onchange="updatePreview()">
+            </div>
+          </div>
+
+          <div class="form-section-title">📷 Upload Reference Images</div>
+          <!-- Developer note: Wire to cloud storage (S3/GCS) upload endpoint -->
+          <div class="upload-zone" onclick="simulateUpload(this)">
+            <span class="upload-icon">📁</span>
+            <div class="upload-text">Drag & drop images here or <strong>click to browse</strong></div>
+            <div class="upload-hint">Supports JPG, PNG, PDF up to 10MB · Part photos, damage images, OEM packaging</div>
+          </div>
+          <div id="upload-status" style="margin-top:10px;font-size:13px;color:var(--text-muted);display:none">
+            ✓ 2 files attached: alternator_damage.jpg, oem_label.jpg
+          </div>
+
+          <div style="margin-top:24px;display:flex;gap:12px;align-items:center">
+            <button class="btn btn-primary btn-lg" style="flex:1" onclick="submitRequest()">
+              ⚙️ Submit Sourcing Request
+            </button>
+            <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+          </div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:12px;text-align:center">
+            🔒 Your request is secure. Suppliers see only the part details — not your personal contact info until you select an offer.
+          </div>
+        </div>
+      </div>
+
+      <!-- Request Preview Panel -->
+      <div class="preview-panel">
+        <div class="preview-inner">
+          <div id="request-preview">
+            <div class="preview-header">
+              <div class="preview-header-title">📋 Request Summary</div>
+              <div class="preview-header-sub">Auto-updates as you type</div>
+            </div>
+            <div class="preview-body">
+              <div class="preview-id">RFQ-#AAP-2026-08441</div>
+              <div class="preview-row"><span class="pl">Vehicle</span><span class="pv" id="pv-vehicle">—</span></div>
+              <div class="preview-row"><span class="pl">Year</span><span class="pv" id="pv-year">—</span></div>
+              <div class="preview-row"><span class="pl">Engine</span><span class="pv" id="pv-engine">—</span></div>
+              <div class="preview-row"><span class="pl">Part Needed</span><span class="pv" id="pv-part">—</span></div>
+              <div class="preview-row"><span class="pl">Part No.</span><span class="pv" id="pv-partnum">—</span></div>
+              <div class="preview-row"><span class="pl">Condition</span><span class="pv" id="pv-cond">Any</span></div>
+              <div class="preview-row"><span class="pl">Urgency</span><span class="pv" id="pv-urgency">Standard</span></div>
+              <div class="preview-row"><span class="pl">Destination</span><span class="pv" id="pv-country">—</span></div>
+              <div class="preview-row"><span class="pl">Status</span><span class="pv" style="color:var(--amber)">Draft</span></div>
+              <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light)">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Platform match estimate:</div>
+                <div style="font-size:13px;color:var(--text-muted);display:flex;justify-content:space-between;margin-bottom:6px">
+                  <span>Potential suppliers</span><span style="color:var(--white);font-weight:600" id="pv-suppliers">—</span>
+                </div>
+                <div style="font-size:13px;color:var(--text-muted);display:flex;justify-content:space-between">
+                  <span>Est. first response</span><span style="color:var(--green);font-weight:600">Within 2 hours</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Success state shown after form submission -->
+          <div class="success-state" id="success-state">
+            <div class="success-icon">✅</div>
+            <div class="success-title">Request Received!</div>
+            <div class="success-ref">RFQ-#AAP-2026-08441</div>
+            <div class="success-desc">Matching suppliers across Africa and Saudi Arabia. You'll receive your first quote within 2 hours by email and WhatsApp.</div>
+            <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-primary" style="width:100%" onclick="smoothScroll(event,'quotation')">View Sample Quotes</button>
+              <button class="btn btn-ghost" style="width:100%" onclick="resetForm()">Submit Another</button>
+            </div>
+          </div>
+        </div>
+        <!-- Platform promise -->
+        <div class="card-2" style="margin-top:16px">
+          <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:10px">Platform Guarantee</div>
+          <div style="font-size:12px;color:var(--text-muted);display:flex;flex-direction:column;gap:7px">
+            <div>✓ All suppliers are identity-verified</div>
+            <div>✓ Payments held in escrow until delivery confirmed</div>
+            <div>✓ 100% refund if part doesn't match spec</div>
+            <div>✓ Dispute resolution support included</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     QUOTATION COMPARISON
+     ══════════════════════════════════════════════════════════ -->
+<section id="quotation">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Quotation Engine</div>
+      <h2 class="section-title">Compare Supplier Offers</h2>
+      <p class="section-sub">Africa Autopart surfaces the best options from our verified network so you can make an informed decision — not just grab the cheapest.</p>
+    </div>
+    <div class="reveal" style="transition-delay:0.1s">
+      <div class="quote-tabs" id="quoteTabs">
+        <button class="quote-tab active" onclick="switchQuoteTab(this,'alternator')">Alternator – Hilux</button>
+        <button class="quote-tab" onclick="switchQuoteTab(this,'brake')">Brake Pads – Patrol</button>
+        <button class="quote-tab" onclick="switchQuoteTab(this,'filter')">Oil Filter Kit – Corolla</button>
+      </div>
+    </div>
+    <div class="quotes-request-bar reveal" style="transition-delay:0.15s">
+      <div class="qrb-item"><div class="qrb-label">Request ID</div><div class="qrb-val" id="q-id">RFQ-#AAP-2026-08441</div></div>
+      <div class="qrb-divider"></div>
+      <div class="qrb-item"><div class="qrb-label">Vehicle</div><div class="qrb-val" id="q-vehicle">Toyota Hilux 2021 – 2.4L Diesel</div></div>
+      <div class="qrb-divider"></div>
+      <div class="qrb-item"><div class="qrb-label">Part</div><div class="qrb-val" id="q-part">Alternator (27060-0L050)</div></div>
+      <div class="qrb-divider"></div>
+      <div class="qrb-item"><div class="qrb-label">Responses</div><div class="qrb-val" style="color:var(--green)" id="q-resp">7 quotes received</div></div>
+      <div class="qrb-divider"></div>
+      <div class="qrb-item"><div class="qrb-label">Status</div><div class="qrb-val"><span class="tag tag-green">Open</span></div></div>
+    </div>
+    <div class="quotes-grid reveal" id="quotesGrid" style="transition-delay:0.2s">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     ORDER TRACKING
+     ══════════════════════════════════════════════════════════ -->
+<section id="tracking">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Logistics & Tracking</div>
+      <h2 class="section-title">Real-Time Order Tracking</h2>
+      <p class="section-sub">From supplier warehouse to your door. Every step of the cross-border journey is visible on the platform.</p>
+    </div>
+    <div class="tracking-layout reveal" style="transition-delay:0.1s">
+      <!-- Left: Map + timeline -->
+      <div>
+        <!-- Map placeholder -->
+        <div class="map-placeholder">
+          <div class="map-bg"></div>
+          <div class="map-route">
+            <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg">
+              <!-- Africa + Arabia outline (simplified) -->
+              <path d="M100,80 Q150,60 200,90 Q240,110 220,160 Q200,200 180,210 Q160,220 140,200 Q120,180 110,150 Q95,120 100,80Z" fill="none" stroke="rgba(0,200,83,0.15)" stroke-width="1.5"/>
+              <path d="M380,60 Q420,40 460,70 Q490,90 480,130 Q470,160 450,170 Q420,175 400,155 Q375,130 380,60Z" fill="none" stroke="rgba(0,200,83,0.15)" stroke-width="1.5"/>
+              <!-- Route line: Jeddah → Nairobi -->
+              <path d="M440,110 Q380,90 300,120 Q240,140 200,160" fill="none" stroke="var(--green)" stroke-width="2" stroke-dasharray="8 5" opacity="0.8"/>
+              <!-- Origin dot: Jeddah -->
+              <circle cx="440" cy="110" r="8" fill="var(--green)" opacity="0.9"/>
+              <text x="450" y="105" fill="var(--green)" font-size="10" font-family="sans-serif">Jeddah, KSA</text>
+              <!-- Current position (truck) -->
+              <circle cx="315" cy="118" r="6" fill="var(--amber)" opacity="0.9"/>
+              <text x="320" y="112" fill="var(--amber)" font-size="9" font-family="sans-serif">Djibouti (Customs)</text>
+              <!-- Destination dot: Nairobi -->
+              <circle cx="200" cy="160" r="8" fill="rgba(255,255,255,0.3)" stroke="var(--green)" stroke-width="2"/>
+              <text x="210" y="156" fill="rgba(255,255,255,0.6)" font-size="10" font-family="sans-serif">Nairobi, KE</text>
+              <!-- Plane icon rough -->
+              <text x="305" y="106" fill="var(--amber)" font-size="14" font-family="sans-serif">✈</text>
+            </svg>
+          </div>
+          <span class="map-label">Live Route: Jeddah KSA → Nairobi Kenya · Via Djibouti</span>
+        </div>
+        <!-- Order Info -->
+        <div class="track-order-info">
+          <div class="toi-item"><div class="toi-label">Order ID</div><div class="toi-val" style="font-family:var(--font-mono);font-size:13px">ORD-#AAP-2026-00317</div></div>
+          <div class="toi-item"><div class="toi-label">Part</div><div class="toi-val">Alternator – Toyota Hilux</div></div>
+          <div class="toi-item"><div class="toi-label">Supplier</div><div class="toi-val">GulfParts Trading · Jeddah</div></div>
+          <div class="toi-item"><div class="toi-label">Courier</div><div class="toi-val">Aramex Freight</div></div>
+          <div class="toi-item"><div class="toi-label">Current Status</div><div class="toi-val green">At Border / Customs</div></div>
+        </div>
+        <!-- Timeline -->
+        <div class="card" style="padding:24px 28px">
+          <div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--white);margin-bottom:20px">Shipment Timeline</div>
+          <div class="timeline" id="trackingTimeline">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+      </div>
+      <!-- Right: ETA + stats -->
+      <div class="tracking-sidebar">
+        <div class="eta-card">
+          <div class="eta-label">Estimated Arrival</div>
+          <div class="eta-date">Apr 14, 2026</div>
+          <div class="eta-status">📍 Currently at Djibouti Customs — Clearance in progress</div>
+        </div>
+        <div class="tracking-progress">
+          <div class="tp-header">
+            <span class="tp-label">Delivery Progress</span>
+            <span class="tp-pct" id="trackPct">65%</span>
+          </div>
+          <div class="tp-bar">
+            <div class="tp-fill" id="trackFill" style="width:65%"></div>
+          </div>
+        </div>
+        <div class="shipment-info">
+          <div class="si-row"><span class="si-label">Dispatch Date</span><span class="si-val">Apr 08, 2026</span></div>
+          <div class="si-row"><span class="si-label">Origin</span><span class="si-val">Jeddah Industrial City, KSA</span></div>
+          <div class="si-row"><span class="si-label">Transit Hub</span><span class="si-val">Djibouti Free Zone</span></div>
+          <div class="si-row"><span class="si-label">Destination</span><span class="si-val">Nairobi, Kenya</span></div>
+          <div class="si-row"><span class="si-label">Tracking No.</span><span class="si-val" style="font-family:var(--font-mono);font-size:12px">ARX-KE-9840312</span></div>
+          <div class="si-row"><span class="si-label">Insurance</span><span class="si-val" style="color:var(--green)">✓ Covered – USD 229</span></div>
+          <div class="si-row"><span class="si-label">Customs Duty</span><span class="si-val">Platform-managed</span></div>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+          <button class="btn btn-outline" style="width:100%;justify-content:center">📞 Contact Courier</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="simulateTracking()">▶ Simulate Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SUPPLIER FEED / COMMUNITY
+     ══════════════════════════════════════════════════════════ -->
+<section id="supplier-feed">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Supplier Network</div>
+      <h2 class="section-title">Supplier Community Hub</h2>
+      <p class="section-sub">A B2B social ecosystem where approved suppliers post stock, respond to RFQs, collaborate on sourcing, and build their market presence across Africa and the Gulf.</p>
+    </div>
+    <div class="feed-layout reveal" style="transition-delay:0.1s">
+      <!-- Left sidebar: Groups -->
+      <div class="feed-sidebar-left">
+        <div class="card-2">
+          <div class="feed-sidebar-title">🏘️ Supplier Groups</div>
+          <div class="supplier-groups" id="supplierGroups">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+        <div class="card-2" style="margin-top:16px">
+          <div class="feed-sidebar-title">🔍 Quick Filters</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:13px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text-muted)"><input type="checkbox" checked style="accent-color:var(--green)"> Stock Alerts</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text-muted)"><input type="checkbox" checked style="accent-color:var(--green)"> RFQ Threads</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text-muted)"><input type="checkbox" style="accent-color:var(--green)"> New Arrivals</label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text-muted)"><input type="checkbox" style="accent-color:var(--green)"> KSA Shipments</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main feed -->
+      <div>
+        <div class="feed-filters" id="feedFilters">
+          <button class="feed-filter active" onclick="filterFeed(this,'all')">All Posts</button>
+          <button class="feed-filter" onclick="filterFeed(this,'stock')">📦 Stock Alerts</button>
+          <button class="feed-filter" onclick="filterFeed(this,'rfq')">🔔 RFQ Requests</button>
+          <button class="feed-filter" onclick="filterFeed(this,'oem')">✅ OEM Arrivals</button>
+          <button class="feed-filter" onclick="filterFeed(this,'discussion')">💬 Discussions</button>
+        </div>
+        <div class="feed-posts" id="feedPosts">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Right sidebar: Trusted Suppliers -->
+      <div class="feed-right-col">
+        <div class="card-2">
+          <div class="feed-sidebar-title">⭐ Top Suppliers</div>
+          <div class="ts-list" id="topSuppliers">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+        <div class="card-2">
+          <div class="feed-sidebar-title">📊 Network Stats</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Active Suppliers</span><span style="color:var(--white);font-weight:600">620+</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Posts Today</span><span style="color:var(--green);font-weight:600">147</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Open RFQs</span><span style="color:var(--amber);font-weight:600">84</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--text-muted)">Countries</span><span style="color:var(--white);font-weight:600">32</span></div>
+          </div>
+        </div>
+        <div class="card-2">
+          <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--white);margin-bottom:12px">📢 Market Alerts</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--text-muted)">
+            <div>🔴 High demand: Toyota Land Cruiser suspension parts – Kenya region</div>
+            <div>🟡 Low stock: Genuine Isuzu D-Max filters across East Africa</div>
+            <div>🟢 New shipment landed: Bosch alternators – Jeddah warehouse</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     SERVICES / CAPABILITIES
+     ══════════════════════════════════════════════════════════ -->
+<section id="services">
+  <div class="container">
+    <div class="reveal section-header-center" style="text-align:center">
+      <div class="section-label" style="justify-content:center"><span>Platform</span></div>
+      <h2 class="section-title">What Africa Autopart Delivers</h2>
+      <p class="section-sub" style="margin:0 auto">End-to-end capabilities for automotive spare parts procurement across Africa and the Gulf region.</p>
+    </div>
+    <div class="services-grid reveal" style="transition-delay:0.1s" id="servicesGrid">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     DASHBOARD PREVIEW
+     ══════════════════════════════════════════════════════════ -->
+<section id="dashboards">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Platform Dashboards</div>
+      <h2 class="section-title">Built for Every Stakeholder</h2>
+      <p class="section-sub">Purpose-built dashboards for customers, suppliers, and platform administrators — each providing the right data at the right time.</p>
+    </div>
+    <div class="reveal" style="transition-delay:0.1s">
+      <div class="dashboard-tabs-nav">
+        <button class="dash-tab active" onclick="switchDashTab(this,'customer')">👤 Customer</button>
+        <button class="dash-tab" onclick="switchDashTab(this,'supplier')">🏭 Supplier</button>
+        <button class="dash-tab" onclick="switchDashTab(this,'admin')">🛡️ Admin</button>
+      </div>
+    </div>
+
+    <!-- Customer Dashboard -->
+    <div class="dash-panel active" id="dash-customer">
+      <div class="dash-grid">
+        <div class="dash-kpi"><div class="kpi-label">Active Requests</div><div class="kpi-val green">3</div><div class="kpi-change">▲ 1 new today</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Quotes Received</div><div class="kpi-val">14</div><div class="kpi-change">▲ 7 new</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Orders in Transit</div><div class="kpi-val">2</div><div class="kpi-change">On schedule</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Total Saved</div><div class="kpi-val green">$640</div><div class="kpi-change">vs. local market</div></div>
+      </div>
+      <div class="dash-two-col">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:16px">📋 My Requests</div>
+          <table class="mini-table">
+            <thead><tr><th>Part</th><th>Vehicle</th><th>Quotes</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Alternator</td><td>Hilux 2021</td><td>7</td><td><span class="status-pill sp-active">Active</span></td></tr>
+              <tr><td>Brake Pads</td><td>Patrol 2019</td><td>4</td><td><span class="status-pill sp-pending">Comparing</span></td></tr>
+              <tr><td>Oil Filter Kit</td><td>Corolla 2020</td><td>9</td><td><span class="status-pill sp-transit">Ordered</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:16px">🚚 Active Deliveries</div>
+          <table class="mini-table">
+            <thead><tr><th>Order</th><th>From</th><th>ETA</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Oil Filter</td><td>Dubai, UAE</td><td>Apr 12</td><td><span class="status-pill sp-transit">In Transit</span></td></tr>
+              <tr><td>Alternator</td><td>Jeddah, KSA</td><td>Apr 14</td><td><span class="status-pill sp-pending">Customs</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supplier Dashboard -->
+    <div class="dash-panel" id="dash-supplier">
+      <div class="dash-grid">
+        <div class="dash-kpi"><div class="kpi-label">Incoming RFQs</div><div class="kpi-val green">28</div><div class="kpi-change">▲ 5 today</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Offers Submitted</div><div class="kpi-val">64</div><div class="kpi-change">Last 30 days</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Accepted Orders</div><div class="kpi-val">19</div><div class="kpi-change">▲ 3 this week</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Response Rate</div><div class="kpi-val green">94%</div><div class="kpi-change">Top 10% supplier</div></div>
+      </div>
+      <div class="dash-two-col">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:16px">🔔 RFQ Inbox</div>
+          <table class="mini-table">
+            <thead><tr><th>Part</th><th>Vehicle</th><th>Country</th><th>Urgency</th></tr></thead>
+            <tbody>
+              <tr><td>Clutch Kit</td><td>Land Cruiser</td><td>🇰🇪 Kenya</td><td><span class="status-pill sp-pending">Express</span></td></tr>
+              <tr><td>Radiator</td><td>Navara 2020</td><td>🇳🇬 Nigeria</td><td><span class="status-pill" style="background:rgba(255,68,68,0.1);color:var(--red)">Urgent</span></td></tr>
+              <tr><td>Shock Absorber</td><td>Pajero 2017</td><td>🇪🇹 Ethiopia</td><td><span class="status-pill sp-active">Standard</span></td></tr>
+              <tr><td>Alternator</td><td>Hilux 2021</td><td>🇰🇪 Kenya</td><td><span class="status-pill sp-pending">Express</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:16px">📈 Performance</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-muted)">Quote Acceptance Rate</span><span style="color:var(--white)">29.7%</span></div><div class="hc-progress-bar"><div class="hc-progress-fill" style="width:30%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-muted)">Profile Views (30d)</span><span style="color:var(--white)">1,840</span></div><div class="hc-progress-bar"><div class="hc-progress-fill" style="width:68%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--text-muted)">Customer Rating</span><span style="color:var(--amber)">4.8/5</span></div><div class="hc-progress-bar"><div class="hc-progress-fill" style="width:96%;background:linear-gradient(90deg,#7B5800,var(--amber))"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="dash-panel" id="dash-admin">
+      <div class="dash-grid">
+        <div class="dash-kpi"><div class="kpi-label">Total Requests</div><div class="kpi-val">4,812</div><div class="kpi-change">▲ 14% MoM</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Active Suppliers</div><div class="kpi-val green">620</div><div class="kpi-change">▲ 18 pending</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Active Orders</div><div class="kpi-val">187</div><div class="kpi-change">12 flagged</div></div>
+        <div class="dash-kpi"><div class="kpi-label">Platform Revenue</div><div class="kpi-val green">$84K</div><div class="kpi-change">▲ 22% this month</div></div>
+      </div>
+      <div class="dash-two-col">
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:16px">🚨 Operational Alerts</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+            <div style="display:flex;gap:10px;padding:10px;background:rgba(255,68,68,0.06);border:1px solid rgba(255,68,68,0.15);border-radius:8px"><span>🔴</span><div><div style="color:var(--white);font-weight:600">Delivery Delay – ORD-00312</div><div style="color:var(--text-muted)">Customs hold in Djibouti · +2 day ETA</div></div></div>
+            <div style="display:flex;gap:10px;padding:10px;background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.15);border-radius:8px"><span>🟡</span><div><div style="color:var(--white);font-weight:600">Supplier Verification Pending</div><div style="color:var(--text-muted)">18 new supplier applications to review</div></div></div>
+            <div style="display:flex;gap:10px;padding:10px;background:rgba(0,200,83,0.05);border:1px solid rgba(0,200,83,0.12);border-radius:8px"><span>🟢</span><div><div style="color:var(--white);font-weight:600">New Market: Cameroon Launch</div><div style="color:var(--text-muted)">3 suppliers onboarded, 1 active RFQ</div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:16px">🌍 Orders by Country</div>
+          <table class="mini-table">
+            <thead><tr><th>Country</th><th>Orders</th><th>Revenue</th><th>Trend</th></tr></thead>
+            <tbody>
+              <tr><td>🇰🇪 Kenya</td><td>48</td><td>$18,400</td><td style="color:var(--green)">▲ 18%</td></tr>
+              <tr><td>🇳🇬 Nigeria</td><td>37</td><td>$14,200</td><td style="color:var(--green)">▲ 12%</td></tr>
+              <tr><td>🇪🇹 Ethiopia</td><td>29</td><td>$9,800</td><td style="color:var(--green)">▲ 31%</td></tr>
+              <tr><td>🇸🇦 Saudi Arabia</td><td>24</td><td>$11,600</td><td style="color:var(--amber)">→ 2%</td></tr>
+              <tr><td>🇿🇦 South Africa</td><td>21</td><td>$8,200</td><td style="color:var(--green)">▲ 8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     KPI STRIP / TRUST
+     ══════════════════════════════════════════════════════════ -->
+<section id="trust">
+  <div class="container">
+    <div class="reveal section-header-center">
+      <div class="section-label" style="justify-content:center"><span>Trust & Scale</span></div>
+      <h2 class="section-title">Built for Enterprise-Scale Sourcing</h2>
+    </div>
+    <div class="kpi-strip reveal" style="transition-delay:0.1s">
+      <div class="kpi-strip-item"><div class="kpi-strip-num">180<span class="accent">+</span></div><div class="kpi-strip-label">Parts Categories</div></div>
+      <div class="kpi-strip-item"><div class="kpi-strip-num">620<span class="accent">+</span></div><div class="kpi-strip-label">Verified Suppliers</div></div>
+      <div class="kpi-strip-item"><div class="kpi-strip-num">32<span class="accent"></span></div><div class="kpi-strip-label">Countries Served</div></div>
+      <div class="kpi-strip-item"><div class="kpi-strip-num">98<span class="accent">%</span></div><div class="kpi-strip-label">Delivery Success</div></div>
+      <div class="kpi-strip-item"><div class="kpi-strip-num">&lt;2<span class="accent">hr</span></div><div class="kpi-strip-label">First Quote Response</div></div>
+    </div>
+    <div class="reveal" style="transition-delay:0.15s">
+      <div class="section-label">Testimonials</div>
+      <h3 class="section-title" style="font-size:28px">What Our Customers Say</h3>
+    </div>
+    <div class="testimonials-grid reveal" style="transition-delay:0.2s" id="testimonialsGrid">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     BECOME A SUPPLIER
+     ══════════════════════════════════════════════════════════ -->
+<section id="become-supplier">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Supplier Onboarding</div>
+      <h2 class="section-title">Grow Your Business with Africa Autopart</h2>
+      <p class="section-sub">Join 620+ verified suppliers already sourcing parts for customers across 32 African and Gulf countries. Get direct RFQs, faster deal closure, and a powerful platform to showcase your inventory.</p>
+    </div>
+    <div class="supplier-layout reveal" style="transition-delay:0.1s">
+      <div>
+        <div class="benefits-list" id="benefitsList">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+      <!-- Onboarding form -->
+      <div>
+        <div class="onboard-form-card">
+          <div class="onboard-form-header">
+            <h3>Join the Supplier Network</h3>
+            <p>Free application · Approval within 48 hours</p>
+          </div>
+          <div class="onboard-form-body">
+            <div class="form-group">
+              <label>Business / Company Name</label>
+              <input type="text" placeholder="e.g. SparePro Nairobi Ltd.">
+            </div>
+            <div class="form-group">
+              <label>Country of Operation</label>
+              <select>
+                <option value="">Select Country</option>
+                <option>Kenya</option><option>Nigeria</option><option>South Africa</option>
+                <option>Ethiopia</option><option>Saudi Arabia</option><option>Egypt</option>
+                <option>Ghana</option><option>Tanzania</option><option>Uganda</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Primary Parts Category</label>
+              <select>
+                <option>Engine Parts</option><option>Braking System</option>
+                <option>Suspension & Steering</option><option>Electrical</option>
+                <option>Body Parts</option><option>Transmission</option>
+                <option>Cooling System</option><option>Full Range</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Business Email</label>
+              <input type="email" placeholder="business@company.com">
+            </div>
+            <div class="form-group">
+              <label>WhatsApp / Phone</label>
+              <input type="tel" placeholder="+966 50 000 0000">
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="showToast('✅ Application submitted! Our team will contact you within 48 hours.')">
+              🚀 Apply to Join Network
+            </button>
+            <div class="onboard-form-note">
+              By applying, you agree to our Supplier Code of Conduct and platform verification process.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAYMENT & PROCUREMENT
+     ══════════════════════════════════════════════════════════ -->
+<section id="payment">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Payment & Procurement</div>
+      <h2 class="section-title">Transparent, Secure Procurement</h2>
+      <p class="section-sub">From quote acceptance to final delivery confirmation — every transaction is managed, insured, and traceable inside the platform.</p>
+    </div>
+    <div class="payment-layout reveal" style="transition-delay:0.1s">
+      <!-- Stage 1: Invoice -->
+      <div class="payment-stage">
+        <div class="ps-header">
+          <div class="ps-step-num">1</div>
+          <div class="ps-header-title">Review Invoice & Confirm Order</div>
+        </div>
+        <div class="ps-body">
+          <div class="invoice-card">
+            <div class="invoice-line"><span class="invoice-label">Alternator – Toyota Hilux</span><span>$148.00</span></div>
+            <div class="invoice-line"><span class="invoice-label">Platform Service Fee (5%)</span><span>$7.40</span></div>
+            <div class="invoice-line"><span class="invoice-label">Cross-border Freight</span><span>$22.00</span></div>
+            <div class="invoice-line"><span class="invoice-label">Insurance</span><span>$3.00</span></div>
+            <div class="invoice-line" style="padding-top:10px;border-top:1px solid var(--border-light)"><span class="invoice-label">Total (USD)</span><span>$180.40</span></div>
+          </div>
+          <div class="pay-methods">
+            <div class="pay-method">💳 Visa / MC</div>
+            <div class="pay-method">🏦 Bank Transfer</div>
+            <div class="pay-method">📱 M-Pesa</div>
+            <div class="pay-method">💵 PayPal</div>
+          </div>
+        </div>
+      </div>
+      <!-- Stage 2: Escrow -->
+      <div class="payment-stage">
+        <div class="ps-header">
+          <div class="ps-step-num">2</div>
+          <div class="ps-header-title">Payment Held in Secure Escrow</div>
+        </div>
+        <div class="ps-body">
+          <div class="order-summary-card">
+            <div class="os-line"><span class="os-label">Payment Status</span><span class="os-val green">✓ Confirmed</span></div>
+            <div class="os-line"><span class="os-label">Escrow Ref</span><span class="os-val" style="font-family:var(--font-mono);font-size:11px">ESC-2026-00317</span></div>
+            <div class="os-line"><span class="os-label">Held Amount</span><span class="os-val green">$180.40</span></div>
+            <div class="os-line"><span class="os-label">Release Trigger</span><span class="os-val">Delivery Confirmed</span></div>
+            <div class="os-line"><span class="os-label">Protection</span><span class="os-val green">✓ Buyer Protected</span></div>
+          </div>
+          <div style="margin-top:14px;font-size:12px;color:var(--text-muted);line-height:1.6">
+            🔒 Supplier receives payment only after you confirm receipt and part matches spec. Full refund if disputed.
+          </div>
+        </div>
+      </div>
+      <!-- Stage 3: Fulfillment -->
+      <div class="payment-stage">
+        <div class="ps-header">
+          <div class="ps-step-num">3</div>
+          <div class="ps-header-title">Delivery Confirmed – Funds Released</div>
+        </div>
+        <div class="ps-body">
+          <div class="order-summary-card" style="border-color:rgba(0,200,83,0.3)">
+            <div class="os-line"><span class="os-label">Order ID</span><span class="os-val" style="font-family:var(--font-mono);font-size:11px">ORD-AAP-00317</span></div>
+            <div class="os-line"><span class="os-label">Delivered</span><span class="os-val green">✓ Apr 14, 2026</span></div>
+            <div class="os-line"><span class="os-label">Part Verified</span><span class="os-val green">✓ Spec Match</span></div>
+            <div class="os-line"><span class="os-label">Supplier Paid</span><span class="os-val green">✓ $148.00</span></div>
+            <div class="os-line"><span class="os-label">Receipt</span><span class="os-val" style="color:var(--blue);cursor:pointer">Download PDF</span></div>
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:13px" onclick="showToast('⭐ Thank you for your review!')">Rate this Supplier</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════ -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="#" class="nav-logo" style="margin-right:0;text-decoration:none">
+          <div class="nav-logo-icon">🔧</div>
+          <div class="nav-logo-text">Africa<span>Auto</span>part</div>
+        </a>
+        <p class="footer-brand-desc">
+          Africa Autopart is a hybrid enterprise platform for sourcing OEM, aftermarket, and second-hand automotive spare parts across Africa and Saudi Arabia — with verified suppliers, secure payments, and real-time delivery tracking.
+        </p>
+        <div class="social-links">
+          <a class="social-btn" title="LinkedIn">in</a>
+          <a class="social-btn" title="Twitter/X">𝕏</a>
+          <a class="social-btn" title="WhatsApp">💬</a>
+          <a class="social-btn" title="YouTube">▶</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <div class="footer-links">
+          <a href="#">Request a Part</a>
+          <a href="#">Compare Quotes</a>
+          <a href="#">Track Delivery</a>
+          <a href="#">Supplier Network</a>
+          <a href="#">Services</a>
+          <a href="#">Pricing</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Suppliers</div>
+        <div class="footer-links">
+          <a href="#">Become a Supplier</a>
+          <a href="#">Supplier Dashboard</a>
+          <a href="#">Community Feed</a>
+          <a href="#">RFQ Alerts</a>
+          <a href="#">Verification Process</a>
+          <a href="#">Supplier Code of Conduct</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <div class="footer-contact">
+          <div class="fc-item">📍 <span>Nairobi, Kenya · Jeddah, KSA</span></div>
+          <div class="fc-item">📧 <strong>info@africaautopart.com</strong></div>
+          <div class="fc-item">📞 <strong>+254 700 000 001</strong></div>
+          <div class="fc-item">💬 <strong>WhatsApp Business</strong></div>
+        </div>
+        <div style="margin-top:20px">
+          <div class="footer-col-title">Languages</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="tag tag-dark" style="cursor:pointer">🇬🇧 English</span>
+            <span class="tag tag-dark" style="cursor:pointer">🇸🇦 Arabic</span>
+            <span class="tag tag-dark" style="cursor:pointer">🇫🇷 Français</span>
+            <span class="tag tag-dark" style="cursor:pointer">🇸🇴 Somali</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Africa Autopart. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Service · Cookie Policy</span>
+      <span style="color:var(--green)">🔒 Platform secured · Payments insured</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODALS
+     ══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Sign In to Africa Autopart</span>
+      <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Email Address</label>
+        <input type="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="showToast('✅ Login successful! Welcome back.');closeModal('loginModal')">
+        Sign In
+      </button>
+      <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--text-muted)">
+        New here? <span style="color:var(--green);cursor:pointer">Create Account</span> · 
+        <span style="color:var(--text-dim);cursor:pointer">Forgot password?</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Action completed.</span>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════════════════════ -->
+<script>
+/* ============================================================
+   AFRICA AUTOPART – PROTOTYPE SCRIPTS
+   Developer note: Replace dummy data arrays with API calls.
+   API integration points marked with: // [API: endpoint_name]
+   ============================================================ */
+
+// ── Smooth Scroll ──────────────────────────────────────────
+function smoothScroll(e, id) {
+  if (e && e.preventDefault) e.preventDefault();
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Modal ──────────────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e, id) {
+  if (e.target.id === id) closeModal(id);
+}
+
+// ── Toast ──────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  m.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// ── Reveal on scroll ──────────────────────────────────────
+function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => io.observe(el));
+}
+
+// ── Form Preview ───────────────────────────────────────────
+function updatePreview() {
+  const make = document.getElementById('f-make').value;
+  const model = document.getElementById('f-model').value;
+  const year = document.getElementById('f-year').value;
+  const engine = document.getElementById('f-engine').value;
+  const vin = document.getElementById('f-vin').value;
+  const part = document.getElementById('f-part').value;
+  const partnum = document.getElementById('f-partnum').value;
+  const cond = document.getElementById('f-cond');
+  const urgency = document.getElementById('f-urgency').value;
+  const country = document.getElementById('f-country').value;
+
+  const vehicle = [make, model].filter(Boolean).join(' ') || '—';
+  document.getElementById('pv-vehicle').textContent = vehicle;
+  document.getElementById('pv-year').textContent = year || '—';
+  document.getElementById('pv-engine').textContent = engine || '—';
+  document.getElementById('pv-part').textContent = part || '—';
+  document.getElementById('pv-partnum').textContent = partnum || '—';
+  document.getElementById('pv-cond').textContent = cond.options[cond.selectedIndex].text;
+  document.getElementById('pv-urgency').textContent = urgency;
+  document.getElementById('pv-country').textContent = country || '—';
+
+  const hasMake = make && model;
+  // [API: /api/supplier-match-estimate] — estimate suppliers for given make/part
+  document.getElementById('pv-suppliers').textContent = hasMake ? Math.floor(Math.random() * 12 + 8) + ' suppliers' : '—';
+}
+
+function simulateUpload(el) {
+  el.innerHTML = '<span class="upload-icon">✅</span><div class="upload-text"><strong>Files attached</strong></div><div class="upload-hint">alternator_damage.jpg · oem_label.jpg (2 files, 4.2MB)</div>';
+  el.style.borderColor = 'var(--green)';
+  el.style.background = 'rgba(0,200,83,0.05)';
+}
+
+function submitRequest() {
+  // Developer note: POST to /api/rfq/submit
+  const preview = document.getElementById('request-preview');
+  const success = document.getElementById('success-state');
+  preview.style.display = 'none';
+  success.style.display = 'block';
+  showToast('✅ Request submitted! Matching suppliers across 32 countries...');
+}
+
+function resetForm() {
+  document.getElementById('request-preview').style.display = 'block';
+  document.getElementById('success-state').style.display = 'none';
+}
+
+function clearForm() {
+  ['f-make','f-model','f-year','f-engine','f-cond','f-urgency','f-country'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  ['f-vin','f-part','f-partnum','f-phone','f-email','f-desc'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  updatePreview();
+}
+
+// ── Quotation Data ─────────────────────────────────────────
+// [API: /api/quotes/:rfqId] — fetch live quotes from suppliers
+const quoteData = {
+  alternator: {
+    id: 'RFQ-#AAP-2026-08441', vehicle: 'Toyota Hilux 2021 – 2.4L Diesel', part: 'Alternator (27060-0L050)', resp: '7 quotes received',
+    quotes: [
+      { type: 'oem', strip: 'strip-oem', label: 'OEM – Original Equipment', badges: [{ cls: 'bb-quality', icon: '✅', text: 'Best Quality' }],
+        supplier: 'Toyota Arabia Trading', country: '🇸🇦 Jeddah, KSA', initials: 'TA', bg: '#003D1A', color: '#00FF88', rating: '★★★★★ 5.0', cond: 'Genuine OEM', warranty: '2 Year', delivery: '5–7 business days', avail: 'In Stock', price: 229, note: 'Incl. tax & shipping', featured: true },
+      { type: 'aftermarket', strip: 'strip-aftermarket', label: 'Aftermarket – Quality Brand', badges: [{ cls: 'bb-price', icon: '💰', text: 'Best Price' }],
+        supplier: 'SparePro Kenya Ltd', country: '🇰🇪 Nairobi, Kenya', initials: 'SP', bg: '#2D4A00', color: '#8FD600', rating: '★★★★☆ 4.7', cond: 'Aftermarket (Bosch)', warranty: '1 Year', delivery: '3–5 business days', avail: 'In Stock', price: 148, note: 'Free delivery to Nairobi', featured: false },
+      { type: 'used', strip: 'strip-used', label: 'Second-Hand / Used', badges: [{ cls: 'bb-speed', icon: '⚡', text: 'Fastest Delivery' }],
+        supplier: 'GulfParts Trading', country: '🇸🇦 Riyadh, KSA', initials: 'GP', bg: '#4A3000', color: '#FFB300', rating: '★★★★☆ 4.3', cond: 'Used – Good Condition', warranty: '3 Months', delivery: '2–3 business days', avail: 'Limited (2 units)', price: 89, note: '+$22 international freight', featured: false }
+    ]
+  },
+  brake: {
+    id: 'RFQ-#AAP-2026-08399', vehicle: 'Nissan Patrol 2019 – 4.0L V6', part: 'Brake Pads – Front Set', resp: '4 quotes received',
+    quotes: [
+      { type: 'oem', strip: 'strip-oem', label: 'OEM – Original Equipment', badges: [{ cls: 'bb-quality', icon: '✅', text: 'Best Quality' }],
+        supplier: 'Nissan Parts Gulf', country: '🇦🇪 Dubai, UAE', initials: 'NP', bg: '#003D1A', color: '#00FF88', rating: '★★★★★ 4.9', cond: 'Genuine OEM', warranty: '18 Months', delivery: '6–8 business days', avail: 'In Stock', price: 195, note: 'OEM boxed set', featured: true },
+      { type: 'aftermarket', strip: 'strip-aftermarket', label: 'Aftermarket – Quality Brand', badges: [{ cls: 'bb-price', icon: '💰', text: 'Best Price' }],
+        supplier: 'AutoZone Nigeria', country: '🇳🇬 Lagos, Nigeria', initials: 'AZ', bg: '#2D4A00', color: '#8FD600', rating: '★★★★☆ 4.5', cond: 'Aftermarket (Brembo)', warranty: '1 Year', delivery: '4–6 business days', avail: 'In Stock', price: 112, note: 'High-performance pads', featured: false },
+      { type: 'used', strip: 'strip-used', label: 'Second-Hand / Used', badges: [{ cls: 'bb-speed', icon: '⚡', text: 'Fastest Delivery' }],
+        supplier: 'KaroParts SA', country: '🇿🇦 Johannesburg, RSA', initials: 'KP', bg: '#4A3000', color: '#FFB300', rating: '★★★★☆ 4.1', cond: 'Used – Inspected', warranty: 'None', delivery: '1–2 business days', avail: 'In Stock (5 sets)', price: 58, note: 'Inspected and certified', featured: false }
+    ]
+  },
+  filter: {
+    id: 'RFQ-#AAP-2026-08282', vehicle: 'Toyota Corolla 2020 – 2.0L Petrol', part: 'Oil Filter Service Kit', resp: '9 quotes received',
+    quotes: [
+      { type: 'oem', strip: 'strip-oem', label: 'OEM – Original Equipment', badges: [{ cls: 'bb-quality', icon: '✅', text: 'Best Quality' }],
+        supplier: 'Toyota Kenya Genuine', country: '🇰🇪 Mombasa, Kenya', initials: 'TK', bg: '#003D1A', color: '#00FF88', rating: '★★★★★ 5.0', cond: 'Genuine OEM', warranty: 'Until next service', delivery: '2–3 business days', avail: 'In Stock', price: 45, note: 'Full service kit', featured: true },
+      { type: 'aftermarket', strip: 'strip-aftermarket', label: 'Aftermarket – Quality Brand', badges: [{ cls: 'bb-price', icon: '💰', text: 'Best Price' }],
+        supplier: 'FilterPro Ethiopia', country: '🇪🇹 Addis Ababa, ETH', initials: 'FP', bg: '#2D4A00', color: '#8FD600', rating: '★★★★☆ 4.6', cond: 'Aftermarket (Mann)', warranty: 'Until next service', delivery: '3–4 business days', avail: 'Bulk Stock', price: 28, note: 'Mann HU 7010Z equivalent', featured: false },
+      { type: 'used', strip: 'strip-used', label: 'Second-Hand / Used', badges: [{ cls: 'bb-speed', icon: '⚡', text: 'Not Applicable' }],
+        supplier: 'Budget Parts KE', country: '🇰🇪 Nairobi, Kenya', initials: 'BP', bg: '#4A3000', color: '#FFB300', rating: '★★★☆☆ 3.8', cond: 'New Unbranded', warranty: 'None', delivery: '1 business day', avail: 'In Stock (20+)', price: 18, note: 'Budget option, unverified brand', featured: false }
+    ]
+  }
+};
+
+let currentQuoteSet = 'alternator';
+
+function renderQuotes(key) {
+  const data = quoteData[key];
+  document.getElementById('q-id').textContent = data.id;
+  document.getElementById('q-vehicle').textContent = data.vehicle;
+  document.getElementById('q-part').textContent = data.part;
+  document.getElementById('q-resp').textContent = data.resp;
+
+  const grid = document.getElementById('quotesGrid');
+  grid.innerHTML = data.quotes.map(q => `
+    <div class="quote-card ${q.featured ? 'featured' : ''}">
+      <div class="quote-badge-strip ${q.strip}">${q.label}</div>
+      <div class="quote-body">
+        ${q.badges.map(b => `<span class="best-badge ${b.cls}">${b.icon} ${b.text}</span>`).join('')}
+        <div class="quote-supplier">
+          <div class="supplier-avatar" style="background:${q.bg};color:${q.color}">${q.initials}</div>
+          <div>
+            <div class="supplier-name">${q.supplier}</div>
+            <div class="supplier-country">${q.country}</div>
+            <div class="stars">${q.rating}</div>
+          </div>
+        </div>
+        <div class="quote-price"><span class="currency">USD </span>${q.price}</div>
+        <div class="quote-price-note">${q.note}</div>
+        <div class="quote-details">
+          <div class="qd-row"><span class="qd-label">Condition</span><span class="qd-val">${q.cond}</span></div>
+          <div class="qd-row"><span class="qd-label">Warranty</span><span class="qd-val green">${q.warranty}</span></div>
+          <div class="qd-row"><span class="qd-label">Delivery</span><span class="qd-val">${q.delivery}</span></div>
+          <div class="qd-row"><span class="qd-label">Availability</span><span class="qd-val green">${q.avail}</span></div>
+        </div>
+      </div>
+      <div class="quote-footer">
+        <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="selectQuote('${q.supplier}','${q.price}')">Select Offer</button>
+        <button class="btn btn-ghost btn-sm" onclick="showToast('💬 Message sent to ${q.supplier}')">💬</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function switchQuoteTab(btn, key) {
+  document.querySelectorAll('.quote-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentQuoteSet = key;
+  renderQuotes(key);
+}
+
+function selectQuote(supplier, price) {
+  showToast(`✅ Selected: ${supplier} · $${price} — Proceed to payment in your dashboard`);
+}
+
+// ── Tracking Timeline ──────────────────────────────────────
+// [API: /api/orders/:orderId/tracking] — real tracking from logistics provider
+const trackingSteps = [
+  { icon: '✅', title: 'Request Confirmed', time: 'Apr 06, 10:24 AM', detail: 'RFQ matched and quote selected', done: true, active: false },
+  { icon: '✅', title: 'Supplier Assigned', time: 'Apr 06, 11:45 AM', detail: 'GulfParts Trading – Jeddah confirmed order', done: true, active: false },
+  { icon: '✅', title: 'Picked Up by Courier', time: 'Apr 07, 02:10 PM', detail: 'Aramex collected from Jeddah Industrial City', done: true, active: false },
+  { icon: '✅', title: 'In Transit', time: 'Apr 07, 06:30 PM', detail: 'En route to Djibouti freight hub', done: true, active: false },
+  { icon: '🟡', title: 'At Border / Customs', time: 'Apr 08, 09:15 AM', detail: 'Djibouti customs clearance — platform managing documentation', done: false, active: true },
+  { icon: '⭕', title: 'Out for Delivery', time: 'Est. Apr 13', detail: 'Final-mile delivery – Nairobi Kenya', done: false, active: false },
+  { icon: '⭕', title: 'Delivered', time: 'Est. Apr 14', detail: 'Confirmed receipt & payment released to supplier', done: false, active: false },
+];
+
+function renderTimeline() {
+  const tl = document.getElementById('trackingTimeline');
+  tl.innerHTML = trackingSteps.map(s => `
+    <div class="tl-item ${s.done ? 'done' : ''} ${s.active ? 'active' : ''} ${!s.done && !s.active ? 'pending' : ''}">
+      <div class="tl-dot">${s.done ? '✓' : s.active ? '●' : '○'}</div>
+      <div class="tl-content">
+        <div class="tl-title">${s.title}</div>
+        <div class="tl-time">${s.time}</div>
+        <div class="tl-detail">${s.detail}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+let trackingStep = 4; // 0-indexed, currently at customs
+function simulateTracking() {
+  if (trackingStep < trackingSteps.length - 1) {
+    trackingSteps[trackingStep].done = true;
+    trackingSteps[trackingStep].active = false;
+    trackingStep++;
+    trackingSteps[trackingStep].active = true;
+    renderTimeline();
+    const pct = Math.round(((trackingStep + 1) / trackingSteps.length) * 100);
+    document.getElementById('trackPct').textContent = pct + '%';
+    document.getElementById('trackFill').style.width = pct + '%';
+    showToast('📦 Status updated: ' + trackingSteps[trackingStep].title);
+  } else {
+    showToast('✅ Order fully delivered!');
+  }
+}
+
+// ── Supplier Feed ──────────────────────────────────────────
+// [API: /api/supplier-feed] — paginated posts from supplier community
+const feedPosts = [
+  { type: 'stock', avatar: 'KP', bg: '#003D1A', color: '#00FF88', name: 'KE Parts Hub', title: 'Verified Supplier · Nairobi, Kenya', badge: 'tag-green', badgeText: '📦 Stock Alert', time: '18 min ago',
+    content: '🚨 STOCK AVAILABLE: Genuine Toyota Hilux brake pads (front & rear sets) just arrived at our Nairobi warehouse. OEM spec, factory sealed boxes. Limited to 30 sets. DM for pricing and bulk discounts.',
+    tags: ['#ToyotaHilux','#BrakePads','#Nairobi','#OEMParts'], comments: 12, likes: 34, messages: 8 },
+  { type: 'oem', avatar: 'GP', bg: '#2D4A00', color: '#8FD600', name: 'GulfParts Trading', title: 'Verified OEM Distributor · Jeddah, KSA', badge: 'tag-amber', badgeText: '✅ OEM Arrival', time: '45 min ago',
+    content: 'New shipment landed: 200+ units of Bosch alternators covering Toyota, Nissan, and Mitsubishi applications. Ready to ship across East Africa within 48 hours. Contact us for trade pricing.',
+    tags: ['#Bosch','#Alternators','#Jeddah','#OEMStock'], comments: 9, likes: 51, messages: 14,
+    rfq: { title: 'RFQ Response Thread: Alternator – Toyota Hilux', replies: [
+      { name: 'SparePro KE', text: 'Interested! Do you have 27060-0L050 in stock?' },
+      { name: 'GulfParts', text: 'Yes – 15 units available. USD 148 aftermarket, 229 OEM. DM for PO.' },
+      { name: 'LogiTrack EA', text: 'Can arrange Aramex pickup same day.' }
+    ]}},
+  { type: 'rfq', avatar: 'AT', bg: '#1A2A00', color: '#A8E060', name: 'AutoTrack Ethiopia', title: 'Supplier Member · Addis Ababa', badge: 'tag-blue', badgeText: '🔔 RFQ Request', time: '1 hr ago',
+    content: '🔍 LOOKING FOR SUPPLIER: Toyota Land Cruiser 200 Series steering rack (power-assisted) — right-hand drive. Need 3–5 units. Must include warranty. Preferred: OEM or reputable aftermarket. Delivery to Addis Ababa.',
+    tags: ['#LandCruiser200','#SteeringRack','#WantedParts'], comments: 7, likes: 18, messages: 22 },
+  { type: 'stock', avatar: 'NS', bg: '#003D40', color: '#00E5FF', name: 'NileSpares Cairo', title: 'Verified Supplier · Cairo, Egypt', badge: 'tag-green', badgeText: '📦 Stock Alert', time: '2 hr ago',
+    content: 'Engine mount stock clearance sale! Mitsubishi Pajero, L200, and Outlander models. New OEM units, some ex-display. Prices 20–30% below market. Serious buyers only. Can ship to KE, SA, NG, DJI regions.',
+    tags: ['#Mitsubishi','#EngineMounts','#Cairo','#Clearance'], comments: 4, likes: 29, messages: 11 },
+  { type: 'discussion', avatar: 'WA', bg: '#3D2A00', color: '#FFC040', name: 'WestAfrica Parts', title: 'Supplier · Lagos, Nigeria', badge: 'tag-dark', badgeText: '💬 Discussion', time: '3 hr ago',
+    content: 'What is your experience with Chinese aftermarket alternators for Nissan Navara? We are seeing more demand but mixed quality feedback. Would appreciate insights from East and Southern Africa colleagues.',
+    tags: ['#Aftermarket','#Nissan','#Navara','#QualityControl'], comments: 31, likes: 67, messages: 5 }
+];
+
+let currentFilter = 'all';
+function filterFeed(btn, filter) {
+  document.querySelectorAll('.feed-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = filter;
+  renderFeed(filter);
+}
+
+function renderFeed(filter) {
+  const posts = filter === 'all' ? feedPosts : feedPosts.filter(p => p.type === filter);
+  const container = document.getElementById('feedPosts');
+  container.innerHTML = posts.map(p => `
+    <div class="post-card">
+      <div class="post-header">
+        <div class="post-avatar" style="background:${p.bg};color:${p.color}">${p.avatar}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="post-meta-name">${p.name}</div>
+            <span class="tag ${p.badge}" style="font-size:9px">${p.badgeText}</span>
+          </div>
+          <div class="post-meta-sub">${p.title}<span class="sep">·</span>${p.time}</div>
+        </div>
+      </div>
+      <div class="post-content">${p.content}</div>
+      ${p.rfq ? `<div class="rfq-thread">
+        <div class="rfq-thread-title">🔗 ${p.rfq.title}</div>
+        ${p.rfq.replies.map(r => `<div class="rfq-reply"><span><span class="rfq-reply-name">${r.name}</span>: ${r.text}</span></div>`).join('')}
+      </div>` : ''}
+      <div class="post-tags">${p.tags.map(t => `<span class="tag tag-dark" style="font-size:10px;cursor:pointer">${t}</span>`).join('')}</div>
+      <div class="post-actions">
+        <div class="post-action-btn" onclick="showToast('❤️ Liked!')">❤️ ${p.likes}</div>
+        <div class="post-action-btn">💬 ${p.comments} Comments</div>
+        <div class="post-action-btn" onclick="showToast('💬 Opening DM with ${p.name}...')">✉️ Message</div>
+        <div class="post-action-btn" onclick="showToast('🔔 Following post...')">🔔 Follow</div>
+        <div class="post-action-btn" style="margin-left:auto" onclick="showToast('🔗 Link copied!')">Share</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+const supplierGroups = [
+  { icon: '🚗', name: 'Toyota Specialists', count: 89 },
+  { icon: '⚡', name: 'Electricals & Electronics', count: 64 },
+  { icon: '🛞', name: 'Suspension & Brakes', count: 112 },
+  { icon: '🔧', name: 'Engine Parts KSA', count: 47 },
+  { icon: '🌍', name: 'East Africa Suppliers', count: 183 },
+  { icon: '📦', name: 'OEM Importers', count: 38 },
+];
+
+function renderGroups() {
+  document.getElementById('supplierGroups').innerHTML = supplierGroups.map(g => `
+    <div class="sg-item" onclick="showToast('👥 Opening group: ${g.name}')">
+      <span class="sg-icon">${g.icon}</span>
+      <span class="sg-name">${g.name}</span>
+      <span class="sg-count">${g.count}</span>
+    </div>
+  `).join('');
+}
+
+const topSuppliers = [
+  { initials: 'GP', bg: '#003D1A', color: '#00FF88', name: 'GulfParts Trading', country: 'Jeddah, KSA', rating: '★★★★★ 5.0' },
+  { initials: 'SP', bg: '#1A3A00', color: '#8FD600', name: 'SparePro Kenya', country: 'Nairobi, KE', rating: '★★★★☆ 4.7' },
+  { initials: 'KP', bg: '#3A1A00', color: '#FFC040', name: 'KaroParts SA', country: 'Johannesburg, ZA', rating: '★★★★☆ 4.6' },
+  { initials: 'NS', bg: '#003D40', color: '#00E5FF', name: 'NileSpares Cairo', country: 'Cairo, EG', rating: '★★★★☆ 4.5' },
+  { initials: 'AT', bg: '#1A001A', color: '#E040FB', name: 'AutoTrack ETH', country: 'Addis Ababa, ET', rating: '★★★★☆ 4.3' },
+];
+
+function renderTopSuppliers() {
+  document.getElementById('topSuppliers').innerHTML = topSuppliers.map(s => `
+    <div class="ts-item">
+      <div class="ts-avatar" style="background:${s.bg};color:${s.color}">${s.initials}</div>
+      <div>
+        <div class="ts-name">${s.name}</div>
+        <div class="ts-country">${s.country}</div>
+      </div>
+      <div class="ts-rating">${s.rating.split(' ')[0]}</div>
+    </div>
+  `).join('');
+}
+
+// ── Services Grid ──────────────────────────────────────────
+const services = [
+  { icon: '🏭', title: 'OEM Parts Sourcing', desc: 'Direct from manufacturer-authorized distributors. Guaranteed genuine, warranty-backed, spec-matched to your vehicle.' },
+  { icon: '⚙️', title: 'Aftermarket Sourcing', desc: 'Quality brands like Bosch, Mann, Brembo, and TRW. Priced competitively with strong supplier vetting.' },
+  { icon: '♻️', title: 'Second-Hand Parts', desc: 'Inspected, graded, and certified used parts for cost-conscious buyers. Each piece assessed by platform-approved inspectors.' },
+  { icon: '🌍', title: 'Cross-Border Sourcing', desc: 'Seamlessly source from KSA, UAE, and within Africa with customs handling, freight coordination, and import documentation managed by Africa Autopart.' },
+  { icon: '🤝', title: 'Supplier Matching', desc: 'AI-assisted matching of your RFQ to the most relevant verified suppliers. Reduces response time from days to hours.' },
+  { icon: '🔒', title: 'Secure Platform Payment', desc: 'Escrow-based payment system. Funds released to supplier only after confirmed delivery. Dispute resolution built in.' },
+  { icon: '📦', title: 'Tracked Delivery', desc: 'Real-time tracking via integrated logistics partners — Aramex, DHL, and regional couriers. Live ETA updates via SMS and platform.' },
+  { icon: '📊', title: 'Sourcing Analytics', desc: 'Procurement reports, spend analysis, and supplier performance tracking. Useful for fleets, workshops, and SMEs.' },
+];
+
+function renderServices() {
+  document.getElementById('servicesGrid').innerHTML = services.map(s => `
+    <div class="service-card">
+      <div class="service-icon">${s.icon}</div>
+      <div class="service-title">${s.title}</div>
+      <div class="service-desc">${s.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ── Dashboard Tabs ─────────────────────────────────────────
+function switchDashTab(btn, panelId) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dash-' + panelId).classList.add('active');
+}
+
+// ── Testimonials ───────────────────────────────────────────
+const testimonials = [
+  { stars: '★★★★★', quote: 'We sourced engine mounts for 14 trucks within 36 hours. Africa Autopart matched us with a Jeddah supplier we never knew existed. Delivery to Nairobi in 5 days flat. Exceptional.', name: 'Emmanuel K.', role: 'Fleet Manager – Tele-Logistics Kenya', initials: 'EK', bg: '#003D1A', color: '#00FF88' },
+  { stars: '★★★★★', quote: 'As a supplier in Jeddah, the platform connected me to East African buyers overnight. I went from 3 regional clients to serving buyers in 9 countries through one dashboard. Life-changing.', name: 'Khalid Al-Rashidi', role: 'Director – GulfParts Trading, KSA', initials: 'KR', bg: '#2D3400', color: '#C8F040' },
+  { stars: '★★★★☆', quote: 'The comparison tool is what sold me. I could see OEM vs aftermarket side-by-side with real prices and real delivery times. I chose aftermarket and saved $800 on a fleet job. Transparent and fast.', name: 'Fatima Duale', role: 'Procurement Lead – East Africa Automotive Group', initials: 'FD', bg: '#3D1A00', color: '#FFC040' },
+];
+
+function renderTestimonials() {
+  document.getElementById('testimonialsGrid').innerHTML = testimonials.map(t => `
+    <div class="testimonial-card">
+      <div class="testimonial-stars">${t.stars}</div>
+      <div class="testimonial-quote">"${t.quote}"</div>
+      <div class="testimonial-author">
+        <div class="ta-avatar" style="background:${t.bg};color:${t.color}">${t.initials}</div>
+        <div><div class="ta-name">${t.name}</div><div class="ta-role">${t.role}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Benefits List ──────────────────────────────────────────
+const benefits = [
+  { icon: '🌍', title: 'Wider Market Reach', desc: 'Access buyers from 32 African countries and Saudi Arabia through a single verified supplier profile. No cold outreach needed.' },
+  { icon: '🔔', title: 'Direct RFQ Alerts', desc: 'Get notified the moment a buyer submits a request matching your inventory. Respond faster, win more orders.' },
+  { icon: '⚡', title: 'Faster Deal Closure', desc: 'Streamlined quote-to-payment workflow. Accept an order, ship it, get paid — all inside the platform in days, not weeks.' },
+  { icon: '📊', title: 'Supplier Analytics', desc: 'Track your profile views, quote win rate, buyer ratings, and revenue — all in a purpose-built supplier dashboard.' },
+  { icon: '💬', title: 'Community & Collaboration', desc: 'Join the supplier network feed to post stock, collaborate on RFQs, share market intelligence, and build your reputation.' },
+  { icon: '🔒', title: 'Guaranteed Payment', desc: 'Escrow holds buyer payment before you even dispatch. You ship with confidence — funds are guaranteed on delivery.' },
+];
+
+function renderBenefits() {
+  document.getElementById('benefitsList').innerHTML = benefits.map(b => `
+    <div class="benefit-item">
+      <div class="benefit-icon">${b.icon}</div>
+      <div>
+        <div class="benefit-title">${b.title}</div>
+        <div class="benefit-desc">${b.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Navbar scroll effect ───────────────────────────────────
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 60) {
+    nav.style.background = 'rgba(7,17,10,0.98)';
+    nav.style.borderBottomColor = 'rgba(0,200,83,0.2)';
+  } else {
+    nav.style.background = 'rgba(7,17,10,0.92)';
+    nav.style.borderBottomColor = 'rgba(0,200,83,0.15)';
+  }
+});
+
+// ── KPI counter animation ──────────────────────────────────
+function animateCounters() {
+  const items = document.querySelectorAll('.kpi-strip-num');
+  items.forEach(el => {
+    const text = el.innerHTML;
+    const accent = el.querySelector('.accent');
+    const suffix = accent ? accent.outerHTML : '';
+    const numStr = text.replace(/<[^>]+>/g, '').trim();
+    let target = parseFloat(numStr.replace(/[^0-9.]/g, ''));
+    if (isNaN(target)) return;
+    let start = 0;
+    const dur = 1500;
+    const step = 16;
+    const inc = target / (dur / step);
+    const prefix = numStr.startsWith('<') ? '<' : '';
+    const timer = setInterval(() => {
+      start += inc;
+      if (start >= target) { start = target; clearInterval(timer); }
+      const display = Number.isInteger(target) ? Math.round(start) : start.toFixed(1);
+      el.innerHTML = prefix + display + suffix;
+    }, step);
+  });
+}
+
+const kpiObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) { animateCounters(); kpiObserver.disconnect(); }
+}, { threshold: 0.3 });
+
+// ── Init ───────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  renderQuotes('alternator');
+  renderTimeline();
+  renderFeed('all');
+  renderGroups();
+  renderTopSuppliers();
+  renderServices();
+  renderTestimonials();
+  renderBenefits();
+  initReveal();
+  const kpiEl = document.querySelector('.kpi-strip');
+  if (kpiEl) kpiObserver.observe(kpiEl);
+});
+</script>
+</body>
+</html>
