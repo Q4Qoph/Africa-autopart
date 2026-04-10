@@ -1,10 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
+import { UserRole } from '@/types/user'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
@@ -73,6 +75,14 @@ export default function Navbar() {
               </a>
             ),
           )}
+          {auth?.role === UserRole.Admin && (
+            <Link
+              to="/admin"
+              className="text-sm font-semibold text-[#00C853] hover:text-[#39FF88] transition-colors"
+            >
+              Admin Panel
+            </Link>
+          )}
         </nav>
 
         {/* Auth actions */}
@@ -94,6 +104,16 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-[#111C14] border-[rgba(0,200,83,0.2)] text-white">
+                  {auth?.role === UserRole.Admin && (
+                    <>
+                      <DropdownMenuItem>
+                        <Link to="/admin" className="w-full text-[#00C853] font-semibold">
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-[rgba(0,200,83,0.12)]" />
+                    </>
+                  )}
                   <DropdownMenuItem>
                     <Link to="/dashboard" className="w-full">Dashboard</Link>
                   </DropdownMenuItem>
