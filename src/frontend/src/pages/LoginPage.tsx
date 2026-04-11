@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/context/AuthContext'
 import { userApi } from '@/api/userApi'
+import { UserRole } from '@/types/user'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -38,7 +39,9 @@ export default function LoginPage() {
     try {
       const { data } = await userApi.login(values)
       login(data)
-      navigate('/dashboard')
+      if (data.role === UserRole.Admin) navigate('/admin')
+      else if (data.role === UserRole.Supplier) navigate('/supplier/dashboard')
+      else navigate('/dashboard')
     } catch {
       setApiError('Invalid email or password.')
     }
@@ -136,6 +139,9 @@ export default function LoginPage() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="text-[#E8F0E9] text-sm">Password</Label>
+                <Link to="/forgot-password" className="text-xs text-[#7A9A80] hover:text-[#00C853] transition-colors">
+                  Forgot password?
+                </Link>
               </div>
               <Input
                 id="password"

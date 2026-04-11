@@ -44,3 +44,13 @@ export interface LoginResponseDTO {
   userId: number
   token: string
 }
+
+export interface ForgotPasswordDTO {
+  email: string
+}
+
+export interface ResetPasswordDTO {
+  token: string
+  password: string
+  confirmPassword: string
+}

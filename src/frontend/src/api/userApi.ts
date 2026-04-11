@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { AddUserDTO, LoginUserDTO, LoginResponseDTO, UpdateUserDTO, User } from '@/types/user'
+import type { AddUserDTO, LoginUserDTO, LoginResponseDTO, UpdateUserDTO, User, ForgotPasswordDTO, ResetPasswordDTO } from '@/types/user'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -31,4 +31,10 @@ export const userApi = {
 
   approveUser: (id: number, token: string) =>
     api.put<boolean>(`/api/User/user/approveUser/${id}`, {}, authHeader(token)),
+
+  forgotPassword: (dto: ForgotPasswordDTO) =>
+    api.post<boolean>('/api/User/forgotPassword', dto),
+
+  resetPassword: (dto: ResetPasswordDTO) =>
+    api.post<boolean>('/api/User/user/resetPassword', dto),
 }

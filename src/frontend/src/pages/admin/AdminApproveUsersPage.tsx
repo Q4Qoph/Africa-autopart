@@ -183,7 +183,7 @@ export default function AdminApproveUsersPage() {
               {detail.role === UserRole.Supplier && !detail.isApproved && (
                 <div className="border-t border-[rgba(0,200,83,0.1)] pt-5">
                   <p className="text-[#7A9A80] text-sm mb-3">
-                    This supplier account is pending approval. Approving will allow them to list parts and receive orders.
+                    Approving this supplier will activate their account and send them an email with a link to set their password.
                   </p>
                   <Button
                     onClick={handleApprove}

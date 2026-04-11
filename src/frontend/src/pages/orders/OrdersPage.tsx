@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { Order } from '@/types/order'
@@ -30,7 +31,7 @@ export default function OrdersPage() {
     if (!auth) return
     orderApi
       .getAll(auth.token)
-      .then(({ data }) => setOrders(data))
+      .then(({ data }) => setOrders(data.filter((o) => o.partRequest?.userId === auth.userId)))
       .catch(() => setError('Failed to load orders.'))
       .finally(() => setLoading(false))
   }, [auth])
@@ -61,7 +62,7 @@ export default function OrdersPage() {
               <CardContent className="py-16 text-center">
                 <p className="text-[#7A9A80]">No orders yet.</p>
                 <p className="text-[#3D5942] text-xs mt-1">
-                  Orders will appear here once a supplier fulfils your request.
+                  Orders will appear here once our team matches your request to a supplier.
                 </p>
               </CardContent>
             </Card>
@@ -70,19 +71,20 @@ export default function OrdersPage() {
           {!loading && orders.length > 0 && (
             <div className="grid gap-3">
               {/* Table header */}
-              <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#3D5942]">
+              <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr_auto] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#3D5942]">
                 <span>#</span>
                 <span>Part</span>
                 <span>Supplier</span>
                 <span>Price</span>
                 <span>Tracking</span>
                 <span>Status</span>
+                <span>Request</span>
               </div>
 
               {orders.map((order) => (
                 <div
                   key={order.id}
-                  className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 items-center"
+                  className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr_auto] gap-4 items-center"
                 >
                   <span className="text-[#3D5942] text-xs font-mono">{order.id}</span>
 
@@ -107,6 +109,13 @@ export default function OrdersPage() {
                   <Badge className={cn('text-[10px] w-fit', statusBadge(order.status))}>
                     {statusLabel(order.status)}
                   </Badge>
+
+                  <Link
+                    to={`/requests/${order.partRequestId}`}
+                    className="text-xs text-[#7A9A80] hover:text-[#00C853] font-mono transition-colors whitespace-nowrap"
+                  >
+                    Req #{order.partRequestId}
+                  </Link>
                 </div>
               ))}
             </div>

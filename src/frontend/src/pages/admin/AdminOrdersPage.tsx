@@ -5,6 +5,7 @@ import type { Order } from '@/types/order'
 import { OrderStatus } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 const statusLabel: Record<number, string> = {
   [OrderStatus.Pending]: 'Pending',
@@ -18,10 +19,19 @@ const statusClass: Record<number, string> = {
   [OrderStatus.Delivered]: 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
 }
 
+interface EditState {
+  status: number
+  trackingNumber: string
+  saving: boolean
+  error: string
+}
+
 export default function AdminOrdersPage() {
   const { auth } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editState, setEditState] = useState<EditState>({ status: 0, trackingNumber: '', saving: false, error: '' })
 
   useEffect(() => {
     if (!auth) return
@@ -32,8 +42,46 @@ export default function AdminOrdersPage() {
       .finally(() => setLoading(false))
   }, [auth])
 
-  async function handleDelete(id: number, tracking: string) {
-    if (!window.confirm(`Delete order "${tracking}"? This cannot be undone.`)) return
+  function startEdit(order: Order) {
+    setEditingId(order.id)
+    setEditState({ status: order.status, trackingNumber: order.trackingNumber ?? '', saving: false, error: '' })
+  }
+
+  function cancelEdit() {
+    setEditingId(null)
+  }
+
+  async function saveEdit(order: Order) {
+    if (!auth) return
+    setEditState((s) => ({ ...s, saving: true, error: '' }))
+    try {
+      await orderApi.update(
+        order.id,
+        {
+          supplierId: order.supplierId,
+          partId: order.partId,
+          partRequestId: order.partRequestId,
+          price: order.price,
+          status: editState.status,
+          trackingNumber: editState.trackingNumber,
+        },
+        auth.token,
+      )
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === order.id
+            ? { ...o, status: editState.status as OrderStatus, trackingNumber: editState.trackingNumber }
+            : o,
+        ),
+      )
+      setEditingId(null)
+    } catch {
+      setEditState((s) => ({ ...s, saving: false, error: 'Failed to save. Please try again.' }))
+    }
+  }
+
+  async function handleDelete(id: number) {
+    if (!window.confirm('Delete this order? This cannot be undone.')) return
     if (!auth) return
     try {
       await orderApi.delete(id, auth.token)
@@ -61,48 +109,113 @@ export default function AdminOrdersPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#0D1810]">
-                <Th>Tracking #</Th>
+                <Th>#</Th>
                 <Th>Part</Th>
                 <Th>Supplier</Th>
+                <Th>Request</Th>
+                <Th>Price</Th>
+                <Th>Tracking</Th>
                 <Th>Status</Th>
-                <Th>Price (KES)</Th>
                 <Th>Actions</Th>
               </tr>
             </thead>
             <tbody>
               {orders.map((o) => (
-                <tr
-                  key={o.id}
-                  className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
-                >
-                  <Td className="font-mono text-[#00C853] text-xs">{o.trackingNumber}</Td>
-                  <Td className="text-white font-medium">
-                    {o.part?.partName ?? `Part #${o.partId}`}
-                  </Td>
-                  <Td className="text-[#7A9A80]">
-                    {o.supplier?.businessName ?? `Supplier #${o.supplierId}`}
-                  </Td>
-                  <Td>
-                    <Badge className={`text-[10px] border ${statusClass[o.status] ?? ''}`}>
-                      {statusLabel[o.status] ?? o.status}
-                    </Badge>
-                  </Td>
-                  <Td className="text-white">{o.price.toLocaleString()}</Td>
-                  <Td>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDelete(o.id, o.trackingNumber)}
-                      className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
-                    >
-                      Delete
-                    </Button>
-                  </Td>
-                </tr>
+                <>
+                  <tr
+                    key={o.id}
+                    className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                  >
+                    <Td className="text-[#7A9A80] font-mono text-xs">#{o.id}</Td>
+                    <Td className="text-white font-medium">
+                      {o.part?.partName ?? `Part #${o.partId}`}
+                    </Td>
+                    <Td className="text-[#7A9A80]">
+                      {o.supplier?.businessName ?? `Supplier #${o.supplierId}`}
+                    </Td>
+                    <Td className="text-[#7A9A80] font-mono text-xs">Req #{o.partRequestId}</Td>
+                    <Td className="text-white">${o.price.toLocaleString()}</Td>
+                    <Td className="font-mono text-xs text-[#7A9A80]">
+                      {o.trackingNumber || <span className="text-[#3D5942]">—</span>}
+                    </Td>
+                    <Td>
+                      <Badge className={`text-[10px] border ${statusClass[o.status] ?? ''}`}>
+                        {statusLabel[o.status] ?? o.status}
+                      </Badge>
+                    </Td>
+                    <Td>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => editingId === o.id ? cancelEdit() : startEdit(o)}
+                          className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
+                        >
+                          {editingId === o.id ? 'Close' : 'Update'}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDelete(o.id)}
+                          className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </Td>
+                  </tr>
+
+                  {/* Inline edit row */}
+                  {editingId === o.id && (
+                    <tr key={`edit-${o.id}`}>
+                      <td colSpan={8} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
+                        <div className="flex items-end gap-4 flex-wrap">
+                          <div className="space-y-1">
+                            <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Status</p>
+                            <select
+                              value={editState.status}
+                              onChange={(e) => setEditState((s) => ({ ...s, status: Number(e.target.value) }))}
+                              className="h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.1)] text-white focus:outline-none focus:border-[#00C853] text-sm"
+                            >
+                              <option value={OrderStatus.Pending}>Pending</option>
+                              <option value={OrderStatus.Shipped}>Shipped</option>
+                              <option value={OrderStatus.Delivered}>Delivered</option>
+                            </select>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Tracking Number</p>
+                            <Input
+                              value={editState.trackingNumber}
+                              onChange={(e) => setEditState((s) => ({ ...s, trackingNumber: e.target.value }))}
+                              placeholder="e.g. TRK-00123"
+                              className="bg-[#111C14] border-[rgba(255,255,255,0.1)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 w-48"
+                            />
+                          </div>
+                          <Button
+                            onClick={() => saveEdit(o)}
+                            disabled={editState.saving}
+                            className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-5 text-sm font-semibold"
+                          >
+                            {editState.saving ? 'Saving…' : 'Save'}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={cancelEdit}
+                            className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                        {editState.error && (
+                          <p className="text-red-400 text-xs mt-2">{editState.error}</p>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </>
               ))}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-[#7A9A80] text-sm">
+                  <td colSpan={8} className="py-8 text-center text-[#7A9A80] text-sm">
                     No orders found.
                   </td>
                 </tr>

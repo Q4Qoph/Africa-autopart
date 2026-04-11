@@ -80,9 +80,10 @@ export default function RequestsPage() {
           {!loading && requests.length > 0 && (
             <div className="grid gap-3">
               {requests.map((req) => (
-                <div
+                <Link
                   key={req.id}
-                  className="bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between"
+                  to={`/requests/${req.id}`}
+                  className="bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between hover:border-[rgba(0,200,83,0.3)] transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-white font-semibold truncate">{req.partName || '—'}</p>
@@ -91,13 +92,18 @@ export default function RequestsPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3 flex-wrap">
+                    {req.orders && req.orders.length > 0 && (
+                      <span className="text-[10px] font-mono px-2 py-1 rounded-md bg-blue-400/10 text-blue-400">
+                        {req.orders.length} order{req.orders.length > 1 ? 's' : ''}
+                      </span>
+                    )}
                     <span className={cn(
                       'text-[10px] font-mono uppercase tracking-wider px-2 py-1 rounded-md',
-                      req.urgency === 2 // Urgent
+                      req.urgency === 2
                         ? 'bg-red-400/10 text-red-400'
-                        : req.urgency === 1 // Express
+                        : req.urgency === 1
                         ? 'bg-amber-400/10 text-amber-400'
-                        : 'bg-[rgba(0,200,83,0.1)] text-[#00C853]', // Standard
+                        : 'bg-[rgba(0,200,83,0.1)] text-[#00C853]',
                     )}>
                       {urgencyLabel(req.urgency)}
                     </span>
@@ -111,11 +117,9 @@ export default function RequestsPage() {
                     >
                       {req.isSorted ? 'Sorted' : 'Pending'}
                     </Badge>
-                    <span className="text-[#3D5942] text-xs font-mono">
-                      #{req.id}
-                    </span>
+                    <span className="text-[#3D5942] text-xs font-mono">#{req.id}</span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

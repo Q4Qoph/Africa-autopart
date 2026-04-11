@@ -24,6 +24,12 @@ const authLinks = [
   { label: 'Suppliers', href: '/suppliers' },
 ]
 
+const supplierLinks = [
+  { label: 'Dashboard', href: '/supplier/dashboard' },
+  { label: 'My Parts', href: '/supplier/dashboard' },
+  { label: 'My Orders', href: '/supplier/dashboard' },
+]
+
 const btnBase =
   'inline-flex items-center justify-center rounded-lg text-sm font-semibold px-4 py-2 transition-all'
 
@@ -36,7 +42,11 @@ export default function Navbar() {
     navigate('/')
   }
 
-  const links = auth ? authLinks : publicLinks
+  const links = auth
+    ? auth.role === UserRole.Supplier
+      ? supplierLinks
+      : authLinks
+    : publicLinks
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 h-[68px] bg-[rgba(7,17,10,0.92)] backdrop-blur-md border-b border-[rgba(0,200,83,0.15)] flex items-center">
@@ -89,12 +99,14 @@ export default function Navbar() {
         <div className="ml-auto flex items-center gap-2">
           {auth ? (
             <>
-              <Link
-                to="/requests/new"
-                className={cn(btnBase, 'bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] hidden sm:inline-flex')}
-              >
-                + Request Part
-              </Link>
+              {auth.role !== UserRole.Supplier && (
+                <Link
+                  to="/requests/new"
+                  className={cn(btnBase, 'bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] hidden sm:inline-flex')}
+                >
+                  + Request Part
+                </Link>
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none ml-1">
                   <Avatar className="w-8 h-8">
@@ -114,15 +126,31 @@ export default function Navbar() {
                       <DropdownMenuSeparator className="bg-[rgba(0,200,83,0.12)]" />
                     </>
                   )}
-                  <DropdownMenuItem>
-                    <Link to="/dashboard" className="w-full">Dashboard</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link to="/requests" className="w-full">My Requests</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link to="/orders" className="w-full">My Orders</Link>
-                  </DropdownMenuItem>
+                  {auth?.role === UserRole.Supplier ? (
+                    <>
+                      <DropdownMenuItem>
+                        <Link to="/supplier/dashboard" className="w-full">Dashboard</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link to="/supplier/dashboard" className="w-full">My Parts</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link to="/supplier/dashboard" className="w-full">My Orders</Link>
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem>
+                        <Link to="/dashboard" className="w-full">Dashboard</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link to="/requests" className="w-full">My Requests</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link to="/orders" className="w-full">My Orders</Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuItem onClick={handleLogout} className="text-red-400 cursor-pointer">
                     Logout
                   </DropdownMenuItem>

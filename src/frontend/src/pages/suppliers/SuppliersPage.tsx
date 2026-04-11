@@ -1,11 +1,14 @@
 import { useEffect, useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { supplierApi } from '@/api/supplierApi'
 import type { Supplier, PartResponse } from '@/types/supplier'
+import { useAuth } from '@/context/AuthContext'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 
 export default function SuppliersPage() {
+  const { auth } = useAuth()
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [searchResults, setSearchResults] = useState<PartResponse[] | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
@@ -16,7 +19,8 @@ export default function SuppliersPage() {
   useEffect(() => {
     supplierApi
       .getAll()
-      .then(({ data }) => setSuppliers(data))
+      .then(({ data }) => setSuppliers(Array.isArray(data) ? data : []))
+      .catch(() => setSuppliers([]))
       .finally(() => setLoading(false))
   }, [])
 
@@ -27,10 +31,11 @@ export default function SuppliersPage() {
       setSearchResults(null)
       return
     }
+    if (!auth) return
     debounce.current = setTimeout(() => {
       setSearching(true)
       supplierApi
-        .search(value.trim())
+        .search(value.trim(), auth.token)
         .then(({ data }) => setSearchResults(data))
         .catch(() => setSearchResults([]))
         .finally(() => setSearching(false))
@@ -52,12 +57,19 @@ export default function SuppliersPage() {
               Suppliers &amp; Parts
             </h1>
             <div className="max-w-lg">
-              <Input
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search parts by name, number, or condition…"
-                className="bg-[#162019] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
-              />
+              {auth ? (
+                <Input
+                  value={searchTerm}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="Search parts by name, number, or condition…"
+                  className="bg-[#162019] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                />
+              ) : (
+                <p className="text-[#7A9A80] text-sm">
+                  <Link to="/login" className="text-[#00C853] hover:text-[#39FF88] font-medium">Log in</Link>
+                  {' '}to search parts across all suppliers.
+                </p>
+              )}
             </div>
           </div>
 

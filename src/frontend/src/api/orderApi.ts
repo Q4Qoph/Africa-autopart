@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Order, AddOrderDTO } from '@/types/order'
+import type { Order, AddOrderDTO, UpdateOrderDTO } from '@/types/order'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -23,7 +23,7 @@ export const orderApi = {
   getByRequestId: (id: number, token: string) =>
     api.get<Order>(`/api/Order/getOrderBRequestId/${id}`, authHeader(token)),
 
-  update: (id: number, dto: AddOrderDTO, token: string) =>
+  update: (id: number, dto: UpdateOrderDTO, token: string) =>
     api.put<string>(`/api/Order/updateOrder/${id}`, dto, authHeader(token)),
 
   delete: (id: number, token: string) =>

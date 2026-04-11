@@ -17,8 +17,10 @@ export const supplierApi = {
   getById: (id: number) =>
     api.get<Supplier>(`/api/Suppliers/supplier/${id}`),
 
-  search: (term: string) =>
-    api.get<PartResponse[]>(`/api/Suppliers/searchTerm/${encodeURIComponent(term)}`),
+  search: (term: string, token?: string) =>
+    token
+      ? api.get<PartResponse[]>(`/api/Suppliers/searchTerm/${encodeURIComponent(term)}`, authHeader(token))
+      : api.get<PartResponse[]>(`/api/Suppliers/searchTerm/${encodeURIComponent(term)}`),
 
   add: (dto: AddSupplierDTO, token?: string) =>
     token
@@ -36,4 +38,7 @@ export const supplierApi = {
 
   updatePart: (id: number, dto: UpdatePartDTO, token: string) =>
     api.put<string>(`/api/Suppliers/updatePart/${id}`, dto, authHeader(token)),
+
+  myProducts: (id: number, token: string) =>
+    api.get<Supplier[]>(`/api/Suppliers/myProducts/${id}`, authHeader(token)),
 }

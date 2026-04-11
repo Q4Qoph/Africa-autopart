@@ -15,6 +15,15 @@ export interface AddOrderDTO {
   price: number
 }
 
+export interface UpdateOrderDTO {
+  supplierId: number
+  partId: number
+  partRequestId: number
+  price: number
+  status?: number
+  trackingNumber?: string
+}
+
 export interface Order {
   id: number
   supplierId: number

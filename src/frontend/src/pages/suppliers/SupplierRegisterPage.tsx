@@ -139,8 +139,8 @@ export default function SupplierRegisterPage() {
                 <span className="text-[#00C853] text-3xl">✓</span>
               </div>
               <h2 className="text-white text-2xl font-extrabold font-display mb-2">Application submitted!</h2>
-              <p className="text-[#7A9A80] text-sm max-w-[280px] mx-auto leading-relaxed">
-                Our team will review your business within 24–48 hours. You'll be notified when your account is activated.
+              <p className="text-[#7A9A80] text-sm max-w-[300px] mx-auto leading-relaxed">
+                Our team will review your business within 24–48 hours. Once approved, you'll receive an email with a link to set your password and access your dashboard.
               </p>
               <p className="text-[#3D5942] text-xs mt-4">Redirecting to sign in…</p>
             </div>
