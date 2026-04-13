@@ -28,10 +28,9 @@ export default function RequestsPage() {
   useEffect(() => {
     if (!auth) return
     requestApi
-      .getAll(auth.token)
+      .getByUserId(auth.userId, auth.token)
       .then(({ data }) => {
-        // show only this user's requests
-        setRequests(data.filter((r) => r.userId === auth.userId))
+        setRequests(data)
       })
       .catch(() => setError('Failed to load requests.'))
       .finally(() => setLoading(false))

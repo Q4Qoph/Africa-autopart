@@ -27,6 +27,9 @@ export const requestApi = {
   delete: (id: number, token: string) =>
     api.delete<string>(`/api/Request/delete/${id}`, authHeader(token)),
 
+  getByUserId: (userId: number, token: string) =>
+    api.get<PartRequest[]>(`/api/Request/requests/${userId}`, authHeader(token)),
+
   markAsSorted: (id: number, token: string) =>
     api.put<string>(`/api/Request/markAsSorted/${id}`, {}, authHeader(token)),
 }

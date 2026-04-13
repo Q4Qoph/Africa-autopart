@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
+import { orderApi } from '@/api/orderApi'
 import type { PartRequest } from '@/types/request'
 import { ConditionPreference, Urgency } from '@/types/request'
 import type { Order } from '@/types/order'
-import { OrderStatus } from '@/types/order'
+import { OrderStatus, statusLabel } from '@/types/order'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -38,10 +39,6 @@ function statusBadgeClass(status: number) {
   return 'bg-amber-400/10 text-amber-400 border-amber-400/20'
 }
 
-function statusLabel(status: number) {
-  return ['Pending', 'Shipped', 'Delivered'][status] ?? '—'
-}
-
 const selectClass =
   'w-full h-9 px-3 rounded-lg bg-[#162019] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm'
 
@@ -61,6 +58,7 @@ export default function RequestDetailPage() {
   const { auth } = useAuth()
   const navigate = useNavigate()
   const [request, setRequest] = useState<PartRequest | null>(null)
+  const [order, setOrder] = useState<Order | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -78,10 +76,15 @@ export default function RequestDetailPage() {
 
   useEffect(() => {
     if (!auth || !id) return
-    requestApi
-      .getById(Number(id), auth.token)
-      .then(({ data }) => {
+    const numId = Number(id)
+    Promise.all([
+      requestApi.getById(numId, auth.token),
+      orderApi.getByRequestId(numId, auth.token).catch(() => null),
+    ])
+      .then(([reqRes, orderRes]) => {
+        const data = reqRes.data
         setRequest(data)
+        setOrder(orderRes?.data ?? null)
         setEditForm({
           partName: data.partName,
           partNumber: data.partNumber,
@@ -150,8 +153,6 @@ export default function RequestDetailPage() {
       setDeleting(false)
     }
   }
-
-  const orders = (request?.orders ?? []) as unknown as Order[]
 
   return (
     <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
@@ -355,15 +356,15 @@ export default function RequestDetailPage() {
                 )}
               </div>
 
-              {/* Orders */}
+              {/* Order */}
               <div className="rounded-2xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
                 <div className="bg-[#0D1810] px-6 py-3 border-b border-[rgba(0,200,83,0.12)]">
                   <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
-                    Orders ({orders.length})
+                    Order {order ? `· ${order.trackingNumber ?? ''}` : ''}
                   </p>
                 </div>
 
-                {orders.length === 0 ? (
+                {!order ? (
                   <div className="px-6 py-12 text-center">
                     <div className="w-12 h-12 rounded-full bg-amber-400/10 border border-amber-400/20 grid place-items-center mx-auto mb-4">
                       <span className="text-amber-400 text-lg">⏳</span>
@@ -374,44 +375,20 @@ export default function RequestDetailPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-[rgba(255,255,255,0.04)]">
-                          <Th>Part</Th>
-                          <Th>Supplier</Th>
-                          <Th>Price</Th>
-                          <Th>Tracking</Th>
-                          <Th>Status</Th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[rgba(255,255,255,0.03)]">
-                        {orders.map((order) => (
-                          <tr key={order.id} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
-                            <td className="px-5 py-4">
-                              <p className="text-white font-medium">{order.part?.partName ?? `Part #${order.partId}`}</p>
-                              <p className="text-[#7A9A80] text-xs font-mono">{order.part?.partNumber}</p>
-                            </td>
-                            <td className="px-5 py-4 text-[#7A9A80]">
-                              {order.supplier?.businessName ?? `Supplier #${order.supplierId}`}
-                            </td>
-                            <td className="px-5 py-4 text-[#00C853] font-semibold">
-                              ${order.price?.toLocaleString()}
-                            </td>
-                            <td className="px-5 py-4">
-                              <span className={cn('text-xs font-mono', order.trackingNumber ? 'text-white' : 'text-[#3D5942]')}>
-                                {order.trackingNumber || 'Not assigned'}
-                              </span>
-                            </td>
-                            <td className="px-5 py-4">
-                              <Badge className={cn('text-[10px]', statusBadgeClass(order.status))}>
-                                {statusLabel(order.status)}
-                              </Badge>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-5">
+                    <Detail label="Part" value={order.part?.partName ?? '—'} />
+                    <Detail label="Part #" value={order.part?.partNumber || '—'} />
+                    <Detail label="Condition" value={order.part?.condition ?? '—'} />
+                    <Detail label="Supplier" value={order.supplier?.businessName ?? '—'} />
+                    <Detail label="Price" value={`$${order.price.toLocaleString()}`} />
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] mb-0.5">Status</p>
+                      <Badge className={cn('text-[10px]', statusBadgeClass(order.status))}>
+                        {statusLabel(order.status)}
+                      </Badge>
+                    </div>
+                    <Detail label="Tracking" value={order.trackingNumber || 'Not assigned'} />
+                    <Detail label="Date" value={order.partRequest?.dateCreated ? new Date(order.partRequest.dateCreated).toLocaleDateString() : '—'} />
                   </div>
                 )}
               </div>
@@ -429,13 +406,5 @@ function Detail({ label, value }: { label: string; value: string }) {
       <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] mb-0.5">{label}</p>
       <p className="text-white text-sm">{value}</p>
     </div>
-  )
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
-      {children}
-    </th>
   )
 }

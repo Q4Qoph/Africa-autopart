@@ -6,14 +6,13 @@ import { orderApi } from '@/api/orderApi'
 import { imageApi } from '@/api/imageApi'
 import type { Supplier } from '@/types/supplier'
 import type { Order } from '@/types/order'
-import { OrderStatus } from '@/types/order'
+import { OrderStatus, statusLabel } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 
-const statusLabel = ['Pending', 'Shipped', 'Delivered']
 function statusBadge(status: number) {
   if (status === OrderStatus.Delivered) return 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
   if (status === OrderStatus.Shipped) return 'bg-blue-400/10 text-blue-400 border-blue-400/20'
@@ -112,8 +111,8 @@ export default function SupplierDashboardPage() {
     if (!auth || !supplier || activeTab !== 'orders') return
     setLoadingOrders(true)
     orderApi
-      .getAll(auth.token)
-      .then(({ data }) => setOrders(data.filter((o) => o.supplierId === supplier.id)))
+      .getBySupplierId(supplier.id, auth.token)
+      .then(({ data }) => setOrders(Array.isArray(data) ? data : [data]))
       .catch(() => {})
       .finally(() => setLoadingOrders(false))
   }, [auth, supplier, activeTab])
@@ -242,9 +241,9 @@ export default function SupplierDashboardPage() {
       await orderApi.update(
         order.id,
         {
-          supplierId: order.supplierId,
-          partId: order.partId,
-          partRequestId: order.partRequestId,
+          supplierId: 0,
+          partId: 0,
+          partRequestId: 0,
           price: order.price,
           status: orderEdit.status,
           trackingNumber: orderEdit.trackingNumber,
@@ -254,7 +253,7 @@ export default function SupplierDashboardPage() {
       setOrders((prev) =>
         prev.map((o) =>
           o.id === order.id
-            ? { ...o, status: orderEdit.status as OrderStatus, trackingNumber: orderEdit.trackingNumber }
+            ? { ...o, status: orderEdit.status, trackingNumber: orderEdit.trackingNumber }
             : o,
         ),
       )
@@ -682,7 +681,7 @@ export default function SupplierDashboardPage() {
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
-                              <Th>#</Th><Th>Part</Th><Th>Request</Th><Th>Price</Th><Th>Tracking</Th><Th>Status</Th><Th>Actions</Th>
+                              <Th>#</Th><Th>Part</Th><Th>Vehicle</Th><Th>Price</Th><Th>Tracking</Th><Th>Status</Th><Th>Actions</Th>
                             </tr>
                           </thead>
                           <tbody>
@@ -690,8 +689,10 @@ export default function SupplierDashboardPage() {
                               <>
                                 <tr key={order.id} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                                   <td className="px-5 py-3 text-[#3D5942] font-mono text-xs">#{order.id}</td>
-                                  <td className="px-5 py-3 text-white">{order.part?.partName ?? `Part #${order.partId}`}</td>
-                                  <td className="px-5 py-3 text-[#7A9A80] font-mono text-xs">Req #{order.partRequestId}</td>
+                                  <td className="px-5 py-3 text-white">{order.part?.partName ?? '—'}</td>
+                                  <td className="px-5 py-3 text-[#7A9A80] text-xs">
+                                    {order.partRequest?.vehicleMake} {order.partRequest?.model}
+                                  </td>
                                   <td className="px-5 py-3 text-[#00C853] font-semibold">${order.price.toLocaleString()}</td>
                                   <td className="px-5 py-3 font-mono text-xs">
                                     <span className={order.trackingNumber ? 'text-white' : 'text-[#3D5942]'}>
@@ -700,7 +701,7 @@ export default function SupplierDashboardPage() {
                                   </td>
                                   <td className="px-5 py-3">
                                     <Badge className={cn('text-[10px]', statusBadge(order.status))}>
-                                      {statusLabel[order.status] ?? '—'}
+                                      {statusLabel(order.status)}
                                     </Badge>
                                   </td>
                                   <td className="px-5 py-3">
@@ -724,9 +725,9 @@ export default function SupplierDashboardPage() {
                                             onChange={(e) => setOrderEdit((s) => ({ ...s, status: Number(e.target.value) }))}
                                             className="h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.1)] text-white focus:outline-none focus:border-[#00C853] text-sm"
                                           >
-                                            <option value={OrderStatus.Pending}>Pending</option>
-                                            <option value={OrderStatus.Shipped}>Shipped</option>
-                                            <option value={OrderStatus.Delivered}>Delivered</option>
+                                            <option value={0}>Pending</option>
+                                            <option value={1}>Shipped</option>
+                                            <option value={2}>Delivered</option>
                                           </select>
                                         </div>
                                         <div className="space-y-1">

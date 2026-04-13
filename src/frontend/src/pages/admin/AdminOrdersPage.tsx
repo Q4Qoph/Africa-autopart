@@ -2,16 +2,10 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { Order } from '@/types/order'
-import { OrderStatus } from '@/types/order'
+import { OrderStatus, statusLabel } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-const statusLabel: Record<number, string> = {
-  [OrderStatus.Pending]: 'Pending',
-  [OrderStatus.Shipped]: 'Shipped',
-  [OrderStatus.Delivered]: 'Delivered',
-}
 
 const statusClass: Record<number, string> = {
   [OrderStatus.Pending]: 'bg-amber-900/30 text-amber-300 border-amber-700/30',
@@ -58,9 +52,9 @@ export default function AdminOrdersPage() {
       await orderApi.update(
         order.id,
         {
-          supplierId: order.supplierId,
-          partId: order.partId,
-          partRequestId: order.partRequestId,
+          supplierId: 0,
+          partId: 0,
+          partRequestId: 0,
           price: order.price,
           status: editState.status,
           trackingNumber: editState.trackingNumber,
@@ -70,7 +64,7 @@ export default function AdminOrdersPage() {
       setOrders((prev) =>
         prev.map((o) =>
           o.id === order.id
-            ? { ...o, status: editState.status as OrderStatus, trackingNumber: editState.trackingNumber }
+            ? { ...o, status: editState.status, trackingNumber: editState.trackingNumber }
             : o,
         ),
       )
@@ -80,12 +74,12 @@ export default function AdminOrdersPage() {
     }
   }
 
-  async function handleDelete(id: number) {
+  async function handleDelete(orderId: number) {
     if (!window.confirm('Delete this order? This cannot be undone.')) return
     if (!auth) return
     try {
-      await orderApi.delete(id, auth.token)
-      setOrders((prev) => prev.filter((o) => o.id !== id))
+      await orderApi.delete(orderId, auth.token)
+      setOrders((prev) => prev.filter((o) => o.id !== orderId))
     } catch {
       alert('Failed to delete order.')
     }
@@ -112,7 +106,7 @@ export default function AdminOrdersPage() {
                 <Th>#</Th>
                 <Th>Part</Th>
                 <Th>Supplier</Th>
-                <Th>Request</Th>
+                <Th>Vehicle</Th>
                 <Th>Price</Th>
                 <Th>Tracking</Th>
                 <Th>Status</Th>
@@ -127,20 +121,22 @@ export default function AdminOrdersPage() {
                     className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
                     <Td className="text-[#7A9A80] font-mono text-xs">#{o.id}</Td>
-                    <Td className="text-white font-medium">
-                      {o.part?.partName ?? `Part #${o.partId}`}
+                    <Td>
+                      <p className="text-white font-medium">{o.part?.partName ?? '—'}</p>
+                      <p className="text-[#3D5942] text-xs font-mono">{o.part?.partNumber ?? ''}</p>
                     </Td>
-                    <Td className="text-[#7A9A80]">
-                      {o.supplier?.businessName ?? `Supplier #${o.supplierId}`}
+                    <Td>
+                      <p className="text-[#7A9A80]">{o.supplier?.businessName ?? '—'}</p>
+                      <p className="text-[#3D5942] text-xs">{o.supplier?.email ?? ''}</p>
                     </Td>
-                    <Td className="text-[#7A9A80] font-mono text-xs">Req #{o.partRequestId}</Td>
+                    <Td className="text-[#7A9A80] text-xs">{o.partRequest?.vehicleMake} {o.partRequest?.model}</Td>
                     <Td className="text-white">${o.price.toLocaleString()}</Td>
                     <Td className="font-mono text-xs text-[#7A9A80]">
                       {o.trackingNumber || <span className="text-[#3D5942]">—</span>}
                     </Td>
                     <Td>
                       <Badge className={`text-[10px] border ${statusClass[o.status] ?? ''}`}>
-                        {statusLabel[o.status] ?? o.status}
+                        {statusLabel(o.status)}
                       </Badge>
                     </Td>
                     <Td>
@@ -176,9 +172,9 @@ export default function AdminOrdersPage() {
                               onChange={(e) => setEditState((s) => ({ ...s, status: Number(e.target.value) }))}
                               className="h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.1)] text-white focus:outline-none focus:border-[#00C853] text-sm"
                             >
-                              <option value={OrderStatus.Pending}>Pending</option>
-                              <option value={OrderStatus.Shipped}>Shipped</option>
-                              <option value={OrderStatus.Delivered}>Delivered</option>
+                              <option value={0}>Pending</option>
+                              <option value={1}>Shipped</option>
+                              <option value={2}>Delivered</option>
                             </select>
                           </div>
                           <div className="space-y-1">

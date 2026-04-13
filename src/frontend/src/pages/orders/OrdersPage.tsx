@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { Order } from '@/types/order'
-import { OrderStatus } from '@/types/order'
+import { OrderStatus, statusLabel } from '@/types/order'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -17,10 +16,6 @@ function statusBadge(status: number) {
   return 'bg-amber-400/10 text-amber-400 border-amber-400/20'
 }
 
-function statusLabel(status: number) {
-  return ['Pending', 'Shipped', 'Delivered'][status] ?? '—'
-}
-
 export default function OrdersPage() {
   const { auth } = useAuth()
   const [orders, setOrders] = useState<Order[]>([])
@@ -31,7 +26,7 @@ export default function OrdersPage() {
     if (!auth) return
     orderApi
       .getAll(auth.token)
-      .then(({ data }) => setOrders(data.filter((o) => o.partRequest?.userId === auth.userId)))
+      .then(({ data }) => setOrders(data))
       .catch(() => setError('Failed to load orders.'))
       .finally(() => setLoading(false))
   }, [auth])
@@ -71,29 +66,34 @@ export default function OrdersPage() {
           {!loading && orders.length > 0 && (
             <div className="grid gap-3">
               {/* Table header */}
-              <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr_auto] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#3D5942]">
+              <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#3D5942]">
                 <span>#</span>
                 <span>Part</span>
                 <span>Supplier</span>
                 <span>Price</span>
                 <span>Tracking</span>
                 <span>Status</span>
-                <span>Request</span>
               </div>
 
               {orders.map((order) => (
                 <div
                   key={order.id}
-                  className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr_auto] gap-4 items-center"
+                  className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 items-center"
                 >
                   <span className="text-[#3D5942] text-xs font-mono">{order.id}</span>
 
                   <div>
                     <p className="text-white text-sm font-medium">{order.part?.partName ?? '—'}</p>
-                    <p className="text-[#7A9A80] text-xs font-mono">{order.part?.partNumber}</p>
+                    <p className="text-[#7A9A80] text-xs font-mono">{order.part?.partNumber ?? ''}</p>
+                    <p className="text-[#3D5942] text-xs mt-0.5">
+                      {order.partRequest?.vehicleMake} {order.partRequest?.model}
+                    </p>
                   </div>
 
-                  <p className="text-[#7A9A80] text-sm">{order.supplier?.businessName ?? '—'}</p>
+                  <div>
+                    <p className="text-[#7A9A80] text-sm">{order.supplier?.businessName ?? '—'}</p>
+                    <p className="text-[#3D5942] text-xs">{order.supplier?.email ?? ''}</p>
+                  </div>
 
                   <p className="text-[#00C853] font-semibold text-sm">
                     ${order.price?.toLocaleString()}
@@ -109,13 +109,6 @@ export default function OrdersPage() {
                   <Badge className={cn('text-[10px] w-fit', statusBadge(order.status))}>
                     {statusLabel(order.status)}
                   </Badge>
-
-                  <Link
-                    to={`/requests/${order.partRequestId}`}
-                    className="text-xs text-[#7A9A80] hover:text-[#00C853] font-mono transition-colors whitespace-nowrap"
-                  >
-                    Req #{order.partRequestId}
-                  </Link>
                 </div>
               ))}
             </div>

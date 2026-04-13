@@ -21,7 +21,10 @@ export const orderApi = {
     api.get<Order>(`/api/Order/getOrderById/${id}`, authHeader(token)),
 
   getByRequestId: (id: number, token: string) =>
-    api.get<Order>(`/api/Order/getOrderBRequestId/${id}`, authHeader(token)),
+    api.get<Order>(`/api/Order/getOrderByRequestId/${id}`, authHeader(token)),
+
+  getBySupplierId: (id: number, token: string) =>
+    api.get<Order[]>(`/api/Order/getOrderBySupplierId/${id}`, authHeader(token)),
 
   update: (id: number, dto: UpdateOrderDTO, token: string) =>
     api.put<string>(`/api/Order/updateOrder/${id}`, dto, authHeader(token)),
