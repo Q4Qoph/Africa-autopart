@@ -149,19 +149,19 @@ export default function Navbar() {
               <span className="w-px h-3 bg-[rgba(255,255,255,0.12)]" />
               <button
                 onClick={toggleTheme}
-                className="flex items-center gap-1 text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] transition-colors"
+                className="w-6 h-6 flex items-center justify-center rounded text-[rgba(255,255,255,0.55)] hover:text-[rgba(255,255,255,0.9)] hover:bg-[rgba(255,255,255,0.08)] transition-colors"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark'
-                  ? <Sun className="w-3 h-3" />
-                  : <Moon className="w-3 h-3" />}
+                  ? <Sun className="w-3.5 h-3.5" />
+                  : <Moon className="w-3.5 h-3.5" />}
               </button>
             </div>
           </div>
         </div>
 
         {/* ── Main nav bar ── */}
-        <header className="h-[68px] bg-[rgba(247,253,248,0.95)] dark:bg-[rgba(7,17,10,0.95)] backdrop-blur-md border-b border-[rgba(0,200,83,0.12)] flex items-center">
+        <header className="h-[96px] bg-[rgba(247,253,248,0.95)] dark:bg-[rgba(7,17,10,0.95)] backdrop-blur-md border-b border-[rgba(0,200,83,0.12)] flex items-center">
           <div className="max-w-[1260px] w-full mx-auto px-6 flex items-center gap-6">
 
             {/* Logo */}
@@ -169,7 +169,7 @@ export default function Navbar() {
               <img
                 src="/images/logo.png"
                 alt="Africa Autopart"
-                className="w-60 h-auto"
+                className="w-52 h-auto"
               />
             </Link>
 
@@ -196,7 +196,7 @@ export default function Navbar() {
               {/* Theme toggle — mobile only (desktop has it in topbar) */}
               <button
                 onClick={toggleTheme}
-                className="md:hidden w-8 h-8 rounded-lg flex items-center justify-center text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
+                className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

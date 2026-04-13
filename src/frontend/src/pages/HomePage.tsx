@@ -181,7 +181,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── Hero ── */}
-      <section className="relative pt-[68px] md:pt-[104px] min-h-screen flex items-center overflow-hidden">
+      <section className="relative pt-[68px] md:pt-[132px] min-h-screen flex items-center overflow-hidden">
         {/* Background: glow + grid */}
         <div className="absolute inset-0 pointer-events-none">
           <div
