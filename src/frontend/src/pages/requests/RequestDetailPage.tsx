@@ -157,7 +157,7 @@ export default function RequestDetailPage() {
   return (
     <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
       <Navbar />
-      <main className="pt-[68px]">
+      <main className="pt-[68px] md:pt-[104px]">
         <div className="max-w-[900px] mx-auto px-6 py-12">
           <Link to="/requests" className="text-[#7A9A80] text-xs hover:text-white mb-6 inline-block">
             ← Back to Requests

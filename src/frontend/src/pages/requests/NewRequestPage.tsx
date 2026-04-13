@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -51,6 +51,9 @@ const selectClass =
 export default function NewRequestPage() {
   const { auth } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const prefill = location.state as { year?: string; make?: string; partName?: string } | null
+
   const [condition, setCondition] = useState<number>(ConditionPreference.AnyCondition)
   const [urgency, setUrgency] = useState<number>(Urgency.Standard)
   const [uploadedImages, setUploadedImages] = useState<string[]>([])
@@ -61,7 +64,14 @@ export default function NewRequestPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({ resolver: zodResolver(schema) })
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      vehicleMake: prefill?.make ?? '',
+      year: prefill?.year ?? '',
+      partName: prefill?.partName ?? '',
+    },
+  })
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
@@ -78,7 +88,6 @@ export default function NewRequestPage() {
   }
 
   async function onSubmit(values: FormValues) {
-    if (!auth) return
     setApiError('')
     try {
       await requestApi.create(
@@ -87,12 +96,12 @@ export default function NewRequestPage() {
           conditionPreference: condition as typeof ConditionPreference[keyof typeof ConditionPreference],
           urgency: urgency as typeof Urgency[keyof typeof Urgency],
           dateCreated: new Date().toISOString(),
-          userId: auth.userId,
+          userId: auth?.userId ?? 0,
           partImages: uploadedImages.map((url) => ({ imageUrl: url })),
         },
-        auth.token,
+        auth?.token,
       )
-      navigate('/requests')
+      navigate(auth ? '/requests' : '/')
     } catch {
       setApiError('Failed to submit request. Please try again.')
     }
@@ -101,12 +110,12 @@ export default function NewRequestPage() {
   return (
     <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
       <Navbar />
-      <main className="pt-[68px]">
+      <main className="pt-[68px] md:pt-[104px]">
         <div className="max-w-[860px] mx-auto px-6 py-12">
           {/* Header */}
           <div className="mb-8">
-            <Link to="/requests" className="text-[#7A9A80] text-xs hover:text-white mb-4 inline-block">
-              ← Back to Requests
+            <Link to={auth ? '/requests' : '/'} className="text-[#7A9A80] text-xs hover:text-white mb-4 inline-block">
+              ← {auth ? 'Back to Requests' : 'Back to Home'}
             </Link>
             <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
               <span className="block w-6 h-px bg-[#00C853]" />
@@ -248,7 +257,7 @@ export default function NewRequestPage() {
                 {isSubmitting ? 'Submitting…' : 'Submit Request'}
               </Button>
               <Link
-                to="/requests"
+                to={auth ? '/requests' : '/'}
                 className="inline-flex items-center px-6 py-2 rounded-lg border border-[rgba(255,255,255,0.1)] text-[#7A9A80] text-sm hover:text-white hover:border-[rgba(255,255,255,0.2)] transition-colors"
               >
                 Cancel

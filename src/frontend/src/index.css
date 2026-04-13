@@ -4,6 +4,31 @@
 
 @layer base {
   :root {
+    /* ── Light theme ── */
+    --background: 143 30% 97%;
+    --foreground: 143 70% 5%;
+    --card: 0 0% 100%;
+    --card-foreground: 143 70% 5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 143 70% 5%;
+    --primary: 144 100% 39%;
+    --primary-foreground: 143 100% 3%;
+    --secondary: 143 20% 91%;
+    --secondary-foreground: 143 70% 5%;
+    --muted: 143 20% 91%;
+    --muted-foreground: 143 20% 35%;
+    --accent: 143 20% 91%;
+    --accent-foreground: 143 70% 5%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 143 15% 88%;
+    --input: 143 15% 91%;
+    --ring: 144 100% 39%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* ── Dark theme ── */
     --background: 143 100% 3%;
     --foreground: 140 20% 92%;
     --card: 143 30% 10%;
@@ -23,7 +48,6 @@
     --border: 143 30% 18%;
     --input: 143 30% 14%;
     --ring: 144 100% 39%;
-    --radius: 0.5rem;
   }
 
   * {
@@ -39,4 +63,18 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Syne', sans-serif;
   }
+}
+
+@layer utilities {
+  .animate-marquee {
+    animation: marquee 32s linear infinite;
+  }
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }

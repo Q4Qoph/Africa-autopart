@@ -49,12 +49,12 @@ export const router = createBrowserRouter([
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/reset-password', element: <ResetPasswordPage /> },
   { path: '/suppliers', element: <SuppliersPage /> },
+  { path: '/requests/new', element: <NewRequestPage /> },
   {
     element: <ProtectedRoute />,
     children: [
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/requests', element: <RequestsPage /> },
-      { path: '/requests/new', element: <NewRequestPage /> },
       { path: '/requests/:id', element: <RequestDetailPage /> },
       { path: '/orders', element: <OrdersPage /> },
     ],

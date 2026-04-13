@@ -230,7 +230,7 @@ export default function SupplierDashboardPage() {
 
   // Order edit
   function startEditOrder(order: Order) {
-    setEditingOrderId(order.id)
+    setEditingOrderId(order.orderId)
     setOrderEdit({ status: order.status, trackingNumber: order.trackingNumber ?? '', saving: false, error: '' })
   }
 
@@ -239,11 +239,11 @@ export default function SupplierDashboardPage() {
     setOrderEdit((s) => ({ ...s, saving: true, error: '' }))
     try {
       await orderApi.update(
-        order.id,
+        order.orderId,
         {
-          supplierId: 0,
-          partId: 0,
-          partRequestId: 0,
+          supplierId: order.supplierId,
+          partId: order.partId,
+          partRequestId: order.partRequestId,
           price: order.price,
           status: orderEdit.status,
           trackingNumber: orderEdit.trackingNumber,
@@ -252,7 +252,7 @@ export default function SupplierDashboardPage() {
       )
       setOrders((prev) =>
         prev.map((o) =>
-          o.id === order.id
+          o.orderId === order.orderId
             ? { ...o, status: orderEdit.status, trackingNumber: orderEdit.trackingNumber }
             : o,
         ),
@@ -687,8 +687,8 @@ export default function SupplierDashboardPage() {
                           <tbody>
                             {orders.map((order) => (
                               <>
-                                <tr key={order.id} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
-                                  <td className="px-5 py-3 text-[#3D5942] font-mono text-xs">#{order.id}</td>
+                                <tr key={order.orderId} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                                  <td className="px-5 py-3 text-[#3D5942] font-mono text-xs">#{order.orderId}</td>
                                   <td className="px-5 py-3 text-white">{order.part?.partName ?? '—'}</td>
                                   <td className="px-5 py-3 text-[#7A9A80] text-xs">
                                     {order.partRequest?.vehicleMake} {order.partRequest?.model}
@@ -707,15 +707,15 @@ export default function SupplierDashboardPage() {
                                   <td className="px-5 py-3">
                                     <Button
                                       size="sm"
-                                      onClick={() => editingOrderId === order.id ? setEditingOrderId(null) : startEditOrder(order)}
+                                      onClick={() => editingOrderId === order.orderId ? setEditingOrderId(null) : startEditOrder(order)}
                                       className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
                                     >
-                                      {editingOrderId === order.id ? 'Close' : 'Update'}
+                                      {editingOrderId === order.orderId ? 'Close' : 'Update'}
                                     </Button>
                                   </td>
                                 </tr>
-                                {editingOrderId === order.id && (
-                                  <tr key={`edit-${order.id}`}>
+                                {editingOrderId === order.orderId && (
+                                  <tr key={`edit-${order.orderId}`}>
                                     <td colSpan={7} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-5 py-4">
                                       <div className="flex items-end gap-4 flex-wrap">
                                         <div className="space-y-1">

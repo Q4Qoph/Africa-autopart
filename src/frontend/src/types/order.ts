@@ -1,5 +1,5 @@
 export interface Order {
-  id: number
+  orderId: number
   supplierId: number
   partId: number
   partRequestId: number

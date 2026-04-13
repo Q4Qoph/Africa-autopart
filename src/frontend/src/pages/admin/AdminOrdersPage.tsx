@@ -37,7 +37,7 @@ export default function AdminOrdersPage() {
   }, [auth])
 
   function startEdit(order: Order) {
-    setEditingId(order.id)
+    setEditingId(order.orderId)
     setEditState({ status: order.status, trackingNumber: order.trackingNumber ?? '', saving: false, error: '' })
   }
 
@@ -50,11 +50,11 @@ export default function AdminOrdersPage() {
     setEditState((s) => ({ ...s, saving: true, error: '' }))
     try {
       await orderApi.update(
-        order.id,
+        order.orderId,
         {
-          supplierId: 0,
-          partId: 0,
-          partRequestId: 0,
+          supplierId: order.supplierId,
+          partId: order.partId,
+          partRequestId: order.partRequestId,
           price: order.price,
           status: editState.status,
           trackingNumber: editState.trackingNumber,
@@ -63,7 +63,7 @@ export default function AdminOrdersPage() {
       )
       setOrders((prev) =>
         prev.map((o) =>
-          o.id === order.id
+          o.orderId === order.orderId
             ? { ...o, status: editState.status, trackingNumber: editState.trackingNumber }
             : o,
         ),
@@ -79,7 +79,7 @@ export default function AdminOrdersPage() {
     if (!auth) return
     try {
       await orderApi.delete(orderId, auth.token)
-      setOrders((prev) => prev.filter((o) => o.id !== orderId))
+      setOrders((prev) => prev.filter((o) => o.orderId !== orderId))
     } catch {
       alert('Failed to delete order.')
     }
@@ -117,10 +117,10 @@ export default function AdminOrdersPage() {
               {orders.map((o) => (
                 <>
                   <tr
-                    key={o.id}
+                    key={o.orderId}
                     className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
-                    <Td className="text-[#7A9A80] font-mono text-xs">#{o.id}</Td>
+                    <Td className="text-[#7A9A80] font-mono text-xs">#{o.orderId}</Td>
                     <Td>
                       <p className="text-white font-medium">{o.part?.partName ?? '—'}</p>
                       <p className="text-[#3D5942] text-xs font-mono">{o.part?.partNumber ?? ''}</p>
@@ -143,15 +143,15 @@ export default function AdminOrdersPage() {
                       <div className="flex items-center gap-2">
                         <Button
                           size="sm"
-                          onClick={() => editingId === o.id ? cancelEdit() : startEdit(o)}
+                          onClick={() => editingId === o.orderId ? cancelEdit() : startEdit(o)}
                           className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
                         >
-                          {editingId === o.id ? 'Close' : 'Update'}
+                          {editingId === o.orderId ? 'Close' : 'Update'}
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleDelete(o.id)}
+                          onClick={() => handleDelete(o.orderId)}
                           className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
                         >
                           Delete
@@ -161,8 +161,8 @@ export default function AdminOrdersPage() {
                   </tr>
 
                   {/* Inline edit row */}
-                  {editingId === o.id && (
-                    <tr key={`edit-${o.id}`}>
+                  {editingId === o.orderId && (
+                    <tr key={`edit-${o.orderId}`}>
                       <td colSpan={8} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
                         <div className="flex items-end gap-4 flex-wrap">
                           <div className="space-y-1">

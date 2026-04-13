@@ -34,7 +34,7 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
       <Navbar />
-      <main className="pt-[68px]">
+      <main className="pt-[68px] md:pt-[104px]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
           <div className="mb-8">
             <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
@@ -77,10 +77,10 @@ export default function OrdersPage() {
 
               {orders.map((order) => (
                 <div
-                  key={order.id}
+                  key={order.orderId}
                   className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 items-center"
                 >
-                  <span className="text-[#3D5942] text-xs font-mono">{order.id}</span>
+                  <span className="text-[#3D5942] text-xs font-mono">{order.orderId}</span>
 
                   <div>
                     <p className="text-white text-sm font-medium">{order.part?.partName ?? '—'}</p>

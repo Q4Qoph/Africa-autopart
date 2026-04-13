@@ -11,8 +11,8 @@ function authHeader(token: string) {
 }
 
 export const requestApi = {
-  create: (dto: AddPartRequestDTO, token: string) =>
-    api.post<string>('/api/Request', dto, authHeader(token)),
+  create: (dto: AddPartRequestDTO, token?: string) =>
+    api.post<string>('/api/Request', dto, token ? authHeader(token) : undefined),
 
   getAll: (token: string) =>
     api.get<PartRequest[]>('/api/Request', authHeader(token)),
