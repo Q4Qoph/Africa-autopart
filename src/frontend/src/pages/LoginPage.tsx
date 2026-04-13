@@ -48,7 +48,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07110A] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] flex flex-col md:flex-row">
       {/* Left — brand panel */}
       <div className="hidden md:flex md:w-[45%] lg:w-[42%] relative flex-col justify-between p-10 overflow-hidden">
         {/* Background glow */}
@@ -67,7 +67,7 @@ export default function LoginPage() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-sm shadow-lg shadow-[#00C853]/20">
             AA
           </div>
-          <span className="text-white font-bold text-lg tracking-tight">Africa Autopart</span>
+          <span className="text-[#07110A] dark:text-white font-bold text-lg tracking-tight">Africa Autopart</span>
         </Link>
 
         {/* Main content */}
@@ -76,11 +76,11 @@ export default function LoginPage() {
             <span className="block w-5 h-px bg-[#00C853]" />
             Cross-border sourcing
           </p>
-          <h2 className="text-4xl font-extrabold text-white font-display leading-tight mb-4">
+          <h2 className="text-4xl font-extrabold text-[#07110A] dark:text-white font-display leading-tight mb-4">
             Source any part,<br />
             <span className="text-[#00C853]">anywhere in Africa</span>
           </h2>
-          <p className="text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[320px]">
+          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[320px]">
             Connect with verified suppliers across the continent and get competitive quotes fast.
           </p>
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 <div className="w-9 h-9 rounded-lg bg-[rgba(0,200,83,0.1)] border border-[rgba(0,200,83,0.2)] grid place-items-center text-base flex-shrink-0">
                   {f.icon}
                 </div>
-                <span className="text-[#C5DEC8] text-sm">{f.text}</span>
+                <span className="text-[#4A6B50] dark:text-[#C5DEC8] text-sm">{f.text}</span>
               </div>
             ))}
           </div>
@@ -112,24 +112,24 @@ export default function LoginPage() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
             AA
           </div>
-          <span className="text-white font-bold text-base">Africa Autopart</span>
+          <span className="text-[#07110A] dark:text-white font-bold text-base">Africa Autopart</span>
         </Link>
 
         <div className="w-full max-w-[400px]">
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-white font-display mb-2">Welcome back</h1>
-            <p className="text-[#7A9A80] text-sm">Sign in to your account to continue</p>
+            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Welcome back</h1>
+            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Sign in to your account to continue</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[#E8F0E9] text-sm">Email address</Label>
+              <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Email address</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="you@example.com"
                 {...register('email')}
-                className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
               />
               {errors.email && (
                 <p className="text-red-400 text-xs">{errors.email.message}</p>
@@ -138,8 +138,8 @@ export default function LoginPage() {
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-[#E8F0E9] text-sm">Password</Label>
-                <Link to="/forgot-password" className="text-xs text-[#7A9A80] hover:text-[#00C853] transition-colors">
+                <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Password</Label>
+                <Link to="/forgot-password" className="text-xs text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 type="password"
                 placeholder="••••••••"
                 {...register('password')}
-                className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
               />
               {errors.password && (
                 <p className="text-red-400 text-xs">{errors.password.message}</p>
@@ -170,8 +170,8 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.06)] text-center">
-            <p className="text-sm text-[#7A9A80]">
+          <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] text-center">
+            <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
               Don't have an account?{' '}
               <Link to="/register" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
                 Create one free

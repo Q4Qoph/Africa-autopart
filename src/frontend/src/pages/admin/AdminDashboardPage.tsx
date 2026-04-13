@@ -55,12 +55,12 @@ export default function AdminDashboardPage() {
           <span className="block w-6 h-px bg-[#00C853]" />
           Admin
         </p>
-        <h1 className="text-2xl font-extrabold text-white">Overview</h1>
-        <p className="text-[#7A9A80] text-sm mt-1">Platform-wide statistics</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Overview</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">Platform-wide statistics</p>
       </div>
 
       {loading ? (
-        <p className="text-[#7A9A80] text-sm">Loading stats…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading stats…</p>
       ) : stats ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <StatCard title="Total Users" value={stats.totalUsers} href="/admin/users" />
@@ -101,14 +101,14 @@ function StatCard({
   return (
     <Link to={href}>
       <Card
-        className={`bg-[#111C14] border transition-colors cursor-pointer hover:border-[rgba(0,200,83,0.35)] ${
+        className={`bg-white dark:bg-[#111C14] border transition-colors cursor-pointer hover:border-[rgba(0,200,83,0.35)] ${
           highlight
             ? 'border-[rgba(0,200,83,0.4)]'
             : 'border-[rgba(0,200,83,0.15)]'
         }`}
       >
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-mono uppercase tracking-widest text-[#7A9A80]">
+          <CardTitle className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
             {title}
           </CardTitle>
         </CardHeader>

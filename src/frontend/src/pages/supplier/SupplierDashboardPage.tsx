@@ -289,24 +289,24 @@ export default function SupplierDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07110A]">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A]">
       {/* Top bar */}
-      <header className="border-b border-[rgba(0,200,83,0.1)] bg-[#0D1810]">
+      <header className="border-b border-[rgba(0,200,83,0.1)] bg-[#E8F2EA] dark:bg-[#0D1810]">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
               AA
             </div>
             <div>
-              <span className="text-white font-bold text-sm">Africa Autopart</span>
+              <span className="text-[#07110A] dark:text-white font-bold text-sm">Africa Autopart</span>
               {supplier && (
-                <span className="text-[#7A9A80] text-xs ml-2">— {supplier.businessName}</span>
+                <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs ml-2">— {supplier.businessName}</span>
               )}
             </div>
           </div>
           <Button
             onClick={handleLogout}
-            className="text-[#7A9A80] bg-transparent border border-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.04)] hover:text-white text-sm h-9 px-4"
+            className="text-[#4A6B50] dark:text-[#7A9A80] bg-transparent border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)] hover:text-[#07110A] dark:hover:text-white text-sm h-9 px-4"
           >
             Sign out
           </Button>
@@ -320,13 +320,13 @@ export default function SupplierDashboardPage() {
             <span className="block w-6 h-px bg-[#00C853]" />
             Supplier Portal
           </p>
-          <h1 className="text-2xl font-extrabold text-white">
+          <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">
             {loadingSupplier ? 'Dashboard' : supplier?.businessName ?? 'Dashboard'}
           </h1>
-          {supplier && <p className="text-[#7A9A80] text-sm mt-0.5">{supplier.category}</p>}
+          {supplier && <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-0.5">{supplier.category}</p>}
         </div>
 
-        {loadingSupplier && <p className="text-[#7A9A80] text-sm">Loading…</p>}
+        {loadingSupplier && <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>}
         {supplierError && !loadingSupplier && (
           <p className="text-red-400 text-sm">Failed to load your supplier profile.</p>
         )}
@@ -359,50 +359,50 @@ export default function SupplierDashboardPage() {
 
             {/* Edit profile panel */}
             {editingProfile && supplier && (
-              <div className="bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-xl p-5 mb-6">
+              <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-xl p-5 mb-6">
                 <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">Edit Business Profile</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label className="text-[#E8F0E9] text-xs">Business Name *</Label>
+                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Business Name *</Label>
                     <Input
                       value={profileForm.businessName}
                       onChange={(e) => setProfileForm((f) => ({ ...f, businessName: e.target.value }))}
-                      className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm"
+                      className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[#E8F0E9] text-xs">Category *</Label>
+                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Category *</Label>
                     <select
                       value={profileForm.category}
                       onChange={(e) => setProfileForm((f) => ({ ...f, category: e.target.value }))}
-                      className="w-full h-9 px-3 rounded-lg bg-[#0D1810] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm"
+                      className="w-full h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                     >
                       {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[#E8F0E9] text-xs">Email *</Label>
+                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Email *</Label>
                     <Input
                       value={profileForm.email}
                       onChange={(e) => setProfileForm((f) => ({ ...f, email: e.target.value }))}
-                      className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm"
+                      className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[#E8F0E9] text-xs">Phone *</Label>
+                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Phone *</Label>
                     <Input
                       value={profileForm.phone}
                       onChange={(e) => setProfileForm((f) => ({ ...f, phone: e.target.value }))}
-                      className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm"
+                      className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
                     />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[#E8F0E9] text-xs">Description</Label>
+                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Description</Label>
                     <textarea
                       value={profileForm.description}
                       onChange={(e) => setProfileForm((f) => ({ ...f, description: e.target.value }))}
                       rows={2}
-                      className="w-full px-3 py-2 rounded-lg bg-[#0D1810] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm resize-none"
+                      className="w-full px-3 py-2 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm resize-none"
                     />
                   </div>
                 </div>
@@ -418,7 +418,7 @@ export default function SupplierDashboardPage() {
                   <Button
                     variant="outline"
                     onClick={() => setEditingProfile(false)}
-                    className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm"
+                    className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
                   >
                     Cancel
                   </Button>
@@ -436,13 +436,13 @@ export default function SupplierDashboardPage() {
                     'px-5 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px',
                     activeTab === tab
                       ? 'border-[#00C853] text-[#00C853]'
-                      : 'border-transparent text-[#7A9A80] hover:text-white',
+                      : 'border-transparent text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#07110A] dark:hover:text-white',
                   )}
                 >
                   {tab}
-                  {tab === 'parts' && <span className="ml-1.5 text-xs text-[#3D5942]">({parts.length})</span>}
+                  {tab === 'parts' && <span className="ml-1.5 text-xs text-[#7A9A80] dark:text-[#3D5942]">({parts.length})</span>}
                   {tab === 'orders' && orders.length > 0 && (
-                    <span className="ml-1.5 text-xs text-[#3D5942]">({orders.length})</span>
+                    <span className="ml-1.5 text-xs text-[#7A9A80] dark:text-[#3D5942]">({orders.length})</span>
                   )}
                 </button>
               ))}
@@ -452,7 +452,7 @@ export default function SupplierDashboardPage() {
             {activeTab === 'parts' && (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[#7A9A80] text-sm">{parts.length} part{parts.length !== 1 ? 's' : ''} in inventory</p>
+                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{parts.length} part{parts.length !== 1 ? 's' : ''} in inventory</p>
                   <Button
                     onClick={() => { setShowAddPart((v) => !v); setAddPartError('') }}
                     className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-9 px-4 text-sm"
@@ -463,64 +463,64 @@ export default function SupplierDashboardPage() {
 
                 {/* Add part form */}
                 {showAddPart && (
-                  <div className="bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-xl p-5 mb-5">
+                  <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-xl p-5 mb-5">
                     <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">New Part</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <Label className="text-[#E8F0E9] text-xs">Part Name *</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Part Name *</Label>
                         <Input value={addForm.partName} onChange={(e) => setAddForm((f) => ({ ...f, partName: e.target.value }))}
-                          placeholder="Front Brake Pad Set" className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
+                          placeholder="Front Brake Pad Set" className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#E8F0E9] text-xs">Part Number</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Part Number</Label>
                         <Input value={addForm.partNumber} onChange={(e) => setAddForm((f) => ({ ...f, partNumber: e.target.value }))}
-                          placeholder="04465-0K260" className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
+                          placeholder="04465-0K260" className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#E8F0E9] text-xs">Condition *</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Condition *</Label>
                         <select value={addForm.condition} onChange={(e) => setAddForm((f) => ({ ...f, condition: e.target.value }))}
-                          className="w-full h-9 px-3 rounded-lg bg-[#0D1810] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm">
+                          className="w-full h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm">
                           {conditionOptions.map((c) => <option key={c} value={c}>{c}</option>)}
                         </select>
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#E8F0E9] text-xs">Part Image</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Part Image</Label>
                         <label className="flex items-center gap-3 cursor-pointer group">
-                          <div className="flex-1 h-9 px-3 rounded-lg bg-[#0D1810] border border-[rgba(255,255,255,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
+                          <div className="flex-1 h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
                             {uploadingImage ? (
-                              <span className="text-[#7A9A80] text-xs">Uploading…</span>
+                              <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">Uploading…</span>
                             ) : addForm.imageURL ? (
                               <>
                                 <img src={addForm.imageURL} alt="preview" className="h-6 w-6 rounded object-cover shrink-0" />
-                                <span className="text-white text-xs truncate">Image uploaded</span>
+                                <span className="text-[#07110A] dark:text-white text-xs truncate">Image uploaded</span>
                               </>
                             ) : (
-                              <span className="text-[#3D5942] text-xs">Click to upload image…</span>
+                              <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">Click to upload image…</span>
                             )}
                           </div>
                           {addForm.imageURL && !uploadingImage && (
                             <button type="button" onClick={(e) => { e.preventDefault(); setAddForm((f) => ({ ...f, imageURL: '' })) }}
-                              className="text-[#7A9A80] hover:text-red-400 text-xs transition-colors shrink-0">Remove</button>
+                              className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-red-400 text-xs transition-colors shrink-0">Remove</button>
                           )}
                           <input type="file" accept="image/*" className="sr-only" disabled={uploadingImage}
                             onChange={makeImageUploadHandler(setUploadingImage, setAddForm, setAddPartError)} />
                         </label>
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#E8F0E9] text-xs">Price (USD) *</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Price (USD) *</Label>
                         <Input type="number" value={addForm.price} onChange={(e) => setAddForm((f) => ({ ...f, price: e.target.value }))}
-                          placeholder="0" className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
+                          placeholder="0" className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#E8F0E9] text-xs">Stock *</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Stock *</Label>
                         <Input type="number" value={addForm.stock} onChange={(e) => setAddForm((f) => ({ ...f, stock: e.target.value }))}
-                          placeholder="0" className="bg-[#0D1810] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
+                          placeholder="0" className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm" />
                       </div>
                       <div className="space-y-1.5 sm:col-span-2">
-                        <Label className="text-[#E8F0E9] text-xs">Description</Label>
+                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Description</Label>
                         <textarea value={addForm.description} onChange={(e) => setAddForm((f) => ({ ...f, description: e.target.value }))}
                           rows={2} placeholder="Additional notes…"
-                          className="w-full px-3 py-2 rounded-lg bg-[#0D1810] border border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:outline-none focus:border-[#00C853] text-sm resize-none" />
+                          className="w-full px-3 py-2 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:outline-none focus:border-[#00C853] text-sm resize-none" />
                       </div>
                     </div>
                     {addPartError && <p className="text-red-400 text-xs mt-3">{addPartError}</p>}
@@ -530,7 +530,7 @@ export default function SupplierDashboardPage() {
                         {addingPart ? 'Adding…' : 'Add Part'}
                       </Button>
                       <Button variant="outline" onClick={() => setShowAddPart(false)}
-                        className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm">
+                        className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm">
                         Cancel
                       </Button>
                     </div>
@@ -542,13 +542,13 @@ export default function SupplierDashboardPage() {
                   <div className="overflow-x-auto">
                     {parts.length === 0 ? (
                       <div className="px-6 py-12 text-center">
-                        <p className="text-[#7A9A80] text-sm mb-1">No parts in your inventory yet.</p>
-                        <p className="text-[#3D5942] text-xs">Click "+ Add Part" to list your first part.</p>
+                        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-1">No parts in your inventory yet.</p>
+                        <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">Click "+ Add Part" to list your first part.</p>
                       </div>
                     ) : (
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
+                          <tr className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
                             <Th>Part Name</Th><Th>Part #</Th><Th>Condition</Th><Th>Price</Th><Th>Stock</Th><Th>Actions</Th>
                           </tr>
                         </thead>
@@ -556,15 +556,15 @@ export default function SupplierDashboardPage() {
                           {parts.map((part) => (
                             <>
                               <tr key={part.id} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
-                                <td className="px-5 py-3 text-white">{part.partName}</td>
-                                <td className="px-5 py-3 text-[#7A9A80] font-mono text-xs">{part.partNumber || '—'}</td>
+                                <td className="px-5 py-3 text-[#07110A] dark:text-white">{part.partName}</td>
+                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">{part.partNumber || '—'}</td>
                                 <td className="px-5 py-3">
                                   <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.15)] text-[10px]">
                                     {part.condition}
                                   </Badge>
                                 </td>
-                                <td className="px-5 py-3 text-[#C5DEC8]">${part.price.toLocaleString()}</td>
-                                <td className="px-5 py-3 text-[#7A9A80]">{part.stock}</td>
+                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#C5DEC8]">${part.price.toLocaleString()}</td>
+                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80]">{part.stock}</td>
                                 <td className="px-5 py-3">
                                   <Button
                                     size="sm"
@@ -583,60 +583,60 @@ export default function SupplierDashboardPage() {
                                     <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">Edit Part</p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#E8F0E9] text-xs">Part Name *</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Part Name *</Label>
                                         <Input value={partEditForm.partName} onChange={(e) => setPartEditForm((f) => ({ ...f, partName: e.target.value }))}
-                                          className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm" />
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm" />
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#E8F0E9] text-xs">Part Number</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Part Number</Label>
                                         <Input value={partEditForm.partNumber} onChange={(e) => setPartEditForm((f) => ({ ...f, partNumber: e.target.value }))}
-                                          className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm" />
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm" />
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#E8F0E9] text-xs">Condition *</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Condition *</Label>
                                         <select value={partEditForm.condition} onChange={(e) => setPartEditForm((f) => ({ ...f, condition: e.target.value }))}
-                                          className="w-full h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm">
+                                          className="w-full h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm">
                                           {conditionOptions.map((c) => <option key={c} value={c}>{c}</option>)}
                                         </select>
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#E8F0E9] text-xs">Part Image</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Part Image</Label>
                                         <label className="flex items-center gap-3 cursor-pointer group">
-                                          <div className="flex-1 h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
+                                          <div className="flex-1 h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
                                             {uploadingEditImage ? (
-                                              <span className="text-[#7A9A80] text-xs">Uploading…</span>
+                                              <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">Uploading…</span>
                                             ) : partEditForm.imageURL ? (
                                               <>
                                                 <img src={partEditForm.imageURL} alt="preview" className="h-6 w-6 rounded object-cover shrink-0" />
-                                                <span className="text-white text-xs truncate">Image uploaded</span>
+                                                <span className="text-[#07110A] dark:text-white text-xs truncate">Image uploaded</span>
                                               </>
                                             ) : (
-                                              <span className="text-[#3D5942] text-xs">Click to upload image…</span>
+                                              <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">Click to upload image…</span>
                                             )}
                                           </div>
                                           {partEditForm.imageURL && !uploadingEditImage && (
                                             <button type="button" onClick={(e) => { e.preventDefault(); setPartEditForm((f) => ({ ...f, imageURL: '' })) }}
-                                              className="text-[#7A9A80] hover:text-red-400 text-xs transition-colors shrink-0">Remove</button>
+                                              className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-red-400 text-xs transition-colors shrink-0">Remove</button>
                                           )}
                                           <input type="file" accept="image/*" className="sr-only" disabled={uploadingEditImage}
                                             onChange={makeImageUploadHandler(setUploadingEditImage, setPartEditForm, setPartEditError)} />
                                         </label>
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#E8F0E9] text-xs">Price (USD) *</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Price (USD) *</Label>
                                         <Input type="number" value={partEditForm.price} onChange={(e) => setPartEditForm((f) => ({ ...f, price: e.target.value }))}
-                                          className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm" />
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm" />
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#E8F0E9] text-xs">Stock *</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Stock *</Label>
                                         <Input type="number" value={partEditForm.stock} onChange={(e) => setPartEditForm((f) => ({ ...f, stock: e.target.value }))}
-                                          className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white focus:border-[#00C853] h-9 text-sm" />
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm" />
                                       </div>
                                       <div className="space-y-1.5 sm:col-span-2">
-                                        <Label className="text-[#E8F0E9] text-xs">Description</Label>
+                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">Description</Label>
                                         <textarea value={partEditForm.description} onChange={(e) => setPartEditForm((f) => ({ ...f, description: e.target.value }))}
                                           rows={2}
-                                          className="w-full px-3 py-2 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm resize-none" />
+                                          className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm resize-none" />
                                       </div>
                                     </div>
                                     {partEditError && <p className="text-red-400 text-xs mt-3">{partEditError}</p>}
@@ -647,7 +647,7 @@ export default function SupplierDashboardPage() {
                                         {savingPart ? 'Saving…' : 'Save Changes'}
                                       </Button>
                                       <Button variant="outline" onClick={() => setEditingPartId(null)}
-                                        className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm">
+                                        className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm">
                                         Cancel
                                       </Button>
                                     </div>
@@ -667,20 +667,20 @@ export default function SupplierDashboardPage() {
             {/* ── ORDERS TAB ── */}
             {activeTab === 'orders' && (
               <>
-                {loadingOrders && <p className="text-[#7A9A80] text-sm">Loading orders…</p>}
+                {loadingOrders && <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading orders…</p>}
 
                 {!loadingOrders && (
                   <div className="rounded-xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
                     {orders.length === 0 ? (
                       <div className="px-6 py-12 text-center">
-                        <p className="text-[#7A9A80] text-sm">No orders for your parts yet.</p>
-                        <p className="text-[#3D5942] text-xs mt-1">Orders will appear here when the admin assigns your parts to customer requests.</p>
+                        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">No orders for your parts yet.</p>
+                        <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-1">Orders will appear here when the admin assigns your parts to customer requests.</p>
                       </div>
                     ) : (
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
+                            <tr className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
                               <Th>#</Th><Th>Part</Th><Th>Vehicle</Th><Th>Price</Th><Th>Tracking</Th><Th>Status</Th><Th>Actions</Th>
                             </tr>
                           </thead>
@@ -688,14 +688,14 @@ export default function SupplierDashboardPage() {
                             {orders.map((order) => (
                               <>
                                 <tr key={order.orderId} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
-                                  <td className="px-5 py-3 text-[#3D5942] font-mono text-xs">#{order.orderId}</td>
-                                  <td className="px-5 py-3 text-white">{order.part?.partName ?? '—'}</td>
-                                  <td className="px-5 py-3 text-[#7A9A80] text-xs">
+                                  <td className="px-5 py-3 text-[#7A9A80] dark:text-[#3D5942] font-mono text-xs">#{order.orderId}</td>
+                                  <td className="px-5 py-3 text-[#07110A] dark:text-white">{order.part?.partName ?? '—'}</td>
+                                  <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
                                     {order.partRequest?.vehicleMake} {order.partRequest?.model}
                                   </td>
                                   <td className="px-5 py-3 text-[#00C853] font-semibold">${order.price.toLocaleString()}</td>
                                   <td className="px-5 py-3 font-mono text-xs">
-                                    <span className={order.trackingNumber ? 'text-white' : 'text-[#3D5942]'}>
+                                    <span className={order.trackingNumber ? 'text-[#07110A] dark:text-white' : 'text-[#7A9A80] dark:text-[#3D5942]'}>
                                       {order.trackingNumber || '—'}
                                     </span>
                                   </td>
@@ -719,11 +719,11 @@ export default function SupplierDashboardPage() {
                                     <td colSpan={7} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-5 py-4">
                                       <div className="flex items-end gap-4 flex-wrap">
                                         <div className="space-y-1">
-                                          <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Status</p>
+                                          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Status</p>
                                           <select
                                             value={orderEdit.status}
                                             onChange={(e) => setOrderEdit((s) => ({ ...s, status: Number(e.target.value) }))}
-                                            className="h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.1)] text-white focus:outline-none focus:border-[#00C853] text-sm"
+                                            className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                                           >
                                             <option value={0}>Pending</option>
                                             <option value={1}>Shipped</option>
@@ -731,12 +731,12 @@ export default function SupplierDashboardPage() {
                                           </select>
                                         </div>
                                         <div className="space-y-1">
-                                          <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Tracking Number</p>
+                                          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Tracking Number</p>
                                           <Input
                                             value={orderEdit.trackingNumber}
                                             onChange={(e) => setOrderEdit((s) => ({ ...s, trackingNumber: e.target.value }))}
                                             placeholder="e.g. TRK-00123"
-                                            className="bg-[#111C14] border-[rgba(255,255,255,0.1)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 w-44"
+                                            className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 w-44"
                                           />
                                         </div>
                                         <Button
@@ -749,7 +749,7 @@ export default function SupplierDashboardPage() {
                                         <Button
                                           variant="outline"
                                           onClick={() => setEditingOrderId(null)}
-                                          className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm"
+                                          className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
                                         >
                                           Cancel
                                         </Button>
@@ -777,7 +777,7 @@ export default function SupplierDashboardPage() {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
+    <th className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
       {children}
     </th>
   )
@@ -785,9 +785,9 @@ function Th({ children }: { children: React.ReactNode }) {
 
 function InfoCard({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="bg-[#111C14] rounded-xl border border-[rgba(0,200,83,0.1)] px-4 py-3">
-      <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] mb-1">{label}</p>
-      <div className="text-white text-sm">{value}</div>
+    <div className="bg-white dark:bg-[#111C14] rounded-xl border border-[rgba(0,200,83,0.1)] px-4 py-3">
+      <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-1">{label}</p>
+      <div className="text-[#07110A] dark:text-white text-sm">{value}</div>
     </div>
   )
 }

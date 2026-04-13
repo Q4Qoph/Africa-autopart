@@ -37,7 +37,7 @@ export default function RequestsPage() {
   }, [auth])
 
   return (
-    <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
       <Navbar />
       <main className="pt-[68px] md:pt-[104px]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
@@ -48,7 +48,7 @@ export default function RequestsPage() {
                 <span className="block w-6 h-px bg-[#00C853]" />
                 Part Requests
               </p>
-              <h1 className="text-3xl font-extrabold text-white font-display">My Requests</h1>
+              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">My Requests</h1>
             </div>
             <Link to="/requests/new" className={btnPrimary}>
               + New Request
@@ -56,7 +56,7 @@ export default function RequestsPage() {
           </div>
 
           {loading && (
-            <p className="text-[#7A9A80] text-sm">Loading…</p>
+            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>
           )}
 
           {error && (
@@ -66,9 +66,9 @@ export default function RequestsPage() {
           )}
 
           {!loading && !error && requests.length === 0 && (
-            <Card className="bg-[#111C14] border-[rgba(0,200,83,0.15)] text-white">
+            <Card className="bg-white dark:bg-[#111C14] border-[rgba(0,200,83,0.15)] text-[#07110A] dark:text-white">
               <CardContent className="py-16 text-center">
-                <p className="text-[#7A9A80] mb-4">You haven't submitted any requests yet.</p>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] mb-4">You haven't submitted any requests yet.</p>
                 <Link to="/requests/new" className={btnPrimary}>
                   Request your first part
                 </Link>
@@ -82,11 +82,11 @@ export default function RequestsPage() {
                 <Link
                   key={req.id}
                   to={`/requests/${req.id}`}
-                  className="bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between hover:border-[rgba(0,200,83,0.3)] transition-colors"
+                  className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between hover:border-[rgba(0,200,83,0.3)] transition-colors"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-semibold truncate">{req.partName || '—'}</p>
-                    <p className="text-[#7A9A80] text-xs mt-0.5">
+                    <p className="text-[#07110A] dark:text-white font-semibold truncate">{req.partName || '—'}</p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mt-0.5">
                       {req.vehicleMake} {req.model} {req.year} · {conditionLabel(req.conditionPreference)}
                     </p>
                   </div>
@@ -116,7 +116,7 @@ export default function RequestsPage() {
                     >
                       {req.isSorted ? 'Sorted' : 'Pending'}
                     </Badge>
-                    <span className="text-[#3D5942] text-xs font-mono">#{req.id}</span>
+                    <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs font-mono">#{req.id}</span>
                   </div>
                 </Link>
               ))}

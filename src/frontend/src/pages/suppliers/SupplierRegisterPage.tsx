@@ -60,7 +60,7 @@ export default function SupplierRegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07110A] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] flex flex-col md:flex-row">
       {/* Left — brand panel */}
       <div className="hidden md:flex md:w-[45%] lg:w-[42%] relative flex-col justify-between p-10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_15%_50%,rgba(0,200,83,0.2),transparent)]" />
@@ -77,7 +77,7 @@ export default function SupplierRegisterPage() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-sm shadow-lg shadow-[#00C853]/20">
             AA
           </div>
-          <span className="text-white font-bold text-lg tracking-tight">Africa Autopart</span>
+          <span className="text-[#07110A] dark:text-white font-bold text-lg tracking-tight">Africa Autopart</span>
         </Link>
 
         <div className="relative">
@@ -85,11 +85,11 @@ export default function SupplierRegisterPage() {
             <span className="block w-5 h-px bg-[#00C853]" />
             Supplier Network
           </p>
-          <h2 className="text-4xl font-extrabold text-white font-display leading-tight mb-4">
+          <h2 className="text-4xl font-extrabold text-[#07110A] dark:text-white font-display leading-tight mb-4">
             Grow your business<br />
             <span className="text-[#00C853]">across borders</span>
           </h2>
-          <p className="text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[320px]">
+          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[320px]">
             Join 1,240+ verified suppliers already fulfilling orders for buyers across Africa and Saudi Arabia.
           </p>
 
@@ -100,8 +100,8 @@ export default function SupplierRegisterPage() {
                   {b.icon}
                 </div>
                 <div>
-                  <p className="text-[#C5DEC8] text-sm font-medium">{b.title}</p>
-                  <p className="text-[#7A9A80] text-xs">{b.desc}</p>
+                  <p className="text-[#4A6B50] dark:text-[#C5DEC8] text-sm font-medium">{b.title}</p>
+                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{b.desc}</p>
                 </div>
               </div>
             ))}
@@ -113,7 +113,7 @@ export default function SupplierRegisterPage() {
             <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse" />
             <span className="text-[#00C853] text-xs font-mono">Reviewed within 24–48 hours</span>
           </div>
-          <p className="text-[#3D5942] text-xs">
+          <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">
             Looking to buy parts?{' '}
             <Link to="/register" className="text-[#00C853] hover:underline">
               Create a buyer account →
@@ -129,7 +129,7 @@ export default function SupplierRegisterPage() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
             AA
           </div>
-          <span className="text-white font-bold text-base">Africa Autopart</span>
+          <span className="text-[#07110A] dark:text-white font-bold text-base">Africa Autopart</span>
         </Link>
 
         <div className="w-full max-w-[420px]">
@@ -138,29 +138,29 @@ export default function SupplierRegisterPage() {
               <div className="w-16 h-16 rounded-full bg-[#00C853]/15 border border-[#00C853]/30 grid place-items-center mx-auto mb-5">
                 <span className="text-[#00C853] text-3xl">✓</span>
               </div>
-              <h2 className="text-white text-2xl font-extrabold font-display mb-2">Application submitted!</h2>
-              <p className="text-[#7A9A80] text-sm max-w-[300px] mx-auto leading-relaxed">
+              <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">Application submitted!</h2>
+              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm max-w-[300px] mx-auto leading-relaxed">
                 Our team will review your business within 24–48 hours. Once approved, you'll receive an email with a link to set your password and access your dashboard.
               </p>
-              <p className="text-[#3D5942] text-xs mt-4">Redirecting to sign in…</p>
+              <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-4">Redirecting to sign in…</p>
             </div>
           ) : (
             <>
               <div className="mb-7">
-                <h1 className="text-3xl font-extrabold text-white font-display mb-2">Register as Supplier</h1>
-                <p className="text-[#7A9A80] text-sm">
+                <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Register as Supplier</h1>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                   Tell us about your business. Our team reviews every application.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="businessName" className="text-[#E8F0E9] text-sm">Business name *</Label>
+                  <Label htmlFor="businessName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Business name *</Label>
                   <Input
                     id="businessName"
                     placeholder="Precision Auto Parts Ltd"
                     {...register('businessName')}
-                    className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                    className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
                   {errors.businessName && (
                     <p className="text-red-400 text-xs">{errors.businessName.message}</p>
@@ -168,11 +168,11 @@ export default function SupplierRegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="category" className="text-[#E8F0E9] text-sm">Parts category *</Label>
+                  <Label htmlFor="category" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Parts category *</Label>
                   <select
                     id="category"
                     {...register('category')}
-                    className="w-full h-11 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.08)] text-white focus:outline-none focus:border-[#00C853] text-sm"
+                    className="w-full h-11 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                   >
                     <option value="">Select a category…</option>
                     {categoryOptions.map((c) => (
@@ -185,26 +185,26 @@ export default function SupplierRegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="description" className="text-[#E8F0E9] text-sm">
-                    About your business <span className="text-[#3D5942]">(optional)</span>
+                  <Label htmlFor="description" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">
+                    About your business <span className="text-[#7A9A80] dark:text-[#3D5942]">(optional)</span>
                   </Label>
                   <textarea
                     id="description"
                     rows={3}
                     placeholder="Describe what you supply, regions you cover, years in business…"
                     {...register('description')}
-                    className="w-full px-3 py-2.5 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:outline-none focus:border-[#00C853] text-sm resize-none"
+                    className="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:outline-none focus:border-[#00C853] text-sm resize-none"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-[#E8F0E9] text-sm">Business email *</Label>
+                  <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Business email *</Label>
                   <Input
                     id="email"
                     type="email"
                     placeholder="info@yourbusiness.com"
                     {...register('email')}
-                    className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                    className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
                   {errors.email && (
                     <p className="text-red-400 text-xs">{errors.email.message}</p>
@@ -212,13 +212,13 @@ export default function SupplierRegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-[#E8F0E9] text-sm">Business phone *</Label>
+                  <Label htmlFor="phone" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Business phone *</Label>
                   <Input
                     id="phone"
                     type="tel"
                     placeholder="+254 700 000 000"
                     {...register('phone')}
-                    className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                    className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
                   {errors.phone && (
                     <p className="text-red-400 text-xs">{errors.phone.message}</p>
@@ -246,16 +246,16 @@ export default function SupplierRegisterPage() {
                 </Button>
               </form>
 
-              <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.06)] space-y-3 text-center">
-                <p className="text-sm text-[#7A9A80]">
+              <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] space-y-3 text-center">
+                <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
                   Already have an account?{' '}
                   <Link to="/login" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
                     Sign in
                   </Link>
                 </p>
-                <p className="text-xs text-[#3D5942]">
+                <p className="text-xs text-[#7A9A80] dark:text-[#3D5942]">
                   Looking to buy parts?{' '}
-                  <Link to="/register" className="text-[#7A9A80] hover:text-[#00C853] transition-colors">
+                  <Link to="/register" className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
                     Create a buyer account →
                   </Link>
                 </p>

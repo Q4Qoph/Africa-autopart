@@ -75,8 +75,8 @@ export default function AdminApproveUsersPage() {
           <span className="block w-6 h-px bg-[#00C853]" />
           Admin
         </p>
-        <h1 className="text-2xl font-extrabold text-white">Approve Users</h1>
-        <p className="text-[#7A9A80] text-sm mt-1">
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Approve Users</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">
           Select a user to view their status and approve if needed
         </p>
       </div>
@@ -84,13 +84,13 @@ export default function AdminApproveUsersPage() {
       <div className="flex gap-4 flex-col lg:flex-row">
         {/* User list */}
         <div className="lg:w-80 shrink-0 rounded-xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
-          <div className="bg-[#0D1810] px-4 py-3 border-b border-[rgba(0,200,83,0.12)]">
-            <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
+          <div className="bg-[#E8F2EA] dark:bg-[#0D1810] px-4 py-3 border-b border-[rgba(0,200,83,0.12)]">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
               All Users ({users.length})
             </p>
           </div>
           {loadingList ? (
-            <p className="px-4 py-6 text-[#7A9A80] text-sm">Loading…</p>
+            <p className="px-4 py-6 text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>
           ) : (
             <ul className="divide-y divide-[rgba(255,255,255,0.04)]">
               {users.map((u) => (
@@ -103,10 +103,10 @@ export default function AdminApproveUsersPage() {
                         : 'border-l-2 border-transparent'
                     }`}
                   >
-                    <p className="text-white text-sm font-medium">
+                    <p className="text-[#07110A] dark:text-white text-sm font-medium">
                       {u.firstName} {u.lastName}
                     </p>
-                    <p className="text-[#7A9A80] text-xs mt-0.5">{u.email}</p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mt-0.5">{u.email}</p>
                   </button>
                 </li>
               ))}
@@ -115,16 +115,16 @@ export default function AdminApproveUsersPage() {
         </div>
 
         {/* Detail panel */}
-        <div className="flex-1 rounded-xl border border-[rgba(0,200,83,0.15)] bg-[#111C14]">
+        <div className="flex-1 rounded-xl border border-[rgba(0,200,83,0.15)] bg-white dark:bg-[#111C14]">
           {!selectedId ? (
             <div className="flex flex-col items-center justify-center h-64 text-center px-6">
-              <p className="text-[#7A9A80] text-sm">
+              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                 Select a user from the list to view details
               </p>
             </div>
           ) : loadingDetail ? (
             <div className="flex items-center justify-center h-64">
-              <p className="text-[#7A9A80] text-sm">Loading user details…</p>
+              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading user details…</p>
             </div>
           ) : !detail ? (
             <div className="flex items-center justify-center h-64">
@@ -135,10 +135,10 @@ export default function AdminApproveUsersPage() {
               {/* Header */}
               <div className="flex items-start justify-between gap-4 mb-6">
                 <div>
-                  <h2 className="text-xl font-bold text-white">
+                  <h2 className="text-xl font-bold text-[#07110A] dark:text-white">
                     {detail.firstName} {detail.lastName}
                   </h2>
-                  <p className="text-[#7A9A80] text-sm mt-0.5">User #{detail.id}</p>
+                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-0.5">User #{detail.id}</p>
                 </div>
                 <Badge
                   className={
@@ -182,7 +182,7 @@ export default function AdminApproveUsersPage() {
               {/* Action */}
               {detail.role === UserRole.Supplier && !detail.isApproved && (
                 <div className="border-t border-[rgba(0,200,83,0.1)] pt-5">
-                  <p className="text-[#7A9A80] text-sm mb-3">
+                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-3">
                     Approving this supplier will activate their account and send them an email with a link to set their password.
                   </p>
                   <Button
@@ -205,7 +205,7 @@ export default function AdminApproveUsersPage() {
 
               {detail.role !== UserRole.Supplier && (
                 <div className="border-t border-[rgba(0,200,83,0.1)] pt-5">
-                  <p className="text-[#7A9A80] text-sm">
+                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     Approval is only applicable to supplier accounts.
                   </p>
                 </div>
@@ -226,11 +226,11 @@ function InfoRow({
   value: React.ReactNode
 }) {
   return (
-    <div className="bg-[#0D1810] rounded-lg px-4 py-3">
-      <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] mb-1">
+    <div className="bg-[#E8F2EA] dark:bg-[#0D1810] rounded-lg px-4 py-3">
+      <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-1">
         {label}
       </p>
-      <div className="text-white text-sm">{value}</div>
+      <div className="text-[#07110A] dark:text-white text-sm">{value}</div>
     </div>
   )
 }

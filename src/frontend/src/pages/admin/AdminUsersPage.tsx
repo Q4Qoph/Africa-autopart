@@ -67,8 +67,8 @@ export default function AdminUsersPage() {
           <span className="block w-6 h-px bg-[#00C853]" />
           Admin
         </p>
-        <h1 className="text-2xl font-extrabold text-white">Users</h1>
-        <p className="text-[#7A9A80] text-sm mt-1">{users.length} registered accounts</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Users</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{users.length} registered accounts</p>
       </div>
 
       <input
@@ -76,16 +76,16 @@ export default function AdminUsersPage() {
         placeholder="Search by name or email…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-5 w-full max-w-sm bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2 text-sm text-white placeholder-[#7A9A80] focus:outline-none focus:border-[#00C853]"
+        className="mb-5 w-full max-w-sm bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2 text-sm text-[#07110A] dark:text-white placeholder-[#7A9A80] focus:outline-none focus:border-[#00C853]"
       />
 
       {loading ? (
-        <p className="text-[#7A9A80] text-sm">Loading users…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading users…</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#0D1810]">
+              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
                 <Th>ID</Th>
                 <Th>Name</Th>
                 <Th>Email</Th>
@@ -101,12 +101,12 @@ export default function AdminUsersPage() {
                   key={u.id}
                   className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                 >
-                  <Td className="text-[#7A9A80] font-mono">#{u.id}</Td>
-                  <Td className="font-medium text-white">
+                  <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{u.id}</Td>
+                  <Td className="font-medium text-[#07110A] dark:text-white">
                     {u.firstName} {u.lastName}
                   </Td>
-                  <Td className="text-[#7A9A80]">{u.email}</Td>
-                  <Td className="text-[#7A9A80]">{u.phone}</Td>
+                  <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{u.email}</Td>
+                  <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{u.phone}</Td>
                   <Td>
                     <Badge className={`text-[10px] border ${roleBadgeClass[u.role] ?? ''}`}>
                       {roleLabel[u.role] ?? u.role}
@@ -124,7 +124,7 @@ export default function AdminUsersPage() {
                         </Badge>
                       )
                     ) : (
-                      <span className="text-[#7A9A80] text-xs">—</span>
+                      <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">—</span>
                     )}
                   </Td>
                   <Td>
@@ -154,7 +154,7 @@ export default function AdminUsersPage() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#7A9A80] text-sm">
+                  <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     No users found.
                   </td>
                 </tr>
@@ -169,7 +169,7 @@ export default function AdminUsersPage() {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
+    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
       {children}
     </th>
   )

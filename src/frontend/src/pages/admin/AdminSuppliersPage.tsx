@@ -44,8 +44,8 @@ export default function AdminSuppliersPage() {
           <span className="block w-6 h-px bg-[#00C853]" />
           Admin
         </p>
-        <h1 className="text-2xl font-extrabold text-white">Suppliers</h1>
-        <p className="text-[#7A9A80] text-sm mt-1">{suppliers.length} registered suppliers</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Suppliers</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{suppliers.length} registered suppliers</p>
       </div>
 
       <input
@@ -53,16 +53,16 @@ export default function AdminSuppliersPage() {
         placeholder="Search by name, category or email…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-5 w-full max-w-sm bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2 text-sm text-white placeholder-[#7A9A80] focus:outline-none focus:border-[#00C853]"
+        className="mb-5 w-full max-w-sm bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2 text-sm text-[#07110A] dark:text-white placeholder-[#7A9A80] focus:outline-none focus:border-[#00C853]"
       />
 
       {loading ? (
-        <p className="text-[#7A9A80] text-sm">Loading suppliers…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading suppliers…</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#0D1810]">
+              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
                 <Th>ID</Th>
                 <Th>Business Name</Th>
                 <Th>Category</Th>
@@ -79,16 +79,16 @@ export default function AdminSuppliersPage() {
                     key={s.id}
                     className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
-                    <Td className="text-[#7A9A80] font-mono">#{s.id}</Td>
-                    <Td className="font-medium text-white">{s.businessName}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{s.id}</Td>
+                    <Td className="font-medium text-[#07110A] dark:text-white">{s.businessName}</Td>
                     <Td>
                       <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
                         {s.category}
                       </Badge>
                     </Td>
-                    <Td className="text-[#7A9A80]">{s.email}</Td>
-                    <Td className="text-[#7A9A80]">{s.phone}</Td>
-                    <Td className="text-[#7A9A80]">{s.parts.length}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{s.email}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{s.phone}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{s.parts.length}</Td>
                     <Td>
                       <div className="flex items-center gap-2">
                         {s.parts.length > 0 && (
@@ -115,22 +115,22 @@ export default function AdminSuppliersPage() {
                     </Td>
                   </tr>
                   {expandedId === s.id && (
-                    <tr key={`${s.id}-parts`} className="bg-[#0D1810]">
+                    <tr key={`${s.id}-parts`} className="bg-[#E8F2EA] dark:bg-[#0D1810]">
                       <td colSpan={7} className="px-6 py-4">
-                        <p className="text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] mb-3">
+                        <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
                           Parts ({s.parts.length})
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                           {s.parts.map((p) => (
                             <div
                               key={p.id}
-                              className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-lg px-3 py-2"
+                              className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-lg px-3 py-2"
                             >
-                              <p className="text-white text-xs font-semibold">{p.partName}</p>
-                              <p className="text-[#7A9A80] text-[10px] mt-0.5">
+                              <p className="text-[#07110A] dark:text-white text-xs font-semibold">{p.partName}</p>
+                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] mt-0.5">
                                 #{p.partNumber} · {p.condition} · KES {p.price.toLocaleString()}
                               </p>
-                              <p className="text-[#7A9A80] text-[10px]">Stock: {p.stock}</p>
+                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px]">Stock: {p.stock}</p>
                             </div>
                           ))}
                         </div>
@@ -141,7 +141,7 @@ export default function AdminSuppliersPage() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#7A9A80] text-sm">
+                  <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     No suppliers found.
                   </td>
                 </tr>
@@ -156,7 +156,7 @@ export default function AdminSuppliersPage() {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
+    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
       {children}
     </th>
   )

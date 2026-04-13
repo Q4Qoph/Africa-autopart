@@ -32,7 +32,7 @@ export default function OrdersPage() {
   }, [auth])
 
   return (
-    <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
       <Navbar />
       <main className="pt-[68px] md:pt-[104px]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
@@ -41,10 +41,10 @@ export default function OrdersPage() {
               <span className="block w-6 h-px bg-[#00C853]" />
               Orders
             </p>
-            <h1 className="text-3xl font-extrabold text-white font-display">My Orders</h1>
+            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">My Orders</h1>
           </div>
 
-          {loading && <p className="text-[#7A9A80] text-sm">Loading…</p>}
+          {loading && <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>}
 
           {error && (
             <p className="text-red-400 text-sm bg-red-400/10 px-4 py-3 rounded-lg border border-red-400/20">
@@ -53,10 +53,10 @@ export default function OrdersPage() {
           )}
 
           {!loading && !error && orders.length === 0 && (
-            <Card className="bg-[#111C14] border-[rgba(0,200,83,0.15)] text-white">
+            <Card className="bg-white dark:bg-[#111C14] border-[rgba(0,200,83,0.15)] text-[#07110A] dark:text-white">
               <CardContent className="py-16 text-center">
-                <p className="text-[#7A9A80]">No orders yet.</p>
-                <p className="text-[#3D5942] text-xs mt-1">
+                <p className="text-[#4A6B50] dark:text-[#7A9A80]">No orders yet.</p>
+                <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-1">
                   Orders will appear here once our team matches your request to a supplier.
                 </p>
               </CardContent>
@@ -66,7 +66,7 @@ export default function OrdersPage() {
           {!loading && orders.length > 0 && (
             <div className="grid gap-3">
               {/* Table header */}
-              <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#3D5942]">
+              <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942]">
                 <span>#</span>
                 <span>Part</span>
                 <span>Supplier</span>
@@ -78,21 +78,21 @@ export default function OrdersPage() {
               {orders.map((order) => (
                 <div
                   key={order.orderId}
-                  className="bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 items-center"
+                  className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl px-6 py-5 grid grid-cols-1 md:grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 items-center"
                 >
-                  <span className="text-[#3D5942] text-xs font-mono">{order.orderId}</span>
+                  <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs font-mono">{order.orderId}</span>
 
                   <div>
-                    <p className="text-white text-sm font-medium">{order.part?.partName ?? '—'}</p>
-                    <p className="text-[#7A9A80] text-xs font-mono">{order.part?.partNumber ?? ''}</p>
-                    <p className="text-[#3D5942] text-xs mt-0.5">
+                    <p className="text-[#07110A] dark:text-white text-sm font-medium">{order.part?.partName ?? '—'}</p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">{order.part?.partNumber ?? ''}</p>
+                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-0.5">
                       {order.partRequest?.vehicleMake} {order.partRequest?.model}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-[#7A9A80] text-sm">{order.supplier?.businessName ?? '—'}</p>
-                    <p className="text-[#3D5942] text-xs">{order.supplier?.email ?? ''}</p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{order.supplier?.businessName ?? '—'}</p>
+                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">{order.supplier?.email ?? ''}</p>
                   </div>
 
                   <p className="text-[#00C853] font-semibold text-sm">
@@ -101,7 +101,7 @@ export default function OrdersPage() {
 
                   <p className={cn(
                     'text-xs font-mono',
-                    order.trackingNumber ? 'text-white' : 'text-[#3D5942]',
+                    order.trackingNumber ? 'text-[#07110A] dark:text-white' : 'text-[#7A9A80] dark:text-[#3D5942]',
                   )}>
                     {order.trackingNumber || 'Not assigned'}
                   </p>

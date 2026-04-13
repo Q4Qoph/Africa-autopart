@@ -165,18 +165,12 @@ export default function Navbar() {
           <div className="max-w-[1260px] w-full mx-auto px-6 flex items-center gap-6">
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-sm shrink-0">
-                AA
-              </div>
-              <div className="leading-tight hidden sm:block">
-                <p className="text-[9px] text-[rgba(0,0,0,0.4)] dark:text-[rgba(255,255,255,0.45)] uppercase tracking-[0.18em] font-mono">
-                  Cross-Border Sourcing
-                </p>
-                <p className="text-[#07110A] dark:text-white font-bold text-sm leading-none mt-0.5">
-                  Africa Autopart
-                </p>
-              </div>
+            <Link to="/" className="flex items-center shrink-0 mr-2">
+              <img
+                src="/images/logo.png"
+                alt="Africa Autopart"
+                className="w-60 h-auto"
+              />
             </Link>
 
             {/* Desktop nav links */}

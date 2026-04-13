@@ -92,17 +92,17 @@ export default function AdminOrdersPage() {
           <span className="block w-6 h-px bg-[#00C853]" />
           Admin
         </p>
-        <h1 className="text-2xl font-extrabold text-white">Orders</h1>
-        <p className="text-[#7A9A80] text-sm mt-1">{orders.length} total orders</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Orders</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{orders.length} total orders</p>
       </div>
 
       {loading ? (
-        <p className="text-[#7A9A80] text-sm">Loading orders…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading orders…</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#0D1810]">
+              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
                 <Th>#</Th>
                 <Th>Part</Th>
                 <Th>Supplier</Th>
@@ -120,19 +120,19 @@ export default function AdminOrdersPage() {
                     key={o.orderId}
                     className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
-                    <Td className="text-[#7A9A80] font-mono text-xs">#{o.orderId}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{o.orderId}</Td>
                     <Td>
-                      <p className="text-white font-medium">{o.part?.partName ?? '—'}</p>
-                      <p className="text-[#3D5942] text-xs font-mono">{o.part?.partNumber ?? ''}</p>
+                      <p className="text-[#07110A] dark:text-white font-medium">{o.part?.partName ?? '—'}</p>
+                      <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs font-mono">{o.part?.partNumber ?? ''}</p>
                     </Td>
                     <Td>
-                      <p className="text-[#7A9A80]">{o.supplier?.businessName ?? '—'}</p>
-                      <p className="text-[#3D5942] text-xs">{o.supplier?.email ?? ''}</p>
+                      <p className="text-[#4A6B50] dark:text-[#7A9A80]">{o.supplier?.businessName ?? '—'}</p>
+                      <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">{o.supplier?.email ?? ''}</p>
                     </Td>
-                    <Td className="text-[#7A9A80] text-xs">{o.partRequest?.vehicleMake} {o.partRequest?.model}</Td>
-                    <Td className="text-white">${o.price.toLocaleString()}</Td>
-                    <Td className="font-mono text-xs text-[#7A9A80]">
-                      {o.trackingNumber || <span className="text-[#3D5942]">—</span>}
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{o.partRequest?.vehicleMake} {o.partRequest?.model}</Td>
+                    <Td className="text-[#07110A] dark:text-white">${o.price.toLocaleString()}</Td>
+                    <Td className="font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
+                      {o.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
                     </Td>
                     <Td>
                       <Badge className={`text-[10px] border ${statusClass[o.status] ?? ''}`}>
@@ -166,11 +166,11 @@ export default function AdminOrdersPage() {
                       <td colSpan={8} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
                         <div className="flex items-end gap-4 flex-wrap">
                           <div className="space-y-1">
-                            <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Status</p>
+                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Status</p>
                             <select
                               value={editState.status}
                               onChange={(e) => setEditState((s) => ({ ...s, status: Number(e.target.value) }))}
-                              className="h-9 px-3 rounded-lg bg-[#111C14] border border-[rgba(255,255,255,0.1)] text-white focus:outline-none focus:border-[#00C853] text-sm"
+                              className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                             >
                               <option value={0}>Pending</option>
                               <option value={1}>Shipped</option>
@@ -178,12 +178,12 @@ export default function AdminOrdersPage() {
                             </select>
                           </div>
                           <div className="space-y-1">
-                            <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Tracking Number</p>
+                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Tracking Number</p>
                             <Input
                               value={editState.trackingNumber}
                               onChange={(e) => setEditState((s) => ({ ...s, trackingNumber: e.target.value }))}
                               placeholder="e.g. TRK-00123"
-                              className="bg-[#111C14] border-[rgba(255,255,255,0.1)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 w-48"
+                              className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 w-48"
                             />
                           </div>
                           <Button
@@ -196,7 +196,7 @@ export default function AdminOrdersPage() {
                           <Button
                             variant="outline"
                             onClick={cancelEdit}
-                            className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm"
+                            className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
                           >
                             Cancel
                           </Button>
@@ -211,7 +211,7 @@ export default function AdminOrdersPage() {
               ))}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-[#7A9A80] text-sm">
+                  <td colSpan={8} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     No orders found.
                   </td>
                 </tr>
@@ -226,7 +226,7 @@ export default function AdminOrdersPage() {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
+    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
       {children}
     </th>
   )

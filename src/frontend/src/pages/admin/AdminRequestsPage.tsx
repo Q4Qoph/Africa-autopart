@@ -214,8 +214,8 @@ export default function AdminRequestsPage() {
           <span className="block w-6 h-px bg-[#00C853]" />
           Admin
         </p>
-        <h1 className="text-2xl font-extrabold text-white">Part Requests</h1>
-        <p className="text-[#7A9A80] text-sm mt-1">{requests.length} total requests</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Part Requests</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{requests.length} total requests</p>
       </div>
 
       {/* Filter tabs */}
@@ -227,7 +227,7 @@ export default function AdminRequestsPage() {
             className={`px-4 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-colors ${
               filter === f
                 ? 'bg-[rgba(0,200,83,0.12)] text-[#00C853] border border-[rgba(0,200,83,0.3)]'
-                : 'text-[#7A9A80] border border-transparent hover:text-white'
+                : 'text-[#4A6B50] dark:text-[#7A9A80] border border-transparent hover:text-[#07110A] dark:hover:text-white'
             }`}
           >
             {f}
@@ -236,12 +236,12 @@ export default function AdminRequestsPage() {
       </div>
 
       {loading ? (
-        <p className="text-[#7A9A80] text-sm">Loading requests…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading requests…</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#0D1810]">
+              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
                 <Th>ID</Th>
                 <Th>Part</Th>
                 <Th>Vehicle</Th>
@@ -259,9 +259,9 @@ export default function AdminRequestsPage() {
                     key={r.id}
                     className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
-                    <Td className="text-[#7A9A80] font-mono">#{r.id}</Td>
-                    <Td className="text-white font-medium">{r.partName}</Td>
-                    <Td className="text-[#7A9A80]">
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{r.id}</Td>
+                    <Td className="text-[#07110A] dark:text-white font-medium">{r.partName}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">
                       {r.vehicleMake} {r.model} {r.year}
                     </Td>
                     <Td>
@@ -270,7 +270,7 @@ export default function AdminRequestsPage() {
                       </Badge>
                     </Td>
                     <Td>
-                      <span className="text-[#7A9A80] text-xs font-mono">
+                      <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">
                         {r.orders?.length ?? 0}
                       </span>
                     </Td>
@@ -285,7 +285,7 @@ export default function AdminRequestsPage() {
                         </Badge>
                       )}
                     </Td>
-                    <Td className="text-[#7A9A80] text-xs">
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
                       {new Date(r.dateCreated).toLocaleDateString()}
                     </Td>
                     <Td>
@@ -294,7 +294,7 @@ export default function AdminRequestsPage() {
                           <Button
                             size="sm"
                             onClick={() => panel?.requestId === r.id ? closePanel() : openPanel(r)}
-                            className="bg-blue-600 text-white hover:bg-blue-500 h-7 text-xs px-3"
+                            className="bg-blue-600 text-[#07110A] dark:text-white hover:bg-blue-500 h-7 text-xs px-3"
                           >
                             {panel?.requestId === r.id ? 'Close' : 'Create Order'}
                           </Button>
@@ -336,7 +336,7 @@ export default function AdminRequestsPage() {
                             onChange={(e) => { setSearchTerm(e.target.value); if (!e.target.value) clearSearch() }}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                             placeholder="Search parts by name or number…"
-                            className="bg-[#111C14] border-[rgba(255,255,255,0.1)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-9 max-w-sm"
+                            className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 max-w-sm"
                           />
                           <Button
                             onClick={handleSearch}
@@ -349,7 +349,7 @@ export default function AdminRequestsPage() {
                             <Button
                               onClick={clearSearch}
                               variant="outline"
-                              className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-3 text-xs"
+                              className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-3 text-xs"
                             >
                               Clear
                             </Button>
@@ -357,7 +357,7 @@ export default function AdminRequestsPage() {
                         </div>
 
                         {/* List label */}
-                        <p className="text-[10px] font-mono text-[#3D5942] mb-3 mt-3">
+                        <p className="text-[10px] font-mono text-[#7A9A80] dark:text-[#3D5942] mb-3 mt-3">
                           {hasSearched
                             ? `${searchResults.length} result${searchResults.length !== 1 ? 's' : ''} for "${searchTerm}"`
                             : loadingAll
@@ -367,9 +367,9 @@ export default function AdminRequestsPage() {
 
                         {/* Parts list */}
                         {!loadingAll && displayParts.length > 0 && (
-                          <div className="mb-4 rounded-lg border border-[rgba(255,255,255,0.08)] overflow-hidden max-h-64 overflow-y-auto">
+                          <div className="mb-4 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] overflow-hidden max-h-64 overflow-y-auto">
                             {/* Mini table header */}
-                            <div className="grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 px-4 py-2 bg-[#0D1810] border-b border-[rgba(255,255,255,0.06)] text-[10px] font-mono uppercase tracking-widest text-[#3D5942]">
+                            <div className="grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 px-4 py-2 bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942]">
                               <span>Part</span>
                               <span>Supplier</span>
                               <span>Condition</span>
@@ -383,20 +383,20 @@ export default function AdminRequestsPage() {
                                 className={`w-full text-left grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 items-center px-4 py-3 transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0 ${
                                   selectedPart?.id === part.id
                                     ? 'bg-[rgba(0,200,83,0.1)] border-l-2 border-l-[#00C853]'
-                                    : 'hover:bg-[rgba(255,255,255,0.04)]'
+                                    : 'hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)]'
                                 }`}
                               >
                                 <div>
-                                  <p className="text-white text-sm font-medium leading-tight">{part.partName}</p>
+                                  <p className="text-[#07110A] dark:text-white text-sm font-medium leading-tight">{part.partName}</p>
                                   {part.partNumber && (
-                                    <p className="text-[#3D5942] text-[10px] font-mono">{part.partNumber}</p>
+                                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-[10px] font-mono">{part.partNumber}</p>
                                   )}
                                 </div>
-                                <p className="text-[#7A9A80] text-xs">{part.supplierName}</p>
+                                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{part.supplierName}</p>
                                 <Badge className="bg-[rgba(0,200,83,0.06)] text-[#00C853] border-[rgba(0,200,83,0.15)] text-[10px] whitespace-nowrap">
                                   {part.condition}
                                 </Badge>
-                                <span className="text-[#7A9A80] text-xs font-mono">{part.stock}</span>
+                                <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">{part.stock}</span>
                                 <span className="text-[#00C853] font-semibold text-sm whitespace-nowrap">
                                   ${part.price.toLocaleString()}
                                 </span>
@@ -406,7 +406,7 @@ export default function AdminRequestsPage() {
                         )}
 
                         {hasSearched && searchResults.length === 0 && !searching && (
-                          <p className="text-[#7A9A80] text-xs mb-4">No parts matched "{searchTerm}"</p>
+                          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mb-4">No parts matched "{searchTerm}"</p>
                         )}
 
                         {/* Confirm order */}
@@ -414,16 +414,16 @@ export default function AdminRequestsPage() {
                           <div className="flex items-end gap-3 flex-wrap mt-2">
                             <div className="bg-[rgba(0,200,83,0.06)] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2">
                               <p className="text-[#00C853] text-[10px] font-mono mb-0.5">Selected</p>
-                              <p className="text-white text-sm font-semibold">{selectedPart.partName}</p>
-                              <p className="text-[#7A9A80] text-xs">{selectedPart.supplierName}</p>
+                              <p className="text-[#07110A] dark:text-white text-sm font-semibold">{selectedPart.partName}</p>
+                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{selectedPart.supplierName}</p>
                             </div>
                             <div className="space-y-1">
-                              <p className="text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Price (USD)</p>
+                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Price (USD)</p>
                               <Input
                                 type="number"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                className="bg-[#111C14] border-[rgba(255,255,255,0.1)] text-white focus:border-[#00C853] h-9 w-32"
+                                className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 w-32"
                               />
                             </div>
                             <Button
@@ -436,7 +436,7 @@ export default function AdminRequestsPage() {
                             <Button
                               variant="outline"
                               onClick={() => setSelectedPart(null)}
-                              className="border-[rgba(255,255,255,0.1)] text-[#7A9A80] bg-transparent hover:text-white h-9 px-4 text-sm"
+                              className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
                             >
                               Deselect
                             </Button>
@@ -449,13 +449,13 @@ export default function AdminRequestsPage() {
                             <span className="text-[#00C853] text-lg">✓</span>
                             <div>
                               <p className="text-[#00C853] text-sm font-semibold">Order created successfully</p>
-                              <p className="text-[#7A9A80] text-xs font-mono mt-0.5">
-                                Order ref: <span className="text-white">{orderRef}</span>
+                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono mt-0.5">
+                                Order ref: <span className="text-[#07110A] dark:text-white">{orderRef}</span>
                               </p>
                             </div>
                             <button
                               onClick={closePanel}
-                              className="ml-auto text-[#7A9A80] hover:text-white text-xs transition-colors"
+                              className="ml-auto text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#07110A] dark:hover:text-white text-xs transition-colors"
                             >
                               Close
                             </button>
@@ -472,7 +472,7 @@ export default function AdminRequestsPage() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-[#7A9A80] text-sm">
+                  <td colSpan={8} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     No requests found.
                   </td>
                 </tr>
@@ -487,7 +487,7 @@ export default function AdminRequestsPage() {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#7A9A80]">
+    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
       {children}
     </th>
   )

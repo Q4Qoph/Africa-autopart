@@ -39,7 +39,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07110A] text-[#E8F0E9]">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
       <Navbar />
       <main className="pt-[68px] md:pt-[104px]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
@@ -50,9 +50,9 @@ export default function DashboardPage() {
                 <span className="block w-6 h-px bg-[#00C853]" />
                 Dashboard
               </p>
-              <h1 className="text-3xl font-extrabold text-white font-display">Welcome back</h1>
+              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">Welcome back</h1>
               <div className="flex items-center gap-2 mt-1">
-                <p className="text-[#7A9A80] text-sm">User #{auth?.userId}</p>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">User #{auth?.userId}</p>
                 <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
                   {auth?.role !== undefined ? roleLabel[auth.role] : '—'}
                 </Badge>
@@ -128,9 +128,9 @@ export default function DashboardPage() {
 function KpiCard({ title, value, href, color }: { title: string; value: number; href: string; color: 'green' | 'blue' }) {
   return (
     <Link to={href}>
-      <Card className="bg-[#111C14] border-[rgba(0,200,83,0.15)] text-white hover:border-[rgba(0,200,83,0.35)] transition-colors cursor-pointer">
+      <Card className="bg-white dark:bg-[#111C14] border-[rgba(0,200,83,0.15)] text-[#07110A] dark:text-white hover:border-[rgba(0,200,83,0.35)] transition-colors cursor-pointer">
         <CardHeader className="pb-2">
-          <CardTitle className="text-xs font-mono uppercase tracking-widest text-[#7A9A80]">
+          <CardTitle className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
             {title}
           </CardTitle>
         </CardHeader>
@@ -151,11 +151,11 @@ function QuickLink({ title, desc, href, highlight }: { title: string; desc: stri
       className={`block p-5 rounded-2xl border transition-colors ${
         highlight
           ? 'bg-[rgba(0,200,83,0.06)] border-[rgba(0,200,83,0.25)] hover:border-[#00C853]'
-          : 'bg-[#111C14] border-[rgba(255,255,255,0.06)] hover:border-[rgba(0,200,83,0.2)]'
+          : 'bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] hover:border-[rgba(0,200,83,0.2)]'
       }`}
     >
-      <p className="text-white font-semibold text-sm mb-1">{title}</p>
-      <p className="text-[#7A9A80] text-xs leading-relaxed">{desc}</p>
+      <p className="text-[#07110A] dark:text-white font-semibold text-sm mb-1">{title}</p>
+      <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs leading-relaxed">{desc}</p>
     </Link>
   )
 }

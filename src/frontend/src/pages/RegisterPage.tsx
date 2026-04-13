@@ -47,7 +47,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07110A] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] flex flex-col md:flex-row">
       {/* Left — brand panel */}
       <div className="hidden md:flex md:w-[40%] lg:w-[38%] relative flex-col justify-between p-10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_20%_50%,rgba(0,200,83,0.18),transparent)]" />
@@ -64,7 +64,7 @@ export default function RegisterPage() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-sm shadow-lg shadow-[#00C853]/20">
             AA
           </div>
-          <span className="text-white font-bold text-lg tracking-tight">Africa Autopart</span>
+          <span className="text-[#07110A] dark:text-white font-bold text-lg tracking-tight">Africa Autopart</span>
         </Link>
 
         <div className="relative">
@@ -72,11 +72,11 @@ export default function RegisterPage() {
             <span className="block w-5 h-px bg-[#00C853]" />
             For buyers
           </p>
-          <h2 className="text-4xl font-extrabold text-white font-display leading-tight mb-4">
+          <h2 className="text-4xl font-extrabold text-[#07110A] dark:text-white font-display leading-tight mb-4">
             Find the part<br />
             <span className="text-[#00C853]">you need, fast</span>
           </h2>
-          <p className="text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[300px]">
+          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[300px]">
             Submit a sourcing request and get competitive quotes from verified suppliers across Africa.
           </p>
 
@@ -86,7 +86,7 @@ export default function RegisterPage() {
                 <div className="w-9 h-9 rounded-lg bg-[rgba(0,200,83,0.1)] border border-[rgba(0,200,83,0.2)] grid place-items-center text-base flex-shrink-0">
                   {p.icon}
                 </div>
-                <span className="text-[#C5DEC8] text-sm">{p.text}</span>
+                <span className="text-[#4A6B50] dark:text-[#C5DEC8] text-sm">{p.text}</span>
               </div>
             ))}
           </div>
@@ -97,7 +97,7 @@ export default function RegisterPage() {
             <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse" />
             <span className="text-[#00C853] text-xs font-mono">4,000+ businesses trust us</span>
           </div>
-          <p className="text-[#3D5942] text-xs">
+          <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">
             Are you a supplier?{' '}
             <Link to="/become-supplier" className="text-[#00C853] hover:underline">
               Register your business →
@@ -113,7 +113,7 @@ export default function RegisterPage() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
             AA
           </div>
-          <span className="text-white font-bold text-base">Africa Autopart</span>
+          <span className="text-[#07110A] dark:text-white font-bold text-base">Africa Autopart</span>
         </Link>
 
         <div className="w-full max-w-[420px]">
@@ -122,14 +122,14 @@ export default function RegisterPage() {
               <div className="w-16 h-16 rounded-full bg-[#00C853]/15 border border-[#00C853]/30 grid place-items-center mx-auto mb-5">
                 <span className="text-[#00C853] text-3xl">✓</span>
               </div>
-              <h2 className="text-white text-2xl font-extrabold font-display mb-2">Account created!</h2>
-              <p className="text-[#7A9A80] text-sm">Redirecting you to sign in…</p>
+              <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">Account created!</h2>
+              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Redirecting you to sign in…</p>
             </div>
           ) : (
             <>
               <div className="mb-7">
-                <h1 className="text-3xl font-extrabold text-white font-display mb-2">Create account</h1>
-                <p className="text-[#7A9A80] text-sm">
+                <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Create account</h1>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                   Join Africa Autopart as a buyer — it's free
                 </p>
               </div>
@@ -137,24 +137,24 @@ export default function RegisterPage() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="firstName" className="text-[#E8F0E9] text-sm">First name</Label>
+                    <Label htmlFor="firstName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">First name</Label>
                     <Input
                       id="firstName"
                       placeholder="John"
                       {...register('firstName')}
-                      className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                      className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                     />
                     {errors.firstName && (
                       <p className="text-red-400 text-xs">{errors.firstName.message}</p>
                     )}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="lastName" className="text-[#E8F0E9] text-sm">Last name</Label>
+                    <Label htmlFor="lastName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Last name</Label>
                     <Input
                       id="lastName"
                       placeholder="Doe"
                       {...register('lastName')}
-                      className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                      className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                     />
                     {errors.lastName && (
                       <p className="text-red-400 text-xs">{errors.lastName.message}</p>
@@ -163,13 +163,13 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-[#E8F0E9] text-sm">Email address</Label>
+                  <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Email address</Label>
                   <Input
                     id="email"
                     type="email"
                     placeholder="you@example.com"
                     {...register('email')}
-                    className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                    className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
                   {errors.email && (
                     <p className="text-red-400 text-xs">{errors.email.message}</p>
@@ -177,13 +177,13 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-[#E8F0E9] text-sm">Phone number</Label>
+                  <Label htmlFor="phone" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Phone number</Label>
                   <Input
                     id="phone"
                     type="tel"
                     placeholder="+254 700 000 000"
                     {...register('phone')}
-                    className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                    className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
                   {errors.phone && (
                     <p className="text-red-400 text-xs">{errors.phone.message}</p>
@@ -191,13 +191,13 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-[#E8F0E9] text-sm">Password</Label>
+                  <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Password</Label>
                   <Input
                     id="password"
                     type="password"
                     placeholder="Min. 6 characters"
                     {...register('password')}
-                    className="bg-[#111C14] border-[rgba(255,255,255,0.08)] text-white placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
+                    className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
                   {errors.password && (
                     <p className="text-red-400 text-xs">{errors.password.message}</p>
@@ -219,16 +219,16 @@ export default function RegisterPage() {
                 </Button>
               </form>
 
-              <div className="mt-6 pt-6 border-t border-[rgba(255,255,255,0.06)] space-y-3 text-center">
-                <p className="text-sm text-[#7A9A80]">
+              <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] space-y-3 text-center">
+                <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
                   Already have an account?{' '}
                   <Link to="/login" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
                     Sign in
                   </Link>
                 </p>
-                <p className="text-xs text-[#3D5942]">
+                <p className="text-xs text-[#7A9A80] dark:text-[#3D5942]">
                   Are you a supplier?{' '}
-                  <Link to="/become-supplier" className="text-[#7A9A80] hover:text-[#00C853] transition-colors">
+                  <Link to="/become-supplier" className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
                     Register your business →
                   </Link>
                 </p>
