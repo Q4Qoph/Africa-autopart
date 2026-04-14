@@ -8,6 +8,7 @@ const sidebarLinks = [
   { label: 'Suppliers', href: '/admin/suppliers' },
   { label: 'Orders', href: '/admin/orders' },
   { label: 'Requests', href: '/admin/requests' },
+  { label: 'Contacts', href: '/admin/contacts' },
 ]
 
 export default function AdminLayout() {

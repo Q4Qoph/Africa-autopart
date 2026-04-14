@@ -28,10 +28,8 @@ export default function RequestsPage() {
   useEffect(() => {
     if (!auth) return
     requestApi
-      .getByUserId(auth.userId, auth.token)
-      .then(({ data }) => {
-        setRequests(data)
-      })
+      .getByEmail(auth.email, auth.token)
+      .then(({ data }) => setRequests([...data].reverse()))
       .catch(() => setError('Failed to load requests.'))
       .finally(() => setLoading(false))
   }, [auth])

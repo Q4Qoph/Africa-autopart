@@ -42,6 +42,7 @@ export interface LoginResponseDTO {
   id: number
   role: UserRole
   userId: number
+  email: string
   token: string
 }
 

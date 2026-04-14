@@ -21,6 +21,9 @@ import AdminSuppliersPage from '@/pages/admin/AdminSuppliersPage'
 import AdminOrdersPage from '@/pages/admin/AdminOrdersPage'
 import AdminRequestsPage from '@/pages/admin/AdminRequestsPage'
 import AdminApproveUsersPage from '@/pages/admin/AdminApproveUsersPage'
+import AdminContactsPage from '@/pages/admin/AdminContactsPage'
+import ContactPage from '@/pages/ContactPage'
+import AboutPage from '@/pages/AboutPage'
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -49,6 +52,8 @@ export const router = createBrowserRouter([
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/reset-password', element: <ResetPasswordPage /> },
   { path: '/suppliers', element: <SuppliersPage /> },
+  { path: '/contact', element: <ContactPage /> },
+  { path: '/about', element: <AboutPage /> },
   { path: '/requests/new', element: <NewRequestPage /> },
   {
     element: <ProtectedRoute />,
@@ -77,6 +82,7 @@ export const router = createBrowserRouter([
           { path: '/admin/orders', element: <AdminOrdersPage /> },
           { path: '/admin/requests', element: <AdminRequestsPage /> },
           { path: '/admin/approve-users', element: <AdminApproveUsersPage /> },
+          { path: '/admin/contacts', element: <AdminContactsPage /> },
         ],
       },
     ],

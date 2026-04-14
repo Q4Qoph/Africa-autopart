@@ -29,8 +29,11 @@ const publicLinks = [
 
 const customerLinks = [
   { label: 'My Requests', href: '/requests' },
-  { label: 'My Orders',   href: '/orders' },
   { label: 'Suppliers',   href: '/suppliers' },
+]
+
+const adminLinks = [
+  { label: 'Suppliers', href: '/suppliers' },
 ]
 
 const supplierNavLinks = [
@@ -100,6 +103,8 @@ export default function Navbar() {
   const navLinks = auth
     ? auth.role === UserRole.Supplier
       ? supplierNavLinks
+      : auth.role === UserRole.Admin
+      ? adminLinks
       : customerLinks
     : publicLinks
 
@@ -125,12 +130,12 @@ export default function Navbar() {
                 +254 700 225 100
               </a>
               <span className="w-px h-3 bg-[rgba(255,255,255,0.12)]" />
-              <a href="#" className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
+              <Link to="/about" className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
                 About
-              </a>
-              <a href="#" className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
+              </Link>
+              <Link to="/contact" className="text-[rgba(255,255,255,0.45)] hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
                 Contact
-              </a>
+              </Link>
               <Link to="/orders" className="flex items-center gap-1 text-[rgba(255,255,255,0.45)] hover:text-[#00C853] text-[11px] transition-colors">
                 <Truck className="w-3 h-3" />
                 Track Order
@@ -205,7 +210,7 @@ export default function Navbar() {
               {auth ? (
                 <>
                   {/* New request CTA — customer only */}
-                  {auth.role !== UserRole.Supplier && (
+                  {auth.role !== UserRole.Supplier && auth.role !== UserRole.Admin && (
                     <Link
                       to="/requests/new"
                       className={cn(
@@ -283,18 +288,14 @@ export default function Navbar() {
                               Dashboard
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Link to="/requests" className="w-full flex items-center gap-2">
-                              <Package className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                              My Requests
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Link to="/orders" className="w-full flex items-center gap-2">
-                              <Truck className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                              My Orders
-                            </Link>
-                          </DropdownMenuItem>
+                          {auth.role !== UserRole.Admin && (
+                            <DropdownMenuItem>
+                              <Link to="/requests" className="w-full flex items-center gap-2">
+                                <Package className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
+                                My Requests
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
                         </>
                       )}
 
@@ -417,7 +418,7 @@ export default function Navbar() {
                   </p>
                   <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80]">ID #{auth.userId}</p>
                 </div>
-                {auth.role !== UserRole.Supplier && (
+                {auth.role !== UserRole.Supplier && auth.role !== UserRole.Admin && (
                   <Link
                     to="/requests/new"
                     className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors"

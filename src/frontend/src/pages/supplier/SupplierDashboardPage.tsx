@@ -294,15 +294,12 @@ export default function SupplierDashboardPage() {
       <header className="border-b border-[rgba(0,200,83,0.1)] bg-[#E8F2EA] dark:bg-[#0D1810]">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
-              AA
-            </div>
-            <div>
-              <span className="text-[#07110A] dark:text-white font-bold text-sm">Africa Autopart</span>
-              {supplier && (
-                <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs ml-2">— {supplier.businessName}</span>
-              )}
-            </div>
+            <img src="/images/logo.png" alt="Africa Autopart" className="w-36 h-auto" />
+            {supplier && (
+              <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs border-l border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] pl-3">
+                {supplier.businessName}
+              </span>
+            )}
           </div>
           <Button
             onClick={handleLogout}

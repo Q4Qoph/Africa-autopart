@@ -30,6 +30,9 @@ export const requestApi = {
   getByUserId: (userId: number, token: string) =>
     api.get<PartRequest[]>(`/api/Request/requests/${userId}`, authHeader(token)),
 
+  getByEmail: (email: string, token: string) =>
+    api.get<PartRequest[]>(`/api/Request/requests/${encodeURIComponent(email)}`, authHeader(token)),
+
   markAsSorted: (id: number, token: string) =>
     api.put<string>(`/api/Request/markAsSorted/${id}`, {}, authHeader(token)),
 }

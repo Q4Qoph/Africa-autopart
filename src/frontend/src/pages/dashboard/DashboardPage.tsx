@@ -23,8 +23,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!auth) return
-    requestApi.getAll(auth.token).then(({ data }) =>
-      setRequests(data.filter((r) => r.userId === auth.userId)),
+    requestApi.getByEmail(auth.email, auth.token).then(({ data }) =>
+      setRequests(data),
     ).catch(() => {})
     orderApi.getAll(auth.token).then(({ data }) => setOrders(data)).catch(() => {})
   }, [auth])

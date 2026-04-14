@@ -59,6 +59,8 @@ export default function NewRequestPage() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
   const [apiError, setApiError] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState('')
 
   const {
     register,
@@ -70,6 +72,7 @@ export default function NewRequestPage() {
       vehicleMake: prefill?.make ?? '',
       year: prefill?.year ?? '',
       partName: prefill?.partName ?? '',
+      email: auth?.email ?? '',
     },
   })
 
@@ -101,7 +104,12 @@ export default function NewRequestPage() {
         },
         auth?.token,
       )
-      navigate(auth ? '/requests' : '/')
+      if (auth) {
+        navigate('/requests')
+      } else {
+        setSubmittedEmail(values.email)
+        setSubmitted(true)
+      }
     } catch {
       setApiError('Failed to submit request. Please try again.')
     }
@@ -111,6 +119,43 @@ export default function NewRequestPage() {
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
       <Navbar />
       <main className="pt-[68px] md:pt-[132px]">
+        {/* Guest success screen */}
+        {submitted && (
+          <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
+            <div className="w-16 h-16 rounded-full bg-[rgba(0,200,83,0.12)] border border-[rgba(0,200,83,0.25)] grid place-items-center mx-auto mb-6">
+              <span className="text-[#00C853] text-3xl">✓</span>
+            </div>
+            <h2 className="font-display text-2xl font-bold text-[#07110A] dark:text-white mb-3">
+              Request submitted!
+            </h2>
+            <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80] mb-2 leading-relaxed">
+              Your request has been sent to suppliers. They will reach out to you at{' '}
+              <span className="font-medium text-[#07110A] dark:text-white">{submittedEmail}</span>.
+            </p>
+            <div className="mt-8 p-5 rounded-xl bg-[rgba(0,200,83,0.05)] border border-[rgba(0,200,83,0.18)] text-left">
+              <p className="text-xs font-mono uppercase tracking-widest text-[#00C853] mb-2">Want to track your request?</p>
+              <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80] mb-4 leading-relaxed">
+                Create a free account with the same email address to track your request status, view supplier quotes, and manage orders in one place.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center rounded-lg bg-[#00C853] text-[#07110A] font-semibold px-5 py-2 text-sm hover:bg-[#39FF88] transition-colors"
+                >
+                  Create Free Account
+                </Link>
+                <Link
+                  to="/"
+                  className="inline-flex items-center justify-center rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] font-medium px-5 py-2 text-sm hover:text-[#07110A] dark:hover:text-white transition-colors"
+                >
+                  Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {!submitted && (
         <div className="max-w-[860px] mx-auto px-6 py-12">
           {/* Header */}
           <div className="mb-8">
@@ -201,7 +246,18 @@ export default function NewRequestPage() {
                   <Input {...register('phone')} type="tel" placeholder="+254 700 000 000" className={fieldClass} />
                 </Field>
                 <Field label="Email *" error={errors.email?.message} className="sm:col-span-2">
-                  <Input {...register('email')} type="email" placeholder="you@example.com" className={fieldClass} />
+                  <Input
+                    {...register('email')}
+                    type="email"
+                    placeholder="you@example.com"
+                    readOnly={!!auth}
+                    className={cn(fieldClass, auth && 'opacity-60 cursor-not-allowed')}
+                  />
+                  {!auth && (
+                    <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80] mt-1">
+                      Use your account email to track this request after submission.
+                    </p>
+                  )}
                 </Field>
               </div>
             </Section>
@@ -265,6 +321,7 @@ export default function NewRequestPage() {
             </div>
           </form>
         </div>
+        )}
       </main>
     </div>
   )

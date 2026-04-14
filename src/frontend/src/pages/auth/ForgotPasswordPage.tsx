@@ -36,11 +36,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] flex flex-col items-center justify-center px-6 py-12">
-      <Link to="/" className="flex items-center gap-2.5 mb-10">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
-          AA
-        </div>
-        <span className="text-[#07110A] dark:text-white font-bold text-base">Africa Autopart</span>
+      <Link to="/" className="mb-10">
+        <img src="/images/logo.png" alt="Africa Autopart" className="w-40 h-auto" />
       </Link>
 
       <div className="w-full max-w-[400px]">

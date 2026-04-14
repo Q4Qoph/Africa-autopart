@@ -60,11 +60,8 @@ export default function RegisterPage() {
           }}
         />
 
-        <Link to="/" className="relative flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-sm shadow-lg shadow-[#00C853]/20">
-            AA
-          </div>
-          <span className="text-[#07110A] dark:text-white font-bold text-lg tracking-tight">Africa Autopart</span>
+        <Link to="/" className="relative">
+          <img src="/images/logo.png" alt="Africa Autopart" className="w-44 h-auto" />
         </Link>
 
         <div className="relative">
@@ -109,11 +106,8 @@ export default function RegisterPage() {
       {/* Right — form panel */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:px-12 overflow-y-auto">
         {/* Mobile logo */}
-        <Link to="/" className="flex items-center gap-2.5 mb-8 md:hidden">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
-            AA
-          </div>
-          <span className="text-[#07110A] dark:text-white font-bold text-base">Africa Autopart</span>
+        <Link to="/" className="mb-8 md:hidden">
+          <img src="/images/logo.png" alt="Africa Autopart" className="w-36 h-auto" />
         </Link>
 
         <div className="w-full max-w-[420px]">
