@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { userApi } from '@/api/userApi'
 import type { User } from '@/types/user'
 import { UserRole } from '@/types/user'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-
-const roleLabel: Record<number, string> = {
-  [UserRole.Admin]: 'Admin',
-  [UserRole.Customer]: 'Customer',
-  [UserRole.Supplier]: 'Supplier',
-}
 
 const roleBadgeClass: Record<number, string> = {
   [UserRole.Admin]: 'bg-purple-900/40 text-purple-300 border-purple-700/30',
@@ -20,9 +15,17 @@ const roleBadgeClass: Record<number, string> = {
 
 export default function AdminUsersPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('admin')
+  const { t: tCommon } = useTranslation('common')
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+
+  const roleLabel: Record<number, string> = {
+    [UserRole.Admin]: t('users_role_admin'),
+    [UserRole.Customer]: t('users_role_customer'),
+    [UserRole.Supplier]: t('users_role_supplier'),
+  }
 
   useEffect(() => {
     if (!auth) return
@@ -65,34 +68,34 @@ export default function AdminUsersPage() {
       <div className="mb-6">
         <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
           <span className="block w-6 h-px bg-[#00C853]" />
-          Admin
+          {t('admin_label')}
         </p>
-        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Users</h1>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">{t('users_heading')}</h1>
         <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{users.length} registered accounts</p>
       </div>
 
       <input
         type="text"
-        placeholder="Search by name or email…"
+        placeholder={t('users_col_name') + ' / ' + t('users_col_email') + '…'}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="mb-5 w-full max-w-sm bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2 text-sm text-[#07110A] dark:text-white placeholder-[#7A9A80] focus:outline-none focus:border-[#00C853]"
       />
 
       {loading ? (
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading users…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                <Th>ID</Th>
-                <Th>Name</Th>
-                <Th>Email</Th>
-                <Th>Phone</Th>
-                <Th>Role</Th>
-                <Th>Approved</Th>
-                <Th>Actions</Th>
+                <Th>{t('users_col_id')}</Th>
+                <Th>{t('users_col_name')}</Th>
+                <Th>{t('users_col_email')}</Th>
+                <Th>{t('users_col_phone')}</Th>
+                <Th>{t('users_col_role')}</Th>
+                <Th>{t('users_col_status')}</Th>
+                <Th>{t('users_col_actions')}</Th>
               </tr>
             </thead>
             <tbody>
@@ -116,11 +119,11 @@ export default function AdminUsersPage() {
                     {u.role === UserRole.Supplier ? (
                       u.isApproved ? (
                         <Badge className="bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
-                          Approved
+                          {t('users_approved')}
                         </Badge>
                       ) : (
                         <Badge className="bg-red-900/30 text-red-400 border-red-700/30 text-[10px]">
-                          Pending
+                          {tCommon('status_pending')}
                         </Badge>
                       )
                     ) : (
@@ -135,7 +138,7 @@ export default function AdminUsersPage() {
                           onClick={() => handleApprove(u.id)}
                           className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-7 text-xs px-3"
                         >
-                          Approve
+                          {t('users_approve')}
                         </Button>
                       )}
                       {u.role !== UserRole.Admin && (
@@ -155,7 +158,7 @@ export default function AdminUsersPage() {
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                    No users found.
+                    {t('users_no_users')}
                   </td>
                 </tr>
               )}

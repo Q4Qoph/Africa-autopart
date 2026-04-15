@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Phone, Mail, MapPin, Send, CheckCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 import { contactApi } from '@/api/contactApi'
 
@@ -7,6 +8,7 @@ const inputCls =
   'w-full rounded-lg border border-[rgba(0,0,0,0.12)] dark:border-[rgba(255,255,255,0.1)] bg-white dark:bg-[#111C14] text-[#07110A] dark:text-[#E8F0E9] placeholder:text-[rgba(0,0,0,0.35)] dark:placeholder:text-[rgba(255,255,255,0.3)] px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#00C853]/40 transition-all'
 
 export default function ContactPage() {
+  const { t } = useTranslation('pages')
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -20,7 +22,7 @@ export default function ContactPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      setError('Please fill in your name, email and message.')
+      setError(t('contact_error_fill'))
       return
     }
     setLoading(true)
@@ -29,7 +31,7 @@ export default function ContactPage() {
       setSuccess(true)
       setForm({ name: '', email: '', phone: '', message: '' })
     } catch {
-      setError('Something went wrong. Please try again.')
+      setError(t('contact_error_generic'))
     } finally {
       setLoading(false)
     }
@@ -44,13 +46,13 @@ export default function ContactPage() {
         <section className="bg-[#07110A] py-14 px-6">
           <div className="max-w-[1260px] mx-auto">
             <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#00C853] mb-3">
-              Get in Touch
+              {t('contact_eyebrow')}
             </p>
             <h1 className="font-display text-3xl md:text-4xl font-bold text-white leading-tight">
-              Contact Us
+              {t('contact_heading')}
             </h1>
             <p className="mt-3 text-[rgba(255,255,255,0.55)] text-sm max-w-lg">
-              Have a question or need help sourcing a part? Our team is ready to assist you.
+              {t('contact_subtext')}
             </p>
           </div>
         </section>
@@ -61,18 +63,15 @@ export default function ContactPage() {
 
             {/* Left — contact info */}
             <div>
-              <h2 className="font-display text-xl font-bold mb-6">Reach Us Directly</h2>
+              <h2 className="font-display text-xl font-bold mb-6">{t('contact_reach_heading')}</h2>
               <div className="space-y-5">
                 <div className="flex items-start gap-4">
                   <div className="w-9 h-9 rounded-lg bg-[rgba(0,200,83,0.1)] dark:bg-[rgba(0,200,83,0.08)] flex items-center justify-center shrink-0">
                     <Phone className="w-4 h-4 text-[#00C853]" />
                   </div>
                   <div>
-                    <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">Phone</p>
-                    <a
-                      href="tel:+254700225100"
-                      className="text-sm text-[#07110A] dark:text-[#E8F0E9] hover:text-[#00C853] transition-colors"
-                    >
+                    <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('contact_phone_label')}</p>
+                    <a href="tel:+254700225100" className="text-sm text-[#07110A] dark:text-[#E8F0E9] hover:text-[#00C853] transition-colors">
                       +254 700 225 100
                     </a>
                   </div>
@@ -83,11 +82,8 @@ export default function ContactPage() {
                     <Mail className="w-4 h-4 text-[#00C853]" />
                   </div>
                   <div>
-                    <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">Email</p>
-                    <a
-                      href="mailto:info@africaautopart.com"
-                      className="text-sm text-[#07110A] dark:text-[#E8F0E9] hover:text-[#00C853] transition-colors"
-                    >
+                    <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('contact_email_label')}</p>
+                    <a href="mailto:info@africaautopart.com" className="text-sm text-[#07110A] dark:text-[#E8F0E9] hover:text-[#00C853] transition-colors">
                       info@africaautopart.com
                     </a>
                   </div>
@@ -98,30 +94,30 @@ export default function ContactPage() {
                     <MapPin className="w-4 h-4 text-[#00C853]" />
                   </div>
                   <div>
-                    <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">Location</p>
+                    <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('contact_location_label')}</p>
                     <p className="text-sm text-[#07110A] dark:text-[#E8F0E9]">
-                      Nairobi, Kenya<br />
-                      Serving all of Africa
+                      {t('contact_location_value')}<br />
+                      {t('contact_location_sub')}
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-10 p-5 rounded-xl bg-[rgba(0,200,83,0.06)] dark:bg-[rgba(0,200,83,0.05)] border border-[rgba(0,200,83,0.15)]">
-                <p className="text-xs font-mono uppercase tracking-widest text-[#00C853] mb-2">Business Hours</p>
-                <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">Monday – Friday: 8:00 AM – 6:00 PM EAT</p>
-                <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">Saturday: 9:00 AM – 2:00 PM EAT</p>
+                <p className="text-xs font-mono uppercase tracking-widest text-[#00C853] mb-2">{t('contact_hours_label')}</p>
+                <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">{t('contact_hours_weekday')}</p>
+                <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">{t('contact_hours_saturday')}</p>
               </div>
             </div>
 
             {/* Right — form */}
             <div>
-              <h2 className="font-display text-xl font-bold mb-6">Send a Message</h2>
+              <h2 className="font-display text-xl font-bold mb-6">{t('contact_form_heading')}</h2>
 
               {success && (
                 <div className="mb-6 flex items-center gap-3 p-4 rounded-lg bg-[rgba(0,200,83,0.1)] border border-[rgba(0,200,83,0.25)] text-[#00933C] dark:text-[#00C853]">
                   <CheckCircle className="w-4 h-4 shrink-0" />
-                  <p className="text-sm font-medium">Message sent! We'll get back to you shortly.</p>
+                  <p className="text-sm font-medium">{t('contact_success')}</p>
                 </div>
               )}
 
@@ -135,55 +131,35 @@ export default function ContactPage() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-[#4A6B50] dark:text-[#7A9A80] mb-1.5">
-                      Full Name <span className="text-red-500">*</span>
+                      {t('contact_field_name')} <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="John Kamau"
-                      className={inputCls}
-                    />
+                    <input name="name" value={form.name} onChange={handleChange} placeholder={t('contact_field_name_placeholder')} className={inputCls} />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-[#4A6B50] dark:text-[#7A9A80] mb-1.5">
-                      Email Address <span className="text-red-500">*</span>
+                      {t('contact_field_email')} <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="john@example.com"
-                      className={inputCls}
-                    />
+                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="john@example.com" className={inputCls} />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-[#4A6B50] dark:text-[#7A9A80] mb-1.5">
-                    Phone Number
+                    {t('contact_field_phone')}
                   </label>
-                  <input
-                    name="phone"
-                    type="tel"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="+254 7xx xxx xxx"
-                    className={inputCls}
-                  />
+                  <input name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder={t('contact_field_phone_placeholder')} className={inputCls} />
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-[#4A6B50] dark:text-[#7A9A80] mb-1.5">
-                    Message <span className="text-red-500">*</span>
+                    {t('contact_field_message')} <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
                     rows={5}
-                    placeholder="Tell us how we can help you…"
+                    placeholder={t('contact_field_message_placeholder')}
                     className={`${inputCls} resize-none`}
                   />
                 </div>
@@ -198,7 +174,7 @@ export default function ContactPage() {
                   ) : (
                     <Send className="w-4 h-4" />
                   )}
-                  {loading ? 'Sending…' : 'Send Message'}
+                  {loading ? t('contact_sending') : t('contact_submit')}
                 </button>
               </form>
             </div>

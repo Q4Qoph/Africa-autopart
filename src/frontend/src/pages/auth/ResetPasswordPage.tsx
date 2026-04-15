@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { userApi } from '@/api/userApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +24,7 @@ type FormValues = z.infer<typeof schema>
 export default function ResetPasswordPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { t } = useTranslation('auth')
   const token = searchParams.get('token')
 
   const [apiError, setApiError] = useState('')
@@ -40,7 +42,7 @@ export default function ResetPasswordPage() {
       await userApi.resetPassword({ token, password: values.password, confirmPassword: values.confirmPassword })
       navigate('/login', { state: { passwordReset: true } })
     } catch {
-      setApiError('Failed to reset password. Your link may have expired.')
+      setApiError(t('reset_error'))
     }
   }
 
@@ -50,12 +52,12 @@ export default function ResetPasswordPage() {
         <div className="w-16 h-16 rounded-full bg-red-400/10 border border-red-400/20 grid place-items-center mx-auto mb-5">
           <span className="text-red-400 text-2xl">!</span>
         </div>
-        <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">Invalid reset link</h2>
+        <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">{t('reset_invalid_title')}</h2>
         <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-6">
-          This password reset link is invalid or has expired.
+          {t('reset_invalid_text')}
         </p>
         <Link to="/forgot-password" className="text-[#00C853] hover:text-[#39FF88] text-sm font-medium transition-colors">
-          Request a new link
+          {t('reset_request_new')}
         </Link>
       </div>
     )
@@ -69,19 +71,19 @@ export default function ResetPasswordPage() {
 
       <div className="w-full max-w-[400px]">
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Set your password</h1>
+          <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">{t('reset_heading')}</h1>
           <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-            Choose a secure password to activate your account.
+            {t('reset_subheading')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">New password</Label>
+            <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('reset_password_label')}</Label>
             <Input
               id="password"
               type="password"
-              placeholder="Min. 6 characters"
+              placeholder={t('reset_password_placeholder')}
               {...register('password')}
               className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
             />
@@ -91,11 +93,11 @@ export default function ResetPasswordPage() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="confirmPassword" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Confirm password</Label>
+            <Label htmlFor="confirmPassword" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('reset_confirm_label')}</Label>
             <Input
               id="confirmPassword"
               type="password"
-              placeholder="Repeat your password"
+              placeholder={t('reset_confirm_placeholder')}
               {...register('confirmPassword')}
               className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
             />
@@ -115,7 +117,7 @@ export default function ResetPasswordPage() {
             disabled={isSubmitting}
             className="w-full bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-11 text-sm"
           >
-            {isSubmitting ? 'Setting password…' : 'Set Password'}
+            {isSubmitting ? t('reset_submitting') : t('reset_submit')}
           </Button>
         </form>
       </div>

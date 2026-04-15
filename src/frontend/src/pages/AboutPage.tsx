@@ -1,26 +1,29 @@
 import { Link } from 'react-router-dom'
 import { Zap, ShieldCheck, Globe } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 
-const values = [
-  {
-    icon: Zap,
-    title: 'Speed',
-    body: 'We connect buyers with verified suppliers in hours, not days — so your vehicle stays on the road.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Trust',
-    body: 'Every supplier on our platform is vetted and reviewed, giving you confidence in every transaction.',
-  },
-  {
-    icon: Globe,
-    title: 'Coverage',
-    body: 'From Nairobi to Lagos to Johannesburg — we bring the entire African auto parts market to your fingertips.',
-  },
-]
-
 export default function AboutPage() {
+  const { t } = useTranslation('pages')
+
+  const values = [
+    {
+      icon: Zap,
+      title: t('about_value_speed_title'),
+      body: t('about_value_speed_body'),
+    },
+    {
+      icon: ShieldCheck,
+      title: t('about_value_trust_title'),
+      body: t('about_value_trust_body'),
+    },
+    {
+      icon: Globe,
+      title: t('about_value_coverage_title'),
+      body: t('about_value_coverage_body'),
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
       <Navbar />
@@ -31,14 +34,13 @@ export default function AboutPage() {
         <section className="bg-[#07110A] py-16 px-6">
           <div className="max-w-[1260px] mx-auto">
             <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#00C853] mb-3">
-              Who We Are
+              {t('about_eyebrow')}
             </p>
             <h1 className="font-display text-3xl md:text-5xl font-bold text-white leading-tight max-w-2xl">
-              Africa's Trusted Marketplace for Auto Parts
+              {t('about_heading')}
             </h1>
             <p className="mt-4 text-[rgba(255,255,255,0.55)] text-sm max-w-xl leading-relaxed">
-              Africa Autopart was built to solve a real problem — finding quality, affordable auto parts
-              across Africa shouldn't require dozens of phone calls and weeks of waiting.
+              {t('about_subtext')}
             </p>
           </div>
         </section>
@@ -48,26 +50,15 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#00C853] mb-3">
-                Our Story
+                {t('about_story_eyebrow')}
               </p>
               <h2 className="font-display text-2xl md:text-3xl font-bold mb-5 leading-snug">
-                Built for African roads, by Africans
+                {t('about_story_heading')}
               </h2>
               <div className="space-y-4 text-sm text-[#4A6B50] dark:text-[#7A9A80] leading-relaxed">
-                <p>
-                  Millions of vehicles across Africa are grounded every day due to parts shortages.
-                  Traditional supply chains are fragmented, opaque, and slow — leaving mechanics and
-                  fleet operators frustrated and vehicles idle.
-                </p>
-                <p>
-                  Africa Autopart changes that. We built a digital platform that connects buyers
-                  directly with a network of verified parts suppliers, enabling fast quotes,
-                  transparent pricing, and reliable fulfilment across the continent.
-                </p>
-                <p>
-                  Whether you're a fleet manager in Nairobi, an independent mechanic in Accra,
-                  or a supplier in Johannesburg — our platform was designed with your workflow in mind.
-                </p>
+                <p>{t('about_story_p1')}</p>
+                <p>{t('about_story_p2')}</p>
+                <p>{t('about_story_p3')}</p>
               </div>
             </div>
             <div className="rounded-2xl overflow-hidden border border-[rgba(0,200,83,0.12)]">
@@ -85,9 +76,9 @@ export default function AboutPage() {
           <div className="max-w-[1260px] mx-auto">
             <div className="text-center mb-10">
               <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#00C853] mb-3">
-                Why Choose Us
+                {t('about_values_eyebrow')}
               </p>
-              <h2 className="font-display text-2xl md:text-3xl font-bold">Our Core Values</h2>
+              <h2 className="font-display text-2xl md:text-3xl font-bold">{t('about_values_heading')}</h2>
             </div>
             <div className="grid sm:grid-cols-3 gap-6">
               {values.map(({ icon: Icon, title, body }) => (
@@ -109,23 +100,23 @@ export default function AboutPage() {
         {/* CTA */}
         <section className="max-w-[1260px] mx-auto px-6 py-16 text-center">
           <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">
-            Ready to find your part?
+            {t('about_cta_heading')}
           </h2>
           <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80] mb-8 max-w-md mx-auto">
-            Submit a request in minutes and receive quotes from verified suppliers across Africa.
+            {t('about_cta_subtext')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               to="/requests/new"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#00C853] text-[#07110A] font-semibold px-6 py-2.5 text-sm hover:bg-[#39FF88] transition-colors"
             >
-              Request a Part
+              {t('about_cta_request')}
             </Link>
             <Link
               to="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] font-semibold px-6 py-2.5 text-sm hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
             >
-              Contact Us
+              {t('about_cta_contact')}
             </Link>
           </div>
         </section>

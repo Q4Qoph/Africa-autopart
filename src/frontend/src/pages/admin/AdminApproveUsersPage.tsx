@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { userApi } from '@/api/userApi'
 import type { User } from '@/types/user'
@@ -15,14 +16,9 @@ interface UserSummary {
   phone: string
 }
 
-const roleLabel: Record<number, string> = {
-  [UserRole.Admin]: 'Admin',
-  [UserRole.Customer]: 'Customer',
-  [UserRole.Supplier]: 'Supplier',
-}
-
 export default function AdminApproveUsersPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('admin')
   const [users, setUsers] = useState<UserSummary[]>([])
   const [loadingList, setLoadingList] = useState(true)
 
@@ -31,6 +27,12 @@ export default function AdminApproveUsersPage() {
   const [loadingDetail, setLoadingDetail] = useState(false)
 
   const [approving, setApproving] = useState(false)
+
+  const roleLabel: Record<number, string> = {
+    [UserRole.Admin]: t('users_role_admin'),
+    [UserRole.Customer]: t('users_role_customer'),
+    [UserRole.Supplier]: t('users_role_supplier'),
+  }
 
   // Load the user list once
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function AdminApproveUsersPage() {
       await userApi.approveUser(detail.id, auth.token)
       setDetail((prev) => prev ? { ...prev, isApproved: true } : prev)
     } catch {
-      alert('Failed to approve user.')
+      alert(t('approvals_approve_error'))
     } finally {
       setApproving(false)
     }
@@ -73,11 +75,11 @@ export default function AdminApproveUsersPage() {
       <div className="mb-6">
         <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
           <span className="block w-6 h-px bg-[#00C853]" />
-          Admin
+          {t('admin_label')}
         </p>
-        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Approve Users</h1>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">{t('approvals_heading')}</h1>
         <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">
-          Select a user to view their status and approve if needed
+          {t('approvals_select_notice')}
         </p>
       </div>
 
@@ -86,11 +88,11 @@ export default function AdminApproveUsersPage() {
         <div className="lg:w-80 shrink-0 rounded-xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
           <div className="bg-[#E8F2EA] dark:bg-[#0D1810] px-4 py-3 border-b border-[rgba(0,200,83,0.12)]">
             <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-              All Users ({users.length})
+              {t('approvals_all_users', { count: users.length })}
             </p>
           </div>
           {loadingList ? (
-            <p className="px-4 py-6 text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>
+            <p className="px-4 py-6 text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('approvals_loading_list')}</p>
           ) : (
             <ul className="divide-y divide-[rgba(255,255,255,0.04)]">
               {users.map((u) => (
@@ -119,16 +121,16 @@ export default function AdminApproveUsersPage() {
           {!selectedId ? (
             <div className="flex flex-col items-center justify-center h-64 text-center px-6">
               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                Select a user from the list to view details
+                {t('approvals_select_prompt')}
               </p>
             </div>
           ) : loadingDetail ? (
             <div className="flex items-center justify-center h-64">
-              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading user details…</p>
+              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('approvals_loading_detail')}</p>
             </div>
           ) : !detail ? (
             <div className="flex items-center justify-center h-64">
-              <p className="text-red-400 text-sm">Failed to load user details.</p>
+              <p className="text-red-400 text-sm">{t('approvals_detail_error')}</p>
             </div>
           ) : (
             <div className="p-6">
@@ -138,7 +140,7 @@ export default function AdminApproveUsersPage() {
                   <h2 className="text-xl font-bold text-[#07110A] dark:text-white">
                     {detail.firstName} {detail.lastName}
                   </h2>
-                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-0.5">User #{detail.id}</p>
+                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-0.5">{t('approvals_user_id', { id: detail.id })}</p>
                 </div>
                 <Badge
                   className={
@@ -149,21 +151,21 @@ export default function AdminApproveUsersPage() {
                       : 'bg-blue-900/40 text-blue-300 border-blue-700/30'
                   }
                 >
-                  {roleLabel[detail.role] ?? 'Unknown'}
+                  {roleLabel[detail.role] ?? t('users_role_admin')}
                 </Badge>
               </div>
 
               {/* Info grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <InfoRow label="Email" value={detail.email} />
-                <InfoRow label="Phone" value={detail.phone} />
+                <InfoRow label={t('approvals_info_email')} value={detail.email} />
+                <InfoRow label={t('approvals_info_phone')} value={detail.phone} />
                 <InfoRow
-                  label="Role"
+                  label={t('approvals_info_role')}
                   value={roleLabel[detail.role] ?? String(detail.role)}
                 />
                 {detail.role === UserRole.Supplier && (
                   <InfoRow
-                    label="Approval Status"
+                    label={t('approvals_info_status')}
                     value={
                       <Badge
                         className={
@@ -172,7 +174,7 @@ export default function AdminApproveUsersPage() {
                             : 'bg-amber-900/30 text-amber-300 border-amber-700/30 text-[10px]'
                         }
                       >
-                        {detail.isApproved ? 'Approved' : 'Pending Approval'}
+                        {detail.isApproved ? t('approvals_badge_approved') : t('approvals_badge_pending')}
                       </Badge>
                     }
                   />
@@ -183,14 +185,14 @@ export default function AdminApproveUsersPage() {
               {detail.role === UserRole.Supplier && !detail.isApproved && (
                 <div className="border-t border-[rgba(0,200,83,0.1)] pt-5">
                   <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-3">
-                    Approving this supplier will activate their account and send them an email with a link to set their password.
+                    {t('approvals_approve_notice')}
                   </p>
                   <Button
                     onClick={handleApprove}
                     disabled={approving}
                     className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold px-6"
                   >
-                    {approving ? 'Approving…' : 'Approve Supplier'}
+                    {approving ? t('approvals_approving') : t('approvals_approve_btn')}
                   </Button>
                 </div>
               )}
@@ -198,7 +200,7 @@ export default function AdminApproveUsersPage() {
               {detail.role === UserRole.Supplier && detail.isApproved && (
                 <div className="border-t border-[rgba(0,200,83,0.1)] pt-5">
                   <p className="text-[#00C853] text-sm">
-                    This supplier is already approved and active.
+                    {t('approvals_already_approved')}
                   </p>
                 </div>
               )}
@@ -206,7 +208,7 @@ export default function AdminApproveUsersPage() {
               {detail.role !== UserRole.Supplier && (
                 <div className="border-t border-[rgba(0,200,83,0.1)] pt-5">
                   <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                    Approval is only applicable to supplier accounts.
+                    {t('approvals_not_applicable')}
                   </p>
                 </div>
               )}

@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback } from 'react'
 import type { ReactNode } from 'react'
 import type { LoginResponseDTO } from '@/types/user'
 
-interface AuthState extends LoginResponseDTO {}
+type AuthState = LoginResponseDTO
 
 interface AuthContextValue {
   auth: AuthState | null

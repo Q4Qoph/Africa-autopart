@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { userApi } from '@/api/userApi'
 import { UserRole } from '@/types/user'
@@ -17,16 +18,17 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
-const features = [
-  { icon: '🌍', text: '18 countries across Africa & Saudi Arabia' },
-  { icon: '🏭', text: '1,240+ verified parts suppliers' },
-  { icon: '⚡', text: 'Get quotes in under 42 minutes' },
-]
-
 export default function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation('auth')
   const [apiError, setApiError] = useState('')
+
+  const features = [
+    { icon: '🌍', text: t('login_feat1') },
+    { icon: '🏭', text: t('login_feat2') },
+    { icon: '⚡', text: t('login_feat3') },
+  ]
 
   const {
     register,
@@ -43,7 +45,7 @@ export default function LoginPage() {
       else if (data.role === UserRole.Supplier) navigate('/supplier/dashboard')
       else navigate('/dashboard')
     } catch {
-      setApiError('Invalid email or password.')
+      setApiError(t('login_error'))
     }
   }
 
@@ -71,14 +73,14 @@ export default function LoginPage() {
         <div className="relative">
           <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-4">
             <span className="block w-5 h-px bg-[#00C853]" />
-            Cross-border sourcing
+            {t('login_eyebrow')}
           </p>
           <h2 className="text-4xl font-extrabold text-[#07110A] dark:text-white font-display leading-tight mb-4">
-            Source any part,<br />
-            <span className="text-[#00C853]">anywhere in Africa</span>
+            {t('login_headline')}<br />
+            <span className="text-[#00C853]">{t('login_headline_accent')}</span>
           </h2>
           <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[320px]">
-            Connect with verified suppliers across the continent and get competitive quotes fast.
+            {t('login_subtext')}
           </p>
 
           <div className="space-y-4">
@@ -97,7 +99,7 @@ export default function LoginPage() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 bg-[rgba(0,200,83,0.08)] border border-[rgba(0,200,83,0.18)] rounded-full px-4 py-2">
             <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse" />
-            <span className="text-[#00C853] text-xs font-mono">96.8% delivery success rate</span>
+            <span className="text-[#00C853] text-xs font-mono">{t('login_badge')}</span>
           </div>
         </div>
       </div>
@@ -111,17 +113,17 @@ export default function LoginPage() {
 
         <div className="w-full max-w-[400px]">
           <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Welcome back</h1>
-            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Sign in to your account to continue</p>
+            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">{t('login_heading')}</h1>
+            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('login_subheading')}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Email address</Label>
+              <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('login_email_label')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t('login_email_placeholder')}
                 {...register('email')}
                 className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
               />
@@ -132,9 +134,9 @@ export default function LoginPage() {
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Password</Label>
+                <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('login_password_label')}</Label>
                 <Link to="/forgot-password" className="text-xs text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
-                  Forgot password?
+                  {t('login_forgot_password')}
                 </Link>
               </div>
               <Input
@@ -160,15 +162,15 @@ export default function LoginPage() {
               disabled={isSubmitting}
               className="w-full bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-11 text-sm"
             >
-              {isSubmitting ? 'Signing in…' : 'Sign In'}
+              {isSubmitting ? t('login_submitting') : t('login_submit')}
             </Button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] text-center">
             <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
-              Don't have an account?{' '}
+              {t('login_no_account')}{' '}
               <Link to="/register" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
-                Create one free
+                {t('login_create_free')}
               </Link>
             </p>
           </div>

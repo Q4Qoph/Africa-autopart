@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { supplierApi } from '@/api/supplierApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -30,17 +31,18 @@ const categoryOptions = [
   'General / Multi-category',
 ]
 
-const benefits = [
-  { icon: '📦', title: 'List unlimited parts', desc: 'Add your entire inventory — no listing fees' },
-  { icon: '🌍', title: 'Reach buyers in 18 countries', desc: 'Access demand across Africa & Saudi Arabia' },
-  { icon: '⚡', title: 'Get matched to live RFQs', desc: 'Respond to buyer requests in real time' },
-  { icon: '🔒', title: 'Verified supplier badge', desc: 'Build trust with verified status' },
-]
-
 export default function SupplierRegisterPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation('suppliers')
   const [apiError, setApiError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  const benefits = [
+    { icon: '📦', title: t('benefit1_title'), desc: t('benefit1_desc') },
+    { icon: '🌍', title: t('benefit2_title'), desc: t('benefit2_desc') },
+    { icon: '⚡', title: t('benefit3_title'), desc: t('benefit3_desc') },
+    { icon: '🔒', title: t('benefit4_title'), desc: t('benefit4_desc') },
+  ]
 
   const {
     register,
@@ -55,7 +57,7 @@ export default function SupplierRegisterPage() {
       setSuccess(true)
       setTimeout(() => navigate('/login'), 3000)
     } catch {
-      setApiError('Registration failed. Please try again.')
+      setApiError(t('register_error'))
     }
   }
 
@@ -83,14 +85,14 @@ export default function SupplierRegisterPage() {
         <div className="relative">
           <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-4">
             <span className="block w-5 h-px bg-[#00C853]" />
-            Supplier Network
+            {t('register_eyebrow')}
           </p>
           <h2 className="text-4xl font-extrabold text-[#07110A] dark:text-white font-display leading-tight mb-4">
-            Grow your business<br />
-            <span className="text-[#00C853]">across borders</span>
+            {t('register_headline')}<br />
+            <span className="text-[#00C853]">{t('register_headline_accent')}</span>
           </h2>
           <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[320px]">
-            Join 1,240+ verified suppliers already fulfilling orders for buyers across Africa and Saudi Arabia.
+            {t('register_subtext')}
           </p>
 
           <div className="space-y-4">
@@ -111,12 +113,12 @@ export default function SupplierRegisterPage() {
         <div className="relative space-y-3">
           <div className="inline-flex items-center gap-2 bg-[rgba(0,200,83,0.08)] border border-[rgba(0,200,83,0.18)] rounded-full px-4 py-2">
             <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse" />
-            <span className="text-[#00C853] text-xs font-mono">Reviewed within 24–48 hours</span>
+            <span className="text-[#00C853] text-xs font-mono">{t('register_badge')}</span>
           </div>
           <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">
-            Looking to buy parts?{' '}
+            {t('register_buyer_prompt')}{' '}
             <Link to="/register" className="text-[#00C853] hover:underline">
-              Create a buyer account →
+              {t('register_buyer_link')}
             </Link>
           </p>
         </div>
@@ -138,24 +140,24 @@ export default function SupplierRegisterPage() {
               <div className="w-16 h-16 rounded-full bg-[#00C853]/15 border border-[#00C853]/30 grid place-items-center mx-auto mb-5">
                 <span className="text-[#00C853] text-3xl">✓</span>
               </div>
-              <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">Application submitted!</h2>
+              <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">{t('register_success_heading')}</h2>
               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm max-w-[300px] mx-auto leading-relaxed">
-                Our team will review your business within 24–48 hours. Once approved, you'll receive an email with a link to set your password and access your dashboard.
+                {t('register_success_text')}
               </p>
-              <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-4">Redirecting to sign in…</p>
+              <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-4">{t('register_success_redirect')}</p>
             </div>
           ) : (
             <>
               <div className="mb-7">
-                <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Register as Supplier</h1>
+                <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">{t('register_heading')}</h1>
                 <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                  Tell us about your business. Our team reviews every application.
+                  {t('register_subheading')}
                 </p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="businessName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Business name *</Label>
+                  <Label htmlFor="businessName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_field_businessName')}</Label>
                   <Input
                     id="businessName"
                     placeholder="Precision Auto Parts Ltd"
@@ -168,13 +170,13 @@ export default function SupplierRegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="category" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Parts category *</Label>
+                  <Label htmlFor="category" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_field_category')}</Label>
                   <select
                     id="category"
                     {...register('category')}
                     className="w-full h-11 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                   >
-                    <option value="">Select a category…</option>
+                    <option value="">{t('register_select_category')}</option>
                     {categoryOptions.map((c) => (
                       <option key={c} value={c}>{c}</option>
                     ))}
@@ -186,23 +188,23 @@ export default function SupplierRegisterPage() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="description" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">
-                    About your business <span className="text-[#7A9A80] dark:text-[#3D5942]">(optional)</span>
+                    {t('register_field_description')} <span className="text-[#7A9A80] dark:text-[#3D5942]">{t('register_field_description_optional')}</span>
                   </Label>
                   <textarea
                     id="description"
                     rows={3}
-                    placeholder="Describe what you supply, regions you cover, years in business…"
+                    placeholder={t('register_field_description_placeholder')}
                     {...register('description')}
                     className="w-full px-3 py-2.5 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:outline-none focus:border-[#00C853] text-sm resize-none"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Business email *</Label>
+                  <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_field_email')}</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="info@yourbusiness.com"
+                    placeholder={t('register_field_email_placeholder')}
                     {...register('email')}
                     className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
@@ -212,7 +214,7 @@ export default function SupplierRegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Business phone *</Label>
+                  <Label htmlFor="phone" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_field_phone')}</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -227,7 +229,7 @@ export default function SupplierRegisterPage() {
 
                 <div className="bg-amber-400/05 border border-amber-400/20 rounded-lg px-4 py-3">
                   <p className="text-amber-400 text-xs leading-relaxed">
-                    <span className="font-semibold">Review process:</span> Supplier accounts are manually reviewed before activation. You can add your parts inventory after your account is approved.
+                    <span className="font-semibold">{t('register_review_notice_title')}</span> {t('register_review_notice')}
                   </p>
                 </div>
 
@@ -242,21 +244,21 @@ export default function SupplierRegisterPage() {
                   disabled={isSubmitting}
                   className="w-full bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-11 text-sm"
                 >
-                  {isSubmitting ? 'Submitting application…' : 'Submit Application'}
+                  {isSubmitting ? t('register_submitting') : t('register_submit')}
                 </Button>
               </form>
 
               <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] space-y-3 text-center">
                 <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
-                  Already have an account?{' '}
+                  {t('register_already_have')}{' '}
                   <Link to="/login" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
-                    Sign in
+                    {t('register_sign_in')}
                   </Link>
                 </p>
                 <p className="text-xs text-[#7A9A80] dark:text-[#3D5942]">
-                  Looking to buy parts?{' '}
+                  {t('register_buyer_prompt')}{' '}
                   <Link to="/register" className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
-                    Create a buyer account →
+                    {t('register_buyer_link')}
                   </Link>
                 </p>
               </div>

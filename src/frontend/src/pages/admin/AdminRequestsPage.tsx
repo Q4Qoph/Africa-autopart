@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
 import { supplierApi } from '@/api/supplierApi'
@@ -9,12 +10,6 @@ import { Urgency } from '@/types/request'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-const urgencyLabel: Record<number, string> = {
-  [Urgency.Standard]: 'Standard',
-  [Urgency.Express]: 'Express',
-  [Urgency.Urgent]: 'Urgent',
-}
 
 const urgencyClass: Record<number, string> = {
   [Urgency.Standard]: 'bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
@@ -40,6 +35,8 @@ interface FlatPart {
 
 export default function AdminRequestsPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('admin')
+  const { t: tReq } = useTranslation('requests')
   const [requests, setRequests] = useState<PartRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'open' | 'sorted'>('all')
@@ -59,6 +56,18 @@ export default function AdminRequestsPage() {
   const [orderRef, setOrderRef] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
 
+  const urgencyLabel: Record<number, string> = {
+    [Urgency.Standard]: tReq('urgency_standard_short'),
+    [Urgency.Express]: tReq('urgency_express_short'),
+    [Urgency.Urgent]: tReq('urgency_urgent_short'),
+  }
+
+  const filterLabel: Record<string, string> = {
+    all: t('requests_filter_all'),
+    open: t('requests_filter_open'),
+    sorted: t('requests_filter_sorted'),
+  }
+
   useEffect(() => {
     if (!auth) return
     requestApi
@@ -74,18 +83,18 @@ export default function AdminRequestsPage() {
       await requestApi.markAsSorted(id, auth.token)
       setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, isSorted: true } : r)))
     } catch {
-      alert('Failed to mark request as sorted.')
+      alert(t('requests_sorted_error'))
     }
   }
 
   async function handleDelete(id: number, partName: string) {
-    if (!window.confirm(`Delete request for "${partName}"? This cannot be undone.`)) return
+    if (!window.confirm(`${t('requests_delete')} "${partName}"? This cannot be undone.`)) return
     if (!auth) return
     try {
       await requestApi.delete(id, auth.token)
       setRequests((prev) => prev.filter((r) => r.id !== id))
     } catch {
-      alert('Failed to delete request.')
+      alert(t('requests_delete_error'))
     }
   }
 
@@ -139,7 +148,6 @@ export default function AdminRequestsPage() {
     setHasSearched(true)
     try {
       const { data } = await supplierApi.search(searchTerm.trim(), auth.token)
-      // Convert PartResponse → FlatPart (search doesn't return supplier name, use supplierId)
       const flat: FlatPart[] = data.map((p) => ({
         id: p.id,
         partName: p.partName,
@@ -192,13 +200,12 @@ export default function AdminRequestsPage() {
       const { data } = await requestApi.getAll(auth.token)
       setRequests(data)
     } catch {
-      setCreateError('Failed to create order. Please try again.')
+      setCreateError(t('requests_panel_create_error'))
     } finally {
       setCreating(false)
     }
   }
 
-  // Which parts to show in the parts list
   const displayParts = hasSearched ? searchResults : allParts
 
   const filtered = requests.filter((r) => {
@@ -212,10 +219,10 @@ export default function AdminRequestsPage() {
       <div className="mb-6">
         <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
           <span className="block w-6 h-px bg-[#00C853]" />
-          Admin
+          {t('admin_label')}
         </p>
-        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Part Requests</h1>
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{requests.length} total requests</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">{t('requests_heading')}</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{t('requests_count', { count: requests.length })}</p>
       </div>
 
       {/* Filter tabs */}
@@ -230,26 +237,26 @@ export default function AdminRequestsPage() {
                 : 'text-[#4A6B50] dark:text-[#7A9A80] border border-transparent hover:text-[#07110A] dark:hover:text-white'
             }`}
           >
-            {f}
+            {filterLabel[f]}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading requests…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                <Th>ID</Th>
-                <Th>Part</Th>
-                <Th>Vehicle</Th>
-                <Th>Urgency</Th>
-                <Th>Orders</Th>
-                <Th>Status</Th>
-                <Th>Date</Th>
-                <Th>Actions</Th>
+                <Th>{t('requests_col_id')}</Th>
+                <Th>{t('requests_col_part')}</Th>
+                <Th>{t('requests_col_vehicle')}</Th>
+                <Th>{t('requests_col_urgency')}</Th>
+                <Th>{t('requests_col_orders')}</Th>
+                <Th>{t('requests_col_status')}</Th>
+                <Th>{t('requests_col_date')}</Th>
+                <Th>{t('requests_col_actions')}</Th>
               </tr>
             </thead>
             <tbody>
@@ -277,11 +284,11 @@ export default function AdminRequestsPage() {
                     <Td>
                       {r.isSorted ? (
                         <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
-                          Sorted
+                          {t('requests_status_sorted')}
                         </Badge>
                       ) : (
                         <Badge className="bg-amber-900/30 text-amber-300 border-amber-700/30 text-[10px]">
-                          Open
+                          {t('requests_status_open')}
                         </Badge>
                       )}
                     </Td>
@@ -296,7 +303,7 @@ export default function AdminRequestsPage() {
                             onClick={() => panel?.requestId === r.id ? closePanel() : openPanel(r)}
                             className="bg-blue-600 text-[#07110A] dark:text-white hover:bg-blue-500 h-7 text-xs px-3"
                           >
-                            {panel?.requestId === r.id ? 'Close' : 'Create Order'}
+                            {panel?.requestId === r.id ? t('requests_close') : t('requests_create_order')}
                           </Button>
                         )}
                         {!r.isSorted && (
@@ -305,7 +312,7 @@ export default function AdminRequestsPage() {
                             onClick={() => handleMarkSorted(r.id)}
                             className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-7 text-xs px-3"
                           >
-                            Mark Sorted
+                            {t('requests_mark_sorted')}
                           </Button>
                         )}
                         <Button
@@ -314,7 +321,7 @@ export default function AdminRequestsPage() {
                           onClick={() => handleDelete(r.id, r.partName)}
                           className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
                         >
-                          Delete
+                          {t('requests_delete')}
                         </Button>
                       </div>
                     </Td>
@@ -325,7 +332,7 @@ export default function AdminRequestsPage() {
                     <tr key={`panel-${r.id}`}>
                       <td colSpan={8} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-5">
                         <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">
-                          Create Order — {panel.partName}
+                          {t('requests_panel_title', { partName: panel.partName })}
                         </p>
 
                         {/* Search bar */}
@@ -335,7 +342,7 @@ export default function AdminRequestsPage() {
                             value={searchTerm}
                             onChange={(e) => { setSearchTerm(e.target.value); if (!e.target.value) clearSearch() }}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                            placeholder="Search parts by name or number…"
+                            placeholder={t('requests_panel_search_placeholder')}
                             className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 max-w-sm"
                           />
                           <Button
@@ -343,7 +350,7 @@ export default function AdminRequestsPage() {
                             disabled={searching || !searchTerm.trim()}
                             className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-4 text-xs font-semibold"
                           >
-                            {searching ? 'Searching…' : 'Search'}
+                            {searching ? t('requests_panel_searching') : t('requests_panel_search')}
                           </Button>
                           {hasSearched && (
                             <Button
@@ -351,7 +358,7 @@ export default function AdminRequestsPage() {
                               variant="outline"
                               className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-3 text-xs"
                             >
-                              Clear
+                              {t('requests_panel_clear')}
                             </Button>
                           )}
                         </div>
@@ -359,10 +366,10 @@ export default function AdminRequestsPage() {
                         {/* List label */}
                         <p className="text-[10px] font-mono text-[#7A9A80] dark:text-[#3D5942] mb-3 mt-3">
                           {hasSearched
-                            ? `${searchResults.length} result${searchResults.length !== 1 ? 's' : ''} for "${searchTerm}"`
+                            ? t(searchResults.length === 1 ? 'requests_panel_result_one' : 'requests_panel_results', { count: searchResults.length, term: searchTerm })
                             : loadingAll
-                            ? 'Loading parts…'
-                            : `All parts — ${allParts.length} available`}
+                            ? t('requests_panel_loading')
+                            : t('requests_panel_all_parts', { count: allParts.length })}
                         </p>
 
                         {/* Parts list */}
@@ -370,11 +377,11 @@ export default function AdminRequestsPage() {
                           <div className="mb-4 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] overflow-hidden max-h-64 overflow-y-auto">
                             {/* Mini table header */}
                             <div className="grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 px-4 py-2 bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942]">
-                              <span>Part</span>
-                              <span>Supplier</span>
-                              <span>Condition</span>
-                              <span>Stock</span>
-                              <span>Price</span>
+                              <span>{t('requests_panel_col_part')}</span>
+                              <span>{t('requests_panel_col_supplier')}</span>
+                              <span>{t('requests_panel_col_condition')}</span>
+                              <span>{t('requests_panel_col_stock')}</span>
+                              <span>{t('requests_panel_col_price')}</span>
                             </div>
                             {displayParts.map((part) => (
                               <button
@@ -406,19 +413,19 @@ export default function AdminRequestsPage() {
                         )}
 
                         {hasSearched && searchResults.length === 0 && !searching && (
-                          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mb-4">No parts matched "{searchTerm}"</p>
+                          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mb-4">{t('requests_panel_no_match', { term: searchTerm })}</p>
                         )}
 
                         {/* Confirm order */}
                         {selectedPart && (
                           <div className="flex items-end gap-3 flex-wrap mt-2">
                             <div className="bg-[rgba(0,200,83,0.06)] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2">
-                              <p className="text-[#00C853] text-[10px] font-mono mb-0.5">Selected</p>
+                              <p className="text-[#00C853] text-[10px] font-mono mb-0.5">{t('requests_panel_selected')}</p>
                               <p className="text-[#07110A] dark:text-white text-sm font-semibold">{selectedPart.partName}</p>
                               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{selectedPart.supplierName}</p>
                             </div>
                             <div className="space-y-1">
-                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Price (USD)</p>
+                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('requests_panel_price_label')}</p>
                               <Input
                                 type="number"
                                 value={price}
@@ -431,14 +438,14 @@ export default function AdminRequestsPage() {
                               disabled={creating || !price}
                               className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-5 text-sm font-semibold"
                             >
-                              {creating ? 'Creating…' : 'Confirm Order'}
+                              {creating ? t('requests_panel_confirming') : t('requests_panel_confirm')}
                             </Button>
                             <Button
                               variant="outline"
                               onClick={() => setSelectedPart(null)}
                               className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
                             >
-                              Deselect
+                              {t('requests_panel_deselect')}
                             </Button>
                           </div>
                         )}
@@ -448,16 +455,16 @@ export default function AdminRequestsPage() {
                           <div className="mt-4 flex items-center gap-3 bg-[rgba(0,200,83,0.08)] border border-[rgba(0,200,83,0.25)] rounded-lg px-4 py-3">
                             <span className="text-[#00C853] text-lg">✓</span>
                             <div>
-                              <p className="text-[#00C853] text-sm font-semibold">Order created successfully</p>
+                              <p className="text-[#00C853] text-sm font-semibold">{t('requests_panel_success')}</p>
                               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono mt-0.5">
-                                Order ref: <span className="text-[#07110A] dark:text-white">{orderRef}</span>
+                                {t('requests_panel_order_ref')} <span className="text-[#07110A] dark:text-white">{orderRef}</span>
                               </p>
                             </div>
                             <button
                               onClick={closePanel}
                               className="ml-auto text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#07110A] dark:hover:text-white text-xs transition-colors"
                             >
-                              Close
+                              {t('requests_panel_close')}
                             </button>
                           </div>
                         )}
@@ -473,7 +480,7 @@ export default function AdminRequestsPage() {
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={8} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                    No requests found.
+                    {t('requests_no_requests')}
                   </td>
                 </tr>
               )}

@@ -1,0 +1,151 @@
+export default {
+  // Hero
+  hero_eyebrow: 'Afrique + Arabie Saoudite · OEM · Aftermarket · Occasion',
+  hero_headline: 'Trouvez n\'importe quelle pièce,',
+  hero_headline_accent: 'par-delà toutes les frontières.',
+  hero_description: 'Africa Autopart connecte propriétaires de véhicules, ateliers et flottes à des fournisseurs vérifiés en Afrique et en Arabie Saoudite — pièces OEM, aftermarket et d\'occasion avec suivi en temps réel et paiements sécurisés.',
+  hero_tag_oem: 'Pièces OEM',
+  hero_tag_aftermarket: 'Aftermarket',
+  hero_tag_secondhand: 'Occasion',
+  hero_tag_countries: '18 Pays',
+  hero_tag_escrow: 'Paiement sous séquestre',
+  hero_tag_tracking: 'Suivi en direct',
+  hero_cta_track: 'Suivre commande',
+  hero_cta_become_supplier: 'Devenir fournisseur',
+
+  // Stats
+  stats_parts_sourced: 'Pièces approvisionnées',
+  stats_verified_suppliers: 'Fournisseurs vérifiés',
+  stats_countries_served: 'Pays desservis',
+  stats_delivery_success: 'Taux de livraison réussi',
+
+  // Vehicle finder
+  finder_placeholder_part: 'Nom de la pièce (ex. plaquettes de frein avant)',
+  finder_label_make: 'Marque',
+  finder_label_year: 'Année',
+  finder_select_make: 'Choisir la marque',
+  finder_select_year: 'Choisir l\'année',
+  finder_button: 'Trouver la pièce',
+
+  // Categories
+  categories_label: 'Parcourir par catégorie',
+  categories_heading: '3 800+ catégories de pièces, une seule plateforme.',
+  categories_browse: 'Parcourir →',
+  category_brakes: 'Freins',
+  category_engine: 'Pièces moteur',
+  category_suspension: 'Suspension',
+  category_filters: 'Filtres',
+  category_electrical: 'Électrique',
+  category_body: 'Carrosserie',
+  category_transmission: 'Transmission',
+  category_cooling: 'Refroidissement',
+
+  // How it works
+  how_label: 'Comment ça marche',
+  how_heading: 'De la demande à la livraison en 5 étapes structurées.',
+  steps_01_title: 'Soumettez votre demande',
+  steps_01_desc: 'Saisissez les détails du véhicule, le nom de la pièce, la préférence de condition, l\'urgence et le pays de destination.',
+  steps_02_title: 'Les fournisseurs répondent',
+  steps_02_desc: 'Les fournisseurs vérifiés d\'Afrique et d\'Arabie Saoudite reçoivent votre RFQ et soumettent des offres.',
+  steps_03_title: 'Comparez les options',
+  steps_03_desc: 'Examinez les devis OEM, aftermarket et occasion côte à côte sur le prix, la garantie et le délai.',
+  steps_04_title: 'Payez en toute sécurité',
+  steps_04_desc: 'Paiement géré par la plateforme avec protection par séquestre et génération de facture.',
+  steps_05_title: 'Suivez la livraison',
+  steps_05_desc: 'Mises à jour en temps réel de l\'expédition aux douanes jusqu\'à votre porte.',
+
+  // Capabilities
+  capabilities_label: 'Fonctionnalités de la plateforme',
+  capabilities_heading: 'Tout ce dont une opération d\'approvisionnement sérieuse a besoin.',
+  capabilities_subtext: 'Conçu pour les ateliers, les gestionnaires de flotte et les équipes d\'approvisionnement qui ont besoin d\'un sourcing transfrontalier fiable — pas de devinettes.',
+  cap_rfq_title: 'Mise en correspondance RFQ intelligente',
+  cap_rfq_desc: 'Soumettez une seule demande et recevez automatiquement des devis compétitifs de l\'ensemble de notre réseau de fournisseurs vérifiés.',
+  cap_oem_title: 'OEM · Aftermarket · Occasion',
+  cap_oem_desc: 'Trois filières d\'approvisionnement dans chaque devis — choisissez le bon équilibre entre qualité, prix et disponibilité.',
+  cap_logistics_title: 'Logistique transfrontalière',
+  cap_logistics_desc: 'Expédition coordonnée depuis l\'Arabie Saoudite, l\'Afrique de l\'Est et les hubs régionaux avec gestion des douanes.',
+  cap_tracking_title: 'Suivi de commande en direct',
+  cap_tracking_desc: 'Visibilité étape par étape : ramassé, à la frontière, dédouané, en cours de livraison.',
+  cap_escrow_title: 'Paiements sous séquestre',
+  cap_escrow_desc: 'Fonds retenus jusqu\'à confirmation de la livraison. Résolution des litiges intégrée à chaque étape.',
+  cap_verify_title: 'Vérification des fournisseurs',
+  cap_verify_desc: 'Chaque fournisseur passe par une vérification des documents, l\'historique des évaluations et l\'approbation par catégorie.',
+
+  // Brand strip
+  brands_label: 'Couverture des marques',
+  brands_heading: 'Approuvé par les grandes marques automobiles mondiales.',
+
+  // KPIs
+  kpi_categories: 'Catégories de pièces',
+  kpi_suppliers: 'Fournisseurs vérifiés',
+  kpi_countries: 'Pays desservis',
+  kpi_delivery: 'Taux de livraison réussi',
+  kpi_quote: 'Premier devis moyen',
+  kpi_satisfaction: 'Satisfaction acheteur',
+
+  // Testimonials
+  testimonials_label: 'Ils nous font confiance',
+  testimonials_heading: 'Ce que disent acheteurs et fournisseurs.',
+  testimonial_1_quote: 'La possibilité de comparer les offres OEM et aftermarket côte à côte — puis de suivre les points de contrôle de livraison en direct — a considérablement facilité les achats pour notre équipe.',
+  testimonial_1_author: 'Responsable des achats',
+  testimonial_1_company: 'Opérateur de flotte à Nairobi',
+  testimonial_1_tag: 'Acheteur flotte',
+  testimonial_2_quote: 'Une communauté fournisseurs avec fil RFQ est un différenciateur intelligent. Elle permet aux vendeurs sérieux de partager les disponibilités et de conclure des affaires plus vite que n\'importe quelle chaîne d\'e-mails.',
+  testimonial_2_author: 'Distributeur de pièces',
+  testimonial_2_company: 'Djeddah, Arabie Saoudite',
+  testimonial_2_tag: 'Fournisseur',
+  testimonial_3_quote: 'Un seul endroit pour le sourcing, la confirmation de paiement et le suivi de livraison. Exactement ce qui manquait aux ateliers d\'Afrique de l\'Est.',
+  testimonial_3_author: 'Directeur d\'atelier',
+  testimonial_3_company: 'Kampala, Ouganda',
+  testimonial_3_tag: 'Atelier',
+
+  // Featured parts
+  featured_label: 'En stock et prêt',
+  featured_heading: 'Pièces en stock et prêtes à être approvisionnées.',
+  featured_cta: 'Demander toute pièce',
+  featured_request_quote: 'Demander un devis',
+
+  // Become supplier section
+  supplier_label: 'Devenir fournisseur',
+  supplier_heading: 'Développez votre portée. Gagnez plus de RFQs.',
+  supplier_desc: 'Rejoignez le réseau de fournisseurs vérifiés d\'Africa Autopart et accédez aux acheteurs à fort potentiel dans 18 pays. Répondez aux RFQs, publiez votre stock et suivez vos performances — tout en un tableau de bord.',
+  supplier_benefit1: 'Accès aux acheteurs en Afrique de l\'Est et dans le Golfe',
+  supplier_benefit2: 'Répondez aux RFQs directement depuis votre tableau de bord',
+  supplier_benefit3: 'Établissez la confiance avec des évaluations et des badges de profil vérifiés',
+  supplier_benefit4: 'Aucun frais initial — payez uniquement lorsque vous remportez des commandes',
+  supplier_cta: 'Postuler comme fournisseur',
+  supplier_stat1_label: 'Fournisseurs actifs',
+  supplier_stat1_sub: 'Afrique et Arabie Saoudite',
+  supplier_stat2_label: 'Moy. RFQs / Jour',
+  supplier_stat2_sub: 'Par fournisseur vérifié',
+  supplier_stat3_label: 'Taux de réponse',
+  supplier_stat3_sub: 'Référence fournisseur top',
+  supplier_stat4_label: 'Niveau de vérification',
+  supplier_stat4_sub: 'Plus haut niveau de confiance',
+
+  // Footer
+  footer_tagline: 'La marketplace vérifiée d\'Afrique pour les pièces auto. OEM, aftermarket et occasion — approvisionnées sur tout le continent.',
+  footer_col_platform: 'Plateforme',
+  footer_link_howItWorks: 'Comment ça marche',
+  footer_link_suppliers: 'Fournisseurs',
+  footer_link_trackOrder: 'Suivre commande',
+  footer_link_becomeSupplier: 'Devenir fournisseur',
+  footer_col_account: 'Compte',
+  footer_link_login: 'Connexion',
+  footer_link_register: "S'inscrire",
+  footer_link_requestPart: 'Demander une pièce',
+  footer_col_company: 'Entreprise',
+  footer_link_about: 'À propos',
+  footer_link_contact: 'Contact',
+  footer_rights: 'Tous droits réservés.',
+
+  // Final CTA section
+  cta_eyebrow: 'Commencer maintenant',
+  cta_heading: 'Prêt à sourcer plus intelligemment ?',
+  cta_subtext: 'Rejoignez les ateliers, gestionnaires de flottes et équipes achats qui utilisent déjà Africa Autopart pour sourcer des pièces dans 18 pays.',
+  cta_request_btn: 'Demander une pièce',
+  cta_register_btn: 'Créer un compte gratuit',
+
+  // Guest success (new request page)
+  finder_guest_hint: 'Sans compte requis — demandez en tant qu\'invité',
+} as const

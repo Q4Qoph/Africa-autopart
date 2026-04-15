@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { Order } from '@/types/order'
@@ -18,6 +19,7 @@ function statusBadge(status: number) {
 
 export default function OrdersPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('orders')
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -27,9 +29,9 @@ export default function OrdersPage() {
     orderApi
       .getAll(auth.token)
       .then(({ data }) => setOrders(data))
-      .catch(() => setError('Failed to load orders.'))
+      .catch(() => setError(t('error_load')))
       .finally(() => setLoading(false))
-  }, [auth])
+  }, [auth]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
@@ -39,12 +41,12 @@ export default function OrdersPage() {
           <div className="mb-8">
             <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
               <span className="block w-6 h-px bg-[#00C853]" />
-              Orders
+              {t('page_label')}
             </p>
-            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">My Orders</h1>
+            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">{t('page_heading')}</h1>
           </div>
 
-          {loading && <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>}
+          {loading && <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>}
 
           {error && (
             <p className="text-red-400 text-sm bg-red-400/10 px-4 py-3 rounded-lg border border-red-400/20">
@@ -55,9 +57,9 @@ export default function OrdersPage() {
           {!loading && !error && orders.length === 0 && (
             <Card className="bg-white dark:bg-[#111C14] border-[rgba(0,200,83,0.15)] text-[#07110A] dark:text-white">
               <CardContent className="py-16 text-center">
-                <p className="text-[#4A6B50] dark:text-[#7A9A80]">No orders yet.</p>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80]">{t('empty_text')}</p>
                 <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-1">
-                  Orders will appear here once our team matches your request to a supplier.
+                  {t('empty_subtext')}
                 </p>
               </CardContent>
             </Card>
@@ -68,11 +70,11 @@ export default function OrdersPage() {
               {/* Table header */}
               <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942]">
                 <span>#</span>
-                <span>Part</span>
-                <span>Supplier</span>
-                <span>Price</span>
-                <span>Tracking</span>
-                <span>Status</span>
+                <span>{t('col_part')}</span>
+                <span>{t('col_supplier')}</span>
+                <span>{t('col_price')}</span>
+                <span>{t('col_tracking')}</span>
+                <span>{t('col_status')}</span>
               </div>
 
               {orders.map((order) => (
@@ -103,7 +105,7 @@ export default function OrdersPage() {
                     'text-xs font-mono',
                     order.trackingNumber ? 'text-[#07110A] dark:text-white' : 'text-[#7A9A80] dark:text-[#3D5942]',
                   )}>
-                    {order.trackingNumber || 'Not assigned'}
+                    {order.trackingNumber || t('not_assigned')}
                   </p>
 
                   <Badge className={cn('text-[10px] w-fit', statusBadge(order.status))}>

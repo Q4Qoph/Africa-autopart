@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
 import type { PartRequest } from '@/types/request'
@@ -11,28 +12,28 @@ import { cn } from '@/lib/utils'
 const btnPrimary =
   'inline-flex items-center justify-center rounded-lg bg-[#00C853] text-[#07110A] font-semibold px-5 py-2.5 text-sm hover:bg-[#39FF88] transition-colors'
 
-function urgencyLabel(u: number) {
-  return ['Standard', 'Express', 'Urgent'][u] ?? '—'
-}
-
-function conditionLabel(c: number) {
-  return ['Any Condition', 'OEM', 'Aftermarket', 'Second Hand', 'Open to All'][c] ?? '—'
-}
-
 export default function RequestsPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('requests')
+  const { t: tCommon } = useTranslation('common')
   const [requests, setRequests] = useState<PartRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  const urgencyLabel = (u: number) =>
+    [t('urgency_standard_short'), t('urgency_express_short'), t('urgency_urgent_short')][u] ?? '—'
+
+  const conditionLabel = (c: number) =>
+    [t('condition_any'), t('condition_oem'), t('condition_aftermarket'), t('condition_secondHand'), t('condition_openToAll')][c] ?? '—'
 
   useEffect(() => {
     if (!auth) return
     requestApi
       .getByEmail(auth.email, auth.token)
       .then(({ data }) => setRequests([...data].reverse()))
-      .catch(() => setError('Failed to load requests.'))
+      .catch(() => setError(t('error_load')))
       .finally(() => setLoading(false))
-  }, [auth])
+  }, [auth]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
@@ -44,17 +45,17 @@ export default function RequestsPage() {
             <div>
               <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
                 <span className="block w-6 h-px bg-[#00C853]" />
-                Part Requests
+                {t('page_label')}
               </p>
-              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">My Requests</h1>
+              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">{t('page_heading')}</h1>
             </div>
             <Link to="/requests/new" className={btnPrimary}>
-              + New Request
+              {t('new_request_btn')}
             </Link>
           </div>
 
           {loading && (
-            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading…</p>
+            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('images_uploading').replace('…', '').trimEnd()}…</p>
           )}
 
           {error && (
@@ -66,9 +67,9 @@ export default function RequestsPage() {
           {!loading && !error && requests.length === 0 && (
             <Card className="bg-white dark:bg-[#111C14] border-[rgba(0,200,83,0.15)] text-[#07110A] dark:text-white">
               <CardContent className="py-16 text-center">
-                <p className="text-[#4A6B50] dark:text-[#7A9A80] mb-4">You haven't submitted any requests yet.</p>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] mb-4">{t('empty_text')}</p>
                 <Link to="/requests/new" className={btnPrimary}>
-                  Request your first part
+                  {t('empty_cta')}
                 </Link>
               </CardContent>
             </Card>
@@ -112,7 +113,7 @@ export default function RequestsPage() {
                           : 'bg-amber-400/10 text-amber-400 border-amber-400/20',
                       )}
                     >
-                      {req.isSorted ? 'Sorted' : 'Pending'}
+                      {req.isSorted ? tCommon('status_sorted') : tCommon('status_pending')}
                     </Badge>
                     <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs font-mono">#{req.id}</span>
                   </div>

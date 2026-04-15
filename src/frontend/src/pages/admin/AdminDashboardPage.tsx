@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { userApi } from '@/api/userApi'
 import { supplierApi } from '@/api/supplierApi'
@@ -19,6 +20,7 @@ interface Stats {
 
 export default function AdminDashboardPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('admin')
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -53,35 +55,35 @@ export default function AdminDashboardPage() {
       <div className="mb-8">
         <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
           <span className="block w-6 h-px bg-[#00C853]" />
-          Admin
+          {t('admin_label')}
         </p>
-        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Overview</h1>
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">Platform-wide statistics</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">{t('dashboard_heading')}</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{t('dashboard_subtext')}</p>
       </div>
 
       {loading ? (
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading stats…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>
       ) : stats ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <StatCard title="Total Users" value={stats.totalUsers} href="/admin/users" />
+          <StatCard title={t('stat_totalUsers')} value={stats.totalUsers} href="/admin/users" />
           <StatCard
-            title="Pending Approvals"
+            title={t('stat_pendingApprovals')}
             value={stats.pendingApprovals}
             href="/admin/users"
             highlight={stats.pendingApprovals > 0}
           />
-          <StatCard title="Suppliers" value={stats.totalSuppliers} href="/admin/suppliers" />
-          <StatCard title="Total Orders" value={stats.totalOrders} href="/admin/orders" />
+          <StatCard title={t('stat_suppliers')} value={stats.totalSuppliers} href="/admin/suppliers" />
+          <StatCard title={t('stat_totalOrders')} value={stats.totalOrders} href="/admin/orders" />
           <StatCard
-            title="Open Requests"
+            title={t('stat_openRequests')}
             value={stats.openRequests}
             href="/admin/requests"
             highlight={stats.openRequests > 0}
           />
-          <StatCard title="Total Requests" value={stats.totalRequests} href="/admin/requests" />
+          <StatCard title={t('stat_totalRequests')} value={stats.totalRequests} href="/admin/requests" />
         </div>
       ) : (
-        <p className="text-red-400 text-sm">Failed to load stats.</p>
+        <p className="text-red-400 text-sm">{t('failed_stats')}</p>
       )}
     </div>
   )

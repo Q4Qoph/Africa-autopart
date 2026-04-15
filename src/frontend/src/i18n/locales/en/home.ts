@@ -1,0 +1,151 @@
+export default {
+  // Hero
+  hero_eyebrow: 'Africa + Saudi Arabia · OEM · Aftermarket · Second-Hand',
+  hero_headline: 'Find any spare part,',
+  hero_headline_accent: 'across any border.',
+  hero_description: 'Africa Autopart connects vehicle owners, workshops, and fleets to verified suppliers across Africa and Saudi Arabia — OEM, aftermarket, and second-hand parts with real-time tracking and secure payments.',
+  hero_tag_oem: 'OEM Parts',
+  hero_tag_aftermarket: 'Aftermarket',
+  hero_tag_secondhand: 'Second-Hand',
+  hero_tag_countries: '18 Countries',
+  hero_tag_escrow: 'Escrow Payments',
+  hero_tag_tracking: 'Live Tracking',
+  hero_cta_track: 'Track Order',
+  hero_cta_become_supplier: 'Become a Supplier',
+
+  // Stats
+  stats_parts_sourced: 'Parts Sourced',
+  stats_verified_suppliers: 'Verified Suppliers',
+  stats_countries_served: 'Countries Served',
+  stats_delivery_success: 'Delivery Success',
+
+  // Vehicle finder
+  finder_placeholder_part: 'Part name (e.g. front brake pad)',
+  finder_label_make: 'Make',
+  finder_label_year: 'Year',
+  finder_select_make: 'Select make',
+  finder_select_year: 'Select year',
+  finder_button: 'Find Part',
+
+  // Categories
+  categories_label: 'Browse by Category',
+  categories_heading: '3,800+ parts categories, one platform.',
+  categories_browse: 'Browse →',
+  category_brakes: 'Brakes',
+  category_engine: 'Engine Parts',
+  category_suspension: 'Suspension',
+  category_filters: 'Filters',
+  category_electrical: 'Electrical',
+  category_body: 'Body Parts',
+  category_transmission: 'Transmission',
+  category_cooling: 'Cooling',
+
+  // How it works
+  how_label: 'How It Works',
+  how_heading: 'From request to delivery in 5 structured steps.',
+  steps_01_title: 'Submit your request',
+  steps_01_desc: 'Enter vehicle details, part name, condition preference, urgency, and destination country.',
+  steps_02_title: 'Suppliers respond',
+  steps_02_desc: 'Verified suppliers across Africa and Saudi Arabia receive your RFQ and submit offers.',
+  steps_03_title: 'Compare options',
+  steps_03_desc: 'Review OEM, aftermarket, and second-hand quotes side by side on price, warranty, and ETA.',
+  steps_04_title: 'Pay securely',
+  steps_04_desc: 'Platform-managed payment with escrow protection and invoice generation.',
+  steps_05_title: 'Track delivery',
+  steps_05_desc: 'Real-time updates from dispatch to customs to your door.',
+
+  // Capabilities
+  capabilities_label: 'Platform Capabilities',
+  capabilities_heading: 'Everything a serious procurement operation needs.',
+  capabilities_subtext: 'Built for workshops, fleet managers, and procurement teams who need reliable cross-border sourcing — not guesswork.',
+  cap_rfq_title: 'Smart RFQ Matching',
+  cap_rfq_desc: 'Submit one request and receive competitive quotes from our entire verified supplier network automatically.',
+  cap_oem_title: 'OEM · Aftermarket · Used',
+  cap_oem_desc: 'Three sourcing lanes in every quote — choose the right balance of quality, price, and availability.',
+  cap_logistics_title: 'Cross-Border Logistics',
+  cap_logistics_desc: 'Coordinated shipping from Saudi Arabia, East Africa, and regional hubs with customs handling.',
+  cap_tracking_title: 'Live Order Tracking',
+  cap_tracking_desc: 'Milestone-by-milestone visibility: picked up, at border, customs cleared, out for delivery.',
+  cap_escrow_title: 'Escrow Payments',
+  cap_escrow_desc: 'Funds held until delivery is confirmed. Dispute resolution built in at every stage.',
+  cap_verify_title: 'Supplier Verification',
+  cap_verify_desc: 'Every supplier goes through document review, rating history, and category approval.',
+
+  // Brand strip
+  brands_label: 'Brand Coverage',
+  brands_heading: 'Trusted by top automotive brands worldwide.',
+
+  // KPIs
+  kpi_categories: 'Parts categories',
+  kpi_suppliers: 'Verified suppliers',
+  kpi_countries: 'Countries served',
+  kpi_delivery: 'Delivery success rate',
+  kpi_quote: 'Avg. first quote',
+  kpi_satisfaction: 'Buyer satisfaction',
+
+  // Testimonials
+  testimonials_label: 'Trusted By',
+  testimonials_heading: 'What buyers and suppliers say.',
+  testimonial_1_quote: 'The ability to compare OEM and aftermarket offers side by side — then watch delivery checkpoints live — made procurement significantly easier for our operations team.',
+  testimonial_1_author: 'Procurement Lead',
+  testimonial_1_company: 'Nairobi Fleet Operator',
+  testimonial_1_tag: 'Fleet Buyer',
+  testimonial_2_quote: 'A supplier community with RFQ threading is a smart differentiator. It lets serious vendors share availability and close deals faster than any email chain.',
+  testimonial_2_author: 'Parts Distributor',
+  testimonial_2_company: 'Jeddah, Saudi Arabia',
+  testimonial_2_tag: 'Supplier',
+  testimonial_3_quote: 'One place for sourcing, payment confirmation, and delivery status. Exactly what workshops in East Africa have been missing.',
+  testimonial_3_author: 'Workshop Director',
+  testimonial_3_company: 'Kampala, Uganda',
+  testimonial_3_tag: 'Workshop',
+
+  // Featured parts
+  featured_label: 'In Stock & Ready',
+  featured_heading: 'Parts in stock & ready to source.',
+  featured_cta: 'Request Any Part',
+  featured_request_quote: 'Request Quote',
+
+  // Become supplier section
+  supplier_label: 'Become a Supplier',
+  supplier_heading: 'Grow your reach. Win more RFQs.',
+  supplier_desc: "Join Africa Autopart's verified supplier network and get access to high-intent buyers across 18 countries. Respond to RFQs, publish stock, and track your performance — all in one dashboard.",
+  supplier_benefit1: 'Access to buyers across East Africa and the Gulf',
+  supplier_benefit2: 'Respond to RFQs directly from your dashboard',
+  supplier_benefit3: 'Build trust with ratings and verified profile badges',
+  supplier_benefit4: 'No upfront cost — pay only when you win orders',
+  supplier_cta: 'Apply as a Supplier',
+  supplier_stat1_label: 'Active Suppliers',
+  supplier_stat1_sub: 'Across Africa & Saudi Arabia',
+  supplier_stat2_label: 'Avg. RFQs / Day',
+  supplier_stat2_sub: 'Per verified supplier',
+  supplier_stat3_label: 'Response Rate',
+  supplier_stat3_sub: 'Top supplier benchmark',
+  supplier_stat4_label: 'Verification Tier',
+  supplier_stat4_sub: 'Highest trust level',
+
+  // Footer (inside HomePage)
+  footer_tagline: 'Africa\'s verified marketplace for auto parts. OEM, aftermarket, and second-hand — sourced from across the continent.',
+  footer_col_platform: 'Platform',
+  footer_link_howItWorks: 'How It Works',
+  footer_link_suppliers: 'Suppliers',
+  footer_link_trackOrder: 'Track Order',
+  footer_link_becomeSupplier: 'Become a Supplier',
+  footer_col_account: 'Account',
+  footer_link_login: 'Login',
+  footer_link_register: 'Register',
+  footer_link_requestPart: 'Request a Part',
+  footer_col_company: 'Company',
+  footer_link_about: 'About',
+  footer_link_contact: 'Contact',
+  footer_rights: 'All rights reserved.',
+
+  // Final CTA section
+  cta_eyebrow: 'Get Started Today',
+  cta_heading: 'Ready to source smarter?',
+  cta_subtext: 'Join workshops, fleet managers, and procurement teams already using Africa Autopart to source parts across 18 countries.',
+  cta_request_btn: 'Request a Part Now',
+  cta_register_btn: 'Create Free Account',
+
+  // Guest success (new request page)
+  finder_guest_hint: 'No account needed — request as a guest',
+} as const

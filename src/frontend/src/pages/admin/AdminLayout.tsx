@@ -1,17 +1,20 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 
-const sidebarLinks = [
-  { label: 'Overview', href: '/admin', end: true },
-  { label: 'Users', href: '/admin/users' },
-  { label: 'Approve Users', href: '/admin/approve-users' },
-  { label: 'Suppliers', href: '/admin/suppliers' },
-  { label: 'Orders', href: '/admin/orders' },
-  { label: 'Requests', href: '/admin/requests' },
-  { label: 'Contacts', href: '/admin/contacts' },
-]
-
 export default function AdminLayout() {
+  const { t } = useTranslation('admin')
+
+  const sidebarLinks = [
+    { label: t('sidebar_dashboard'), href: '/admin', end: true },
+    { label: t('users_heading'), href: '/admin/users' },
+    { label: t('approvals_heading'), href: '/admin/approve-users' },
+    { label: t('suppliers_heading'), href: '/admin/suppliers' },
+    { label: t('sidebar_orders'), href: '/admin/orders' },
+    { label: t('sidebar_requests'), href: '/admin/requests' },
+    { label: t('sidebar_contacts'), href: '/admin/contacts' },
+  ]
+
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
       <Navbar />
@@ -19,7 +22,7 @@ export default function AdminLayout() {
         {/* Sidebar */}
         <aside className="hidden md:flex flex-col w-52 shrink-0 min-h-[calc(100vh-68px)] bg-[#E8F2EA] dark:bg-[#0D1810] border-r border-[rgba(0,200,83,0.12)] px-3 py-8">
           <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#4A6B50] dark:text-[#7A9A80] mb-4 px-3">
-            Admin Panel
+            {t('admin_label')}
           </p>
           <nav className="flex flex-col gap-1">
             {sidebarLinks.map((l) => (

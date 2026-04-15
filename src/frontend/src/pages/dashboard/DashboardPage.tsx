@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
 import { orderApi } from '@/api/orderApi'
@@ -18,6 +19,7 @@ const btnPrimary =
 export default function DashboardPage() {
   const { auth, logout } = useAuth()
   const navigate = useNavigate()
+  const { t } = useTranslation('dashboard')
   const [requests, setRequests] = useState<PartRequest[]>([])
   const [orders, setOrders] = useState<Order[]>([])
 
@@ -48,66 +50,34 @@ export default function DashboardPage() {
             <div>
               <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
                 <span className="block w-6 h-px bg-[#00C853]" />
-                Dashboard
+                {t('page_label')}
               </p>
-              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">Welcome back</h1>
+              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">{t('page_heading')}</h1>
               <div className="flex items-center gap-2 mt-1">
-                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">User #{auth?.userId}</p>
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('user_id_label')}{auth?.userId}</p>
                 <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
                   {auth?.role !== undefined ? roleLabel[auth.role] : '—'}
                 </Badge>
               </div>
             </div>
             <Link to="/requests/new" className={btnPrimary}>
-              + Request a Part
+              {t('cta_request')}
             </Link>
           </div>
 
           {/* KPI cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <KpiCard
-              title="Active Requests"
-              value={activeRequests}
-              href="/requests"
-              color="green"
-            />
-            <KpiCard
-              title="Orders in Transit"
-              value={inTransit}
-              href="/orders"
-              color="blue"
-            />
-            <KpiCard
-              title="Delivered"
-              value={delivered}
-              href="/orders"
-              color="green"
-            />
+            <KpiCard title={t('kpi_active_requests')} value={activeRequests} href="/requests" color="green" />
+            <KpiCard title={t('kpi_in_transit')} value={inTransit} href="/orders" color="blue" />
+            <KpiCard title={t('kpi_delivered')} value={delivered} href="/orders" color="green" />
           </div>
 
           {/* Quick links */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-            <QuickLink
-              title="My Part Requests"
-              desc="View and manage all your spare part requests"
-              href="/requests"
-            />
-            <QuickLink
-              title="Browse Suppliers"
-              desc="Search parts from verified suppliers across Africa and Saudi Arabia"
-              href="/suppliers"
-            />
-            <QuickLink
-              title="My Orders"
-              desc="Track active shipments and order history"
-              href="/orders"
-            />
-            <QuickLink
-              title="Request a Part"
-              desc="Submit a new spare part sourcing request"
-              href="/requests/new"
-              highlight
-            />
+            <QuickLink title={t('quick_requests_title')} desc={t('quick_requests_desc')} href="/requests" />
+            <QuickLink title={t('quick_suppliers_title')} desc={t('quick_suppliers_desc')} href="/suppliers" />
+            <QuickLink title={t('quick_orders_title')} desc={t('quick_orders_desc')} href="/orders" />
+            <QuickLink title={t('quick_new_title')} desc={t('quick_new_desc')} href="/requests/new" highlight />
           </div>
 
           <div className="mt-4">
@@ -116,7 +86,7 @@ export default function DashboardPage() {
               onClick={handleLogout}
               className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10"
             >
-              Logout
+              {t('logout_btn')}
             </Button>
           </div>
         </div>

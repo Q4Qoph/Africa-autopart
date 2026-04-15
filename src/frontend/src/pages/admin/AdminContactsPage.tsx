@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { MessageSquare, Phone, Mail, User, Copy, Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { contactApi, type ContactDTO } from '@/api/contactApi'
 
@@ -28,6 +29,7 @@ function CopyButton({ value }: { value: string }) {
 
 export default function AdminContactsPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('admin')
   const [messages, setMessages] = useState<ContactDTO[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -36,7 +38,7 @@ export default function AdminContactsPage() {
     if (!auth?.token) return
     contactApi.getAll(auth.token)
       .then((res) => setMessages([...res.data].reverse()))
-      .catch(() => setError('Failed to load contact messages.'))
+      .catch(() => setError(t('contacts_load_error')))
       .finally(() => setLoading(false))
   }, [auth?.token])
 
@@ -45,14 +47,14 @@ export default function AdminContactsPage() {
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00C853]">Admin Panel</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#00C853]">{t('contacts_admin_label')}</p>
           <h1 className="font-display text-xl font-bold text-[#07110A] dark:text-white mt-0.5">
-            Contact Messages
+            {t('contacts_heading')}
           </h1>
         </div>
         {!loading && !error && (
           <span className="ml-auto text-xs font-mono bg-[rgba(0,200,83,0.1)] text-[#00C853] border border-[rgba(0,200,83,0.2)] px-2.5 py-1 rounded-full">
-            {messages.length} {messages.length === 1 ? 'message' : 'messages'}
+            {t('contacts_count', { count: messages.length })}
           </span>
         )}
       </div>
@@ -73,7 +75,7 @@ export default function AdminContactsPage() {
       {!loading && !error && messages.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <MessageSquare className="w-10 h-10 text-[rgba(0,0,0,0.15)] dark:text-[rgba(255,255,255,0.1)] mb-3" />
-          <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">No contact messages yet.</p>
+          <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">{t('contacts_no_messages')}</p>
         </div>
       )}
 

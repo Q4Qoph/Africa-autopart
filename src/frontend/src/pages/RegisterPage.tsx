@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { userApi } from '@/api/userApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,16 +19,17 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
-const perks = [
-  { icon: '🌍', text: 'Source parts from 18+ countries' },
-  { icon: '⚡', text: 'Get supplier quotes in under 42 minutes' },
-  { icon: '✅', text: 'Only verified, approved suppliers' },
-]
-
 export default function RegisterPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation('auth')
   const [apiError, setApiError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  const perks = [
+    { icon: '🌍', text: t('register_perk1') },
+    { icon: '⚡', text: t('register_perk2') },
+    { icon: '✅', text: t('register_perk3') },
+  ]
 
   const {
     register,
@@ -42,7 +44,7 @@ export default function RegisterPage() {
       setSuccess(true)
       setTimeout(() => navigate('/login'), 2000)
     } catch {
-      setApiError('Registration failed. Please try again.')
+      setApiError(t('register_error'))
     }
   }
 
@@ -67,14 +69,14 @@ export default function RegisterPage() {
         <div className="relative">
           <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-4">
             <span className="block w-5 h-px bg-[#00C853]" />
-            For buyers
+            {t('register_eyebrow')}
           </p>
           <h2 className="text-4xl font-extrabold text-[#07110A] dark:text-white font-display leading-tight mb-4">
-            Find the part<br />
-            <span className="text-[#00C853]">you need, fast</span>
+            {t('register_headline')}<br />
+            <span className="text-[#00C853]">{t('register_headline_accent')}</span>
           </h2>
           <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-8 max-w-[300px]">
-            Submit a sourcing request and get competitive quotes from verified suppliers across Africa.
+            {t('register_subtext')}
           </p>
 
           <div className="space-y-4">
@@ -92,12 +94,12 @@ export default function RegisterPage() {
         <div className="relative space-y-3">
           <div className="inline-flex items-center gap-2 bg-[rgba(0,200,83,0.08)] border border-[rgba(0,200,83,0.18)] rounded-full px-4 py-2">
             <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse" />
-            <span className="text-[#00C853] text-xs font-mono">4,000+ businesses trust us</span>
+            <span className="text-[#00C853] text-xs font-mono">{t('register_badge')}</span>
           </div>
           <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">
-            Are you a supplier?{' '}
+            {t('register_are_supplier')}{' '}
             <Link to="/become-supplier" className="text-[#00C853] hover:underline">
-              Register your business →
+              {t('register_supplier_link')}
             </Link>
           </p>
         </div>
@@ -116,25 +118,25 @@ export default function RegisterPage() {
               <div className="w-16 h-16 rounded-full bg-[#00C853]/15 border border-[#00C853]/30 grid place-items-center mx-auto mb-5">
                 <span className="text-[#00C853] text-3xl">✓</span>
               </div>
-              <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">Account created!</h2>
-              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Redirecting you to sign in…</p>
+              <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">{t('register_success_heading')}</h2>
+              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('register_success_subtext')}</p>
             </div>
           ) : (
             <>
               <div className="mb-7">
-                <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Create account</h1>
+                <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">{t('register_heading')}</h1>
                 <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                  Join Africa Autopart as a buyer — it's free
+                  {t('register_subheading')}
                 </p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="firstName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">First name</Label>
+                    <Label htmlFor="firstName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_firstname_label')}</Label>
                     <Input
                       id="firstName"
-                      placeholder="John"
+                      placeholder={t('register_firstname_placeholder')}
                       {...register('firstName')}
                       className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                     />
@@ -143,10 +145,10 @@ export default function RegisterPage() {
                     )}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="lastName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Last name</Label>
+                    <Label htmlFor="lastName" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_lastname_label')}</Label>
                     <Input
                       id="lastName"
-                      placeholder="Doe"
+                      placeholder={t('register_lastname_placeholder')}
                       {...register('lastName')}
                       className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                     />
@@ -157,7 +159,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Email address</Label>
+                  <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_email_label')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -171,11 +173,11 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Phone number</Label>
+                  <Label htmlFor="phone" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_phone_label')}</Label>
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+254 700 000 000"
+                    placeholder={t('register_phone_placeholder')}
                     {...register('phone')}
                     className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
@@ -185,11 +187,11 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Password</Label>
+                  <Label htmlFor="password" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('register_password_label')}</Label>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Min. 6 characters"
+                    placeholder={t('register_password_placeholder')}
                     {...register('password')}
                     className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11"
                   />
@@ -209,21 +211,21 @@ export default function RegisterPage() {
                   disabled={isSubmitting}
                   className="w-full bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-11 text-sm"
                 >
-                  {isSubmitting ? 'Creating account…' : 'Create Account'}
+                  {isSubmitting ? t('register_submitting') : t('register_submit')}
                 </Button>
               </form>
 
               <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] space-y-3 text-center">
                 <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
-                  Already have an account?{' '}
+                  {t('register_already_have')}{' '}
                   <Link to="/login" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
-                    Sign in
+                    {t('register_sign_in')}
                   </Link>
                 </p>
                 <p className="text-xs text-[#7A9A80] dark:text-[#3D5942]">
-                  Are you a supplier?{' '}
+                  {t('register_are_supplier')}{' '}
                   <Link to="/become-supplier" className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
-                    Register your business →
+                    {t('register_supplier_link')}
                   </Link>
                 </p>
               </div>

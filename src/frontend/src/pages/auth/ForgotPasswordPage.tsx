@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { userApi } from '@/api/userApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation('auth')
   const [sent, setSent] = useState(false)
   const [apiError, setApiError] = useState('')
 
@@ -30,7 +32,7 @@ export default function ForgotPasswordPage() {
       await userApi.forgotPassword(values)
       setSent(true)
     } catch {
-      setApiError('Something went wrong. Please try again.')
+      setApiError(t('forgot_error'))
     }
   }
 
@@ -46,29 +48,29 @@ export default function ForgotPasswordPage() {
             <div className="w-16 h-16 rounded-full bg-[#00C853]/15 border border-[#00C853]/30 grid place-items-center mx-auto mb-5">
               <span className="text-[#00C853] text-3xl">✓</span>
             </div>
-            <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">Check your inbox</h2>
+            <h2 className="text-[#07110A] dark:text-white text-2xl font-extrabold font-display mb-2">{t('forgot_success_heading')}</h2>
             <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm max-w-[280px] mx-auto leading-relaxed">
-              We've sent a password reset link to your email. Follow the link to set your password.
+              {t('forgot_success_text')}
             </p>
             <Link
               to="/login"
               className="inline-block mt-6 text-sm text-[#00C853] hover:text-[#39FF88] font-medium transition-colors"
             >
-              Back to sign in
+              {t('forgot_back_to_signin')}
             </Link>
           </div>
         ) : (
           <>
             <div className="mb-8">
-              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">Forgot password?</h1>
+              <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display mb-2">{t('forgot_heading')}</h1>
               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                Enter your email and we'll send you a reset link.
+                {t('forgot_subheading')}
               </p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">Email address</Label>
+                <Label htmlFor="email" className="text-[#07110A] dark:text-[#E8F0E9] text-sm">{t('forgot_email_label')}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -92,13 +94,13 @@ export default function ForgotPasswordPage() {
                 disabled={isSubmitting}
                 className="w-full bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-11 text-sm"
               >
-                {isSubmitting ? 'Sending…' : 'Send Reset Link'}
+                {isSubmitting ? t('forgot_submitting') : t('forgot_submit')}
               </Button>
             </form>
 
             <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] text-center">
               <Link to="/login" className="text-sm text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853] transition-colors">
-                Back to sign in
+                {t('forgot_back_to_signin')}
               </Link>
             </div>
           </>

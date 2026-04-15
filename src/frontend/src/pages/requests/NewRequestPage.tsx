@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
 import { imageApi } from '@/api/imageApi'
@@ -29,20 +30,6 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
-const conditionOptions = [
-  { value: ConditionPreference.AnyCondition, label: 'Any Condition' },
-  { value: ConditionPreference.OEM, label: 'OEM' },
-  { value: ConditionPreference.Aftermarket, label: 'Aftermarket' },
-  { value: ConditionPreference.Second_Hand, label: 'Second Hand' },
-  { value: ConditionPreference.Open_To_All, label: 'Open to All' },
-]
-
-const urgencyOptions = [
-  { value: Urgency.Standard, label: 'Standard — flexible timeline' },
-  { value: Urgency.Express, label: 'Express — within a few days' },
-  { value: Urgency.Urgent, label: 'Urgent — as soon as possible' },
-]
-
 const fieldClass =
   'bg-[#EFF7F1] dark:bg-[#162019] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-11'
 const selectClass =
@@ -52,7 +39,22 @@ export default function NewRequestPage() {
   const { auth } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useTranslation('requests')
   const prefill = location.state as { year?: string; make?: string; partName?: string } | null
+
+  const conditionOptions = [
+    { value: ConditionPreference.AnyCondition, label: t('condition_any') },
+    { value: ConditionPreference.OEM, label: t('condition_oem') },
+    { value: ConditionPreference.Aftermarket, label: t('condition_aftermarket') },
+    { value: ConditionPreference.Second_Hand, label: t('condition_secondHand') },
+    { value: ConditionPreference.Open_To_All, label: t('condition_openToAll') },
+  ]
+
+  const urgencyOptions = [
+    { value: Urgency.Standard, label: t('urgency_standard') },
+    { value: Urgency.Express, label: t('urgency_express') },
+    { value: Urgency.Urgent, label: t('urgency_urgent') },
+  ]
 
   const [condition, setCondition] = useState<number>(ConditionPreference.AnyCondition)
   const [urgency, setUrgency] = useState<number>(Urgency.Standard)
@@ -84,7 +86,7 @@ export default function NewRequestPage() {
       const urls = await Promise.all(files.map((f) => imageApi.upload(f).then((r) => r.data)))
       setUploadedImages((prev) => [...prev, ...urls])
     } catch {
-      setApiError('Image upload failed. Please try again.')
+      setApiError(t('error_image_upload'))
     } finally {
       setUploading(false)
     }
@@ -111,7 +113,7 @@ export default function NewRequestPage() {
         setSubmitted(true)
       }
     } catch {
-      setApiError('Failed to submit request. Please try again.')
+      setApiError(t('error_submit'))
     }
   }
 
@@ -126,29 +128,29 @@ export default function NewRequestPage() {
               <span className="text-[#00C853] text-3xl">✓</span>
             </div>
             <h2 className="font-display text-2xl font-bold text-[#07110A] dark:text-white mb-3">
-              Request submitted!
+              {t('success_heading')}
             </h2>
             <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80] mb-2 leading-relaxed">
-              Your request has been sent to suppliers. They will reach out to you at{' '}
+              {t('success_text')}{' '}
               <span className="font-medium text-[#07110A] dark:text-white">{submittedEmail}</span>.
             </p>
             <div className="mt-8 p-5 rounded-xl bg-[rgba(0,200,83,0.05)] border border-[rgba(0,200,83,0.18)] text-left">
-              <p className="text-xs font-mono uppercase tracking-widest text-[#00C853] mb-2">Want to track your request?</p>
+              <p className="text-xs font-mono uppercase tracking-widest text-[#00C853] mb-2">{t('success_track_label')}</p>
               <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80] mb-4 leading-relaxed">
-                Create a free account with the same email address to track your request status, view supplier quotes, and manage orders in one place.
+                {t('success_track_desc')}
               </p>
               <div className="flex flex-col sm:flex-row gap-2">
                 <Link
                   to="/register"
                   className="inline-flex items-center justify-center rounded-lg bg-[#00C853] text-[#07110A] font-semibold px-5 py-2 text-sm hover:bg-[#39FF88] transition-colors"
                 >
-                  Create Free Account
+                  {t('success_create_account')}
                 </Link>
                 <Link
                   to="/"
                   className="inline-flex items-center justify-center rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] font-medium px-5 py-2 text-sm hover:text-[#07110A] dark:hover:text-white transition-colors"
                 >
-                  Back to Home
+                  {t('success_back_home')}
                 </Link>
               </div>
             </div>
@@ -160,47 +162,47 @@ export default function NewRequestPage() {
           {/* Header */}
           <div className="mb-8">
             <Link to={auth ? '/requests' : '/'} className="text-[#4A6B50] dark:text-[#7A9A80] text-xs hover:text-[#07110A] dark:hover:text-white mb-4 inline-block">
-              ← {auth ? 'Back to Requests' : 'Back to Home'}
+              {auth ? t('back_to_requests') : t('back_to_home')}
             </Link>
             <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
               <span className="block w-6 h-px bg-[#00C853]" />
-              New Request
+              {t('new_label')}
             </p>
-            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">Request a Part</h1>
+            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">{t('new_heading')}</h1>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* Section 1: Vehicle */}
-            <Section title="Vehicle Details" step="01">
+            <Section title={t('section_vehicle')} step={`${t('step_label')} 01`}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Make *" error={errors.vehicleMake?.message}>
+                <Field label={t('field_make')} error={errors.vehicleMake?.message}>
                   <Input {...register('vehicleMake')} placeholder="Toyota" className={fieldClass} />
                 </Field>
-                <Field label="Model *" error={errors.model?.message}>
+                <Field label={t('field_model')} error={errors.model?.message}>
                   <Input {...register('model')} placeholder="Hilux" className={fieldClass} />
                 </Field>
-                <Field label="Year *" error={errors.year?.message}>
+                <Field label={t('field_year')} error={errors.year?.message}>
                   <Input {...register('year')} placeholder="2021" className={fieldClass} />
                 </Field>
-                <Field label="Engine Type" error={errors.engineType?.message}>
+                <Field label={t('field_engine')} error={errors.engineType?.message}>
                   <Input {...register('engineType')} placeholder="2.4L Diesel" className={fieldClass} />
                 </Field>
-                <Field label="Chassis / VIN Number" error={errors.chassisNumber?.message} className="sm:col-span-2">
+                <Field label={t('field_chassis')} error={errors.chassisNumber?.message} className="sm:col-span-2">
                   <Input {...register('chassisNumber')} placeholder="JTFHX02P900XXXXX" className={fieldClass} />
                 </Field>
               </div>
             </Section>
 
             {/* Section 2: Part */}
-            <Section title="Part Details" step="02">
+            <Section title={t('section_part')} step={`${t('step_label')} 02`}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Part Name *" error={errors.partName?.message} className="sm:col-span-2">
+                <Field label={t('field_partName')} error={errors.partName?.message} className="sm:col-span-2">
                   <Input {...register('partName')} placeholder="Front brake pad set" className={fieldClass} />
                 </Field>
-                <Field label="Part Number" error={errors.partNumber?.message}>
+                <Field label={t('field_partNumber')} error={errors.partNumber?.message}>
                   <Input {...register('partNumber')} placeholder="04465-0K260" className={fieldClass} />
                 </Field>
-                <Field label="Condition Preference">
+                <Field label={t('field_condition')}>
                   <select
                     value={condition}
                     onChange={(e) => setCondition(Number(e.target.value))}
@@ -211,7 +213,7 @@ export default function NewRequestPage() {
                     ))}
                   </select>
                 </Field>
-                <Field label="Urgency" className="sm:col-span-2">
+                <Field label={t('field_urgency')} className="sm:col-span-2">
                   <select
                     value={urgency}
                     onChange={(e) => setUrgency(Number(e.target.value))}
@@ -222,11 +224,11 @@ export default function NewRequestPage() {
                     ))}
                   </select>
                 </Field>
-                <Field label="Description" error={errors.description?.message} className="sm:col-span-2">
+                <Field label={t('field_description')} error={errors.description?.message} className="sm:col-span-2">
                   <textarea
                     {...register('description')}
                     rows={3}
-                    placeholder="Additional details about the part or condition…"
+                    placeholder={t('field_description_placeholder')}
                     className={cn(
                       fieldClass,
                       'h-auto px-3 py-2.5 rounded-lg border w-full resize-none',
@@ -237,15 +239,15 @@ export default function NewRequestPage() {
             </Section>
 
             {/* Section 3: Contact & Delivery */}
-            <Section title="Delivery & Contact" step="03">
+            <Section title={t('section_delivery')} step={`${t('step_label')} 03`}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field label="Country *" error={errors.country?.message}>
+                <Field label={t('field_country')} error={errors.country?.message}>
                   <Input {...register('country')} placeholder="Kenya" className={fieldClass} />
                 </Field>
-                <Field label="Phone *" error={errors.phone?.message}>
+                <Field label={t('field_phone')} error={errors.phone?.message}>
                   <Input {...register('phone')} type="tel" placeholder="+254 700 000 000" className={fieldClass} />
                 </Field>
-                <Field label="Email *" error={errors.email?.message} className="sm:col-span-2">
+                <Field label={t('field_email')} error={errors.email?.message} className="sm:col-span-2">
                   <Input
                     {...register('email')}
                     type="email"
@@ -255,7 +257,7 @@ export default function NewRequestPage() {
                   />
                   {!auth && (
                     <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80] mt-1">
-                      Use your account email to track this request after submission.
+                      {t('field_email_hint')}
                     </p>
                   )}
                 </Field>
@@ -263,7 +265,7 @@ export default function NewRequestPage() {
             </Section>
 
             {/* Section 4: Images */}
-            <Section title="Supporting Images" step="04">
+            <Section title={t('section_images')} step={`${t('step_label')} 04`}>
               <label className="block cursor-pointer">
                 <input
                   type="file"
@@ -274,9 +276,9 @@ export default function NewRequestPage() {
                 />
                 <div className="border-2 border-dashed border-[rgba(0,200,83,0.25)] rounded-xl p-8 text-center hover:border-[#00C853] transition-colors">
                   <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                    {uploading ? 'Uploading…' : 'Click to upload images of the damaged or reference part'}
+                    {uploading ? t('images_uploading') : t('images_upload_label')}
                   </p>
-                  <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-1">PNG, JPG supported</p>
+                  <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-1">{t('images_format_hint')}</p>
                 </div>
               </label>
               {uploadedImages.length > 0 && (
@@ -310,13 +312,13 @@ export default function NewRequestPage() {
                 disabled={isSubmitting || uploading}
                 className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold px-8"
               >
-                {isSubmitting ? 'Submitting…' : 'Submit Request'}
+                {isSubmitting ? t('submit_loading') : t('submit_btn')}
               </Button>
               <Link
                 to={auth ? '/requests' : '/'}
                 className="inline-flex items-center px-6 py-2 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] text-sm hover:text-[#07110A] dark:hover:text-white hover:border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.2)] transition-colors"
               >
-                Cancel
+                {t('cancel_btn')}
               </Link>
             </div>
           </form>
@@ -331,7 +333,7 @@ function Section({ title, step, children }: { title: string; step: string; child
   return (
     <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl p-6">
       <div className="flex items-center gap-3 mb-5">
-        <span className="text-[11px] font-mono text-[#00C853] uppercase tracking-widest">Step {step}</span>
+        <span className="text-[11px] font-mono text-[#00C853] uppercase tracking-widest">{step}</span>
         <h2 className="text-[#07110A] dark:text-white font-semibold">{title}</h2>
       </div>
       {children}

@@ -1,18 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search, MapPin, Truck } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-const stats = [
-  { value: '14K', suffix: '+', label: 'Parts Sourced' },
-  { value: '1,240', suffix: '+', label: 'Verified Suppliers' },
-  { value: '18', suffix: '', label: 'Countries Served' },
-  { value: '96.8', suffix: '%', label: 'Delivery Success' },
-]
+// ─── Static data (no i18n needed) ────────────────────────────────────────────
 
 const vehicleYears = Array.from({ length: 20 }, (_, i) => String(2025 - i))
 
@@ -23,117 +17,6 @@ const vehicleMakes = [
   'Peugeot', 'Renault', 'Suzuki', 'Daihatsu', 'Other',
 ]
 
-const steps = [
-  {
-    number: '01',
-    title: 'Submit your request',
-    desc: 'Enter vehicle details, part name, condition preference, urgency, and destination country.',
-  },
-  {
-    number: '02',
-    title: 'Suppliers respond',
-    desc: 'Verified suppliers across Africa and Saudi Arabia receive your RFQ and submit offers.',
-  },
-  {
-    number: '03',
-    title: 'Compare options',
-    desc: 'Review OEM, aftermarket, and second-hand quotes side by side on price, warranty, and ETA.',
-  },
-  {
-    number: '04',
-    title: 'Pay securely',
-    desc: 'Platform-managed payment with escrow protection and invoice generation.',
-  },
-  {
-    number: '05',
-    title: 'Track delivery',
-    desc: 'Real-time updates from dispatch to customs to your door.',
-  },
-]
-
-const capabilities = [
-  {
-    icon: '🔍',
-    title: 'Smart RFQ Matching',
-    desc: 'Submit one request and receive competitive quotes from our entire verified supplier network automatically.',
-  },
-  {
-    icon: '⚖️',
-    title: 'OEM · Aftermarket · Used',
-    desc: 'Three sourcing lanes in every quote — choose the right balance of quality, price, and availability.',
-  },
-  {
-    icon: '🌍',
-    title: 'Cross-Border Logistics',
-    desc: 'Coordinated shipping from Saudi Arabia, East Africa, and regional hubs with customs handling.',
-  },
-  {
-    icon: '📍',
-    title: 'Live Order Tracking',
-    desc: 'Milestone-by-milestone visibility: picked up, at border, customs cleared, out for delivery.',
-  },
-  {
-    icon: '🔒',
-    title: 'Escrow Payments',
-    desc: 'Funds held until delivery is confirmed. Dispute resolution built in at every stage.',
-  },
-  {
-    icon: '✅',
-    title: 'Supplier Verification',
-    desc: 'Every supplier goes through document review, rating history, and category approval.',
-  },
-]
-
-const kpis = [
-  { value: '3,800+', label: 'Parts categories' },
-  { value: '1,240+', label: 'Verified suppliers' },
-  { value: '18', label: 'Countries served' },
-  { value: '96.8%', label: 'Delivery success rate' },
-  { value: '42 min', label: 'Avg. first quote' },
-  { value: '4.8 / 5', label: 'Buyer satisfaction' },
-]
-
-const testimonials = [
-  {
-    quote:
-      'The ability to compare OEM and aftermarket offers side by side — then watch delivery checkpoints live — made procurement significantly easier for our operations team.',
-    author: 'Procurement Lead',
-    company: 'Nairobi Fleet Operator',
-    tag: 'Fleet Buyer',
-    tagColor: 'green',
-    avatar: '/images/testimonials/testimonial-1-190x190.jpg',
-  },
-  {
-    quote:
-      'A supplier community with RFQ threading is a smart differentiator. It lets serious vendors share availability and close deals faster than any email chain.',
-    author: 'Parts Distributor',
-    company: 'Jeddah, Saudi Arabia',
-    tag: 'Supplier',
-    tagColor: 'amber',
-    avatar: '/images/testimonials/testimonial-2-190x190.jpg',
-  },
-  {
-    quote:
-      'One place for sourcing, payment confirmation, and delivery status. Exactly what workshops in East Africa have been missing.',
-    author: 'Workshop Director',
-    company: 'Kampala, Uganda',
-    tag: 'Workshop',
-    tagColor: 'blue',
-    avatar: '/images/testimonials/testimonial-3-190x190.jpg',
-  },
-]
-
-const categories = [
-  { id: 1, label: 'Brakes',       img: '/images/categories/category-1-200x200.jpg' },
-  { id: 2, label: 'Engine Parts', img: '/images/categories/category-2-200x200.jpg' },
-  { id: 3, label: 'Suspension',   img: '/images/categories/category-3-200x200.jpg' },
-  { id: 4, label: 'Filters',      img: '/images/categories/category-4-200x200.jpg' },
-  { id: 5, label: 'Electrical',   img: '/images/categories/category-5-200x200.jpg' },
-  { id: 6, label: 'Body Parts',   img: '/images/categories/category-6-200x200.jpg' },
-  { id: 7, label: 'Transmission', img: '/images/categories/category-7-200x200.jpg' },
-  { id: 8, label: 'Cooling',      img: '/images/categories/category-8-200x200.jpg' },
-]
-
 const brands = Array.from({ length: 16 }, (_, i) => ({
   id: i + 1,
   img: `/images/brands/brand-${i + 1}.png`,
@@ -141,21 +24,6 @@ const brands = Array.from({ length: 16 }, (_, i) => ({
 }))
 
 type PartCondition = 'OEM' | 'Aftermarket' | 'Used'
-
-const featuredParts: {
-  id: number
-  name: string
-  condition: PartCondition
-  img: string
-  conditionColor: 'green' | 'amber' | 'blue'
-}[] = [
-  { id: 1, name: 'Front Brake Pad Set',   condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-1-245x245.jpg' },
-  { id: 2, name: 'Air Filter Assembly',   condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-2-245x245.jpg' },
-  { id: 3, name: 'Alternator Unit',       condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-3-245x245.jpg' },
-  { id: 4, name: 'Shock Absorber — Rear', condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-4-245x245.jpg' },
-  { id: 5, name: 'Radiator Cooling Fan',  condition: 'Used',        conditionColor: 'blue',  img: '/images/products/product-5-245x245.jpg' },
-  { id: 6, name: 'Starter Motor',         condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-6-245x245.jpg' },
-]
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
@@ -176,6 +44,88 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const { t } = useTranslation('home')
+
+  const stats = [
+    { value: '14K', suffix: '+', label: t('stats_parts_sourced') },
+    { value: '1,240', suffix: '+', label: t('stats_verified_suppliers') },
+    { value: '18', suffix: '', label: t('stats_countries_served') },
+    { value: '96.8', suffix: '%', label: t('stats_delivery_success') },
+  ]
+
+  const steps = [
+    { number: '01', title: t('steps_01_title'), desc: t('steps_01_desc') },
+    { number: '02', title: t('steps_02_title'), desc: t('steps_02_desc') },
+    { number: '03', title: t('steps_03_title'), desc: t('steps_03_desc') },
+    { number: '04', title: t('steps_04_title'), desc: t('steps_04_desc') },
+    { number: '05', title: t('steps_05_title'), desc: t('steps_05_desc') },
+  ]
+
+  const capabilities = [
+    { icon: '🔍', title: t('cap_rfq_title'), desc: t('cap_rfq_desc') },
+    { icon: '⚖️', title: t('cap_oem_title'), desc: t('cap_oem_desc') },
+    { icon: '🌍', title: t('cap_logistics_title'), desc: t('cap_logistics_desc') },
+    { icon: '📍', title: t('cap_tracking_title'), desc: t('cap_tracking_desc') },
+    { icon: '🔒', title: t('cap_escrow_title'), desc: t('cap_escrow_desc') },
+    { icon: '✅', title: t('cap_verify_title'), desc: t('cap_verify_desc') },
+  ]
+
+  const kpis = [
+    { value: '3,800+', label: t('kpi_categories') },
+    { value: '1,240+', label: t('kpi_suppliers') },
+    { value: '18', label: t('kpi_countries') },
+    { value: '96.8%', label: t('kpi_delivery') },
+    { value: '42 min', label: t('kpi_quote') },
+    { value: '4.8 / 5', label: t('kpi_satisfaction') },
+  ]
+
+  const testimonials = [
+    {
+      quote: t('testimonial_1_quote'),
+      author: t('testimonial_1_author'),
+      company: t('testimonial_1_company'),
+      tag: t('testimonial_1_tag'),
+      tagColor: 'green' as const,
+      avatar: '/images/testimonials/testimonial-1-190x190.jpg',
+    },
+    {
+      quote: t('testimonial_2_quote'),
+      author: t('testimonial_2_author'),
+      company: t('testimonial_2_company'),
+      tag: t('testimonial_2_tag'),
+      tagColor: 'amber' as const,
+      avatar: '/images/testimonials/testimonial-2-190x190.jpg',
+    },
+    {
+      quote: t('testimonial_3_quote'),
+      author: t('testimonial_3_author'),
+      company: t('testimonial_3_company'),
+      tag: t('testimonial_3_tag'),
+      tagColor: 'blue' as const,
+      avatar: '/images/testimonials/testimonial-3-190x190.jpg',
+    },
+  ]
+
+  const categories = [
+    { id: 1, label: t('category_brakes'),       img: '/images/categories/category-1-200x200.jpg' },
+    { id: 2, label: t('category_engine'),        img: '/images/categories/category-2-200x200.jpg' },
+    { id: 3, label: t('category_suspension'),    img: '/images/categories/category-3-200x200.jpg' },
+    { id: 4, label: t('category_filters'),       img: '/images/categories/category-4-200x200.jpg' },
+    { id: 5, label: t('category_electrical'),    img: '/images/categories/category-5-200x200.jpg' },
+    { id: 6, label: t('category_body'),          img: '/images/categories/category-6-200x200.jpg' },
+    { id: 7, label: t('category_transmission'),  img: '/images/categories/category-7-200x200.jpg' },
+    { id: 8, label: t('category_cooling'),       img: '/images/categories/category-8-200x200.jpg' },
+  ]
+
+  const featuredParts: { id: number; name: string; condition: PartCondition; img: string; conditionColor: 'green' | 'amber' | 'blue' }[] = [
+    { id: 1, name: 'Front Brake Pad Set',   condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-1-245x245.jpg' },
+    { id: 2, name: 'Air Filter Assembly',   condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-2-245x245.jpg' },
+    { id: 3, name: 'Alternator Unit',       condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-3-245x245.jpg' },
+    { id: 4, name: 'Shock Absorber — Rear', condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-4-245x245.jpg' },
+    { id: 5, name: 'Radiator Cooling Fan',  condition: 'Used',        conditionColor: 'blue',  img: '/images/products/product-5-245x245.jpg' },
+    { id: 6, name: 'Starter Motor',         condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-6-245x245.jpg' },
+  ]
+
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9] overflow-x-hidden">
       <Navbar />
@@ -212,21 +162,19 @@ export default function HomePage() {
               <div className="flex items-center gap-2.5 mb-5">
                 <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse shrink-0" />
                 <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#00C853]">
-                  Africa + Saudi Arabia · OEM · Aftermarket · Second-Hand
+                  {t('hero_eyebrow')}
                 </p>
               </div>
 
               {/* Headline */}
               <h1 className="font-display text-[clamp(2.2rem,4.5vw,3.7rem)] font-extrabold leading-[1.06] tracking-tight text-[#07110A] dark:text-white mb-5">
-                Find any spare part,{' '}
-                <span className="text-[#00C853]">across any border.</span>
+                {t('hero_headline')}{' '}
+                <span className="text-[#00C853]">{t('hero_headline_accent')}</span>
               </h1>
 
               {/* Description */}
               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[1rem] leading-[1.8] mb-7 max-w-[500px]">
-                Africa Autopart connects vehicle owners, workshops, and fleets to verified
-                suppliers across Africa and Saudi Arabia — OEM, aftermarket, and second-hand
-                parts with real-time tracking and secure payments.
+                {t('hero_description')}
               </p>
 
               {/* ── Vehicle Finder ── */}
@@ -235,23 +183,23 @@ export default function HomePage() {
               {/* Feature tags */}
               <div className="flex flex-wrap gap-2 mt-7">
                 {[
-                  { label: 'OEM Parts',         color: 'green' },
-                  { label: 'Aftermarket',        color: 'green' },
-                  { label: 'Second-Hand',        color: 'green' },
-                  { label: '18 Countries',       color: 'dim' },
-                  { label: 'Escrow Payments',    color: 'dim' },
-                  { label: 'Live Tracking',      color: 'dim' },
-                ].map((t) => (
+                  { label: t('hero_tag_oem'),         color: 'green' },
+                  { label: t('hero_tag_aftermarket'),  color: 'green' },
+                  { label: t('hero_tag_secondhand'),   color: 'green' },
+                  { label: t('hero_tag_countries'),    color: 'dim' },
+                  { label: t('hero_tag_escrow'),       color: 'dim' },
+                  { label: t('hero_tag_tracking'),     color: 'dim' },
+                ].map((tag) => (
                   <span
-                    key={t.label}
+                    key={tag.label}
                     className={cn(
                       'text-[11px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-md border',
-                      t.color === 'green'
+                      tag.color === 'green'
                         ? 'bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.18)]'
                         : 'bg-[rgba(0,0,0,0.04)] dark:bg-[rgba(255,255,255,0.04)] text-[#4A6B50] dark:text-[#7A9A80] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]',
                     )}
                   >
-                    {t.label}
+                    {tag.label}
                   </span>
                 ))}
               </div>
@@ -260,11 +208,11 @@ export default function HomePage() {
               <div className="flex flex-wrap items-center gap-3 mt-6">
                 <Link to="/orders" className={btnOutline}>
                   <Truck className="w-4 h-4 mr-1.5" />
-                  Track Order
+                  {t('hero_cta_track')}
                 </Link>
                 <Link to="/become-supplier" className={btnOutline}>
                   <MapPin className="w-4 h-4 mr-1.5" />
-                  Become a Supplier
+                  {t('hero_cta_become_supplier')}
                 </Link>
               </div>
 
@@ -293,9 +241,9 @@ export default function HomePage() {
       <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
         <div className="max-w-[1260px] mx-auto px-6">
           <div className="max-w-xl mb-14">
-            <SectionLabel>Browse by Category</SectionLabel>
+            <SectionLabel>{t('categories_label')}</SectionLabel>
             <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-              3,800+ parts categories, one platform.
+              {t('categories_heading')}
             </h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -316,7 +264,7 @@ export default function HomePage() {
                 </div>
                 <div className="absolute inset-0 bg-[rgba(0,200,83,0.12)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <span className="text-[#00C853] font-mono text-xs uppercase tracking-widest translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    Browse →
+                    {t('categories_browse')}
                   </span>
                 </div>
               </Link>
@@ -329,9 +277,9 @@ export default function HomePage() {
       <section id="how-it-works" className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
         <div className="max-w-[1260px] mx-auto px-6">
           <div className="max-w-xl mb-14">
-            <SectionLabel>How It Works</SectionLabel>
+            <SectionLabel>{t('how_label')}</SectionLabel>
             <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-              From request to delivery in 5 structured steps.
+              {t('how_heading')}
             </h2>
           </div>
 
@@ -360,14 +308,13 @@ export default function HomePage() {
         <div className="max-w-[1260px] mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-6 items-end mb-14">
             <div>
-              <SectionLabel>Platform Capabilities</SectionLabel>
+              <SectionLabel>{t('capabilities_label')}</SectionLabel>
               <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-                Everything a serious procurement operation needs.
+                {t('capabilities_heading')}
               </h2>
             </div>
             <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed lg:text-right lg:max-w-md lg:ml-auto">
-              Built for workshops, fleet managers, and procurement teams who need
-              reliable cross-border sourcing — not guesswork.
+              {t('capabilities_subtext')}
             </p>
           </div>
 
@@ -391,9 +338,9 @@ export default function HomePage() {
       {/* ── Brand Logo Strip ── */}
       <section className="py-16 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
         <div className="max-w-[1260px] mx-auto px-6 mb-10">
-          <SectionLabel>Brand Coverage</SectionLabel>
+          <SectionLabel>{t('brands_label')}</SectionLabel>
           <p className="font-display text-[clamp(1.4rem,2.5vw,2rem)] font-extrabold text-[#07110A] dark:text-white">
-            Trusted by top automotive brands worldwide.
+            {t('brands_heading')}
           </p>
         </div>
         <div className="overflow-hidden relative">
@@ -434,44 +381,44 @@ export default function HomePage() {
       <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
         <div className="max-w-[1260px] mx-auto px-6">
           <div className="mb-14">
-            <SectionLabel>Trusted By</SectionLabel>
+            <SectionLabel>{t('testimonials_label')}</SectionLabel>
             <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white">
-              What buyers and suppliers say.
+              {t('testimonials_heading')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {testimonials.map((t) => (
+            {testimonials.map((tmn) => (
               <div
-                key={t.author}
+                key={tmn.author}
                 className="bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-2xl p-6 flex flex-col gap-4 hover:border-[rgba(0,200,83,0.2)] transition-colors shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none"
               >
                 <Badge
                   className={cn(
                     'w-fit text-[10px]',
-                    t.tagColor === 'green' &&
+                    tmn.tagColor === 'green' &&
                       'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
-                    t.tagColor === 'amber' &&
+                    tmn.tagColor === 'amber' &&
                       'bg-amber-400/10 text-amber-400 border-amber-400/20',
-                    t.tagColor === 'blue' &&
+                    tmn.tagColor === 'blue' &&
                       'bg-blue-400/10 text-blue-400 border-blue-400/20',
                   )}
                 >
-                  {t.tag}
+                  {tmn.tag}
                 </Badge>
                 <span className="text-[#00C853] font-display text-4xl leading-none opacity-30 select-none">"</span>
                 <p className="text-[#07110A] dark:text-[#E8F0E9] text-sm leading-relaxed flex-1 -mt-4">
-                  {t.quote}
+                  {tmn.quote}
                 </p>
                 <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] pt-4 flex items-center gap-3">
                   <img
-                    src={t.avatar}
-                    alt={t.author}
+                    src={tmn.avatar}
+                    alt={tmn.author}
                     className="w-10 h-10 rounded-full object-cover border-2 border-[rgba(0,200,83,0.2)] flex-shrink-0"
                   />
                   <div>
-                    <p className="text-[#07110A] dark:text-white font-semibold text-sm">{t.author}</p>
-                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mt-0.5">{t.company}</p>
+                    <p className="text-[#07110A] dark:text-white font-semibold text-sm">{tmn.author}</p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mt-0.5">{tmn.company}</p>
                   </div>
                 </div>
               </div>
@@ -485,14 +432,14 @@ export default function HomePage() {
         <div className="max-w-[1260px] mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-6 items-end mb-14">
             <div>
-              <SectionLabel>In Stock &amp; Ready</SectionLabel>
+              <SectionLabel>{t('featured_label')}</SectionLabel>
               <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-                Parts in stock &amp; ready to source.
+                {t('featured_heading')}
               </h2>
             </div>
             <div className="lg:text-right">
               <Link to="/requests/new" className={cn(btnOutline, 'lg:ml-auto')}>
-                Request Any Part
+                {t('featured_cta')}
               </Link>
             </div>
           </div>
@@ -528,7 +475,7 @@ export default function HomePage() {
                     to="/requests/new"
                     className="text-center text-[10px] font-mono uppercase tracking-wider py-1.5 rounded-lg bg-[rgba(0,200,83,0.08)] text-[#00C853] border border-[rgba(0,200,83,0.15)] hover:bg-[rgba(0,200,83,0.18)] hover:border-[rgba(0,200,83,0.3)] transition-colors"
                   >
-                    Request Quote
+                    {t('featured_request_quote')}
                   </Link>
                 </div>
               </div>
@@ -549,22 +496,15 @@ export default function HomePage() {
               }}
             />
             <div className="relative z-10">
-              <SectionLabel>Become a Supplier</SectionLabel>
+              <SectionLabel>{t('supplier_label')}</SectionLabel>
               <h2 className="font-display text-[clamp(1.6rem,3vw,2.4rem)] font-extrabold text-[#07110A] dark:text-white leading-tight mb-4">
-                Grow your reach. Win more RFQs.
+                {t('supplier_heading')}
               </h2>
               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-6">
-                Join Africa Autopart's verified supplier network and get access to
-                high-intent buyers across 18 countries. Respond to RFQs, publish
-                stock, and track your performance — all in one dashboard.
+                {t('supplier_desc')}
               </p>
               <ul className="space-y-2 mb-8">
-                {[
-                  'Access to buyers across East Africa and the Gulf',
-                  'Respond to RFQs directly from your dashboard',
-                  'Build trust with ratings and verified profile badges',
-                  'No upfront cost — pay only when you win orders',
-                ].map((item) => (
+                {[t('supplier_benefit1'), t('supplier_benefit2'), t('supplier_benefit3'), t('supplier_benefit4')].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-[#07110A] dark:text-[#E8F0E9]">
                     <span className="text-[#00C853] mt-0.5 shrink-0">✓</span>
                     {item}
@@ -572,17 +512,17 @@ export default function HomePage() {
                 ))}
               </ul>
               <Link to="/become-supplier" className={btnPrimary}>
-                Apply as a Supplier
+                {t('supplier_cta')}
               </Link>
             </div>
 
             {/* Right side: supplier stats */}
             <div className="relative z-10 grid grid-cols-2 gap-4">
               {[
-                { value: '1,240+', label: 'Active Suppliers', sub: 'Across Africa & Saudi Arabia' },
-                { value: '14', label: 'Avg. RFQs / Day', sub: 'Per verified supplier' },
-                { value: '92%', label: 'Response Rate', sub: 'Top supplier benchmark' },
-                { value: 'Gold', label: 'Verification Tier', sub: 'Highest trust level' },
+                { value: '1,240+', label: t('supplier_stat1_label'), sub: t('supplier_stat1_sub') },
+                { value: '14', label: t('supplier_stat2_label'), sub: t('supplier_stat2_sub') },
+                { value: '92%', label: t('supplier_stat3_label'), sub: t('supplier_stat3_sub') },
+                { value: 'Gold', label: t('supplier_stat4_label'), sub: t('supplier_stat4_sub') },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -602,21 +542,20 @@ export default function HomePage() {
       <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
         <div className="max-w-[1260px] mx-auto px-6 text-center">
           <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-4">
-            Get Started Today
+            {t('cta_eyebrow')}
           </p>
           <h2 className="font-display text-[clamp(2rem,4vw,3.2rem)] font-extrabold text-[#07110A] dark:text-white mb-4">
-            Ready to source smarter?
+            {t('cta_heading')}
           </h2>
           <p className="text-[#4A6B50] dark:text-[#7A9A80] mb-10 max-w-lg mx-auto leading-relaxed">
-            Join workshops, fleet managers, and procurement teams already using
-            Africa Autopart to source parts across 18 countries.
+            {t('cta_subtext')}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/requests/new" className={cn(btnPrimary, 'px-10 py-4 text-base')}>
-              Request a Part Now
+              {t('cta_request_btn')}
             </Link>
             <Link to="/register" className={cn(btnOutline, 'px-10 py-4 text-base')}>
-              Create Free Account
+              {t('cta_register_btn')}
             </Link>
           </div>
         </div>
@@ -635,42 +574,38 @@ export default function HomePage() {
                 <span className="text-[#07110A] dark:text-white font-bold font-display">Africa Autopart</span>
               </div>
               <p className="text-[#4A6B50] dark:text-[#3D5942] text-sm leading-relaxed max-w-xs">
-                Cross-border spare parts sourcing platform connecting Africa and Saudi Arabia.
+                {t('footer_tagline')}
               </p>
             </div>
 
             <FooterCol
-              title="Platform"
+              title={t('footer_col_platform')}
               links={[
-                { label: 'How It Works', href: '/#how-it-works' },
-                { label: 'Request a Part', href: '/requests/new' },
-                { label: 'Browse Suppliers', href: '/suppliers' },
-                { label: 'Track Order', href: '/orders' },
+                { label: t('footer_link_howItWorks'), href: '/#how-it-works' },
+                { label: t('footer_link_requestPart'), href: '/requests/new' },
+                { label: t('footer_link_suppliers'), href: '/suppliers' },
+                { label: t('footer_link_trackOrder'), href: '/orders' },
               ]}
             />
             <FooterCol
-              title="Suppliers"
+              title={t('supplier_label')}
               links={[
-                { label: 'Become a Supplier', href: '/become-supplier' },
-                { label: 'Supplier Dashboard', href: '/dashboard' },
-                { label: 'Verification Process', href: '#' },
-                { label: 'Pricing', href: '#' },
+                { label: t('footer_link_becomeSupplier'), href: '/become-supplier' },
+                { label: t('footer_link_login'), href: '/dashboard' },
               ]}
             />
             <FooterCol
-              title="Company"
+              title={t('footer_col_company')}
               links={[
-                { label: 'About', href: '#' },
-                { label: 'Contact', href: '#' },
-                { label: 'Privacy Policy', href: '#' },
-                { label: 'Terms of Service', href: '#' },
+                { label: t('footer_link_about'), href: '/about' },
+                { label: t('footer_link_contact'), href: '/contact' },
               ]}
             />
           </div>
 
           <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-[#4A6B50] dark:text-[#3D5942] text-xs">
-              © {new Date().getFullYear()} Africa Autopart. All rights reserved.
+              © {new Date().getFullYear()} Africa Autopart. {t('footer_rights')}
             </p>
             <div className="flex items-center gap-4">
               {['Kenya', 'Uganda', 'Tanzania', 'Saudi Arabia', '+14 more'].map((c) => (
@@ -713,6 +648,7 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
 
 function VehicleFinder() {
   const navigate = useNavigate()
+  const { t } = useTranslation('home')
   const [year, setYear] = useState('')
   const [make, setMake] = useState('')
   const [part, setPart] = useState('')
@@ -727,14 +663,14 @@ function VehicleFinder() {
 
   return (
     <form onSubmit={handleFind} className="bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-2xl p-4 shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-      <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#3D5942] mb-3">Find Your Part</p>
+      <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#3D5942] mb-3">{t('how_label')}</p>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <select value={year} onChange={(e) => setYear(e.target.value)} className={selectCls}>
-          <option value="">Year</option>
+          <option value="">{t('finder_label_year')}</option>
           {vehicleYears.map((y) => <option key={y} value={y}>{y}</option>)}
         </select>
         <select value={make} onChange={(e) => setMake(e.target.value)} className={selectCls}>
-          <option value="">Make</option>
+          <option value="">{t('finder_label_make')}</option>
           {vehicleMakes.map((m) => <option key={m} value={m}>{m}</option>)}
         </select>
       </div>
@@ -745,7 +681,7 @@ function VehicleFinder() {
             type="text"
             value={part}
             onChange={(e) => setPart(e.target.value)}
-            placeholder="Part name or number…"
+            placeholder={t('finder_placeholder_part')}
             className="w-full h-10 pl-8 pr-3 rounded-lg bg-white dark:bg-[#162019] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] text-sm focus:outline-none focus:border-[#00C853] transition-colors"
           />
         </div>
@@ -753,11 +689,11 @@ function VehicleFinder() {
           type="submit"
           className="h-10 px-5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors shrink-0"
         >
-          Find Parts →
+          {t('finder_button')} →
         </button>
       </div>
       <p className="text-[10px] text-[#7A9A80] dark:text-[#3D5942] mt-2.5 font-mono">
-        No account needed — request as a guest
+        {t('finder_guest_hint')}
       </p>
     </form>
   )

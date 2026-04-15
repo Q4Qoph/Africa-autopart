@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { Order } from '@/types/order'
-import { OrderStatus, statusLabel } from '@/types/order'
+import { OrderStatus } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,10 +23,17 @@ interface EditState {
 
 export default function AdminOrdersPage() {
   const { auth } = useAuth()
+  const { t } = useTranslation('admin')
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editState, setEditState] = useState<EditState>({ status: 0, trackingNumber: '', saving: false, error: '' })
+
+  const statusLabelT: Record<number, string> = {
+    [OrderStatus.Pending]: t('orders_status_pending'),
+    [OrderStatus.Shipped]: t('orders_status_shipped'),
+    [OrderStatus.Delivered]: t('orders_status_delivered'),
+  }
 
   useEffect(() => {
     if (!auth) return
@@ -70,18 +78,18 @@ export default function AdminOrdersPage() {
       )
       setEditingId(null)
     } catch {
-      setEditState((s) => ({ ...s, saving: false, error: 'Failed to save. Please try again.' }))
+      setEditState((s) => ({ ...s, saving: false, error: t('orders_save_error') }))
     }
   }
 
   async function handleDelete(orderId: number) {
-    if (!window.confirm('Delete this order? This cannot be undone.')) return
+    if (!window.confirm(t('orders_delete_confirm'))) return
     if (!auth) return
     try {
       await orderApi.delete(orderId, auth.token)
       setOrders((prev) => prev.filter((o) => o.orderId !== orderId))
     } catch {
-      alert('Failed to delete order.')
+      alert(t('orders_delete_error'))
     }
   }
 
@@ -90,27 +98,27 @@ export default function AdminOrdersPage() {
       <div className="mb-6">
         <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
           <span className="block w-6 h-px bg-[#00C853]" />
-          Admin
+          {t('admin_label')}
         </p>
-        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">Orders</h1>
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{orders.length} total orders</p>
+        <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">{t('orders_heading')}</h1>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{t('orders_count', { count: orders.length })}</p>
       </div>
 
       {loading ? (
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">Loading orders…</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                <Th>#</Th>
-                <Th>Part</Th>
-                <Th>Supplier</Th>
-                <Th>Vehicle</Th>
-                <Th>Price</Th>
-                <Th>Tracking</Th>
-                <Th>Status</Th>
-                <Th>Actions</Th>
+                <Th>{t('orders_col_id')}</Th>
+                <Th>{t('orders_col_part')}</Th>
+                <Th>{t('orders_col_supplier')}</Th>
+                <Th>{t('orders_col_vehicle')}</Th>
+                <Th>{t('orders_col_price')}</Th>
+                <Th>{t('orders_col_tracking')}</Th>
+                <Th>{t('orders_col_status')}</Th>
+                <Th>{t('orders_col_actions')}</Th>
               </tr>
             </thead>
             <tbody>
@@ -136,7 +144,7 @@ export default function AdminOrdersPage() {
                     </Td>
                     <Td>
                       <Badge className={`text-[10px] border ${statusClass[o.status] ?? ''}`}>
-                        {statusLabel(o.status)}
+                        {statusLabelT[o.status] ?? String(o.status)}
                       </Badge>
                     </Td>
                     <Td>
@@ -146,7 +154,7 @@ export default function AdminOrdersPage() {
                           onClick={() => editingId === o.orderId ? cancelEdit() : startEdit(o)}
                           className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
                         >
-                          {editingId === o.orderId ? 'Close' : 'Update'}
+                          {editingId === o.orderId ? t('orders_close') : t('orders_update')}
                         </Button>
                         <Button
                           size="sm"
@@ -154,7 +162,7 @@ export default function AdminOrdersPage() {
                           onClick={() => handleDelete(o.orderId)}
                           className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
                         >
-                          Delete
+                          {t('orders_delete')}
                         </Button>
                       </div>
                     </Td>
@@ -166,19 +174,19 @@ export default function AdminOrdersPage() {
                       <td colSpan={8} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
                         <div className="flex items-end gap-4 flex-wrap">
                           <div className="space-y-1">
-                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Status</p>
+                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('orders_status_label')}</p>
                             <select
                               value={editState.status}
                               onChange={(e) => setEditState((s) => ({ ...s, status: Number(e.target.value) }))}
                               className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                             >
-                              <option value={0}>Pending</option>
-                              <option value={1}>Shipped</option>
-                              <option value={2}>Delivered</option>
+                              <option value={OrderStatus.Pending}>{t('orders_status_pending')}</option>
+                              <option value={OrderStatus.Shipped}>{t('orders_status_shipped')}</option>
+                              <option value={OrderStatus.Delivered}>{t('orders_status_delivered')}</option>
                             </select>
                           </div>
                           <div className="space-y-1">
-                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">Tracking Number</p>
+                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('orders_tracking_label')}</p>
                             <Input
                               value={editState.trackingNumber}
                               onChange={(e) => setEditState((s) => ({ ...s, trackingNumber: e.target.value }))}
@@ -191,14 +199,14 @@ export default function AdminOrdersPage() {
                             disabled={editState.saving}
                             className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-5 text-sm font-semibold"
                           >
-                            {editState.saving ? 'Saving…' : 'Save'}
+                            {editState.saving ? t('orders_saving') : t('orders_save')}
                           </Button>
                           <Button
                             variant="outline"
                             onClick={cancelEdit}
                             className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
                           >
-                            Cancel
+                            {t('orders_cancel')}
                           </Button>
                         </div>
                         {editState.error && (
@@ -212,7 +220,7 @@ export default function AdminOrdersPage() {
               {orders.length === 0 && (
                 <tr>
                   <td colSpan={8} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                    No orders found.
+                    {t('orders_no_orders')}
                   </td>
                 </tr>
               )}
