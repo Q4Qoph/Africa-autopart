@@ -26,13 +26,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLanguageState(lang)
     i18n.changeLanguage(lang)
     // RTL support: when 'ar' is added, this handles it automatically
-    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr')
+    document.documentElement.setAttribute('dir', (lang as string) === 'ar' ? 'rtl' : 'ltr')
     document.documentElement.setAttribute('lang', lang)
   }
 
   useEffect(() => {
     // Sync document attributes on mount
-    document.documentElement.setAttribute('dir', language === 'ar' ? 'rtl' : 'ltr')
+    document.documentElement.setAttribute('dir', (language as string) === 'ar' ? 'rtl' : 'ltr')
     document.documentElement.setAttribute('lang', language)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -46,3 +46,4 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 export function useLanguage() {
   return useContext(LanguageContext)
 }
+

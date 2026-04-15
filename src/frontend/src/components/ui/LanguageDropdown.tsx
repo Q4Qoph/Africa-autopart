@@ -16,7 +16,7 @@ const LANGUAGES: { code: Language; native: string; flag: string }[] = [
 
 interface Props {
   /** 'topbar' = dark bg context; 'drawer' = light/dark card context */
-  variant?: 'topbar' | 'drawer'
+  variant?: 'topbar' | 'drawer'  
 }
 
 export function LanguageDropdown({ variant = 'topbar' }: Props) {
@@ -30,12 +30,10 @@ export function LanguageDropdown({ variant = 'topbar' }: Props) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className={triggerCls} aria-label="Select language">
-          <Globe className={variant === 'topbar' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
-          <span>{current.flag} {current.native}</span>
-        </button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger className={triggerCls} aria-label="Select language">
+  <Globe className={variant === 'topbar' ? 'w-3 h-3' : 'w-3.5 h-3.5'} />
+  <span>{current.flag} {current.native}</span>
+</DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
         side="bottom"
