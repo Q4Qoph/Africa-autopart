@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
-function statusBadge(status: number) {
+function statusBadge(status: string) {
   if (status === OrderStatus.Delivered)
     return 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
   if (status === OrderStatus.Shipped)
@@ -67,11 +67,10 @@ export default function OrdersPage() {
 
           {!loading && orders.length > 0 && (
             <div className="grid gap-3">
-              {/* Table header */}
               <div className="hidden md:grid grid-cols-[3rem_1fr_1fr_1fr_1fr_1fr] gap-4 px-6 py-3 text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942]">
                 <span>#</span>
                 <span>{t('col_part')}</span>
-                <span>{t('col_supplier')}</span>
+                <span>{t('col_vehicle')}</span>
                 <span>{t('col_price')}</span>
                 <span>{t('col_tracking')}</span>
                 <span>{t('col_status')}</span>
@@ -85,16 +84,11 @@ export default function OrdersPage() {
                   <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs font-mono">{order.orderId}</span>
 
                   <div>
-                    <p className="text-[#07110A] dark:text-white text-sm font-medium">{order.part?.partName ?? '—'}</p>
-                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">{order.part?.partNumber ?? ''}</p>
-                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-0.5">
-                      {order.partRequest?.vehicleMake} {order.partRequest?.model}
-                    </p>
+                    <p className="text-[#07110A] dark:text-white text-sm font-medium">{order.requestedPartName ?? '—'}</p>
                   </div>
 
                   <div>
-                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{order.supplier?.businessName ?? '—'}</p>
-                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">{order.supplier?.email ?? ''}</p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{order.vehicleMake} {order.model}</p>
                   </div>
 
                   <p className="text-[#00C853] font-semibold text-sm">

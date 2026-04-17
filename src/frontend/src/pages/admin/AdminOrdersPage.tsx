@@ -8,14 +8,14 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-const statusClass: Record<number, string> = {
+const statusClass: Record<string, string> = {
   [OrderStatus.Pending]: 'bg-amber-900/30 text-amber-300 border-amber-700/30',
   [OrderStatus.Shipped]: 'bg-blue-900/30 text-blue-300 border-blue-700/30',
   [OrderStatus.Delivered]: 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
 }
 
 interface EditState {
-  status: number
+  status: string
   trackingNumber: string
   saving: boolean
   error: string
@@ -27,9 +27,9 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [editingId, setEditingId] = useState<number | null>(null)
-  const [editState, setEditState] = useState<EditState>({ status: 0, trackingNumber: '', saving: false, error: '' })
+  const [editState, setEditState] = useState<EditState>({ status: OrderStatus.Pending, trackingNumber: '', saving: false, error: '' })
 
-  const statusLabelT: Record<number, string> = {
+  const statusLabelT: Record<string, string> = {
     [OrderStatus.Pending]: t('orders_status_pending'),
     [OrderStatus.Shipped]: t('orders_status_shipped'),
     [OrderStatus.Delivered]: t('orders_status_delivered'),
@@ -60,9 +60,6 @@ export default function AdminOrdersPage() {
       await orderApi.update(
         order.orderId,
         {
-          supplierId: order.supplierId,
-          partId: order.partId,
-          partRequestId: order.partRequestId,
           price: order.price,
           status: editState.status,
           trackingNumber: editState.trackingNumber,
@@ -130,14 +127,10 @@ export default function AdminOrdersPage() {
                   >
                     <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{o.orderId}</Td>
                     <Td>
-                      <p className="text-[#07110A] dark:text-white font-medium">{o.part?.partName ?? '—'}</p>
-                      <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs font-mono">{o.part?.partNumber ?? ''}</p>
+                      <p className="text-[#07110A] dark:text-white font-medium">{o.requestedPartName ?? '—'}</p>
                     </Td>
-                    <Td>
-                      <p className="text-[#4A6B50] dark:text-[#7A9A80]">{o.supplier?.businessName ?? '—'}</p>
-                      <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs">{o.supplier?.email ?? ''}</p>
-                    </Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{o.partRequest?.vehicleMake} {o.partRequest?.model}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">—</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{o.vehicleMake} {o.model}</Td>
                     <Td className="text-[#07110A] dark:text-white">${o.price.toLocaleString()}</Td>
                     <Td className="font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
                       {o.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
@@ -177,7 +170,7 @@ export default function AdminOrdersPage() {
                             <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('orders_status_label')}</p>
                             <select
                               value={editState.status}
-                              onChange={(e) => setEditState((s) => ({ ...s, status: Number(e.target.value) }))}
+                              onChange={(e) => setEditState((s) => ({ ...s, status: e.target.value }))}
                               className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                             >
                               <option value={OrderStatus.Pending}>{t('orders_status_pending')}</option>

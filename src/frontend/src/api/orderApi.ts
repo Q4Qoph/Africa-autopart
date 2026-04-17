@@ -12,7 +12,7 @@ function authHeader(token: string) {
 
 export const orderApi = {
   create: (dto: AddOrderDTO, token: string) =>
-    api.post<string>('/api/Order/addOrder', dto, authHeader(token)),
+    api.post<number>('/api/Order/addOrder', dto, authHeader(token)),
 
   getAll: (token: string) =>
     api.get<Order[]>('/api/Order/getAllOrders', authHeader(token)),

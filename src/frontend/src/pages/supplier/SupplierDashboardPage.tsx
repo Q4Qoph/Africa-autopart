@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 
-function statusBadge(status: number) {
+function statusBadge(status: string) {
   if (status === OrderStatus.Delivered) return 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
   if (status === OrderStatus.Shipped) return 'bg-blue-400/10 text-blue-400 border-blue-400/20'
   return 'bg-amber-400/10 text-amber-400 border-amber-400/20'
@@ -50,7 +50,7 @@ const emptyForm: AddPartForm = {
 }
 
 interface OrderEdit {
-  status: number
+  status: string
   trackingNumber: string
   saving: boolean
   error: string
@@ -79,7 +79,7 @@ export default function SupplierDashboardPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [loadingOrders, setLoadingOrders] = useState(false)
   const [editingOrderId, setEditingOrderId] = useState<number | null>(null)
-  const [orderEdit, setOrderEdit] = useState<OrderEdit>({ status: 0, trackingNumber: '', saving: false, error: '' })
+  const [orderEdit, setOrderEdit] = useState<OrderEdit>({ status: OrderStatus.Pending, trackingNumber: '', saving: false, error: '' })
 
   // Add part form
   const [showAddPart, setShowAddPart] = useState(false)
@@ -101,7 +101,7 @@ export default function SupplierDashboardPage() {
   const [savingProfile, setSavingProfile] = useState(false)
   const [profileError, setProfileError] = useState('')
 
-  const orderStatusLabel: Record<number, string> = {
+  const orderStatusLabel: Record<string, string> = {
     [OrderStatus.Pending]: t('supplier_order_status_pending'),
     [OrderStatus.Shipped]: t('supplier_order_status_shipped'),
     [OrderStatus.Delivered]: t('supplier_order_status_delivered'),
@@ -251,9 +251,6 @@ export default function SupplierDashboardPage() {
       await orderApi.update(
         order.orderId,
         {
-          supplierId: order.supplierId,
-          partId: order.partId,
-          partRequestId: order.partRequestId,
           price: order.price,
           status: orderEdit.status,
           trackingNumber: orderEdit.trackingNumber,
@@ -706,9 +703,9 @@ export default function SupplierDashboardPage() {
                               <>
                                 <tr key={order.orderId} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                                   <td className="px-5 py-3 text-[#7A9A80] dark:text-[#3D5942] font-mono text-xs">#{order.orderId}</td>
-                                  <td className="px-5 py-3 text-[#07110A] dark:text-white">{order.part?.partName ?? '—'}</td>
+                                  <td className="px-5 py-3 text-[#07110A] dark:text-white">{order.requestedPartName ?? '—'}</td>
                                   <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                                    {order.partRequest?.vehicleMake} {order.partRequest?.model}
+                                    {order.vehicleMake} {order.model}
                                   </td>
                                   <td className="px-5 py-3 text-[#00C853] font-semibold">${order.price.toLocaleString()}</td>
                                   <td className="px-5 py-3 font-mono text-xs">
@@ -739,7 +736,7 @@ export default function SupplierDashboardPage() {
                                           <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('supplier_order_status')}</p>
                                           <select
                                             value={orderEdit.status}
-                                            onChange={(e) => setOrderEdit((s) => ({ ...s, status: Number(e.target.value) }))}
+                                            onChange={(e) => setOrderEdit((s) => ({ ...s, status: e.target.value }))}
                                             className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                                           >
                                             <option value={OrderStatus.Pending}>{t('supplier_order_status_pending')}</option>

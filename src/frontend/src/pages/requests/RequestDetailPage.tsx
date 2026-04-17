@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 
-function statusBadgeClass(status: number) {
+function statusBadgeClass(status: string) {
   if (status === OrderStatus.Delivered)
     return 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
   if (status === OrderStatus.Shipped)
@@ -367,20 +367,22 @@ export default function RequestDetailPage() {
 
                 {!order ? (
                   <div className="px-6 py-12 text-center">
-                    <div className="w-12 h-12 rounded-full bg-amber-400/10 border border-amber-400/20 grid place-items-center mx-auto mb-4">
-                      <span className="text-amber-400 text-lg">⏳</span>
-                    </div>
-                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('order_awaiting')}</p>
-                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mt-1">
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-1">{t('order_awaiting')}</p>
+                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mb-5">
                       {t('order_awaiting_desc')}
                     </p>
+                    {!request.isSorted && (
+                      <Link
+                        to={`/requests/${request.id}/parts`}
+                        className="inline-flex items-center justify-center rounded-lg bg-[#00C853] text-[#07110A] font-semibold px-5 py-2 text-sm hover:bg-[#39FF88] transition-colors"
+                      >
+                        {t('order_find_parts_btn')}
+                      </Link>
+                    )}
                   </div>
                 ) : (
                   <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-5">
-                    <Detail label={t('order_part')} value={order.part?.partName ?? '—'} />
-                    <Detail label={t('order_partNum')} value={order.part?.partNumber || '—'} />
-                    <Detail label={t('order_condition')} value={order.part?.condition ?? '—'} />
-                    <Detail label={t('order_supplier')} value={order.supplier?.businessName ?? '—'} />
+                    <Detail label={t('order_part')} value={order.requestedPartName ?? '—'} />
                     <Detail label={t('order_price')} value={`$${order.price.toLocaleString()}`} />
                     <div>
                       <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('order_status')}</p>
@@ -389,7 +391,7 @@ export default function RequestDetailPage() {
                       </Badge>
                     </div>
                     <Detail label={t('order_tracking')} value={order.trackingNumber || tCommon('not_assigned')} />
-                    <Detail label={t('order_date')} value={order.partRequest?.dateCreated ? new Date(order.partRequest.dateCreated).toLocaleDateString() : '—'} />
+                    <Detail label={t('order_date')} value={order.dateCreated ? new Date(order.dateCreated).toLocaleDateString() : '—'} />
                   </div>
                 )}
               </div>

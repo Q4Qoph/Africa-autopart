@@ -185,14 +185,14 @@ export default function AdminRequestsPage() {
     try {
       const { data: ref } = await orderApi.create(
         {
-          supplierId: selectedPart.supplierId,
-          partId: selectedPart.id,
+          supplierName: selectedPart.supplierName,
+          partName: selectedPart.partName,
           partRequestId: panel.requestId,
           price: Number(price),
         },
         auth.token,
       )
-      setOrderRef(ref)
+      setOrderRef(String(ref))
       setSelectedPart(null)
       setSearchResults([])
       setSearchTerm('')

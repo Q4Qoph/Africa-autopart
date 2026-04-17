@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
+import { partsApi } from '@/api/partsApi'
 import { imageApi } from '@/api/imageApi'
 import { ConditionPreference, Urgency } from '@/types/request'
 import Navbar from '@/components/layout/Navbar'
@@ -95,7 +96,7 @@ export default function NewRequestPage() {
   async function onSubmit(values: FormValues) {
     setApiError('')
     try {
-      await requestApi.create(
+      const { data: requestId } = await requestApi.create(
         {
           ...values,
           conditionPreference: condition as typeof ConditionPreference[keyof typeof ConditionPreference],
@@ -107,7 +108,22 @@ export default function NewRequestPage() {
         auth?.token,
       )
       if (auth) {
-        navigate('/requests')
+        // Auto-search for matching parts and redirect to parts selection page
+        try {
+          const { data: parts } = await partsApi.search({
+            query: values.partName,
+            make: values.vehicleMake,
+            model: values.model,
+            year: values.year,
+          })
+          if (parts.length > 0) {
+            navigate(`/requests/${requestId}/parts`)
+            return
+          }
+        } catch {
+          // Fall through to request detail if search fails
+        }
+        navigate(`/requests/${requestId}`)
       } else {
         setSubmittedEmail(values.email)
         setSubmitted(true)

@@ -1,71 +1,47 @@
 export interface Order {
   orderId: number
-  supplierId: number
-  partId: number
-  partRequestId: number
-  status: number  // 0=Pending, 1=Shipped, 2=Delivered
-  price: number
   trackingNumber: string | null
-  supplier: {
-    id: number
-    businessName: string
-    description: string
-    category: string
-    email: string
-    phone: string
-  } | null
-  part: {
-    id: number
-    partName: string
-    partNumber: string
-    condition: string
-    description: string
-    imageURL: string
-    price: number
-    stock: number
-  } | null
-  partRequest: {
-    id: number
-    vehicleMake: string
-    model: string
-    year: string
-    partName: string
-    description: string
-    dateCreated: string
-    isSorted: boolean
-  } | null
+  status: string
+  price: number
+  vehicleMake: string
+  model: string
+  requestedPartName: string
+  requestDescription: string
+  dateCreated: string
 }
 
 export const OrderStatus = {
-  Pending: 0,
-  Shipped: 1,
-  Delivered: 2,
+  Pending: 'Pending',
+  Shipped: 'Shipped',
+  Delivered: 'Delivered',
 } as const
 export type OrderStatusValue = (typeof OrderStatus)[keyof typeof OrderStatus]
 
-export function statusLabel(status: number): string {
-  if (status === OrderStatus.Shipped) return 'Shipped'
-  if (status === OrderStatus.Delivered) return 'Delivered'
-  return 'Pending'
-}
-
-// kept for update calls — backend still accepts numeric status
-export function statusToNumber(status: number): number {
-  return status
+export function statusLabel(status: string): string {
+  return status ?? 'Pending'
 }
 
 export interface AddOrderDTO {
-  supplierId: number
-  partId: number
+  supplierName: string
+  partName: string
   partRequestId: number
   price: number
 }
 
 export interface UpdateOrderDTO {
-  supplierId: number
-  partId: number
-  partRequestId: number
+  supplierName?: string
+  partName?: string
+  partRequestId?: number
   price: number
-  status?: number
+  status?: string
   trackingNumber?: string
+}
+
+export interface AddPaymentDTO {
+  orderId: number
+}
+
+export interface PaymentResponse {
+  stripeSessionId: string
+  url: string
 }

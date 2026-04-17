@@ -120,8 +120,9 @@ export default {
 
   // Order section
   order_label: 'Commande',
-  order_awaiting: 'En attente d\'une correspondance de notre équipe',
-  order_awaiting_desc: 'Notre équipe recherche le meilleur fournisseur pour votre demande.',
+  order_awaiting: 'Aucune commande pour l\'instant',
+  order_awaiting_desc: 'Parcourez les pièces disponibles et passez votre commande.',
+  order_find_parts_btn: 'Trouver des pièces disponibles',
   order_part: 'Pièce',
   order_partNum: 'N° pièce',
   order_condition: 'Condition',
@@ -130,4 +131,19 @@ export default {
   order_status: 'Statut',
   order_tracking: 'Suivi',
   order_date: 'Date',
+
+  // Pages de recherche de pièces
+  parts_heading: 'Pièces disponibles pour votre demande',
+  parts_loading: 'Recherche de pièces correspondantes…',
+  parts_empty: 'Aucune pièce correspondante. Essayez une autre recherche.',
+  parts_search_again: 'Rechercher à nouveau',
+  parts_search_placeholder: 'Rechercher une pièce…',
+  parts_order_btn: 'Commander cette pièce',
+  parts_ordering: 'Commande en cours…',
+  parts_order_error: 'Échec de la commande. Veuillez réessayer.',
+  parts_col_part: 'Pièce',
+  parts_col_supplier: 'Fournisseur',
+  parts_col_condition: 'Condition',
+  parts_col_stock: 'Stock',
+  parts_col_price: 'Prix',
 } as const

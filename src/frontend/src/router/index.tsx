@@ -11,8 +11,10 @@ import DashboardPage from '@/pages/dashboard/DashboardPage'
 import RequestsPage from '@/pages/requests/RequestsPage'
 import NewRequestPage from '@/pages/requests/NewRequestPage'
 import RequestDetailPage from '@/pages/requests/RequestDetailPage'
+import RequestPartsPage from '@/pages/requests/RequestPartsPage'
 import SuppliersPage from '@/pages/suppliers/SuppliersPage'
 import OrdersPage from '@/pages/orders/OrdersPage'
+import PaymentCallbackPage from '@/pages/orders/PaymentCallbackPage'
 import SupplierDashboardPage from '@/pages/supplier/SupplierDashboardPage'
 import AdminLayout from '@/pages/admin/AdminLayout'
 import AdminDashboardPage from '@/pages/admin/AdminDashboardPage'
@@ -61,7 +63,9 @@ export const router = createBrowserRouter([
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/requests', element: <RequestsPage /> },
       { path: '/requests/:id', element: <RequestDetailPage /> },
+      { path: '/requests/:id/parts', element: <RequestPartsPage /> },
       { path: '/orders', element: <OrdersPage /> },
+      { path: '/orders/payment-callback', element: <PaymentCallbackPage /> },
     ],
   },
   {
