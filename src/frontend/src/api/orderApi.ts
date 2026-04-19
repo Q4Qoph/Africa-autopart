@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { Order, AddOrderDTO, UpdateOrderDTO } from '@/types/order'
+import type { Order, AddOrderDTO, AddOrderResponse, UpdateOrderDTO } from '@/types/order'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -12,7 +12,7 @@ function authHeader(token: string) {
 
 export const orderApi = {
   create: (dto: AddOrderDTO, token: string) =>
-    api.post<number>('/api/Order/addOrder', dto, authHeader(token)),
+    api.post<AddOrderResponse>('/api/Order/addOrder', dto, authHeader(token)),
 
   getAll: (token: string) =>
     api.get<Order[]>('/api/Order/getAllOrders', authHeader(token)),

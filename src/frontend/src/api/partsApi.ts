@@ -6,7 +6,34 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+interface RawPartResult {
+  name: string
+  partNumber: string
+  price: string
+  originalPrice: string
+  supplier: string
+  availability: boolean
+}
+
+function mapPart(raw: RawPartResult, index: number): PartResult {
+  const priceNum = parseFloat(raw.price.replace(/[^0-9.]/g, '')) || 0
+  return {
+    id: index,
+    partName: raw.name,
+    partNumber: '',
+    condition: 'New',
+    description: '',
+    imageURL: '',
+    price: priceNum,
+    stock: raw.availability ? 1 : 0,
+    supplierId: 0,
+    supplierName: raw.supplier,
+  }
+}
+
 export const partsApi = {
-  search: (dto: PartSearchDTO) =>
-    api.post<PartResult[]>('/api/Parts/search', dto),
+  search: async (dto: PartSearchDTO): Promise<{ data: PartResult[] }> => {
+    const response = await api.post<RawPartResult[]>('/api/Parts/search', dto)
+    return { data: response.data.map(mapPart) }
+  },
 }

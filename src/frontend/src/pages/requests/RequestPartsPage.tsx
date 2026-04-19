@@ -72,7 +72,7 @@ export default function RequestPartsPage() {
     setOrderError('')
     setOrdering(true)
     try {
-      const { data: orderId } = await orderApi.create(
+      const { data: order } = await orderApi.create(
         {
           supplierName: part.supplierName,
           partName: part.partName,
@@ -81,7 +81,7 @@ export default function RequestPartsPage() {
         },
         auth.token,
       )
-      const { data: payment } = await paymentApi.addPayment({ orderId }, auth.token)
+      const { data: payment } = await paymentApi.addPayment({ orderId: order.orderId }, auth.token)
       window.location.href = payment.url
     } catch {
       setOrderError(t('parts_order_error'))

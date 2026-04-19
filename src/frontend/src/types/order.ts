@@ -28,6 +28,11 @@ export interface AddOrderDTO {
   price: number
 }
 
+export interface AddOrderResponse {
+  orderId: number
+  trackingNumber: string
+}
+
 export interface UpdateOrderDTO {
   supplierName?: string
   partName?: string
