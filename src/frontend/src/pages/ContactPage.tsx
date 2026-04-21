@@ -72,7 +72,7 @@ export default function ContactPage() {
                   <div>
                     <p className="text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('contact_phone_label')}</p>
                     <a href="tel:+254700225100" className="text-sm text-[#07110A] dark:text-[#E8F0E9] hover:text-[#00C853] transition-colors">
-                      +254 700 225 100
+                      +25377577016
                     </a>
                   </div>
                 </div>

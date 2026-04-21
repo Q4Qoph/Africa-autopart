@@ -14,14 +14,10 @@ export default function PaymentCallbackPage() {
 
   useEffect(() => {
     const sessionId = searchParams.get('stripeSessionId')
-    if (!sessionId || !auth) {
-      setStatus('failed')
-      return
-    }
-    paymentApi
-      .validatePayment(sessionId, auth.token)
-      .then(() => setStatus('success'))
-      .catch(() => setStatus('failed'))
+    const validate = sessionId && auth
+      ? paymentApi.validatePayment(sessionId, auth.token).then(() => setStatus('success'))
+      : Promise.resolve(setStatus('failed'))
+    validate.catch(() => setStatus('failed'))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

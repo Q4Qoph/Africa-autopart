@@ -124,7 +124,7 @@ export default function Navbar() {
                 className="flex items-center gap-1.5 text-[#4A6B50] dark:text-[rgba(255,255,255,0.55)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] font-mono transition-colors"
               >
                 <Phone className="w-3 h-3" />
-                +254 700 225 100
+                +25377577016
               </a>
               <span className="w-px h-3 bg-[rgba(0,0,0,0.12)] dark:bg-[rgba(255,255,255,0.12)]" />
               <Link to="/about" className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
@@ -471,7 +471,7 @@ export default function Navbar() {
             className="flex items-center gap-2 text-[#4A6B50] dark:text-[#7A9A80] text-xs"
           >
             <Phone className="w-3.5 h-3.5 text-[#00C853]" />
-            +254 700 225 100
+            +25377577016
           </a>
           <div className="flex items-center gap-3">
             <LanguageDropdown variant="drawer" />
