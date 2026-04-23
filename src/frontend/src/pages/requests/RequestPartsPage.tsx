@@ -1,3 +1,4 @@
+//src/frontend/src/pages/requests/RequestPartsPage.tsx
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -82,6 +83,7 @@ export default function RequestPartsPage() {
         auth.token,
       )
       const { data: payment } = await paymentApi.addPayment({ orderId: order.orderId }, auth.token)
+      sessionStorage.setItem('pendingStripeSessionId', payment.stripeSessionId)
       window.location.href = payment.url
     } catch {
       setOrderError(t('parts_order_error'))

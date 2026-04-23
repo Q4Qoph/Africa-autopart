@@ -1,3 +1,4 @@
+// src/frontend/src/i18n/locales/en/home.ts   
 export default {
   // Hero
   hero_eyebrow: 'Africa + Saudi Arabia · OEM · Aftermarket · Second-Hand',

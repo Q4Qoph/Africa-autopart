@@ -12,8 +12,9 @@ export default {
   col_status: 'Statut',
   not_assigned: 'Non assigné',
   payment_verifying: 'Vérification du paiement…',
-  payment_success: 'Paiement réussi ! Votre commande est confirmée.',
-  payment_failed: 'Le paiement n\'a pas pu être vérifié. Veuillez contacter le support.',
-  payment_cancelled: 'Paiement annulé',
+payment_success: 'Paiement réussi !',
+payment_failed: 'Échec de la vérification du paiement.',
+view_orders: 'Voir mes commandes',
+back_to_requests: 'Retour aux demandes',
   payment_cancelled_desc: 'Votre paiement n’a pas été traité. Si vous avez changé d’avis, vous pouvez réessayer plus tard.',
 } as const
