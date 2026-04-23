@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/requests.ts
 export default {
   // Page headers
   page_label: 'Part Requests',

@@ -1,8 +1,9 @@
+//src/frontend/src/context/LanguageContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import i18n from '@/i18n'
 
-export type Language = 'en' | 'fr' // add 'ar' here when Arabic ships
+export type Language = 'en' | 'fr' | 'am' // add 'ar' here when Arabic ships
 
 const STORAGE_KEY = 'aa-language'
 

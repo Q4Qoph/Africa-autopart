@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/orders.ts
 export default {
   page_label: 'Orders',
   page_heading: 'My Orders',

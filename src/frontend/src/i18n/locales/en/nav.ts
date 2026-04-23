@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/nav.ts
 export default {
   // Topbar links
   topbar_about: 'About',

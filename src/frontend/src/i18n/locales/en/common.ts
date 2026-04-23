@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/common.ts
 export default {
   loading: 'Loading…',
   error_generic: 'Something went wrong. Please try again.',

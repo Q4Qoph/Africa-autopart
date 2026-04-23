@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/dashboard.ts
 export default {
   // Customer dashboard
   page_label: 'Dashboard',

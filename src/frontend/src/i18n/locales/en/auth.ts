@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/auth.ts
 export default {
   // Login
   login_eyebrow: 'Cross-border sourcing',

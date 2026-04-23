@@ -1,3 +1,4 @@
+//src/frontend/src/components/ui/LanguageDropdown.tsx
 import { Globe } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLanguage, type Language } from '@/context/LanguageContext'
@@ -11,6 +12,7 @@ import {
 const LANGUAGES: { code: Language; native: string; flag: string }[] = [
   { code: 'en', native: 'English', flag: '🇬🇧' },
   { code: 'fr', native: 'Français', flag: '🇫🇷' },
+  { code: 'am', native: 'አማርኛ', flag: '🇪🇹' }
   // { code: 'ar', native: 'العربية', flag: '🇸🇦' }, // uncomment when Arabic is added
 ]
 

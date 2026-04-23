@@ -1,3 +1,4 @@
+// src/frontend/src/i18n/index.ts
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
@@ -24,6 +25,19 @@ import frDashboard from './locales/fr/dashboard'
 import frSuppliers from './locales/fr/suppliers'
 import frAdmin from './locales/fr/admin'
 import frPages from './locales/fr/pages'
+
+// AM
+import amCommon from './locales/am/common'
+import amNav from './locales/am/nav'
+import amHome from './locales/am/home'
+import amAuth from './locales/am/auth'
+import amRequests from './locales/am/requests'
+import amOrders from './locales/am/orders'
+import amDashboard from './locales/am/dashboard'
+import amSuppliers from './locales/am/suppliers'
+import amAdmin from './locales/am/admin'
+import amPages from './locales/am/pages'
+
 
 const STORAGE_KEY = 'aa-language'
 const savedLang = localStorage.getItem(STORAGE_KEY) ?? 'en'
@@ -55,6 +69,18 @@ i18n
         suppliers: frSuppliers,
         admin: frAdmin,
         pages: frPages,
+      },
+      am: {
+        common: amCommon,
+        nav: amNav,
+        home: amHome,
+        auth: amAuth,
+        requests: amRequests,
+        orders: amOrders,
+        dashboard: amDashboard,
+        suppliers: amSuppliers,
+        admin: amAdmin,
+        pages: amPages,
       },
     },
     lng: savedLang,

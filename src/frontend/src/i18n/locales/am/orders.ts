@@ -1,0 +1,17 @@
+export default {
+  page_label: 'ትዕዛዞች',
+  page_heading: 'የእኔ ትዕዛዞች',
+  loading: 'በመጫን ላይ…',
+  error_load: 'ትዕዛዞችን ለመጫን አልተሳካም።',
+  empty_text: 'እስካሁን ምንም ትዕዛዝ የለም።',
+  empty_subtext: 'ዕቃ ከመረጡ እና ክፍያ ካጠናቀቁ በኋላ ትዕዛዞች እዚህ ይታያሉ።',
+  col_part: 'ዕቃ',
+  col_vehicle: 'ተሽከርካሪ',
+  col_price: 'ዋጋ',
+  col_tracking: 'ክትትል',
+  col_status: 'ሁኔታ',
+  not_assigned: 'አልተሰጠም',
+  payment_verifying: 'ክፍያ በማረጋገጥ ላይ…',
+  payment_success: 'ክፍያ ተሳክቷል! ትዕዛዝዎ ተረጋግጧል።',
+  payment_failed: 'ክፍያ ማረጋገጥ አልተቻለም። እባክዎ ድጋፍ ያግኙ።',
+} as const
