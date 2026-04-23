@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/suppliers.ts
 export default {
   // Suppliers page
   page_label: 'Marketplace',

@@ -15,4 +15,6 @@ export default {
   payment_verifying: 'Verifying payment…',
   payment_success: 'Payment successful! Your order is confirmed.',
   payment_failed: 'Payment could not be verified. Please contact support.',
+  payment_cancelled: 'Payment Cancelled',
+  payment_cancelled_desc: 'Your payment was not processed. If you changed your mind, you can try again later.',
 } as const

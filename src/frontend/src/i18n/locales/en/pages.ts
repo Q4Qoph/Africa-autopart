@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/pages.ts
 export default {
   // About
   about_eyebrow: 'Who We Are',

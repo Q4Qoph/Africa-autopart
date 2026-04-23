@@ -1,3 +1,4 @@
+// src/frontend/src/pages/orders/OrdersPage.tsx
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'

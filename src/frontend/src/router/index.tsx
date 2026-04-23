@@ -26,6 +26,7 @@ import AdminApproveUsersPage from '@/pages/admin/AdminApproveUsersPage'
 import AdminContactsPage from '@/pages/admin/AdminContactsPage'
 import ContactPage from '@/pages/ContactPage'
 import AboutPage from '@/pages/AboutPage'
+import PaymentCancelledPage from '@/pages/orders/PaymentCancelledPage'
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -66,6 +67,7 @@ export const router = createBrowserRouter([
       { path: '/requests/:id/parts', element: <RequestPartsPage /> },
       { path: '/orders', element: <OrdersPage /> },
       { path: '/orders/payment-callback', element: <PaymentCallbackPage /> },
+      { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
     ],
   },
   {

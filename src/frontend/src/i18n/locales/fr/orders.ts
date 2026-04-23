@@ -14,4 +14,6 @@ export default {
   payment_verifying: 'Vérification du paiement…',
   payment_success: 'Paiement réussi ! Votre commande est confirmée.',
   payment_failed: 'Le paiement n\'a pas pu être vérifié. Veuillez contacter le support.',
+  payment_cancelled: 'Paiement annulé',
+  payment_cancelled_desc: 'Votre paiement n’a pas été traité. Si vous avez changé d’avis, vous pouvez réessayer plus tard.',
 } as const

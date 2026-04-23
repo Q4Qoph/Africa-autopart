@@ -1,3 +1,4 @@
+//src/frontend/src/i18n/locales/en/admin.ts
 export default {
   // Common admin
   admin_label: 'Admin',

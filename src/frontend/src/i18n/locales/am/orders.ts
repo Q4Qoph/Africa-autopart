@@ -14,4 +14,6 @@ export default {
   payment_verifying: 'ክፍያ በማረጋገጥ ላይ…',
   payment_success: 'ክፍያ ተሳክቷል! ትዕዛዝዎ ተረጋግጧል።',
   payment_failed: 'ክፍያ ማረጋገጥ አልተቻለም። እባክዎ ድጋፍ ያግኙ።',
+  payment_cancelled: 'ክፍያ ተሰርዟል',
+  payment_cancelled_desc: 'ክፍያዎ አልተከናወነም። ሀሳብዎን ከቀየሩ በኋላ እንደገና መሞከር ይችላሉ።',
 } as const
