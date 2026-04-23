@@ -8,6 +8,7 @@ import { userApi } from '@/api/userApi'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {useParams} from 'react-router-dom'
 
 const schema = z
   .object({
@@ -25,7 +26,9 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { t } = useTranslation('auth')
-  const token = searchParams.get('token')
+  const params = useParams()
+
+  const token = searchParams.get('token') || params.token
 
   const [apiError, setApiError] = useState('')
 
