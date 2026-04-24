@@ -1,0 +1,17 @@
+export default {
+  page_label: 'الطلبات',
+  page_heading: 'طلباتي',
+  loading: 'جارٍ التحميل…',
+  error_load: 'فشل تحميل الطلبات.',
+  empty_text: 'لا توجد طلبات بعد.',
+  empty_subtext: 'ستظهر الطلبات هنا بعد اختيار قطعة وإتمام الدفع.',
+  col_part: 'القطعة',
+  col_vehicle: 'المركبة',
+  col_price: 'السعر',
+  col_tracking: 'التتبع',
+  col_status: 'الحالة',
+  not_assigned: 'غير محدد',
+  payment_verifying: 'جارٍ التحقق من الدفع…',
+  payment_success: 'تم الدفع بنجاح! تم تأكيد طلبك.',
+  payment_failed: 'تعذّر التحقق من الدفع. يرجى التواصل مع الدعم.',
+} as const

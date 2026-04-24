@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import i18n from '@/i18n'
 
-export type Language = 'en' | 'fr' | 'am' // add 'ar' here when Arabic ships
+export type Language = 'en' | 'fr' | 'am' | 'ar'
 
 const STORAGE_KEY = 'aa-language'
 

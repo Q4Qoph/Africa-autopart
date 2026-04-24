@@ -12,8 +12,8 @@ import {
 const LANGUAGES: { code: Language; native: string; flag: string }[] = [
   { code: 'en', native: 'English', flag: '🇬🇧' },
   { code: 'fr', native: 'Français', flag: '🇫🇷' },
-  { code: 'am', native: 'አማርኛ', flag: '🇪🇹' }
-  // { code: 'ar', native: 'العربية', flag: '🇸🇦' }, // uncomment when Arabic is added
+  { code: 'am', native: 'አማርኛ', flag: '🇪🇹' },
+  { code: 'ar', native: 'العربية', flag: '🇸🇦' },
 ]
 
 interface Props {

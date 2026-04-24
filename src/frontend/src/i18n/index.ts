@@ -38,6 +38,18 @@ import amSuppliers from './locales/am/suppliers'
 import amAdmin from './locales/am/admin'
 import amPages from './locales/am/pages'
 
+// AR (Arabic)
+import arCommon from './locales/ar/common'
+import arNav from './locales/ar/nav'
+import arHome from './locales/ar/home'
+import arAuth from './locales/ar/auth'
+import arRequests from './locales/ar/requests'
+import arOrders from './locales/ar/orders'
+import arDashboard from './locales/ar/dashboard'
+import arSuppliers from './locales/ar/suppliers'
+import arAdmin from './locales/ar/admin'
+import arPages from './locales/ar/pages'
+
 
 const STORAGE_KEY = 'aa-language'
 const savedLang = localStorage.getItem(STORAGE_KEY) ?? 'en'
@@ -81,6 +93,18 @@ i18n
         suppliers: amSuppliers,
         admin: amAdmin,
         pages: amPages,
+      },
+      ar: {
+        common: arCommon,
+        nav: arNav,
+        home: arHome,
+        auth: arAuth,
+        requests: arRequests,
+        orders: arOrders,
+        dashboard: arDashboard,
+        suppliers: arSuppliers,
+        admin: arAdmin,
+        pages: arPages,
       },
     },
     lng: savedLang,
