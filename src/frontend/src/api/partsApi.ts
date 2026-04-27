@@ -1,3 +1,4 @@
+//src/frontend/src/api/partsApi.ts
 import axios from 'axios'
 import type { PartSearchDTO, PartResult } from '@/types/parts'
 
@@ -12,8 +13,9 @@ interface RawPartResult {
   price: string
   originalPrice: string
   supplier: string
-  availability: boolean
-}
+  availability: boolean,
+  imageURL: string
+}    
 
 function mapPart(raw: RawPartResult, index: number): PartResult {
   const priceNum = parseFloat(raw.price.replace(/[^0-9.]/g, '')) || 0
@@ -23,7 +25,7 @@ function mapPart(raw: RawPartResult, index: number): PartResult {
     partNumber: '',
     condition: 'New',
     description: '',
-    imageURL: '',
+    imageURL: raw.imageURL,
     price: priceNum,
     stock: raw.availability ? 1 : 0,
     supplierId: 0,

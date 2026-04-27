@@ -1,3 +1,4 @@
+// src/frontend/src/types/order.ts
 export interface Order {
   orderId: number
   trackingNumber: string | null
@@ -49,4 +50,12 @@ export interface AddPaymentDTO {
 export interface PaymentResponse {
   stripeSessionId: string
   url: string
+}
+export interface StkPushResponseDto {
+  merchantRequestID: string
+  checkoutRequestID: string
+  responseCode: string
+  responseDescription: string
+  customerMessage: string
+  isSuccessful: boolean
 }

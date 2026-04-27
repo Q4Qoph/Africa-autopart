@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet,} from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { UserRole } from '@/types/user'
 import HomePage from '@/pages/HomePage'
@@ -28,7 +28,7 @@ import ContactPage from '@/pages/ContactPage'
 import AboutPage from '@/pages/AboutPage'
 import PaymentCancelledPage from '@/pages/orders/PaymentCancelledPage'
 import SuccessPage from '@/pages/orders/SuccessPage'
-
+import MpesaStatusPage from "@/pages/orders/MpesaStatusPage"
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -63,6 +63,7 @@ export const router = createBrowserRouter([
   { path: '/requests/new', element: <NewRequestPage /> },
   { path: '/success', element: <SuccessPage /> }, 
   { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
+  { path: '/orders/mpesa-status/:orderId', element: <MpesaStatusPage /> },
   {
     element: <ProtectedRoute />,
     children: [
