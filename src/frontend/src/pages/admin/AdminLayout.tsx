@@ -1,3 +1,4 @@
+// src/frontend/src/pages/admin/AdminLayout.tsx
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'

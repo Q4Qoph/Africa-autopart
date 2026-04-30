@@ -10,11 +10,14 @@ export default {
   dashboard_heading: 'Overview',
   dashboard_subtext: 'Platform-wide statistics',
   stat_totalUsers: 'Total Users',
-  stat_pendingApprovals: 'Pending Approvals',
+  stat_pendingApprovals: 'Pending Approvals',        // kept for future use
   stat_suppliers: 'Suppliers',
   stat_totalOrders: 'Total Orders',
   stat_openRequests: 'Open Requests',
   stat_totalRequests: 'Total Requests',
+  stat_pendingOrders: 'Pending Orders',
+  stat_completedOrders: 'Completed Orders',
+  stat_inProgressOrders: 'In Progress Orders',
 
   // Layout / sidebar
   sidebar_dashboard: 'Dashboard',
@@ -27,6 +30,7 @@ export default {
 
   // Users
   users_heading: 'Users',
+  users_count: '{{count}} registered accounts',
   users_col_id: 'ID',
   users_col_name: 'Name',
   users_col_email: 'Email',
@@ -41,6 +45,11 @@ export default {
   users_role_supplier: 'Supplier',
   users_role_customer: 'Customer',
   users_no_users: 'No users found.',
+  users_show: 'Show',
+  users_page: 'Page',
+  users_of: 'of',
+  users_prev: 'Prev',
+  users_next: 'Next',
 
   // Suppliers
   suppliers_heading: 'Suppliers',
@@ -173,4 +182,9 @@ export default {
   approvals_already_approved: 'This supplier is already approved and active.',
   approvals_not_applicable: 'Approval is only applicable to supplier accounts.',
   approvals_approve_error: 'Failed to approve user.',
-} as const
+  approvals_user_id_placeholder: 'User ID',
+  approvals_go: 'Go',
+  approvals_prev: 'Prev',
+  approvals_next: 'Next',
+  approvals_page_indicator: '{{page}} / {{total}}',
+} as const;

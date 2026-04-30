@@ -13,6 +13,9 @@ export default {
   stat_totalOrders: 'إجمالي الطلبات',
   stat_openRequests: 'الطلبات المفتوحة',
   stat_totalRequests: 'إجمالي الطلبات',
+  stat_pendingOrders: 'الطلبات المعلقة',
+  stat_completedOrders: 'الطلبات المكتملة',
+  stat_inProgressOrders: 'الطلبات قيد المعالجة',
   // Layout / sidebar
   sidebar_dashboard: 'لوحة التحكم',
   sidebar_users: 'المستخدمون',
@@ -23,6 +26,7 @@ export default {
   sidebar_approvals: 'الموافقات',
   // Users
   users_heading: 'المستخدمون',
+  users_count: '{{count}} حساب مسجل',
   users_col_id: 'المعرّف',
   users_col_name: 'الاسم',
   users_col_email: 'البريد الإلكتروني',
@@ -37,6 +41,11 @@ export default {
   users_role_supplier: 'مورد',
   users_role_customer: 'عميل',
   users_no_users: 'لم يتم العثور على مستخدمين.',
+  users_show: 'عرض',
+  users_page: 'صفحة',
+  users_of: 'من',
+  users_prev: 'السابق',
+  users_next: 'التالي',
   // Suppliers
   suppliers_heading: 'الموردون',
   suppliers_no_suppliers: 'لم يتم العثور على موردين.',
@@ -164,4 +173,9 @@ export default {
   approvals_already_approved: 'هذا المورد موافق عليه بالفعل وحسابه نشط.',
   approvals_not_applicable: 'الموافقة تنطبق فقط على حسابات الموردين.',
   approvals_approve_error: 'فشل الموافقة على المستخدم.',
-} as const
+  approvals_user_id_placeholder: 'معرف المستخدم',
+  approvals_go: 'انتقال',
+  approvals_prev: 'السابق',
+  approvals_next: 'التالي',
+  approvals_page_indicator: '{{page}} / {{total}}',
+} as const;

@@ -13,6 +13,9 @@ export default {
   stat_totalOrders: 'ጠቅላላ ትዕዛዞች',
   stat_openRequests: 'ክፍት ጥያቄዎች',
   stat_totalRequests: 'ጠቅላላ ጥያቄዎች',
+  stat_pendingOrders: 'በሂደት ላይ ያሉ ትዕዛዞች',
+  stat_completedOrders: 'የተጠናቀቁ ትዕዛዞች',
+  stat_inProgressOrders: 'በሂደት ላይ ያሉ ትዕዛዞች',
   // Layout / sidebar
   sidebar_dashboard: 'ዳሽቦርድ',
   sidebar_users: 'ተጠቃሚዎች',
@@ -23,6 +26,7 @@ export default {
   sidebar_approvals: 'ፈቃዶች',
   // Users
   users_heading: 'ተጠቃሚዎች',
+  users_count: '{{count}} የተመዘገቡ አካውንቶች',
   users_col_id: 'መታወቂያ',
   users_col_name: 'ስም',
   users_col_email: 'ኢሜይል',
@@ -37,6 +41,11 @@ export default {
   users_role_supplier: 'አቅራቢ',
   users_role_customer: 'ደንበኛ',
   users_no_users: 'ምንም ተጠቃሚ አልተገኘም።',
+  users_show: 'አሳይ',
+  users_page: 'ገጽ',
+  users_of: 'ከ',
+  users_prev: 'ቀዳሚ',
+  users_next: 'ቀጣይ',
   // Suppliers
   suppliers_heading: 'አቅራቢዎች',
   suppliers_no_suppliers: 'ምንም አቅራቢ አልተገኘም።',
@@ -164,4 +173,9 @@ export default {
   approvals_already_approved: 'ይህ አቅራቢ ቀድሞ ፀድቋል እና ንቁ ነው።',
   approvals_not_applicable: 'ፈቃድ ለአቅራቢ መለያዎች ብቻ ተፈጻሚ ነው።',
   approvals_approve_error: 'ተጠቃሚ መፍቀድ አልተሳካም።',
-} as const
+  approvals_user_id_placeholder: 'የተጠቃሚ መታወቂያ',
+  approvals_go: 'ሂድ',
+  approvals_prev: 'ቀዳሚ',
+  approvals_next: 'ቀጣይ',
+  approvals_page_indicator: '{{page}} / {{total}}',
+} as const;

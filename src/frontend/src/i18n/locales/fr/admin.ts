@@ -14,6 +14,9 @@ export default {
   stat_totalOrders: 'Total commandes',
   stat_openRequests: 'Demandes ouvertes',
   stat_totalRequests: 'Total demandes',
+  stat_pendingOrders: 'Commandes en attente',
+  stat_completedOrders: 'Commandes terminées',
+  stat_inProgressOrders: 'Commandes en cours',
 
   // Layout / sidebar
   sidebar_dashboard: 'Tableau de bord',
@@ -26,6 +29,7 @@ export default {
 
   // Users
   users_heading: 'Utilisateurs',
+  users_count: '{{count}} comptes enregistrés',
   users_col_id: 'ID',
   users_col_name: 'Nom',
   users_col_email: 'E-mail',
@@ -40,6 +44,11 @@ export default {
   users_role_supplier: 'Fournisseur',
   users_role_customer: 'Client',
   users_no_users: 'Aucun utilisateur trouvé.',
+  users_show: 'Afficher',
+  users_page: 'Page',
+  users_of: 'sur',
+  users_prev: 'Précédent',
+  users_next: 'Suivant',
 
   // Suppliers
   suppliers_heading: 'Fournisseurs',
@@ -172,4 +181,9 @@ export default {
   approvals_already_approved: 'Ce fournisseur est déjà approuvé et actif.',
   approvals_not_applicable: 'L\'approbation ne s\'applique qu\'aux comptes fournisseurs.',
   approvals_approve_error: 'Échec de l\'approbation de l\'utilisateur.',
-} as const
+  approvals_user_id_placeholder: 'ID utilisateur',
+  approvals_go: 'Aller',
+  approvals_prev: 'Précédent',
+  approvals_next: 'Suivant',
+  approvals_page_indicator: '{{page}} / {{total}}',
+} as const;

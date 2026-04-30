@@ -55,3 +55,21 @@ export interface ResetPasswordDTO {
   password: string
   confirmPassword: string
 }
+
+
+export interface StatsResponse {
+  total_Order: number;
+  pending_Order: number;
+  completed_Order: number;
+  inProgress_Order: number;
+  total_User: number;
+  total_Request: number;
+}
+
+export interface PaginatedUsersResponse {
+  users: User[];
+  totalUsers: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: number;
+}
