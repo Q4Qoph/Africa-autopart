@@ -13,6 +13,7 @@ import enDashboard from './locales/en/dashboard'
 import enSuppliers from './locales/en/suppliers'
 import enAdmin from './locales/en/admin'
 import enPages from './locales/en/pages'
+import enShop from './locales/en/shop'                     // <-- add
 
 // FR
 import frCommon from './locales/fr/common'
@@ -25,6 +26,7 @@ import frDashboard from './locales/fr/dashboard'
 import frSuppliers from './locales/fr/suppliers'
 import frAdmin from './locales/fr/admin'
 import frPages from './locales/fr/pages'
+import frShop from './locales/fr/shop'                     // <-- add
 
 // AM
 import amCommon from './locales/am/common'
@@ -37,6 +39,7 @@ import amDashboard from './locales/am/dashboard'
 import amSuppliers from './locales/am/suppliers'
 import amAdmin from './locales/am/admin'
 import amPages from './locales/am/pages'
+import amShop from './locales/am/shop'                     // <-- add
 
 // AR (Arabic)
 import arCommon from './locales/ar/common'
@@ -49,6 +52,7 @@ import arDashboard from './locales/ar/dashboard'
 import arSuppliers from './locales/ar/suppliers'
 import arAdmin from './locales/ar/admin'
 import arPages from './locales/ar/pages'
+import arShop from './locales/ar/shop'                     // <-- add
 
 
 const STORAGE_KEY = 'aa-language'
@@ -69,6 +73,7 @@ i18n
         suppliers: enSuppliers,
         admin: enAdmin,
         pages: enPages,
+        shop: enShop,                                     // <-- add
       },
       fr: {
         common: frCommon,
@@ -81,6 +86,7 @@ i18n
         suppliers: frSuppliers,
         admin: frAdmin,
         pages: frPages,
+        shop: frShop,
       },
       am: {
         common: amCommon,
@@ -93,6 +99,7 @@ i18n
         suppliers: amSuppliers,
         admin: amAdmin,
         pages: amPages,
+        shop: amShop,
       },
       ar: {
         common: arCommon,
@@ -105,6 +112,7 @@ i18n
         suppliers: arSuppliers,
         admin: arAdmin,
         pages: arPages,
+        shop: arShop,
       },
     },
     lng: savedLang,

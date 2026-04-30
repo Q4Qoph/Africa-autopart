@@ -15,6 +15,7 @@ export default {
   nav_myOffers: 'My Offers',
   nav_myOrders: 'My Orders',
   nav_adminPanel: 'Admin Panel',
+  nav_shop: 'Shop',
 
   // User dropdown
   dropdown_dashboard: 'Dashboard',
@@ -42,4 +43,6 @@ export default {
   lang_fr: 'Français',
   lang_ar: 'العربية',
   lang_label: 'Language',
+
+  
 } as const

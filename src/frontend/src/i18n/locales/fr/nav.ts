@@ -14,6 +14,7 @@ export default {
   nav_myOffers: 'Mes offres',
   nav_myOrders: 'Mes commandes',
   nav_adminPanel: 'Panneau admin',
+  nav_shop: 'Boutique',
 
   // User dropdown
   dropdown_dashboard: 'Tableau de bord',

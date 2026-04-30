@@ -90,4 +90,12 @@ export default {
   supplier_field_phone: 'Phone *',
   supplier_field_description_profile: 'Description',
   supplier_logout: 'Logout',
+  supplier_advertise_btn: 'Advertise',
+supplier_advertise_title: 'Publish to Marketplace',
+supplier_advert_vehicleMake: 'Vehicle Make',
+supplier_advert_vehicleModel: 'Vehicle Model',
+supplier_publish_btn: 'Publish',
+supplier_publishing: 'Publishing…',
+supplier_advert_success: 'Part published successfully!',
+supplier_advert_error: 'Failed to publish. Try again.',
 } as const

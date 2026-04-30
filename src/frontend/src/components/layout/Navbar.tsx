@@ -81,11 +81,13 @@ export default function Navbar() {
     { label: t('nav_suppliers'),  href: '/suppliers' },
     { label: t('nav_trackOrder'), href: '/orders' },
     { label: t('nav_becomeSupplier'), href: '/become-supplier' },
+    { label: t('nav_shop'), href: '/shop' },   
   ]
 
   const customerLinks = [
     { label: t('nav_myRequests'), href: '/requests' },
     { label: t('nav_suppliers'),  href: '/suppliers' },
+    { label: t('nav_shop'), href: '/shop' },
   ]
 
   const adminLinks = [

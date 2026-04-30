@@ -1,3 +1,4 @@
+//src/frontend/src/router/index.tsx
 import { createBrowserRouter, Navigate, Outlet,} from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { UserRole } from '@/types/user'
@@ -29,6 +30,7 @@ import AboutPage from '@/pages/AboutPage'
 import PaymentCancelledPage from '@/pages/orders/PaymentCancelledPage'
 import SuccessPage from '@/pages/orders/SuccessPage'
 import MpesaStatusPage from "@/pages/orders/MpesaStatusPage"
+import ShopPage from '@/pages/shop/ShopPage'
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -60,10 +62,12 @@ export const router = createBrowserRouter([
   { path: '/suppliers', element: <SuppliersPage /> },
   { path: '/contact', element: <ContactPage /> },
   { path: '/about', element: <AboutPage /> },
+  { path: '/shop', element: <ShopPage /> },  
   { path: '/requests/new', element: <NewRequestPage /> },
   { path: '/success', element: <SuccessPage /> }, 
   { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
   { path: '/orders/mpesa-status/:orderId', element: <MpesaStatusPage /> },
+  
   {
     element: <ProtectedRoute />,
     children: [

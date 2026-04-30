@@ -89,4 +89,12 @@ export default {
   supplier_field_phone: 'Téléphone *',
   supplier_field_description_profile: 'Description',
   supplier_logout: 'Déconnexion',
+  supplier_advertise_btn: 'Annoncer',
+supplier_advertise_title: 'Publier sur la marketplace',
+supplier_advert_vehicleMake: 'Marque du véhicule',
+supplier_advert_vehicleModel: 'Modèle du véhicule',
+supplier_publish_btn: 'Publier',
+supplier_publishing: 'Publication…',
+supplier_advert_success: 'Pièce publiée avec succès !',
+supplier_advert_error: 'Échec de la publication. Réessayez.',
 } as const

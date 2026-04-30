@@ -13,6 +13,7 @@ export default {
   nav_myOffers: 'عروضي',
   nav_myOrders: 'طلباتي',
   nav_adminPanel: 'لوحة الإدارة',
+  nav_shop: 'المتجر',
   // User dropdown
   dropdown_dashboard: 'لوحة التحكم',
   dropdown_myRequests: 'طلباتي',

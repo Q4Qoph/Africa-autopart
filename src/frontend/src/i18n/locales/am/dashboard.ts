@@ -88,4 +88,12 @@ export default {
   supplier_field_phone: 'ስልክ *',
   supplier_field_description_profile: 'መግለጫ',
   supplier_logout: 'ውጣ',
+  supplier_advertise_btn: 'ማስታወቂያ',
+supplier_advertise_title: 'ወደ ገበያ አሳትም',
+supplier_advert_vehicleMake: 'የተሽከርካሪ ምርት',
+supplier_advert_vehicleModel: 'የተሽከርካሪ ሞዴል',
+supplier_publish_btn: 'አሳትም',
+supplier_publishing: 'በማሳተም ላይ…',
+supplier_advert_success: 'ዕቃው በተሳካ ሁኔታ ታትሟል!',
+supplier_advert_error: 'ማሳተም አልተሳካም። እንደገና ይሞክሩ።',
 } as const

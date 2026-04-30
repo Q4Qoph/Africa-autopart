@@ -88,4 +88,12 @@ export default {
   supplier_field_phone: 'الهاتف *',
   supplier_field_description_profile: 'الوصف',
   supplier_logout: 'تسجيل الخروج',
+  supplier_advertise_btn: 'إعلان',
+supplier_advertise_title: 'نشر في المتجر',
+supplier_advert_vehicleMake: 'ماركة المركبة',
+supplier_advert_vehicleModel: 'موديل المركبة',
+supplier_publish_btn: 'نشر',
+supplier_publishing: 'جارٍ النشر…',
+supplier_advert_success: 'تم نشر القطعة بنجاح!',
+supplier_advert_error: 'فشل النشر. حاول مجددًا.',
 } as const
