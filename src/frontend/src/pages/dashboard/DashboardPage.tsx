@@ -1,3 +1,4 @@
+//src/frontend/src/pages/dashboard/DashboardPage.tsx
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -5,8 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
 import { orderApi } from '@/api/orderApi'
 import type { PartRequest } from '@/types/request'
-import type { Order } from '@/types/order'
-import { OrderStatus } from '@/types/order'
+import type { CustomerOrder } from '@/types/order'
 import Navbar from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const { t } = useTranslation('dashboard')
   const [requests, setRequests] = useState<PartRequest[]>([])
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<CustomerOrder[]>([])
 
   useEffect(() => {
     if (!auth) return
@@ -32,9 +32,8 @@ export default function DashboardPage() {
   }, [auth])
 
   const activeRequests = requests.filter((r) => !r.isSorted).length
-  const inTransit = orders.filter((o) => o.status === OrderStatus.Shipped).length
-  const delivered = orders.filter((o) => o.status === OrderStatus.Delivered).length
-
+  const inTransit = orders.filter((o) => o.status === 'Shipped').length    
+  const delivered = orders.filter((o) => o.status === 'Delivered').length
   function handleLogout() {
     logout()
     navigate('/')
@@ -42,7 +41,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
+      <Navbar /> 
       <main className="pt-[68px] md:pt-[132px]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
           {/* Header */}

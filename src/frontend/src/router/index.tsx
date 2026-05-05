@@ -31,6 +31,7 @@ import PaymentCancelledPage from '@/pages/orders/PaymentCancelledPage'
 import SuccessPage from '@/pages/orders/SuccessPage'
 import MpesaStatusPage from "@/pages/orders/MpesaStatusPage"
 import ShopPage from '@/pages/shop/ShopPage'
+import TrackOrderPage from '@/pages/orders/TrackOrderPage'
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -67,6 +68,7 @@ export const router = createBrowserRouter([
   { path: '/success', element: <SuccessPage /> }, 
   { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
   { path: '/orders/mpesa-status/:orderId', element: <MpesaStatusPage /> },
+  { path: '/track-order', element: <TrackOrderPage /> },
   
   {
     element: <ProtectedRoute />,

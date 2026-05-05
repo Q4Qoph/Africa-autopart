@@ -7,7 +7,7 @@ import { orderApi } from '@/api/orderApi'
 import type { PartRequest } from '@/types/request'
 import { ConditionPreference, Urgency } from '@/types/request'
 import type { Order } from '@/types/order'
-import { OrderStatus, statusLabel } from '@/types/order'
+import { getOrderDisplay, statusLabel } from '@/types/order'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,12 +15,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 
-function statusBadgeClass(status: string) {
-  if (status === OrderStatus.Delivered)
+function statusBadgeClass(status: number) {
+  if (status === 2) // Delivered
     return 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
-  if (status === OrderStatus.Shipped)
+  if (status === 1) // Shipped
     return 'bg-blue-400/10 text-blue-400 border-blue-400/20'
-  return 'bg-amber-400/10 text-amber-400 border-amber-400/20'
+  return 'bg-amber-400/10 text-amber-400 border-amber-400/20' // Pending = 0
 }
 
 const selectClass =
@@ -60,6 +60,7 @@ export default function RequestDetailPage() {
   ]
   const [request, setRequest] = useState<PartRequest | null>(null)
   const [order, setOrder] = useState<Order | null>(null)
+  const display = order ? getOrderDisplay(order) : null
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -382,7 +383,7 @@ export default function RequestDetailPage() {
                   </div>
                 ) : (
                   <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-5">
-                    <Detail label={t('order_part')} value={order.requestedPartName ?? '—'} />
+                    <Detail label={t('order_part')} value={display?.requestedPartName ?? '—'} />
                     <Detail label={t('order_price')} value={`$${order.price.toLocaleString()}`} />
                     <div>
                       <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('order_status')}</p>
@@ -391,7 +392,7 @@ export default function RequestDetailPage() {
                       </Badge>
                     </div>
                     <Detail label={t('order_tracking')} value={order.trackingNumber || tCommon('not_assigned')} />
-                    <Detail label={t('order_date')} value={order.dateCreated ? new Date(order.dateCreated).toLocaleDateString() : '—'} />
+                    <Detail label={t('order_date')} value={display?.dateCreated ? new Date(display.dateCreated).toLocaleDateString() : '—'} />
                   </div>
                 )}
               </div>

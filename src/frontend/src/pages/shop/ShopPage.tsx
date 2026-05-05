@@ -77,7 +77,7 @@ export default function ShopPage() {
   )
 }
 
-// ─── Single part card ────────────────────────────────────────────────────────
+
 // ─── Single part card ────────────────────────────────────────────────────────
 
 function PartCard({ advert, t }: { advert: Advertisement; t: (key: string) => string }) {

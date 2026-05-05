@@ -79,7 +79,7 @@ export default function Navbar() {
   const publicLinks = [
     { label: t('nav_howItWorks'), href: '/#how-it-works' },
     { label: t('nav_suppliers'),  href: '/suppliers' },
-    { label: t('nav_trackOrder'), href: '/orders' },
+    { label: t('nav_trackOrder'), href: '/track-order' },
     { label: t('nav_becomeSupplier'), href: '/become-supplier' },
     { label: t('nav_shop'), href: '/shop' },   
   ]
@@ -136,7 +136,7 @@ export default function Navbar() {
               <Link to="/contact" className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
                 {t('topbar_contact')}
               </Link>
-              <Link to="/orders" className="flex items-center gap-1 text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] transition-colors">
+              <Link to="/track-order" className="flex items-center gap-1 text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] transition-colors">
                 <Truck className="w-3 h-3" />
                 {t('topbar_trackOrder')}
               </Link>

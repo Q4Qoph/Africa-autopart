@@ -187,4 +187,6 @@ export default {
   approvals_prev: 'Prev',
   approvals_next: 'Next',
   approvals_page_indicator: '{{page}} / {{total}}',
+  orders_change_status: 'Change Status',
+    orders_status_unknown: 'Unknown',
 } as const;

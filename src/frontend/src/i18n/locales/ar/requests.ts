@@ -129,4 +129,11 @@ export default {
   parts_col_condition: 'الحالة',
   parts_col_stock: 'المخزون',
   parts_col_price: 'السعر',
+    // Pick‑up location prompt
+  parts_location_prompt_title: 'موقع الاستلام',
+  parts_location_label: 'الموقع',
+  parts_location_phone_label: 'رقم الهاتف',
+  parts_location_confirm: 'تأكيد الطلب',
+  parts_location_cancel: 'إلغاء',
+  parts_location_error: 'كلا حقلي الموقع مطلوبان.',
 } as const

@@ -8,19 +8,19 @@ import { imageApi } from "@/api/imageApi";
 import { advertisementApi } from "@/api/advertisementApi";
 import type { Supplier } from "@/types/supplier";
 import type { Order } from "@/types/order";
-import { OrderStatus } from "@/types/order";
+import {OrderStatusCode } from "@/types/order";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-function statusBadge(status: string) {
-  if (status === OrderStatus.Delivered)
+function statusBadge(status: number) {
+  if (status === 2) // Delivered
     return "bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]";
-  if (status === OrderStatus.Shipped)
+  if (status === 1) // Shipped
     return "bg-blue-400/10 text-blue-400 border-blue-400/20";
-  return "bg-amber-400/10 text-amber-400 border-amber-400/20";
+  return "bg-amber-400/10 text-amber-400 border-amber-400/20"; // 0 = Pending
 }
 
 // These are API values stored in the database — not translated
@@ -64,7 +64,7 @@ const emptyForm: AddPartForm = {
 };
 
 interface OrderEdit {
-  status: string;
+  status: number;
   trackingNumber: string;
   saving: boolean;
   error: string;
@@ -94,7 +94,7 @@ export default function SupplierDashboardPage() {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
   const [orderEdit, setOrderEdit] = useState<OrderEdit>({
-    status: OrderStatus.Pending,
+    status: OrderStatusCode.Pending,
     trackingNumber: "",
     saving: false,
     error: "",
@@ -126,11 +126,11 @@ export default function SupplierDashboardPage() {
   const [savingProfile, setSavingProfile] = useState(false);
   const [profileError, setProfileError] = useState("");
 
-  const orderStatusLabel: Record<string, string> = {
-    [OrderStatus.Pending]: t("supplier_order_status_pending"),
-    [OrderStatus.Shipped]: t("supplier_order_status_shipped"),
-    [OrderStatus.Delivered]: t("supplier_order_status_delivered"),
-  };
+  const orderStatusLabel: Record<number, string> = {
+  0: t("supplier_order_status_pending"),
+  1: t("supplier_order_status_shipped"),
+  2: t("supplier_order_status_delivered"),
+};
   // ── Advertisement Modal State ──
   const [advertModal, setAdvertModal] = useState<{
     open: boolean;
@@ -283,7 +283,7 @@ export default function SupplierDashboardPage() {
   }
 
   function startEditOrder(order: Order) {
-    setEditingOrderId(order.orderId);
+    setEditingOrderId(order.id);
     setOrderEdit({
       status: order.status,
       trackingNumber: order.trackingNumber ?? "",
@@ -293,38 +293,38 @@ export default function SupplierDashboardPage() {
   }
 
   async function saveOrderEdit(order: Order) {
-    if (!auth) return;
-    setOrderEdit((s) => ({ ...s, saving: true, error: "" }));
-    try {
-      await orderApi.update(
-        order.orderId,
-        {
-          price: order.price,
-          status: orderEdit.status,
-          trackingNumber: orderEdit.trackingNumber,
-        },
-        auth.token,
-      );
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.orderId === order.orderId
-            ? {
-                ...o,
-                status: orderEdit.status,
-                trackingNumber: orderEdit.trackingNumber,
-              }
-            : o,
-        ),
-      );
-      setEditingOrderId(null);
-    } catch {
-      setOrderEdit((s) => ({
-        ...s,
-        saving: false,
-        error: t("supplier_order_save_error"),
-      }));
-    }
+  if (!auth) return;
+  setOrderEdit((s) => ({ ...s, saving: true, error: "" }));
+  try {
+    // Update status via dedicated endpoint
+    await orderApi.updateStatus(order.id, { status: orderEdit.status }, auth.token);
+    // Update tracking number via full update
+    await orderApi.update(
+      order.id,
+      {
+        supplierName: order.supplierName,
+        partName: order.partName,
+        partRequestId: order.partRequestId,
+        price: order.price,
+        pickUpLocation: order.pickUpLocation,
+        pickUpLocationPhoneNumber: order.pickUpLocationPhoneNumber,
+        trackingNumber: orderEdit.trackingNumber,
+      },
+      auth.token,
+    );
+    // Refresh orders
+    if (!supplier) return;
+    const { data } = await orderApi.getBySupplierId(supplier.id, auth.token);
+    setOrders(Array.isArray(data) ? data : [data]);
+    setEditingOrderId(null);
+  } catch {
+    setOrderEdit((s) => ({
+      ...s,
+      saving: false,
+      error: t("supplier_order_save_error"),
+    }));
   }
+}
 
   const parts = supplier?.parts ?? [];
 
@@ -1159,17 +1159,17 @@ export default function SupplierDashboardPage() {
                             {orders.map((order) => (
                               <>
                                 <tr
-                                  key={order.orderId}
+                                  key={order.id}
                                   className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                                 >
                                   <td className="px-5 py-3 text-[#7A9A80] dark:text-[#3D5942] font-mono text-xs">
-                                    #{order.orderId}
+                                    #{order.id}
                                   </td>
                                   <td className="px-5 py-3 text-[#07110A] dark:text-white">
-                                    {order.requestedPartName ?? "—"}
+                                    {order.partRequest?.partName ?? order.partName ?? "—"}
                                   </td>
                                   <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                                    {order.vehicleMake} {order.model}
+                                    {order.partRequest?.vehicleMake ?? "—"} {order.partRequest?.model ?? ""}
                                   </td>
                                   <td className="px-5 py-3 text-[#00C853] font-semibold">
                                     ${order.price.toLocaleString()}
@@ -1200,20 +1200,20 @@ export default function SupplierDashboardPage() {
                                     <Button
                                       size="sm"
                                       onClick={() =>
-                                        editingOrderId === order.orderId
+                                        editingOrderId === order.id
                                           ? setEditingOrderId(null)
                                           : startEditOrder(order)
                                       }
                                       className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
                                     >
-                                      {editingOrderId === order.orderId
+                                      {editingOrderId === order.id
                                         ? t("supplier_close")
                                         : t("supplier_update_order")}
                                     </Button>
                                   </td>
                                 </tr>
-                                {editingOrderId === order.orderId && (
-                                  <tr key={`edit-${order.orderId}`}>
+                                {editingOrderId === order.id && (
+                                  <tr key={`edit-${order.id}`}>
                                     <td
                                       colSpan={7}
                                       className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-5 py-4"
@@ -1228,28 +1228,14 @@ export default function SupplierDashboardPage() {
                                             onChange={(e) =>
                                               setOrderEdit((s) => ({
                                                 ...s,
-                                                status: e.target.value,
+                                                status:Number(e.target.value),
                                               }))
                                             }
                                             className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                                           >
-                                            <option value={OrderStatus.Pending}>
-                                              {t(
-                                                "supplier_order_status_pending",
-                                              )}
-                                            </option>
-                                            <option value={OrderStatus.Shipped}>
-                                              {t(
-                                                "supplier_order_status_shipped",
-                                              )}
-                                            </option>
-                                            <option
-                                              value={OrderStatus.Delivered}
-                                            >
-                                              {t(
-                                                "supplier_order_status_delivered",
-                                              )}
-                                            </option>
+                                            <option value={0}>{t("supplier_order_status_pending")}</option>
+<option value={1}>{t("supplier_order_status_shipped")}</option>
+<option value={2}>{t("supplier_order_status_delivered")}</option>
                                           </select>
                                         </div>
                                         <div className="space-y-1">

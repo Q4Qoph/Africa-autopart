@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
-import type { Order } from '@/types/order'
-import { OrderStatus, statusLabel } from '@/types/order'
+import type { CustomerOrder } from '@/types/order'
+import { OrderStatus,} from '@/types/order'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -21,14 +21,14 @@ function statusBadge(status: string) {
 export default function OrdersPage() {
   const { auth } = useAuth()
   const { t } = useTranslation('orders')
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<CustomerOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
     if (!auth) return
     orderApi
-      .getAll(auth.token)
+      .getByUserId(auth.userId, auth.token)
       .then(({ data }) => setOrders(data))
       .catch(() => setError(t('error_load')))
       .finally(() => setLoading(false))
@@ -104,8 +104,8 @@ export default function OrdersPage() {
                   </p>
 
                   <Badge className={cn('text-[10px] w-fit', statusBadge(order.status))}>
-                    {statusLabel(order.status)}
-                  </Badge>
+  {order.status}
+</Badge>
                 </div>
               ))}
             </div>

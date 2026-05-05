@@ -32,6 +32,12 @@ export default function RequestPartsPage() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [mpesaError, setMpesaError] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
+  // inside the component, after existing state declarations
+const [showLocationPrompt, setShowLocationPrompt] = useState(false);
+const [pickUpLocation, setPickUpLocation] = useState('');
+const [pickUpPhone, setPickUpPhone] = useState('');
+const [pendingPart, setPendingPart] = useState<PartResult | null>(null);
+const [locationError, setLocationError] = useState('');
 
   useEffect(() => {
     if (!auth || !id) return
@@ -73,52 +79,109 @@ export default function RequestPartsPage() {
     }
   }
 
-  async function handleOrder(part: PartResult) {
-    if (!auth || !request) return
-    setOrderError('')
-    setMpesaError('')
-    setOrdering(true)
+  // async function handleOrder(part: PartResult) {
+  //   if (!auth || !request) return
+  //   setOrderError('')
+  //   setMpesaError('')
+  //   setOrdering(true)
 
-    try {
-      const { data: order } = await orderApi.create(
-        {
-          supplierName: part.supplierName,
-          partName: part.partName,
-          partRequestId: request.id,
-          price: part.price,
-        },
-        auth.token,
-      )
+  //   try {
+  //     const { data: order } = await orderApi.create(
+  //       {
+  //         supplierName: part.supplierName,
+  //         partName: part.partName,
+  //         partRequestId: request.id,
+  //         price: part.price,
+  //       },
+  //       auth.token,
+  //     )
 
-      if (paymentMethod === 'stripe') {
-        const { data: payment } = await paymentApi.addPayment({ orderId: order.orderId }, auth.token)
-        sessionStorage.setItem('pendingStripeSessionId', payment.stripeSessionId)
-        sessionStorage.setItem('pendingOrderId', String(order.orderId))
-        window.location.href = payment.url
-        return
-      }
+  //     if (paymentMethod === 'stripe') {
+  //       const { data: payment } = await paymentApi.addPayment({ orderId: order.orderId }, auth.token)
+  //       sessionStorage.setItem('pendingStripeSessionId', payment.stripeSessionId)
+  //       sessionStorage.setItem('pendingOrderId', String(order.orderId))
+  //       window.location.href = payment.url
+  //       return
+  //     }
 
-      if (!phoneNumber.trim()) {
-        setMpesaError('Enter phone number')
-        setOrdering(false)
-        return
-      }
+  //     if (!phoneNumber.trim()) {
+  //       setMpesaError('Enter phone number')
+  //       setOrdering(false)
+  //       return
+  //     }
 
-      const { data: stk } = await paymentApi.initiateStkPush(order.orderId, phoneNumber.trim(), auth.token)
+  //     const { data: stk } = await paymentApi.initiateStkPush(order.orderId, phoneNumber.trim(), auth.token)
 
-      if (!stk.isSuccessful) {
-        setMpesaError(stk.responseDescription || 'M-Pesa STK push failed')
-        setOrdering(false)
-        return
-      }
+  //     if (!stk.isSuccessful) {
+  //       setMpesaError(stk.responseDescription || 'M-Pesa STK push failed')
+  //       setOrdering(false)
+  //       return
+  //     }
 
-      sessionStorage.setItem('pendingOrderId', String(order.orderId))
-      navigate(`/orders/mpesa-status/${order.orderId}`)
-    } catch {
-      setOrderError(t('parts_order_error'))
-      setOrdering(false)
-    }
+  //     sessionStorage.setItem('pendingOrderId', String(order.orderId))
+  //     navigate(`/orders/mpesa-status/${order.orderId}`)
+  //   } catch {
+  //     setOrderError(t('parts_order_error'))
+  //     setOrdering(false)
+  //   }
+  // }
+
+  async function confirmOrderWithLocation() {
+  if (!auth || !pendingPart || !request) return;
+
+  // Validate inputs
+  if (!pickUpLocation.trim() || !pickUpPhone.trim()) {
+    setLocationError('Both location fields are required.');
+    return;
   }
+  setLocationError('');
+  setOrdering(true);
+  setShowLocationPrompt(false);
+
+  try {
+    // Now include the location fields
+    const { data: order } = await orderApi.create(
+      {
+        supplierName: pendingPart.supplierName,
+        partName: pendingPart.partName,
+        partRequestId: request.id,
+        price: pendingPart.price,
+        pickUpLocation: pickUpLocation.trim(),
+        pickUpLocationPhoneNumber: pickUpPhone.trim(),
+      },
+      auth.token,
+    );
+
+    // Continue with payment logic (same as before)
+    if (paymentMethod === 'stripe') {
+      const { data: payment } = await paymentApi.addPayment({ orderId: order.orderId }, auth.token);
+      sessionStorage.setItem('pendingStripeSessionId', payment.stripeSessionId);
+      sessionStorage.setItem('pendingOrderId', String(order.orderId));
+      window.location.href = payment.url;
+      return;
+    }
+
+    if (!phoneNumber.trim()) {
+      setMpesaError('Enter phone number');
+      setOrdering(false);
+      return;
+    }
+
+    const { data: stk } = await paymentApi.initiateStkPush(order.orderId, phoneNumber.trim(), auth.token);
+
+    if (!stk.isSuccessful) {
+      setMpesaError(stk.responseDescription || 'M-Pesa STK push failed');
+      setOrdering(false);
+      return;
+    }
+
+    sessionStorage.setItem('pendingOrderId', String(order.orderId));
+    navigate(`/orders/mpesa-status/${order.orderId}`);
+  } catch {
+    setOrderError(t('parts_order_error'));
+    setOrdering(false);
+  }
+}
 
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
@@ -274,8 +337,12 @@ export default function RequestPartsPage() {
                   <Button
                     size="sm"
                     onClick={() => {
-                      setSelectedPart(part)
-                      handleOrder(part)
+                          setSelectedPart(part);
+                          setPendingPart(part);
+                          setPickUpLocation('');          // clear previous inputs
+                          setPickUpPhone('');
+                          setLocationError('');
+                          setShowLocationPrompt(true);   // open the modal
                     }}
                     disabled={ordering}
                     className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-8 px-4 text-xs font-semibold whitespace-nowrap"
@@ -295,6 +362,60 @@ export default function RequestPartsPage() {
             </p>
           )}
         </div>
+        {/* Location Prompt Modal */}
+{showLocationPrompt && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="bg-white dark:bg-[#111C14] rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
+      <h2 className="text-lg font-semibold text-[#07110A] dark:text-white mb-4">
+        Pick‑up Location
+      </h2>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-1">
+            Location
+          </label>
+          <Input
+            value={pickUpLocation}
+            onChange={(e) => setPickUpLocation(e.target.value)}
+            placeholder="e.g. Nairobi CBD, Moi Avenue"
+            className="w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-1">
+            Phone Number
+          </label>
+          <Input
+            value={pickUpPhone}
+            onChange={(e) => setPickUpPhone(e.target.value)}
+            placeholder="2547XXXXXXXX"
+            className="w-full"
+          />
+        </div>
+        {locationError && (
+          <p className="text-red-400 text-xs">{locationError}</p>
+        )}
+      </div>
+
+      <div className="flex justify-end gap-3 mt-6">
+        <Button
+          variant="ghost"
+          onClick={() => setShowLocationPrompt(false)}
+          className="text-[#4A6B50] dark:text-[#7A9A80]"
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={confirmOrderWithLocation}
+          className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88]"
+        >
+          Confirm &amp; Order
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
       </main>
     </div>
   )

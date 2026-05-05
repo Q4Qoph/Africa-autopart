@@ -147,4 +147,12 @@ export default {
   parts_col_condition: 'Condition',
   parts_col_stock: 'Stock',
   parts_col_price: 'Price',
+
+    // Pick‑up location prompt
+  parts_location_prompt_title: 'Pick‑up Location',
+  parts_location_label: 'Location',
+  parts_location_phone_label: 'Phone Number',
+  parts_location_confirm: 'Confirm & Order',
+  parts_location_cancel: 'Cancel',
+  parts_location_error: 'Both location fields are required.',
 } as const

@@ -129,4 +129,12 @@ export default {
   parts_col_condition: 'ሁኔታ',
   parts_col_stock: 'ክምችት',
   parts_col_price: 'ዋጋ',
-} as const
+
+  // Pick‑up location prompt
+  parts_location_prompt_title: 'የመቀበያ ቦታ',
+  parts_location_label: 'ቦታ',
+  parts_location_phone_label: 'ስልክ ቁጥር',
+  parts_location_confirm: 'አረጋግጥ እና ትዕዛዝ አስገባ',
+  parts_location_cancel: 'ሰርዝ',
+  parts_location_error: 'ሁለቱም የቦታ መስኮች ያስፈልጋሉ።',
+} as const;

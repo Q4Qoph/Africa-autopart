@@ -1,39 +1,36 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
-import type { Order } from '@/types/order'
-import { OrderStatus } from '@/types/order'
+import type { CustomerOrder } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Check, ChevronDown } from 'lucide-react'
 
-const statusClass: Record<string, string> = {
-  [OrderStatus.Pending]: 'bg-amber-900/30 text-amber-300 border-amber-700/30',
-  [OrderStatus.Shipped]: 'bg-blue-900/30 text-blue-300 border-blue-700/30',
-  [OrderStatus.Delivered]: 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
+const statusColor: Record<string, string> = {
+  'Pending':   'bg-amber-900/30 text-amber-300 border-amber-700/30',
+  'Shipped':   'bg-blue-900/30 text-blue-300 border-blue-700/30',
+  'Delivered': 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
+  'Unknown':   'bg-gray-400/20 text-gray-400 border-gray-400/30',
 }
 
-interface EditState {
-  status: string
-  trackingNumber: string
-  saving: boolean
-  error: string
-}
+const statusOptions = [
+  { code: 0, string: 'Pending',   key: 'orders_status_pending' },
+  { code: 1, string: 'Shipped',   key: 'orders_status_shipped' },
+  { code: 2, string: 'Delivered', key: 'orders_status_delivered' },
+]
+
+// ─── Component ──────────────────────────────────────────────────────────────
 
 export default function AdminOrdersPage() {
   const { auth } = useAuth()
   const { t } = useTranslation('admin')
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<CustomerOrder[]>([])
   const [loading, setLoading] = useState(true)
-  const [editingId, setEditingId] = useState<number | null>(null)
-  const [editState, setEditState] = useState<EditState>({ status: OrderStatus.Pending, trackingNumber: '', saving: false, error: '' })
-
-  const statusLabelT: Record<string, string> = {
-    [OrderStatus.Pending]: t('orders_status_pending'),
-    [OrderStatus.Shipped]: t('orders_status_shipped'),
-    [OrderStatus.Delivered]: t('orders_status_delivered'),
-  }
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null)
+  const [savingId, setSavingId] = useState<number | null>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!auth) return
@@ -44,38 +41,32 @@ export default function AdminOrdersPage() {
       .finally(() => setLoading(false))
   }, [auth])
 
-  function startEdit(order: Order) {
-    setEditingId(order.orderId)
-    setEditState({ status: order.status, trackingNumber: order.trackingNumber ?? '', saving: false, error: '' })
-  }
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpenDropdownId(null)
+      }
+    }
+    if (openDropdownId !== null) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [openDropdownId])
 
-  function cancelEdit() {
-    setEditingId(null)
-  }
-
-  async function saveEdit(order: Order) {
+  async function handleStatusChange(orderId: number, newStatusNumber: number) {
     if (!auth) return
-    setEditState((s) => ({ ...s, saving: true, error: '' }))
+    setSavingId(orderId)
     try {
-      await orderApi.update(
-        order.orderId,
-        {
-          price: order.price,
-          status: editState.status,
-          trackingNumber: editState.trackingNumber,
-        },
-        auth.token,
-      )
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.orderId === order.orderId
-            ? { ...o, status: editState.status, trackingNumber: editState.trackingNumber }
-            : o,
-        ),
-      )
-      setEditingId(null)
+      await orderApi.updateStatus(orderId, { status: newStatusNumber }, auth.token)
+      // Refresh list
+      const { data } = await orderApi.getAll(auth.token)
+      setOrders(data)
+      setOpenDropdownId(null)
     } catch {
-      setEditState((s) => ({ ...s, saving: false, error: t('orders_save_error') }))
+      alert(t('orders_save_error'))
+    } finally {
+      setSavingId(null)
     }
   }
 
@@ -98,7 +89,9 @@ export default function AdminOrdersPage() {
           {t('admin_label')}
         </p>
         <h1 className="text-2xl font-extrabold text-[#07110A] dark:text-white">{t('orders_heading')}</h1>
-        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">{t('orders_count', { count: orders.length })}</p>
+        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-1">
+          {t('orders_count', { count: orders.length })}
+        </p>
       </div>
 
       {loading ? (
@@ -110,7 +103,6 @@ export default function AdminOrdersPage() {
               <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
                 <Th>{t('orders_col_id')}</Th>
                 <Th>{t('orders_col_part')}</Th>
-                <Th>{t('orders_col_supplier')}</Th>
                 <Th>{t('orders_col_vehicle')}</Th>
                 <Th>{t('orders_col_price')}</Th>
                 <Th>{t('orders_col_tracking')}</Th>
@@ -119,100 +111,86 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((o) => (
-                <>
+              {orders.map((order) => {
+                const isOpen = openDropdownId === order.orderId
+                const isSaving = savingId === order.orderId
+
+                return (
                   <tr
-                    key={o.orderId}
+                    key={order.orderId}
                     className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                   >
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{o.orderId}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{order.orderId}</Td>
                     <Td>
-                      <p className="text-[#07110A] dark:text-white font-medium">{o.requestedPartName ?? '—'}</p>
+                      <p className="text-[#07110A] dark:text-white font-medium">{order.requestedPartName || '—'}</p>
                     </Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">—</Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">{o.vehicleMake} {o.model}</Td>
-                    <Td className="text-[#07110A] dark:text-white">${o.price.toLocaleString()}</Td>
+                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                      {order.vehicleMake} {order.model}
+                    </Td>
+                    <Td className="text-[#07110A] dark:text-white">
+                      ${order.price.toLocaleString()}
+                    </Td>
                     <Td className="font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
-                      {o.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
+                      {order.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
                     </Td>
+
+                    {/* Status + dropdown */}
                     <Td>
-                      <Badge className={`text-[10px] border ${statusClass[o.status] ?? ''}`}>
-                        {statusLabelT[o.status] ?? String(o.status)}
-                      </Badge>
-                    </Td>
-                    <Td>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => editingId === o.orderId ? cancelEdit() : startEdit(o)}
-                          className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
+                      <div className="relative" ref={isOpen ? dropdownRef : undefined}>
+                        <button
+                          onClick={() => setOpenDropdownId(isOpen ? null : order.orderId)}
+                          disabled={isSaving}
+                          className="flex items-center gap-1.5 group"
                         >
-                          {editingId === o.orderId ? t('orders_close') : t('orders_update')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleDelete(o.orderId)}
-                          className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
-                        >
-                          {t('orders_delete')}
-                        </Button>
+                          <Badge className={`text-[10px] border ${statusColor[order.status] ?? statusColor['Unknown']}`}>
+                            {order.status}
+                          </Badge>
+                          <ChevronDown className={`w-3 h-3 text-[#4A6B50] dark:text-[#7A9A80] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                          {isSaving && (
+                            <span className="w-3 h-3 border-2 border-[#00C853]/30 border-t-[#00C853] rounded-full animate-spin ml-1" />
+                          )}
+                        </button>
+
+                        {isOpen && (
+                          <div className="absolute top-full left-0 mt-1 z-30 bg-white dark:bg-[#1A2A1E] border border-[rgba(0,200,83,0.2)] rounded-lg shadow-lg py-1 min-w-[140px]">
+                            {statusOptions.map((opt) => {
+                              const isCurrent = order.status === opt.string
+                              return (
+                                <button
+                                  key={opt.code}
+                                  onClick={() => handleStatusChange(order.orderId, opt.code)}
+                                  disabled={isSaving}
+                                  className={`w-full text-left px-3 py-2 text-sm flex items-center justify-between transition-colors ${
+                                    isCurrent
+                                      ? 'text-[#00C853] bg-[rgba(0,200,83,0.08)]'
+                                      : 'text-[#07110A] dark:text-white hover:bg-[rgba(0,200,83,0.04)]'
+                                  }`}
+                                >
+                                  {t(opt.key)}
+                                  {isCurrent && <Check className="w-3.5 h-3.5 text-[#00C853]" />}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        )}
                       </div>
                     </Td>
-                  </tr>
 
-                  {/* Inline edit row */}
-                  {editingId === o.orderId && (
-                    <tr key={`edit-${o.orderId}`}>
-                      <td colSpan={8} className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
-                        <div className="flex items-end gap-4 flex-wrap">
-                          <div className="space-y-1">
-                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('orders_status_label')}</p>
-                            <select
-                              value={editState.status}
-                              onChange={(e) => setEditState((s) => ({ ...s, status: e.target.value }))}
-                              className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
-                            >
-                              <option value={OrderStatus.Pending}>{t('orders_status_pending')}</option>
-                              <option value={OrderStatus.Shipped}>{t('orders_status_shipped')}</option>
-                              <option value={OrderStatus.Delivered}>{t('orders_status_delivered')}</option>
-                            </select>
-                          </div>
-                          <div className="space-y-1">
-                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">{t('orders_tracking_label')}</p>
-                            <Input
-                              value={editState.trackingNumber}
-                              onChange={(e) => setEditState((s) => ({ ...s, trackingNumber: e.target.value }))}
-                              placeholder="e.g. TRK-00123"
-                              className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 w-48"
-                            />
-                          </div>
-                          <Button
-                            onClick={() => saveEdit(o)}
-                            disabled={editState.saving}
-                            className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-5 text-sm font-semibold"
-                          >
-                            {editState.saving ? t('orders_saving') : t('orders_save')}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={cancelEdit}
-                            className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
-                          >
-                            {t('orders_cancel')}
-                          </Button>
-                        </div>
-                        {editState.error && (
-                          <p className="text-red-400 text-xs mt-2">{editState.error}</p>
-                        )}
-                      </td>
-                    </tr>
-                  )}
-                </>
-              ))}
+                    <Td>
+                      <button
+                        onClick={() => handleDelete(order.orderId)}
+                        className="text-red-400 hover:text-red-300 text-xs transition-colors"
+                      >
+                        {t('orders_delete')}
+                      </button>
+                    </Td>
+                  </tr>
+                )
+              })}
+
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
+                  <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     {t('orders_no_orders')}
                   </td>
                 </tr>
