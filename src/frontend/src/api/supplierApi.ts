@@ -1,3 +1,4 @@
+// src/frontend/src/api/supplierApi.ts
 import axios from 'axios'
 import type { Supplier, AddSupplierDTO, UpdateSupplierDTO, AddPartDTO, UpdatePartDTO, PartResponse } from '@/types/supplier'
 

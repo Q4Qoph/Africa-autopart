@@ -32,6 +32,8 @@ import SuccessPage from '@/pages/orders/SuccessPage'
 import MpesaStatusPage from "@/pages/orders/MpesaStatusPage"
 import ShopPage from '@/pages/shop/ShopPage'
 import TrackOrderPage from '@/pages/orders/TrackOrderPage'
+import CartPage from '@/pages/shop/CartPage'
+import CheckoutPage from '@/pages/shop/CheckoutPage'
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -63,12 +65,14 @@ export const router = createBrowserRouter([
   { path: '/suppliers', element: <SuppliersPage /> },
   { path: '/contact', element: <ContactPage /> },
   { path: '/about', element: <AboutPage /> },
-  { path: '/shop', element: <ShopPage /> },  
+  { path: '/shop', element: <ShopPage /> },
+  { path: '/cart', element: <CartPage /> },
   { path: '/requests/new', element: <NewRequestPage /> },
   { path: '/success', element: <SuccessPage /> }, 
   { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
   { path: '/orders/mpesa-status/:orderId', element: <MpesaStatusPage /> },
   { path: '/track-order', element: <TrackOrderPage /> },
+  
   
   {
     element: <ProtectedRoute />,
@@ -79,6 +83,7 @@ export const router = createBrowserRouter([
       { path: '/requests/:id/parts', element: <RequestPartsPage /> },
       { path: '/orders', element: <OrdersPage /> },
       { path: '/orders/payment-callback', element: <PaymentCallbackPage /> },
+      { path: '/checkout/:orderId', element: <CheckoutPage /> },
       // { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
     ],
   },

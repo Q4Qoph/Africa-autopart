@@ -1,30 +1,40 @@
 //src/frontend/src/components/layout/Navbar.tsx
-import { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
-  Sun, Moon, Phone, Menu, X,
-  MapPin, Package, LayoutDashboard, LogOut,
-  ChevronDown, Truck,
-} from 'lucide-react'
-import { useAuth } from '@/context/AuthContext'
-import { useTheme } from '@/context/ThemeContext'
-import { UserRole } from '@/types/user'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+  Sun,
+  Moon,
+  Phone,
+  Menu,
+  X,
+  MapPin,
+  Package,
+  LayoutDashboard,
+  LogOut,
+  ChevronDown,
+  Truck,
+} from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
+import { UserRole } from "@/types/user";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { LanguageDropdown } from '@/components/ui/LanguageDropdown'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/dropdown-menu";
+import { LanguageDropdown } from "@/components/ui/LanguageDropdown";
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import { cn } from "@/lib/utils";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const btnBase =
-  'inline-flex items-center justify-center rounded-lg text-sm font-semibold px-4 py-2 transition-all'
+  "inline-flex items-center justify-center rounded-lg text-sm font-semibold px-4 py-2 transition-all";
 
 function NavLink({
   href,
@@ -32,94 +42,90 @@ function NavLink({
   active,
   onClick,
 }: {
-  href: string
-  children: React.ReactNode
-  active?: boolean
-  onClick?: () => void
+  href: string;
+  children: React.ReactNode;
+  active?: boolean;
+  onClick?: () => void;
 }) {
   const cls = cn(
-    'text-sm transition-colors',
+    "text-sm transition-colors",
     active
-      ? 'text-[#00C853] font-semibold'
-      : 'text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] hover:text-[#07110A] dark:hover:text-white',
-  )
+      ? "text-[#00C853] font-semibold"
+      : "text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] hover:text-[#07110A] dark:hover:text-white",
+  );
 
-  if (href.startsWith('/') && !href.includes('#')) {
+  if (href.startsWith("/") && !href.includes("#")) {
     return (
       <Link to={href} className={cls} onClick={onClick}>
         {children}
       </Link>
-    )
+    );
   }
   return (
     <a href={href} className={cls} onClick={onClick}>
       {children}
     </a>
-  )
+  );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function Navbar() {
-  const { auth, logout } = useAuth()
-  const { theme, toggleTheme } = useTheme()
-  const { t } = useTranslation('nav')
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { auth, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation("nav");
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const { itemCount } = useCart();
 
   function handleLogout() {
-    logout()
-    navigate('/')
-    setDrawerOpen(false)
+    logout();
+    navigate("/");
+    setDrawerOpen(false);
   }
 
   // Nav link sets — defined inside component so labels react to language changes
   const publicLinks = [
-    { label: t('nav_howItWorks'), href: '/#how-it-works' },
-    { label: t('nav_suppliers'),  href: '/suppliers' },
-    { label: t('nav_trackOrder'), href: '/track-order' },
-    { label: t('nav_becomeSupplier'), href: '/become-supplier' },
-    { label: t('nav_shop'), href: '/shop' },   
-  ]
+    { label: t("nav_howItWorks"), href: "/#how-it-works" },
+    { label: t("nav_suppliers"), href: "/suppliers" },
+    { label: t("nav_trackOrder"), href: "/track-order" },
+    { label: t("nav_becomeSupplier"), href: "/become-supplier" },
+    { label: t("nav_shop"), href: "/shop" },
+  ];
 
   const customerLinks = [
-    { label: t('nav_myRequests'), href: '/requests' },
-    { label: t('nav_suppliers'),  href: '/suppliers' },
-    { label: t('nav_shop'), href: '/shop' },
-  ]
+    { label: t("nav_myRequests"), href: "/requests" },
+    { label: t("nav_suppliers"), href: "/suppliers" },
+    { label: t("nav_shop"), href: "/shop" },
+  ];
 
-  const adminLinks = [
-    { label: t('nav_suppliers'), href: '/suppliers' },
-  ]
+  const adminLinks = [{ label: t("nav_suppliers"), href: "/suppliers" }];
 
   const supplierNavLinks = [
-    { label: t('nav_rfqInbox'),  href: '/supplier/dashboard' },
-    { label: t('nav_myOffers'), href: '/supplier/dashboard' },
-    { label: t('nav_myOrders'), href: '/supplier/dashboard' },
-  ]
+    { label: t("nav_rfqInbox"), href: "/supplier/dashboard" },
+    { label: t("nav_myOffers"), href: "/supplier/dashboard" },
+    { label: t("nav_myOrders"), href: "/supplier/dashboard" },
+  ];
 
   const navLinks = auth
     ? auth.role === UserRole.Supplier
       ? supplierNavLinks
       : auth.role === UserRole.Admin
-      ? adminLinks
-      : customerLinks
-    : publicLinks
+        ? adminLinks
+        : customerLinks
+    : publicLinks;
 
-  const isActive = (href: string) =>
-    href !== '/' && location.pathname === href
+  const isActive = (href: string) => href !== "/" && location.pathname === href;
 
   return (
     <>
       {/* ── Fixed wrapper ── */}
       <div className="fixed top-0 inset-x-0 z-50 flex flex-col">
-
         {/* ── Topbar — desktop only ── */}
         <div className="hidden md:flex items-center h-9 bg-[#E8F2EA] dark:bg-[#07110A] border-b border-[rgba(0,200,83,0.15)] dark:border-[rgba(0,200,83,0.1)] px-6">
           <div className="max-w-[1260px] w-full mx-auto flex items-center justify-between">
-
             {/* Left: phone + links */}
             <div className="flex items-center gap-5">
               <a
@@ -130,15 +136,24 @@ export default function Navbar() {
                 +25377577016
               </a>
               <span className="w-px h-3 bg-[rgba(0,0,0,0.12)] dark:bg-[rgba(255,255,255,0.12)]" />
-              <Link to="/about" className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
-                {t('topbar_about')}
+              <Link
+                to="/about"
+                className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors"
+              >
+                {t("topbar_about")}
               </Link>
-              <Link to="/contact" className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors">
-                {t('topbar_contact')}
+              <Link
+                to="/contact"
+                className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors"
+              >
+                {t("topbar_contact")}
               </Link>
-              <Link to="/track-order" className="flex items-center gap-1 text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] transition-colors">
+              <Link
+                to="/track-order"
+                className="flex items-center gap-1 text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] transition-colors"
+              >
                 <Truck className="w-3 h-3" />
-                {t('topbar_trackOrder')}
+                {t("topbar_trackOrder")}
               </Link>
             </div>
 
@@ -151,9 +166,11 @@ export default function Navbar() {
                 className="w-6 h-6 flex items-center justify-center rounded text-[#4A6B50] dark:text-[rgba(255,255,255,0.55)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.9)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.08)] transition-colors"
                 aria-label="Toggle theme"
               >
-                {theme === 'dark'
-                  ? <Sun className="w-3.5 h-3.5" />
-                  : <Moon className="w-3.5 h-3.5" />}
+                {theme === "dark" ? (
+                  <Sun className="w-3.5 h-3.5" />
+                ) : (
+                  <Moon className="w-3.5 h-3.5" />
+                )}
               </button>
             </div>
           </div>
@@ -162,7 +179,6 @@ export default function Navbar() {
         {/* ── Main nav bar ── */}
         <header className="h-[96px] bg-[rgba(247,253,248,0.95)] dark:bg-[rgba(7,17,10,0.95)] backdrop-blur-md border-b border-[rgba(0,200,83,0.12)] flex items-center">
           <div className="max-w-[1260px] w-full mx-auto px-6 flex items-center gap-6">
-
             {/* Logo */}
             <Link to="/" className="flex items-center shrink-0 mr-2">
               <img
@@ -184,13 +200,21 @@ export default function Navbar() {
                   to="/admin"
                   className="text-sm font-semibold text-[#00C853] hover:text-[#39FF88] transition-colors"
                 >
-                  {t('nav_adminPanel')}
+                  {t("nav_adminPanel")}
                 </Link>
               )}
             </nav>
 
             {/* Right side */}
             <div className="ml-auto flex items-center gap-2">
+              <Link to="/cart" className="relative mr-2">
+                <ShoppingCart className="w-5 h-5 text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853]" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-[#07110A] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {itemCount}
+                  </span>
+                )}
+              </Link>
 
               {/* Theme toggle — mobile only (desktop has it in topbar) */}
               <button
@@ -198,24 +222,29 @@ export default function Navbar() {
                 className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
               </button>
 
               {auth ? (
                 <>
                   {/* New request CTA — customer only */}
-                  {auth.role !== UserRole.Supplier && auth.role !== UserRole.Admin && (
-                    <Link
-                      to="/requests/new"
-                      className={cn(
-                        btnBase,
-                        'bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] hidden sm:inline-flex text-xs px-3 py-1.5 gap-1.5',
-                      )}
-                    >
-                      <Package className="w-3.5 h-3.5" />
-                      {t('cta_newRequest')}
-                    </Link>
-                  )}
+                  {auth.role !== UserRole.Supplier &&
+                    auth.role !== UserRole.Admin && (
+                      <Link
+                        to="/requests/new"
+                        className={cn(
+                          btnBase,
+                          "bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] hidden sm:inline-flex text-xs px-3 py-1.5 gap-1.5",
+                        )}
+                      >
+                        <Package className="w-3.5 h-3.5" />
+                        {t("cta_newRequest")}
+                      </Link>
+                    )}
 
                   {/* Avatar dropdown */}
                   <DropdownMenu>
@@ -235,10 +264,10 @@ export default function Navbar() {
                       <div className="px-3 py-2.5 border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)]">
                         <p className="text-xs font-semibold text-[#07110A] dark:text-white">
                           {auth.role === UserRole.Supplier
-                            ? t('dropdown_roleSupplier')
+                            ? t("dropdown_roleSupplier")
                             : auth.role === UserRole.Admin
-                            ? t('dropdown_roleAdmin')
-                            : t('dropdown_roleCustomer')}
+                              ? t("dropdown_roleAdmin")
+                              : t("dropdown_roleCustomer")}
                         </p>
                         <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80] mt-0.5">
                           ID #{auth.userId}
@@ -248,9 +277,12 @@ export default function Navbar() {
                       {auth.role === UserRole.Admin && (
                         <>
                           <DropdownMenuItem>
-                            <Link to="/admin" className="w-full flex items-center gap-2 text-[#00C853] font-semibold">
+                            <Link
+                              to="/admin"
+                              className="w-full flex items-center gap-2 text-[#00C853] font-semibold"
+                            >
                               <LayoutDashboard className="w-3.5 h-3.5" />
-                              {t('dropdown_adminPanel')}
+                              {t("dropdown_adminPanel")}
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuSeparator className="bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,200,83,0.12)]" />
@@ -260,37 +292,52 @@ export default function Navbar() {
                       {auth.role === UserRole.Supplier ? (
                         <>
                           <DropdownMenuItem>
-                            <Link to="/supplier/dashboard" className="w-full flex items-center gap-2">
+                            <Link
+                              to="/supplier/dashboard"
+                              className="w-full flex items-center gap-2"
+                            >
                               <LayoutDashboard className="w-3.5 h-3.5 text-[#00C853]" />
-                              {t('dropdown_dashboard')}
+                              {t("dropdown_dashboard")}
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Link to="/supplier/dashboard" className="w-full flex items-center gap-2">
+                            <Link
+                              to="/supplier/dashboard"
+                              className="w-full flex items-center gap-2"
+                            >
                               <Package className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                              {t('dropdown_myOffers')}
+                              {t("dropdown_myOffers")}
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Link to="/supplier/dashboard" className="w-full flex items-center gap-2">
+                            <Link
+                              to="/supplier/dashboard"
+                              className="w-full flex items-center gap-2"
+                            >
                               <Truck className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                              {t('dropdown_myOrders')}
+                              {t("dropdown_myOrders")}
                             </Link>
                           </DropdownMenuItem>
                         </>
                       ) : (
                         <>
                           <DropdownMenuItem>
-                            <Link to="/dashboard" className="w-full flex items-center gap-2">
+                            <Link
+                              to="/dashboard"
+                              className="w-full flex items-center gap-2"
+                            >
                               <LayoutDashboard className="w-3.5 h-3.5 text-[#00C853]" />
-                              {t('dropdown_dashboard')}
+                              {t("dropdown_dashboard")}
                             </Link>
                           </DropdownMenuItem>
                           {auth.role !== UserRole.Admin && (
                             <DropdownMenuItem>
-                              <Link to="/requests" className="w-full flex items-center gap-2">
+                              <Link
+                                to="/requests"
+                                className="w-full flex items-center gap-2"
+                              >
                                 <Package className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                                {t('dropdown_myRequests')}
+                                {t("dropdown_myRequests")}
                               </Link>
                             </DropdownMenuItem>
                           )}
@@ -303,7 +350,7 @@ export default function Navbar() {
                         className="cursor-pointer text-red-500 dark:text-red-400 focus:text-red-500"
                       >
                         <LogOut className="w-3.5 h-3.5 mr-2" />
-                        {t('dropdown_logout')}
+                        {t("dropdown_logout")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -314,17 +361,20 @@ export default function Navbar() {
                     to="/login"
                     className={cn(
                       btnBase,
-                      'hidden sm:inline-flex border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] hover:text-[#07110A] dark:hover:text-white text-xs px-3 py-1.5',
+                      "hidden sm:inline-flex border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] hover:text-[#07110A] dark:hover:text-white text-xs px-3 py-1.5",
                     )}
                   >
-                    {t('cta_login')}
+                    {t("cta_login")}
                   </Link>
                   <Link
                     to="/requests/new"
-                    className={cn(btnBase, 'bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] text-xs px-4 py-1.5 gap-1.5')}
+                    className={cn(
+                      btnBase,
+                      "bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] text-xs px-4 py-1.5 gap-1.5",
+                    )}
                   >
                     <MapPin className="w-3.5 h-3.5 hidden sm:block" />
-                    {t('cta_requestPart')}
+                    {t("cta_requestPart")}
                   </Link>
                 </>
               )}
@@ -346,8 +396,10 @@ export default function Navbar() {
       {/* Backdrop */}
       <div
         className={cn(
-          'fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden',
-          drawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+          "fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
+          drawerOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none",
         )}
         onClick={() => setDrawerOpen(false)}
       />
@@ -355,11 +407,11 @@ export default function Navbar() {
       {/* Drawer panel */}
       <div
         className={cn(
-          'fixed top-0 left-0 h-full w-[300px] z-[70] flex flex-col',
-          'bg-white dark:bg-[#0F1F13]',
-          'border-r border-[rgba(0,200,83,0.12)]',
-          'transition-transform duration-300 ease-in-out lg:hidden',
-          drawerOpen ? 'translate-x-0' : '-translate-x-full',
+          "fixed top-0 left-0 h-full w-[300px] z-[70] flex flex-col",
+          "bg-white dark:bg-[#0F1F13]",
+          "border-r border-[rgba(0,200,83,0.12)]",
+          "transition-transform duration-300 ease-in-out lg:hidden",
+          drawerOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         {/* Drawer header */}
@@ -372,7 +424,9 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
               AA
             </div>
-            <span className="text-[#07110A] dark:text-white font-bold text-sm">Africa Autopart</span>
+            <span className="text-[#07110A] dark:text-white font-bold text-sm">
+              Africa Autopart
+            </span>
           </Link>
           <button
             onClick={() => setDrawerOpen(false)}
@@ -403,7 +457,7 @@ export default function Navbar() {
               className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-[#00C853] hover:bg-[rgba(0,200,83,0.06)] transition-colors"
               onClick={() => setDrawerOpen(false)}
             >
-              {t('nav_adminPanel')}
+              {t("nav_adminPanel")}
             </Link>
           )}
 
@@ -413,29 +467,32 @@ export default function Navbar() {
                 <div className="px-3 py-2 rounded-lg bg-[rgba(0,200,83,0.06)] mb-3">
                   <p className="text-xs font-semibold text-[#07110A] dark:text-white">
                     {auth.role === UserRole.Supplier
-                      ? t('dropdown_roleSupplier')
+                      ? t("dropdown_roleSupplier")
                       : auth.role === UserRole.Admin
-                      ? t('dropdown_roleAdmin')
-                      : t('dropdown_roleCustomer')}
+                        ? t("dropdown_roleAdmin")
+                        : t("dropdown_roleCustomer")}
                   </p>
-                  <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80]">ID #{auth.userId}</p>
+                  <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80]">
+                    ID #{auth.userId}
+                  </p>
                 </div>
-                {auth.role !== UserRole.Supplier && auth.role !== UserRole.Admin && (
-                  <Link
-                    to="/requests/new"
-                    className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors"
-                    onClick={() => setDrawerOpen(false)}
-                  >
-                    <Package className="w-4 h-4" />
-                    {t('cta_newRequest')}
-                  </Link>
-                )}
+                {auth.role !== UserRole.Supplier &&
+                  auth.role !== UserRole.Admin && (
+                    <Link
+                      to="/requests/new"
+                      className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors"
+                      onClick={() => setDrawerOpen(false)}
+                    >
+                      <Package className="w-4 h-4" />
+                      {t("cta_newRequest")}
+                    </Link>
+                  )}
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-400/10 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
-                  {t('dropdown_logout')}
+                  {t("dropdown_logout")}
                 </button>
               </>
             ) : (
@@ -446,21 +503,21 @@ export default function Navbar() {
                   onClick={() => setDrawerOpen(false)}
                 >
                   <MapPin className="w-4 h-4" />
-                  {t('cta_requestPart')}
+                  {t("cta_requestPart")}
                 </Link>
                 <Link
                   to="/login"
                   className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[rgba(0,0,0,0.7)] dark:text-[rgba(255,255,255,0.7)] text-sm hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)] transition-colors"
                   onClick={() => setDrawerOpen(false)}
                 >
-                  {t('cta_login')}
+                  {t("cta_login")}
                 </Link>
                 <Link
                   to="/register"
                   className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[rgba(0,0,0,0.7)] dark:text-[rgba(255,255,255,0.7)] text-sm hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)] transition-colors"
                   onClick={() => setDrawerOpen(false)}
                 >
-                  {t('drawer_createAccount')}
+                  {t("drawer_createAccount")}
                 </Link>
               </>
             )}
@@ -483,12 +540,16 @@ export default function Navbar() {
               onClick={toggleTheme}
               className="flex items-center gap-1.5 text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] text-xs hover:text-[#07110A] dark:hover:text-white transition-colors"
             >
-              {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-              {theme === 'dark' ? t('drawer_lightMode') : t('drawer_darkMode')}
+              {theme === "dark" ? (
+                <Sun className="w-3.5 h-3.5" />
+              ) : (
+                <Moon className="w-3.5 h-3.5" />
+              )}
+              {theme === "dark" ? t("drawer_lightMode") : t("drawer_darkMode")}
             </button>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }

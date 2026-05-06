@@ -27,4 +27,13 @@ export default {
   track_part_details: 'تفاصيل القطعة',
   track_location: 'معلومات الاستلام',
   track_support: 'تحتاج مساعدة؟ اتصل بنا على',
+  track_status_pending: 'قيد الانتظار',
+  track_status_shipped: 'تم الشحن',
+  track_status_delivered: 'تم التوصيل',
+  track_step_pending: 'تم تقديم الطلب',
+  track_step_shipped: 'تم الشحن',
+  track_step_delivered: 'تم التوصيل',
+  track_location_label: 'الموقع',
+  track_phone_label: 'رقم الهاتف',
+  track_request_id: 'رقم الطلب',
 } as const

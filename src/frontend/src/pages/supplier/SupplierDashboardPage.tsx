@@ -1,67 +1,39 @@
+// src/frontend/src/pages/supplier/SupplierDashboardPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
 import { supplierApi } from "@/api/supplierApi";
 import { orderApi } from "@/api/orderApi";
+import { inventoryApi } from "@/api/inventoryApi";
 import { imageApi } from "@/api/imageApi";
-import { advertisementApi } from "@/api/advertisementApi";
 import type { Supplier } from "@/types/supplier";
 import type { Order } from "@/types/order";
-import {OrderStatusCode } from "@/types/order";
+import type { InventoryItem, AddInventoryDTO } from "@/types/inventory";
+import { OrderStatusCode } from "@/types/order";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { EditProfilePanel } from "@/components/supplier/EdirProfilePanel";
+
+// import { AdvertModal } from "@/components/supplier/AdvertModal";
+
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+// Helpers
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
 function statusBadge(status: number) {
-  if (status === 2) // Delivered
+  if (status === 2)
     return "bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]";
-  if (status === 1) // Shipped
-    return "bg-blue-400/10 text-blue-400 border-blue-400/20";
-  return "bg-amber-400/10 text-amber-400 border-amber-400/20"; // 0 = Pending
+  if (status === 1) return "bg-blue-400/10 text-blue-400 border-blue-400/20";
+  return "bg-amber-400/10 text-amber-400 border-amber-400/20";
 }
 
-// These are API values stored in the database — not translated
-const conditionOptions = [
-  "New",
-  "OEM",
-  "Aftermarket",
-  "Second Hand",
-  "Refurbished",
-];
-const categoryOptions = [
-  "Brakes & Suspension",
-  "Engine & Drivetrain",
-  "Electrical & Lighting",
-  "Body & Exterior",
-  "Interior & Accessories",
-  "Tyres & Wheels",
-  "Cooling & Exhaust",
-  "Transmission",
-  "General / Multi-category",
-];
-
-interface AddPartForm {
-  partName: string;
-  partNumber: string;
-  condition: string;
-  description: string;
-  imageURL: string;
-  price: string;
-  stock: string;
-}
-
-const emptyForm: AddPartForm = {
-  partName: "",
-  partNumber: "",
-  condition: "New",
-  description: "",
-  imageURL: "",
-  price: "",
-  stock: "",
-};
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+// Local state types
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
 interface OrderEdit {
   status: number;
@@ -70,26 +42,60 @@ interface OrderEdit {
   error: string;
 }
 
-interface ProfileForm {
-  businessName: string;
-  category: string;
-  description: string;
-  email: string;
-  phone: string;
-}
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+// Component
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
 export default function SupplierDashboardPage() {
   const { auth, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation("dashboard");
-  const [activeTab, setActiveTab] = useState<"parts" | "orders">("parts");
+  const [activeTab, setActiveTab] = useState<"inventory" | "orders">(
+    "inventory",
+  );
 
-  // Supplier data
+  // ── Supplier ──────────────────────────────────────────────────────────────
   const [supplier, setSupplier] = useState<Supplier | null>(null);
   const [loadingSupplier, setLoadingSupplier] = useState(true);
   const [supplierError, setSupplierError] = useState(false);
 
-  // Orders
+  // ── Inventory ─────────────────────────────────────────────────────────────
+  const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [loadingInventory, setLoadingInventory] = useState(true);
+
+  // Add inventory
+  const [showAddInventory, setShowAddInventory] = useState(false);
+  const [addInventoryForm, setAddInventoryForm] = useState<AddInventoryDTO>({
+    partName: "",
+    description: "",
+    vehicleMake: "",
+    vehicleModel: "",
+    price: 0,
+    supplierName: "",
+    imageURL: "",
+  });
+  const [addingInventory, setAddingInventory] = useState(false);
+  const [addInventoryError, setAddInventoryError] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  // Edit inventory
+  const [editingInventoryId, setEditingInventoryId] = useState<number | null>(
+    null,
+  );
+  const [inventoryEditForm, setInventoryEditForm] = useState<AddInventoryDTO>({
+    partName: "",
+    description: "",
+    vehicleMake: "",
+    vehicleModel: "",
+    price: 0,
+    supplierName: "",
+    imageURL: "",
+  });
+  const [uploadingEditImage, setUploadingEditImage] = useState(false);
+  const [savingInventory, setSavingInventory] = useState(false);
+  const [inventoryEditError, setInventoryEditError] = useState("");
+
+  // ── Orders ────────────────────────────────────────────────────────────────
   const [orders, setOrders] = useState<Order[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [editingOrderId, setEditingOrderId] = useState<number | null>(null);
@@ -100,60 +106,26 @@ export default function SupplierDashboardPage() {
     error: "",
   });
 
-  // Add part form
-  const [showAddPart, setShowAddPart] = useState(false);
-  const [addForm, setAddForm] = useState<AddPartForm>(emptyForm);
-  const [addingPart, setAddingPart] = useState(false);
-  const [addPartError, setAddPartError] = useState("");
-  const [uploadingImage, setUploadingImage] = useState(false);
-
-  // Edit part
-  const [editingPartId, setEditingPartId] = useState<number | null>(null);
-  const [partEditForm, setPartEditForm] = useState<AddPartForm>(emptyForm);
-  const [uploadingEditImage, setUploadingEditImage] = useState(false);
-  const [savingPart, setSavingPart] = useState(false);
-  const [partEditError, setPartEditError] = useState("");
-
-  // Edit profile
+  // ── Profile ───────────────────────────────────────────────────────────────
   const [editingProfile, setEditingProfile] = useState(false);
-  const [profileForm, setProfileForm] = useState<ProfileForm>({
-    businessName: "",
-    category: "",
-    description: "",
-    email: "",
-    phone: "",
-  });
-  const [savingProfile, setSavingProfile] = useState(false);
-  const [profileError, setProfileError] = useState("");
 
   const orderStatusLabel: Record<number, string> = {
-  0: t("supplier_order_status_pending"),
-  1: t("supplier_order_status_shipped"),
-  2: t("supplier_order_status_delivered"),
-};
-  // ── Advertisement Modal State ──
-  const [advertModal, setAdvertModal] = useState<{
-    open: boolean;
-    partName: string;
-    price: number;
-    supplierName: string;
-    imageURL: string;
-    partDescription?: string;
-  }>({ open: false, partName: "", price: 0, supplierName: "", imageURL: "" });
+    0: t("supplier_order_status_pending"),
+    1: t("supplier_order_status_shipped"),
+    2: t("supplier_order_status_delivered"),
+  };
 
-  const [advertForm, setAdvertForm] = useState({
-    vehicleMake: "",
-    vehicleModel: "",
-    description: "",
-  });
-  // const [advertDescription, setAdvertDescription] = useState("");
-  const [advertError, setAdvertError] = useState("");
-  const [submittingAdvert, setSubmittingAdvert] = useState(false);
+  // ── Advertisement Modal (still commented out, but keep state if needed) ──
+  // const [advertModal, setAdvertModal] = ...
 
   const tabLabel: Record<string, string> = {
-    parts: t("supplier_tab_parts"),
+    inventory: t("supplier_tab_parts"),
     orders: t("supplier_tab_orders"),
   };
+
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+  // Effects
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
   useEffect(() => {
     if (!auth) return;
@@ -165,6 +137,21 @@ export default function SupplierDashboardPage() {
   }, [auth]);
 
   useEffect(() => {
+    if (!auth || !supplier) return;
+    setLoadingInventory(true);
+    inventoryApi
+      .getAllAdverts()
+      .then(({ data }) => {
+        const mine = data.filter(
+          (item) => item.supplierName === supplier.businessName,
+        );
+        setInventory(mine);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingInventory(false));
+  }, [auth, supplier]);
+
+  useEffect(() => {
     if (!auth || !supplier || activeTab !== "orders") return;
     setLoadingOrders(true);
     orderApi
@@ -174,163 +161,75 @@ export default function SupplierDashboardPage() {
       .finally(() => setLoadingOrders(false));
   }, [auth, supplier, activeTab]);
 
-  function handleLogout() {
-    logout();
-    navigate("/login");
-  }
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+  // Inventory handlers
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
-  async function refreshSupplier() {
-    if (!auth) return;
-    const { data } = await supplierApi.myProducts(auth.userId, auth.token);
-    setSupplier(data[0] ?? null);
-  }
-
-  async function handleAddPart() {
+  async function handleAddInventory() {
     if (!auth || !supplier) return;
-    setAddPartError("");
-    setAddingPart(true);
+    setAddInventoryError("");
+    setAddingInventory(true);
     try {
-      await supplierApi.addPart(
-        {
-          supplierId: supplier.id,
-          partName: addForm.partName,
-          partNumber: addForm.partNumber,
-          condition: addForm.condition,
-          description: addForm.description,
-          imageURL: addForm.imageURL,
-          price: Number(addForm.price),
-          stock: Number(addForm.stock),
-        },
-        auth.token,
+      await inventoryApi.add({
+        ...addInventoryForm,
+        supplierName: supplier.businessName,
+      });
+      const { data } = await inventoryApi.getAllAdverts();
+      setInventory(
+        data.filter((item) => item.supplierName === supplier.businessName),
       );
-      await refreshSupplier();
-      setAddForm(emptyForm);
-      setShowAddPart(false);
+      setAddInventoryForm({
+        partName: "",
+        description: "",
+        vehicleMake: "",
+        vehicleModel: "",
+        price: 0,
+        supplierName: supplier.businessName,
+        imageURL: "",
+      });
+      setShowAddInventory(false);
     } catch {
-      setAddPartError(t("supplier_add_error"));
+      setAddInventoryError(t("supplier_add_error"));
     } finally {
-      setAddingPart(false);
+      setAddingInventory(false);
     }
   }
 
-  function startEditPart(part: Supplier["parts"][number]) {
-    setEditingPartId(part.id);
-    setPartEditForm({
-      partName: part.partName,
-      partNumber: part.partNumber,
-      condition: part.condition,
-      description: "",
-      imageURL: part.imageURL ?? "",
-      price: String(part.price),
-      stock: String(part.stock),
+  function startEditInventory(item: InventoryItem) {
+    setEditingInventoryId(item.id);
+    setInventoryEditForm({
+      partName: item.partName,
+      description: item.description,
+      vehicleMake: item.vehicleMake,
+      vehicleModel: item.vehicleModel,
+      price: item.price,
+      supplierName: item.supplierName,
+      imageURL: item.imageURL ?? "",
     });
-    setPartEditError("");
+    setInventoryEditError("");
   }
 
-  async function handleSavePart(partId: number) {
+  async function handleSaveInventory(itemId: number) {
     if (!auth) return;
-    setPartEditError("");
-    setSavingPart(true);
+    setInventoryEditError("");
+    setSavingInventory(true);
     try {
-      await supplierApi.updatePart(
-        partId,
-        {
-          partName: partEditForm.partName,
-          partNumber: partEditForm.partNumber,
-          condition: partEditForm.condition,
-          description: partEditForm.description,
-          imageURL: partEditForm.imageURL,
-          price: Number(partEditForm.price),
-          stock: Number(partEditForm.stock),
-        },
-        auth.token,
+      await inventoryApi.update(itemId, inventoryEditForm);
+      const { data } = await inventoryApi.getAllAdverts();
+      setInventory(
+        data.filter((item) => item.supplierName === supplier?.businessName),
       );
-      await refreshSupplier();
-      setEditingPartId(null);
+      setEditingInventoryId(null);
     } catch {
-      setPartEditError(t("supplier_save_part_error"));
+      setInventoryEditError(t("supplier_save_part_error"));
     } finally {
-      setSavingPart(false);
+      setSavingInventory(false);
     }
   }
-
-  function openEditProfile() {
-    if (!supplier) return;
-    setProfileForm({
-      businessName: supplier.businessName,
-      category: supplier.category,
-      description: supplier.description,
-      email: supplier.email,
-      phone: supplier.phone,
-    });
-    setProfileError("");
-    setEditingProfile(true);
-  }
-
-  async function handleSaveProfile() {
-    if (!auth || !supplier) return;
-    setProfileError("");
-    setSavingProfile(true);
-    try {
-      await supplierApi.update(supplier.id, profileForm, auth.token);
-      setSupplier((prev) => (prev ? { ...prev, ...profileForm } : prev));
-      setEditingProfile(false);
-    } catch {
-      setProfileError(t("supplier_profile_error"));
-    } finally {
-      setSavingProfile(false);
-    }
-  }
-
-  function startEditOrder(order: Order) {
-    setEditingOrderId(order.id);
-    setOrderEdit({
-      status: order.status,
-      trackingNumber: order.trackingNumber ?? "",
-      saving: false,
-      error: "",
-    });
-  }
-
-  async function saveOrderEdit(order: Order) {
-  if (!auth) return;
-  setOrderEdit((s) => ({ ...s, saving: true, error: "" }));
-  try {
-    // Update status via dedicated endpoint
-    await orderApi.updateStatus(order.id, { status: orderEdit.status }, auth.token);
-    // Update tracking number via full update
-    await orderApi.update(
-      order.id,
-      {
-        supplierName: order.supplierName,
-        partName: order.partName,
-        partRequestId: order.partRequestId,
-        price: order.price,
-        pickUpLocation: order.pickUpLocation,
-        pickUpLocationPhoneNumber: order.pickUpLocationPhoneNumber,
-        trackingNumber: orderEdit.trackingNumber,
-      },
-      auth.token,
-    );
-    // Refresh orders
-    if (!supplier) return;
-    const { data } = await orderApi.getBySupplierId(supplier.id, auth.token);
-    setOrders(Array.isArray(data) ? data : [data]);
-    setEditingOrderId(null);
-  } catch {
-    setOrderEdit((s) => ({
-      ...s,
-      saving: false,
-      error: t("supplier_order_save_error"),
-    }));
-  }
-}
-
-  const parts = supplier?.parts ?? [];
 
   function makeImageUploadHandler(
     setUploading: (v: boolean) => void,
-    setForm: (fn: (f: AddPartForm) => AddPartForm) => void,
+    setForm: (fn: (f: AddInventoryDTO) => AddInventoryDTO) => void,
     setError: (e: string) => void,
   ) {
     return async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,58 +248,59 @@ export default function SupplierDashboardPage() {
       }
     };
   }
-  // Open the advertisement modal with part data
-  function openAdvertModal(part: Supplier["parts"][number]) {
-    if (!supplier) return;
-    setAdvertModal({
-      open: true,
-      partName: part.partName,
-      price: part.price,
-      supplierName: supplier.businessName,
-      imageURL: part.imageURL ?? "",
-      partDescription: part.description ?? "",
+
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+  // Order handlers
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+
+  function startEditOrder(order: Order) {
+    setEditingOrderId(order.id);
+    setOrderEdit({
+      status: order.status,
+      trackingNumber: order.trackingNumber ?? "",
+      saving: false,
+      error: "",
     });
-    setAdvertForm({
-      vehicleMake: "",
-      vehicleModel: "",
-      description: part.description ?? "",
-    });
-    setAdvertError("");
   }
 
-  async function handleAdvertSubmit() {
-    if (!advertForm.vehicleMake.trim() || !advertForm.vehicleModel.trim()) {
-      setAdvertError("Vehicle make and model are required.");
-      return;
-    }
-    setAdvertError("");
-    setSubmittingAdvert(true);
+  async function saveOrderEdit(order: Order) {
+    if (!auth) return;
+    setOrderEdit((s) => ({ ...s, saving: true, error: "" }));
     try {
-      await advertisementApi.addAdvert({
-        partName: advertModal.partName,
-        description:
-          advertForm.description || advertModal.partDescription || "",
-        vehicleMake: advertForm.vehicleMake.trim(),
-        vehicleModel: advertForm.vehicleModel.trim(),
-        price: advertModal.price,
-        supplierName: advertModal.supplierName,
-        imageURL: advertModal.imageURL,
-      });
-      // close modal & maybe show a success toast (we'll just close)
-      setAdvertModal({
-        open: false,
-        partName: "",
-        price: 0,
-        supplierName: "",
-        imageURL: "",
-      });
-      alert("Part published to marketplace successfully!"); // or better: use i18n key
+      await orderApi.updateStatus(
+        order.id,
+        { status: orderEdit.status },
+        auth.token,
+      );
+      await orderApi.update(
+        order.id,
+        {
+          supplierName: order.supplierName,
+          partName: order.partName,
+          partRequestId: order.partRequestId,
+          price: order.price,
+          pickUpLocation: order.pickUpLocation,
+          pickUpLocationPhoneNumber: order.pickUpLocationPhoneNumber,
+          trackingNumber: orderEdit.trackingNumber,
+        },
+        auth.token,
+      );
+      if (!supplier) return;
+      const { data } = await orderApi.getBySupplierId(supplier.id, auth.token);
+      setOrders(Array.isArray(data) ? data : [data]);
+      setEditingOrderId(null);
     } catch {
-      setAdvertError("Failed to publish. Please try again.");
-    } finally {
-      setSubmittingAdvert(false);
+      setOrderEdit((s) => ({
+        ...s,
+        saving: false,
+        error: t("supplier_order_save_error"),
+      }));
     }
   }
+
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+  // Render
+  // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A]">
@@ -420,7 +320,10 @@ export default function SupplierDashboardPage() {
             )}
           </div>
           <Button
-            onClick={handleLogout}
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
             className="text-[#4A6B50] dark:text-[#7A9A80] bg-transparent border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)] hover:text-[#07110A] dark:hover:text-white text-sm h-9 px-4"
           >
             {t("supplier_sign_out")}
@@ -482,7 +385,7 @@ export default function SupplierDashboardPage() {
                 <div className="flex justify-end mb-6">
                   <Button
                     size="sm"
-                    onClick={openEditProfile}
+                    onClick={() => setEditingProfile(true)}
                     className="bg-transparent border border-[rgba(0,200,83,0.2)] text-[#00C853] hover:bg-[rgba(0,200,83,0.08)] h-8 text-xs px-3"
                   >
                     {t("supplier_profile_edit")}
@@ -491,117 +394,18 @@ export default function SupplierDashboardPage() {
               </>
             )}
 
-            {/* Edit profile panel */}
+            {/* Edit profile panel – extracted component */}
             {editingProfile && supplier && (
-              <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-xl p-5 mb-6">
-                <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">
-                  {t("supplier_edit_profile_heading")}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                      {t("supplier_field_businessName")}
-                    </Label>
-                    <Input
-                      value={profileForm.businessName}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({
-                          ...f,
-                          businessName: e.target.value,
-                        }))
-                      }
-                      className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                      {t("supplier_field_category")}
-                    </Label>
-                    <select
-                      value={profileForm.category}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({
-                          ...f,
-                          category: e.target.value,
-                        }))
-                      }
-                      className="w-full h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
-                    >
-                      {categoryOptions.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                      {t("supplier_field_email")}
-                    </Label>
-                    <Input
-                      value={profileForm.email}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({ ...f, email: e.target.value }))
-                      }
-                      className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                      {t("supplier_field_phone")}
-                    </Label>
-                    <Input
-                      value={profileForm.phone}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({ ...f, phone: e.target.value }))
-                      }
-                      className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5 sm:col-span-2">
-                    <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                      {t("supplier_field_description_profile")}
-                    </Label>
-                    <textarea
-                      value={profileForm.description}
-                      onChange={(e) =>
-                        setProfileForm((f) => ({
-                          ...f,
-                          description: e.target.value,
-                        }))
-                      }
-                      rows={2}
-                      className="w-full px-3 py-2 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm resize-none"
-                    />
-                  </div>
-                </div>
-                {profileError && (
-                  <p className="text-red-400 text-xs mt-3">{profileError}</p>
-                )}
-                <div className="flex gap-3 mt-4">
-                  <Button
-                    onClick={handleSaveProfile}
-                    disabled={savingProfile || !profileForm.businessName}
-                    className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-9 px-5 text-sm"
-                  >
-                    {savingProfile
-                      ? t("supplier_profile_saving")
-                      : t("supplier_profile_save")}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => setEditingProfile(false)}
-                    className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
-                  >
-                    {t("supplier_profile_cancel")}
-                  </Button>
-                </div>
-              </div>
+              <EditProfilePanel
+                supplier={supplier}
+                onClose={() => setEditingProfile(false)}
+                onSaved={(updated) => setSupplier(updated)}
+              />
             )}
 
             {/* Tabs */}
             <div className="flex gap-1 mb-6 border-b border-[rgba(0,200,83,0.1)]">
-              {(["parts", "orders"] as const).map((tab) => (
+              {(["inventory", "orders"] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -613,9 +417,9 @@ export default function SupplierDashboardPage() {
                   )}
                 >
                   {tabLabel[tab]}
-                  {tab === "parts" && (
+                  {tab === "inventory" && (
                     <span className="ml-1.5 text-xs text-[#7A9A80] dark:text-[#3D5942]">
-                      ({parts.length})
+                      ({inventory.length})
                     </span>
                   )}
                   {tab === "orders" && orders.length > 0 && (
@@ -627,119 +431,130 @@ export default function SupplierDashboardPage() {
               ))}
             </div>
 
-            {/* ── PARTS TAB ── */}
-            {activeTab === "parts" && (
+            {/* ── INVENTORY TAB ── */}
+            {activeTab === "inventory" && (
               <>
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
-                    {t("supplier_parts_count", { count: parts.length })}
+                    {t("supplier_parts_count", { count: inventory.length })}
                   </p>
                   <Button
                     onClick={() => {
-                      setShowAddPart((v) => !v);
-                      setAddPartError("");
+                      setShowAddInventory((v) => !v);
+                      setAddInventoryError("");
                     }}
                     className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-9 px-4 text-sm"
                   >
-                    {showAddPart
+                    {showAddInventory
                       ? t("supplier_cancel")
                       : t("supplier_add_part")}
                   </Button>
                 </div>
 
-                {/* Add part form */}
-                {showAddPart && (
+                {/* Add inventory form */}
+                {showAddInventory && (
                   <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.2)] rounded-xl p-5 mb-5">
                     <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">
                       {t("supplier_new_part_label")}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
+                        <Label className="text-xs">
                           {t("supplier_field_partName")}
                         </Label>
                         <Input
-                          value={addForm.partName}
+                          value={addInventoryForm.partName}
                           onChange={(e) =>
-                            setAddForm((f) => ({
+                            setAddInventoryForm((f) => ({
                               ...f,
                               partName: e.target.value,
                             }))
                           }
                           placeholder="Front Brake Pad Set"
-                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm"
+                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] h-9 text-sm"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                          {t("supplier_field_partNumber")}
+                        <Label className="text-xs">Vehicle Make</Label>
+                        <Input
+                          value={addInventoryForm.vehicleMake}
+                          onChange={(e) =>
+                            setAddInventoryForm((f) => ({
+                              ...f,
+                              vehicleMake: e.target.value,
+                            }))
+                          }
+                          placeholder="Toyota"
+                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] h-9 text-sm"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs">Vehicle Model</Label>
+                        <Input
+                          value={addInventoryForm.vehicleModel}
+                          onChange={(e) =>
+                            setAddInventoryForm((f) => ({
+                              ...f,
+                              vehicleModel: e.target.value,
+                            }))
+                          }
+                          placeholder="Hilux"
+                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] h-9 text-sm"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs">
+                          {t("supplier_field_price")}
                         </Label>
                         <Input
-                          value={addForm.partNumber}
+                          type="number"
+                          value={addInventoryForm.price || ""}
                           onChange={(e) =>
-                            setAddForm((f) => ({
+                            setAddInventoryForm((f) => ({
                               ...f,
-                              partNumber: e.target.value,
+                              price: Number(e.target.value),
                             }))
                           }
-                          placeholder="04465-0K260"
-                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm"
+                          placeholder="0"
+                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] h-9 text-sm"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                          {t("supplier_field_condition")}
-                        </Label>
-                        <select
-                          value={addForm.condition}
-                          onChange={(e) =>
-                            setAddForm((f) => ({
-                              ...f,
-                              condition: e.target.value,
-                            }))
-                          }
-                          className="w-full h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
-                        >
-                          {conditionOptions.map((c) => (
-                            <option key={c} value={c}>
-                              {c}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
+                        <Label className="text-xs">
                           {t("supplier_field_image_label")}
                         </Label>
                         <label className="flex items-center gap-3 cursor-pointer group">
-                          <div className="flex-1 h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
+                          <div className="flex-1 h-9 px-3 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
                             {uploadingImage ? (
-                              <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                              <span className="text-xs">
                                 {t("supplier_uploading")}
                               </span>
-                            ) : addForm.imageURL ? (
+                            ) : addInventoryForm.imageURL ? (
                               <>
                                 <img
-                                  src={addForm.imageURL}
+                                  src={addInventoryForm.imageURL}
                                   alt="preview"
                                   className="h-6 w-6 rounded object-cover shrink-0"
                                 />
-                                <span className="text-[#07110A] dark:text-white text-xs truncate">
+                                <span className="text-xs truncate">
                                   {t("supplier_image_uploaded")}
                                 </span>
                               </>
                             ) : (
-                              <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">
+                              <span className="text-xs">
                                 {t("supplier_image_placeholder")}
                               </span>
                             )}
                           </div>
-                          {addForm.imageURL && !uploadingImage && (
+                          {addInventoryForm.imageURL && !uploadingImage && (
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.preventDefault();
-                                setAddForm((f) => ({ ...f, imageURL: "" }));
+                                setAddInventoryForm((f) => ({
+                                  ...f,
+                                  imageURL: "",
+                                }));
                               }}
                               className="text-[#4A6B50] dark:text-[#7A9A80] hover:text-red-400 text-xs transition-colors shrink-0"
                             >
@@ -753,83 +568,54 @@ export default function SupplierDashboardPage() {
                             disabled={uploadingImage}
                             onChange={makeImageUploadHandler(
                               setUploadingImage,
-                              setAddForm,
-                              setAddPartError,
+                              setAddInventoryForm,
+                              setAddInventoryError,
                             )}
                           />
                         </label>
                       </div>
-                      <div className="space-y-1.5">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                          {t("supplier_field_price")}
-                        </Label>
-                        <Input
-                          type="number"
-                          value={addForm.price}
-                          onChange={(e) =>
-                            setAddForm((f) => ({ ...f, price: e.target.value }))
-                          }
-                          placeholder="0"
-                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                          {t("supplier_field_stock")}
-                        </Label>
-                        <Input
-                          type="number"
-                          value={addForm.stock}
-                          onChange={(e) =>
-                            setAddForm((f) => ({ ...f, stock: e.target.value }))
-                          }
-                          placeholder="0"
-                          className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 text-sm"
-                        />
-                      </div>
                       <div className="space-y-1.5 sm:col-span-2">
-                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
+                        <Label className="text-xs">
                           {t("supplier_field_description")}
                         </Label>
                         <textarea
-                          value={addForm.description}
+                          value={addInventoryForm.description}
                           onChange={(e) =>
-                            setAddForm((f) => ({
+                            setAddInventoryForm((f) => ({
                               ...f,
                               description: e.target.value,
                             }))
                           }
                           rows={2}
                           placeholder="Additional notes…"
-                          className="w-full px-3 py-2 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:outline-none focus:border-[#00C853] text-sm resize-none"
+                          className="w-full px-3 py-2 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] text-sm resize-none"
                         />
                       </div>
                     </div>
-                    {addPartError && (
+                    {addInventoryError && (
                       <p className="text-red-400 text-xs mt-3">
-                        {addPartError}
+                        {addInventoryError}
                       </p>
                     )}
                     <div className="flex gap-3 mt-4">
                       <Button
-                        onClick={handleAddPart}
+                        onClick={handleAddInventory}
                         disabled={
-                          addingPart ||
+                          addingInventory ||
                           uploadingImage ||
-                          !addForm.partName ||
-                          !addForm.price ||
-                          !addForm.stock
+                          !addInventoryForm.partName ||
+                          !addInventoryForm.price
                         }
                         className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-9 px-5 text-sm"
                       >
-                        {addingPart
+                        {addingInventory
                           ? t("supplier_adding")
                           : t("supplier_add_part")}
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => setShowAddPart(false)}
-                        className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
+                        onClick={() => setShowAddInventory(false)}
+                        className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] h-9 px-4 text-sm"
                       >
                         {t("supplier_cancel")}
                       </Button>
@@ -837,10 +623,10 @@ export default function SupplierDashboardPage() {
                   </div>
                 )}
 
-                {/* Parts table */}
+                {/* Inventory table with inline edit row */}
                 <div className="rounded-xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
                   <div className="overflow-x-auto">
-                    {parts.length === 0 ? (
+                    {inventory.length === 0 && !loadingInventory ? (
                       <div className="px-6 py-12 text-center">
                         <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-1">
                           {t("supplier_no_parts")}
@@ -854,67 +640,49 @@ export default function SupplierDashboardPage() {
                         <thead>
                           <tr className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
                             <Th>{t("supplier_col_part_name")}</Th>
-                            <Th>{t("supplier_col_part_number")}</Th>
-                            <Th>{t("supplier_col_condition")}</Th>
+                            <Th>Vehicle</Th>
                             <Th>{t("supplier_col_price")}</Th>
-                            <Th>{t("supplier_col_stock")}</Th>
                             <Th>{t("supplier_col_actions")}</Th>
                           </tr>
                         </thead>
                         <tbody>
-                          {parts.map((part) => (
+                          {inventory.map((item) => (
                             <>
                               <tr
-                                key={part.id}
+                                key={item.id}
                                 className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                               >
                                 <td className="px-5 py-3 text-[#07110A] dark:text-white">
-                                  {part.partName}
+                                  {item.partName}
                                 </td>
-                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">
-                                  {part.partNumber || "—"}
-                                </td>
-                                <td className="px-5 py-3">
-                                  <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.15)] text-[10px]">
-                                    {part.condition}
-                                  </Badge>
+                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                                  {item.vehicleMake} {item.vehicleModel}
                                 </td>
                                 <td className="px-5 py-3 text-[#4A6B50] dark:text-[#C5DEC8]">
-                                  ${part.price.toLocaleString()}
-                                </td>
-                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80]">
-                                  {part.stock}
+                                  ${item.price.toLocaleString()}
                                 </td>
                                 <td className="px-5 py-3">
                                   <Button
                                     size="sm"
                                     onClick={() =>
-                                      editingPartId === part.id
-                                        ? setEditingPartId(null)
-                                        : startEditPart(part)
+                                      editingInventoryId === item.id
+                                        ? setEditingInventoryId(null)
+                                        : startEditInventory(item)
                                     }
                                     className="bg-[rgba(0,200,83,0.12)] text-[#00C853] hover:bg-[rgba(0,200,83,0.2)] border border-[rgba(0,200,83,0.2)] h-7 text-xs px-3"
                                   >
-                                    {editingPartId === part.id
+                                    {editingInventoryId === item.id
                                       ? t("supplier_close")
                                       : t("supplier_edit_part")}
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => openAdvertModal(part)}
-                                    className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-7 text-xs px-3"
-                                  >
-                                    {t("supplier_advertise_btn")}{" "}
-                                    {/* new i18n key to do */}
                                   </Button>
                                 </td>
                               </tr>
 
-                              {/* Inline edit row */}
-                              {editingPartId === part.id && (
-                                <tr key={`edit-${part.id}`}>
+                              {/* Inline edit row for inventory */}
+                              {editingInventoryId === item.id && (
+                                <tr key={`edit-${item.id}`}>
                                   <td
-                                    colSpan={6}
+                                    colSpan={4}
                                     className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-5 py-5"
                                   >
                                     <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">
@@ -922,92 +690,104 @@ export default function SupplierDashboardPage() {
                                     </p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
+                                        <Label className="text-xs">
                                           {t("supplier_field_partName")}
                                         </Label>
                                         <Input
-                                          value={partEditForm.partName}
+                                          value={inventoryEditForm.partName}
                                           onChange={(e) =>
-                                            setPartEditForm((f) => ({
+                                            setInventoryEditForm((f) => ({
                                               ...f,
                                               partName: e.target.value,
                                             }))
                                           }
-                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] h-9 text-sm"
                                         />
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                                          {t("supplier_field_partNumber")}
+                                        <Label className="text-xs">
+                                          Vehicle Make
                                         </Label>
                                         <Input
-                                          value={partEditForm.partNumber}
+                                          value={inventoryEditForm.vehicleMake}
                                           onChange={(e) =>
-                                            setPartEditForm((f) => ({
+                                            setInventoryEditForm((f) => ({
                                               ...f,
-                                              partNumber: e.target.value,
+                                              vehicleMake: e.target.value,
                                             }))
                                           }
-                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] h-9 text-sm"
                                         />
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                                          {t("supplier_field_condition")}
+                                        <Label className="text-xs">
+                                          Vehicle Model
                                         </Label>
-                                        <select
-                                          value={partEditForm.condition}
+                                        <Input
+                                          value={inventoryEditForm.vehicleModel}
                                           onChange={(e) =>
-                                            setPartEditForm((f) => ({
+                                            setInventoryEditForm((f) => ({
                                               ...f,
-                                              condition: e.target.value,
+                                              vehicleModel: e.target.value,
                                             }))
                                           }
-                                          className="w-full h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
-                                        >
-                                          {conditionOptions.map((c) => (
-                                            <option key={c} value={c}>
-                                              {c}
-                                            </option>
-                                          ))}
-                                        </select>
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] h-9 text-sm"
+                                        />
                                       </div>
                                       <div className="space-y-1.5">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
+                                        <Label className="text-xs">
+                                          {t("supplier_field_price")}
+                                        </Label>
+                                        <Input
+                                          type="number"
+                                          value={inventoryEditForm.price || ""}
+                                          onChange={(e) =>
+                                            setInventoryEditForm((f) => ({
+                                              ...f,
+                                              price: Number(e.target.value),
+                                            }))
+                                          }
+                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] h-9 text-sm"
+                                        />
+                                      </div>
+                                      <div className="space-y-1.5">
+                                        <Label className="text-xs">
                                           {t("supplier_field_image_label")}
                                         </Label>
                                         <label className="flex items-center gap-3 cursor-pointer group">
-                                          <div className="flex-1 h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
+                                          <div className="flex-1 h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] group-hover:border-[#00C853] transition-colors flex items-center gap-2 overflow-hidden">
                                             {uploadingEditImage ? (
-                                              <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                                              <span className="text-xs">
                                                 {t("supplier_uploading")}
                                               </span>
-                                            ) : partEditForm.imageURL ? (
+                                            ) : inventoryEditForm.imageURL ? (
                                               <>
                                                 <img
-                                                  src={partEditForm.imageURL}
+                                                  src={
+                                                    inventoryEditForm.imageURL
+                                                  }
                                                   alt="preview"
                                                   className="h-6 w-6 rounded object-cover shrink-0"
                                                 />
-                                                <span className="text-[#07110A] dark:text-white text-xs truncate">
+                                                <span className="text-xs truncate">
                                                   {t("supplier_image_uploaded")}
                                                 </span>
                                               </>
                                             ) : (
-                                              <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">
+                                              <span className="text-xs">
                                                 {t(
                                                   "supplier_image_placeholder",
                                                 )}
                                               </span>
                                             )}
                                           </div>
-                                          {partEditForm.imageURL &&
+                                          {inventoryEditForm.imageURL &&
                                             !uploadingEditImage && (
                                               <button
                                                 type="button"
                                                 onClick={(e) => {
                                                   e.preventDefault();
-                                                  setPartEditForm((f) => ({
+                                                  setInventoryEditForm((f) => ({
                                                     ...f,
                                                     imageURL: "",
                                                   }));
@@ -1024,86 +804,57 @@ export default function SupplierDashboardPage() {
                                             disabled={uploadingEditImage}
                                             onChange={makeImageUploadHandler(
                                               setUploadingEditImage,
-                                              setPartEditForm,
-                                              setPartEditError,
+                                              setInventoryEditForm,
+                                              setInventoryEditError,
                                             )}
                                           />
                                         </label>
                                       </div>
-                                      <div className="space-y-1.5">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                                          {t("supplier_field_price")}
-                                        </Label>
-                                        <Input
-                                          type="number"
-                                          value={partEditForm.price}
-                                          onChange={(e) =>
-                                            setPartEditForm((f) => ({
-                                              ...f,
-                                              price: e.target.value,
-                                            }))
-                                          }
-                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
-                                        />
-                                      </div>
-                                      <div className="space-y-1.5">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
-                                          {t("supplier_field_stock")}
-                                        </Label>
-                                        <Input
-                                          type="number"
-                                          value={partEditForm.stock}
-                                          onChange={(e) =>
-                                            setPartEditForm((f) => ({
-                                              ...f,
-                                              stock: e.target.value,
-                                            }))
-                                          }
-                                          className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 text-sm"
-                                        />
-                                      </div>
                                       <div className="space-y-1.5 sm:col-span-2">
-                                        <Label className="text-[#07110A] dark:text-[#E8F0E9] text-xs">
+                                        <Label className="text-xs">
                                           {t("supplier_field_description")}
                                         </Label>
                                         <textarea
-                                          value={partEditForm.description}
+                                          value={inventoryEditForm.description}
                                           onChange={(e) =>
-                                            setPartEditForm((f) => ({
+                                            setInventoryEditForm((f) => ({
                                               ...f,
                                               description: e.target.value,
                                             }))
                                           }
                                           rows={2}
-                                          className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm resize-none"
+                                          className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.08)] text-sm resize-none"
                                         />
                                       </div>
                                     </div>
-                                    {partEditError && (
+                                    {inventoryEditError && (
                                       <p className="text-red-400 text-xs mt-3">
-                                        {partEditError}
+                                        {inventoryEditError}
                                       </p>
                                     )}
                                     <div className="flex gap-3 mt-4">
                                       <Button
-                                        onClick={() => handleSavePart(part.id)}
+                                        onClick={() =>
+                                          handleSaveInventory(item.id)
+                                        }
                                         disabled={
-                                          savingPart ||
+                                          savingInventory ||
                                           uploadingEditImage ||
-                                          !partEditForm.partName ||
-                                          !partEditForm.price ||
-                                          !partEditForm.stock
+                                          !inventoryEditForm.partName ||
+                                          !inventoryEditForm.price
                                         }
                                         className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-9 px-5 text-sm"
                                       >
-                                        {savingPart
+                                        {savingInventory
                                           ? t("supplier_saving")
                                           : t("supplier_save_changes")}
                                       </Button>
                                       <Button
                                         variant="outline"
-                                        onClick={() => setEditingPartId(null)}
-                                        className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
+                                        onClick={() =>
+                                          setEditingInventoryId(null)
+                                        }
+                                        className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] h-9 px-4 text-sm"
                                       >
                                         {t("supplier_cancel")}
                                       </Button>
@@ -1129,7 +880,6 @@ export default function SupplierDashboardPage() {
                     {t("supplier_loading_orders")}
                   </p>
                 )}
-
                 {!loadingOrders && (
                   <div className="rounded-xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
                     {orders.length === 0 ? (
@@ -1166,10 +916,13 @@ export default function SupplierDashboardPage() {
                                     #{order.id}
                                   </td>
                                   <td className="px-5 py-3 text-[#07110A] dark:text-white">
-                                    {order.partRequest?.partName ?? order.partName ?? "—"}
+                                    {order.partRequest?.partName ??
+                                      order.partName ??
+                                      "—"}
                                   </td>
                                   <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                                    {order.partRequest?.vehicleMake ?? "—"} {order.partRequest?.model ?? ""}
+                                    {order.partRequest?.vehicleMake ?? "—"}{" "}
+                                    {order.partRequest?.model ?? ""}
                                   </td>
                                   <td className="px-5 py-3 text-[#00C853] font-semibold">
                                     ${order.price.toLocaleString()}
@@ -1228,14 +981,26 @@ export default function SupplierDashboardPage() {
                                             onChange={(e) =>
                                               setOrderEdit((s) => ({
                                                 ...s,
-                                                status:Number(e.target.value),
+                                                status: Number(e.target.value),
                                               }))
                                             }
                                             className="h-9 px-3 rounded-lg bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm"
                                           >
-                                            <option value={0}>{t("supplier_order_status_pending")}</option>
-<option value={1}>{t("supplier_order_status_shipped")}</option>
-<option value={2}>{t("supplier_order_status_delivered")}</option>
+                                            <option value={0}>
+                                              {t(
+                                                "supplier_order_status_pending",
+                                              )}
+                                            </option>
+                                            <option value={1}>
+                                              {t(
+                                                "supplier_order_status_shipped",
+                                              )}
+                                            </option>
+                                            <option value={2}>
+                                              {t(
+                                                "supplier_order_status_delivered",
+                                              )}
+                                            </option>
                                           </select>
                                         </div>
                                         <div className="space-y-1">
@@ -1292,98 +1057,18 @@ export default function SupplierDashboardPage() {
               </>
             )}
 
-             {/* ── Advertisement Modal ── */}
-  {advertModal.open && (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#111C14] rounded-2xl border border-[rgba(0,200,83,0.2)] w-full max-w-md mx-4 p-6">
-        <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">
-          {t('supplier_advertise_title')}   {/* new i18n key */}
-        </p>
-
-        {/* Part info (read‑only) */}
-        <div className="grid grid-cols-2 gap-3 mb-6 text-sm">
-          <div>
-            <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs block">{t('supplier_field_partName')}</span>
-            <span className="text-[#07110A] dark:text-white">{advertModal.partName}</span>
-          </div>
-          <div>
-            <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs block">{t('supplier_col_price')}</span>
-            <span className="text-[#00C853] font-semibold">${advertModal.price.toLocaleString()}</span>
-          </div>
-          <div className="col-span-2">
-            <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs block">{t('supplier_info_email')}</span> 
-            {/* maybe better to use supplier label */}
-            <span className="text-[#07110A] dark:text-white">{advertModal.supplierName}</span>
-          </div>
-          {advertModal.imageURL && (
-            <div className="col-span-2 flex items-center gap-2">
-              <img src={advertModal.imageURL} alt="Part" className="w-10 h-10 rounded object-cover border border-[rgba(0,0,0,0.1)]" />
-              <span className="text-xs text-[#4A6B50] dark:text-[#7A9A80]">{t('supplier_image_uploaded')}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Editable fields */}
-        <div className="space-y-3">
-          <div>
-            <Label className="text-xs">{t('supplier_advert_vehicleMake')}</Label> {/* new i18n key */}
-            <Input
-              value={advertForm.vehicleMake}
-              onChange={(e) => setAdvertForm((f) => ({ ...f, vehicleMake: e.target.value }))}
-              placeholder="e.g. Toyota"
-              className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] focus:border-[#00C853] h-9 text-sm"
-            />
-          </div>
-          <div>
-            <Label className="text-xs">{t('supplier_advert_vehicleModel')}</Label> {/* new i18n key */}
-            <Input
-              value={advertForm.vehicleModel}
-              onChange={(e) => setAdvertForm((f) => ({ ...f, vehicleModel: e.target.value }))}
-              placeholder="e.g. Hilux"
-              className="bg-[#E8F2EA] dark:bg-[#0D1810] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] focus:border-[#00C853] h-9 text-sm"
-            />
-          </div>
-          <div>
-            <Label className="text-xs">{t('supplier_field_description')}</Label>
-            <textarea
-              value={advertForm.description}
-              onChange={(e) => setAdvertForm((f) => ({ ...f, description: e.target.value }))}
-              rows={3}
-              placeholder="Optional description..."
-              className="w-full px-3 py-2 rounded-lg bg-[#E8F2EA] dark:bg-[#0D1810] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] focus:outline-none focus:border-[#00C853] text-sm resize-none"
-            />
-          </div>
-        </div>
-
-        {advertError && <p className="text-red-400 text-xs mt-2">{advertError}</p>}
-
-        {/* Action buttons */}
-        <div className="flex justify-end gap-3 mt-6">
-          <Button
-            variant="outline"
-            onClick={() => setAdvertModal({ open: false, partName: '', price: 0, supplierName: '', imageURL: '' })}
-            className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
-          >
-            {t('supplier_cancel')}
-          </Button>
-          <Button
-            onClick={handleAdvertSubmit}
-            disabled={submittingAdvert || !advertForm.vehicleMake.trim() || !advertForm.vehicleModel.trim()}
-            className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] font-semibold h-9 px-5 text-sm"
-          >
-            {submittingAdvert ? t('supplier_publishing') : t('supplier_publish_btn')} {/* new i18n keys */}
-          </Button>
-        </div>
-      </div>
-    </div>
-  )}
-
+            {/* ── Advertisement Modal (commented out, you can enable later) ── */}
+            {/* <AdvertModal ... /> */}
           </>
         )}
       </main>
     </div>
   );
 }
+
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+// Helper components
+// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
