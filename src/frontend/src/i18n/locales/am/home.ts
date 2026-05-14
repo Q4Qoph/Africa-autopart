@@ -135,4 +135,20 @@ export default {
   cta_register_btn: 'ነፃ መለያ ፍጠር',
   // Guest success
   finder_guest_hint: 'መለያ አያስፈልግም — እንደ እንግዳ ጠይቅ',
+
+  vin_placeholder: 'VIN / የቻሲስ ቁጥር ያስገቡ ለምሳሌ KNAPC813BCK227399',
+  vin_search_btn: 'ክፍሎችን ፈልግ',
+  vin_searching: 'በመፈለግ ላይ…',
+  vin_hint: 'የ17 ቁምፊ VIN ያስገቡ እና ተኳዃኝ ክፍሎችን ይቃኙ',
+  vin_error_short: 'VIN ቢያንስ 11 ቁምፊዎች ሊኖሩት ይገባል',
+  vin_error_invalid: 'ተሽከርካሪውን ማግኘት አልተቻለም። VIN ያረጋግጡ እና እንደገና ይሞክሩ።',
+  no_vehicle: 'ምንም ተሽከርካሪ አልተመረጠም',
+  back_home: 'ወደኋላ ተመለስ እና VIN አስገባ',
+  make: 'ምርት',
+  year: 'አመት',
+  engine: 'ሞተር',
+  categories: 'ምድቦች',
+  parts: 'ክፍሎች',
+  no_parts_category: 'በዚህ ምድብ ውስጥ ምንም ክፍሎች አልተገኙም',
+  no_parts_found: 'ለዚህ ተሽከርካሪ ምንም ክፍሎች አልተገኙም',
 } as const

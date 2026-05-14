@@ -148,4 +148,20 @@ export default {
 
   // Guest success (new request page)
   finder_guest_hint: 'Sans compte requis — demandez en tant qu\'invité',
+
+  vin_placeholder: 'Entrez le VIN / numéro de châssis ex. KNAPC813BCK227399',
+  vin_search_btn: 'Rechercher des pièces',
+  vin_searching: 'Recherche…',
+  vin_hint: 'Entrez votre VIN à 17 caractères pour parcourir les pièces compatibles',
+  vin_error_short: 'Le VIN doit comporter au moins 11 caractères',
+  vin_error_invalid: 'Véhicule introuvable. Vérifiez le VIN et réessayez.',
+  no_vehicle: 'Aucun véhicule sélectionné',
+  back_home: 'Retourner et entrer un VIN',
+  make: 'Marque',
+  year: 'Année',
+  engine: 'Moteur',
+  categories: 'Catégories',
+  parts: 'pièces',
+  no_parts_category: 'Aucune pièce trouvée dans cette catégorie',
+  no_parts_found: 'Aucune pièce trouvée pour ce véhicule',
 } as const

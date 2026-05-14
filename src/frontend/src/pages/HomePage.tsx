@@ -6,17 +6,18 @@ import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { partsApi } from '@/api/partsApi';
 
 // ─── Static data (no i18n needed) ────────────────────────────────────────────
 
-const vehicleYears = Array.from({ length: 20 }, (_, i) => String(2025 - i))
+// const vehicleYears = Array.from({ length: 20 }, (_, i) => String(2025 - i))
 
-const vehicleMakes = [
-  'Toyota', 'Nissan', 'Mitsubishi', 'Isuzu', 'Land Rover',
-  'Mercedes-Benz', 'BMW', 'Ford', 'Honda', 'Hyundai',
-  'Kia', 'Mazda', 'Subaru', 'Jeep', 'Volkswagen',
-  'Peugeot', 'Renault', 'Suzuki', 'Daihatsu', 'Other',
-]
+// const vehicleMakes = [
+//   'Toyota', 'Nissan', 'Mitsubishi', 'Isuzu', 'Land Rover',
+//   'Mercedes-Benz', 'BMW', 'Ford', 'Honda', 'Hyundai',
+//   'Kia', 'Mazda', 'Subaru', 'Jeep', 'Volkswagen',
+//   'Peugeot', 'Renault', 'Suzuki', 'Daihatsu', 'Other',
+// ]
 
 const brands = Array.from({ length: 16 }, (_, i) => ({
   id: i + 1,
@@ -108,23 +109,23 @@ export default function HomePage() {
   ]
 
   const categories = [
-    { id: 1, label: t('category_brakes'),       img: '/images/categories/category-1-200x200.jpg' },
-    { id: 2, label: t('category_engine'),        img: '/images/categories/category-2-200x200.jpg' },
-    { id: 3, label: t('category_suspension'),    img: '/images/categories/category-3-200x200.jpg' },
-    { id: 4, label: t('category_filters'),       img: '/images/categories/category-4-200x200.jpg' },
-    { id: 5, label: t('category_electrical'),    img: '/images/categories/category-5-200x200.jpg' },
-    { id: 6, label: t('category_body'),          img: '/images/categories/category-6-200x200.jpg' },
-    { id: 7, label: t('category_transmission'),  img: '/images/categories/category-7-200x200.jpg' },
-    { id: 8, label: t('category_cooling'),       img: '/images/categories/category-8-200x200.jpg' },
+    { id: 1, label: t('category_brakes'), img: '/images/categories/category-1-200x200.jpg' },
+    { id: 2, label: t('category_engine'), img: '/images/categories/category-2-200x200.jpg' },
+    { id: 3, label: t('category_suspension'), img: '/images/categories/category-3-200x200.jpg' },
+    { id: 4, label: t('category_filters'), img: '/images/categories/category-4-200x200.jpg' },
+    { id: 5, label: t('category_electrical'), img: '/images/categories/category-5-200x200.jpg' },
+    { id: 6, label: t('category_body'), img: '/images/categories/category-6-200x200.jpg' },
+    { id: 7, label: t('category_transmission'), img: '/images/categories/category-7-200x200.jpg' },
+    { id: 8, label: t('category_cooling'), img: '/images/categories/category-8-200x200.jpg' },
   ]
 
   const featuredParts: { id: number; name: string; condition: PartCondition; img: string; conditionColor: 'green' | 'amber' | 'blue' }[] = [
-    { id: 1, name: 'Front Brake Pad Set',   condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-1-245x245.jpg' },
-    { id: 2, name: 'Air Filter Assembly',   condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-2-245x245.jpg' },
-    { id: 3, name: 'Alternator Unit',       condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-3-245x245.jpg' },
+    { id: 1, name: 'Front Brake Pad Set', condition: 'OEM', conditionColor: 'green', img: '/images/products/product-1-245x245.jpg' },
+    { id: 2, name: 'Air Filter Assembly', condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-2-245x245.jpg' },
+    { id: 3, name: 'Alternator Unit', condition: 'OEM', conditionColor: 'green', img: '/images/products/product-3-245x245.jpg' },
     { id: 4, name: 'Shock Absorber — Rear', condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-4-245x245.jpg' },
-    { id: 5, name: 'Radiator Cooling Fan',  condition: 'Used',        conditionColor: 'blue',  img: '/images/products/product-5-245x245.jpg' },
-    { id: 6, name: 'Starter Motor',         condition: 'OEM',         conditionColor: 'green', img: '/images/products/product-6-245x245.jpg' },
+    { id: 5, name: 'Radiator Cooling Fan', condition: 'Used', conditionColor: 'blue', img: '/images/products/product-5-245x245.jpg' },
+    { id: 6, name: 'Starter Motor', condition: 'OEM', conditionColor: 'green', img: '/images/products/product-6-245x245.jpg' },
   ]
 
   return (
@@ -179,17 +180,17 @@ export default function HomePage() {
               </p>
 
               {/* ── Vehicle Finder ── */}
-              <VehicleFinder />
+              <VinSearchHero />
 
               {/* Feature tags */}
               <div className="flex flex-wrap gap-2 mt-7">
                 {[
-                  { label: t('hero_tag_oem'),         color: 'green' },
-                  { label: t('hero_tag_aftermarket'),  color: 'green' },
-                  { label: t('hero_tag_secondhand'),   color: 'green' },
-                  { label: t('hero_tag_countries'),    color: 'dim' },
-                  { label: t('hero_tag_escrow'),       color: 'dim' },
-                  { label: t('hero_tag_tracking'),     color: 'dim' },
+                  { label: t('hero_tag_oem'), color: 'green' },
+                  { label: t('hero_tag_aftermarket'), color: 'green' },
+                  { label: t('hero_tag_secondhand'), color: 'green' },
+                  { label: t('hero_tag_countries'), color: 'dim' },
+                  { label: t('hero_tag_escrow'), color: 'dim' },
+                  { label: t('hero_tag_tracking'), color: 'dim' },
                 ].map((tag) => (
                   <span
                     key={tag.label}
@@ -398,11 +399,11 @@ export default function HomePage() {
                   className={cn(
                     'w-fit text-[10px]',
                     tmn.tagColor === 'green' &&
-                      'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
+                    'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
                     tmn.tagColor === 'amber' &&
-                      'bg-amber-400/10 text-amber-400 border-amber-400/20',
+                    'bg-amber-400/10 text-amber-400 border-amber-400/20',
                     tmn.tagColor === 'blue' &&
-                      'bg-blue-400/10 text-blue-400 border-blue-400/20',
+                    'bg-blue-400/10 text-blue-400 border-blue-400/20',
                   )}
                 >
                   {tmn.tag}
@@ -460,11 +461,11 @@ export default function HomePage() {
                     className={cn(
                       'absolute top-2 right-2 text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md',
                       part.conditionColor === 'green' &&
-                        'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-[#00C853] border border-[rgba(0,200,83,0.3)]',
+                      'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-[#00C853] border border-[rgba(0,200,83,0.3)]',
                       part.conditionColor === 'amber' &&
-                        'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-amber-400 border border-amber-400/30',
+                      'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-amber-400 border border-amber-400/30',
                       part.conditionColor === 'blue' &&
-                        'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-blue-400 border border-blue-400/30',
+                      'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-blue-400 border border-blue-400/30',
                     )}
                   >
                     {part.condition}
@@ -647,59 +648,69 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
   )
 }
 
-function VehicleFinder() {
+function VinSearchHero() {
   const navigate = useNavigate()
   const { t } = useTranslation('home')
-  const [year, setYear] = useState('')
-  const [make, setMake] = useState('')
-  const [part, setPart] = useState('')
+  const [vin, setVin] = useState('')
+  const [searching, setSearching] = useState(false)
+  const [error, setError] = useState('')
 
-  function handleFind(e: React.FormEvent) {
+  async function handleVinSearch(e: React.FormEvent) {
     e.preventDefault()
-    navigate('/requests/new', { state: { year, make, partName: part } })
+    const trimmed = vin.trim()
+    if (trimmed.length < 11) {
+      setError(t('vin_error_short') ?? 'VIN must be at least 11 characters')
+      return
+    }
+    setError('')
+    setSearching(true)
+    try {
+      const { data } = await partsApi.searchByVin(trimmed)
+      // ✅ Pass the FULL response — not just part of it
+      console.log('✅ VIN response:', data)               // <-- add this      
+      navigate('/parts-search', { state: { vehicleInfo: data } })
+    } catch {
+      setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN and try again.')
+    } finally {
+      setSearching(false)
+    }
   }
 
-  const selectCls =
-    'h-10 px-3 rounded-lg bg-white dark:bg-[#162019] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white text-sm focus:outline-none focus:border-[#00C853] transition-colors'
-
   return (
-    <form onSubmit={handleFind} className="bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-2xl p-4 shadow-[0_4px_24px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
-      <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#3D5942] mb-3">{t('how_label')}</p>
-      <div className="grid grid-cols-2 gap-2 mb-2">
-        <select value={year} onChange={(e) => setYear(e.target.value)} className={selectCls}>
-          <option value="">{t('finder_label_year')}</option>
-          {vehicleYears.map((y) => <option key={y} value={y}>{y}</option>)}
-        </select>
-        <select value={make} onChange={(e) => setMake(e.target.value)} className={selectCls}>
-          <option value="">{t('finder_label_make')}</option>
-          {vehicleMakes.map((m) => <option key={m} value={m}>{m}</option>)}
-        </select>
-      </div>
-      <div className="flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#4A6B50] dark:text-[#3D5942]" />
-          <input
-            type="text"
-            value={part}
-            onChange={(e) => setPart(e.target.value)}
-            placeholder={t('finder_placeholder_part')}
-            className="w-full h-10 pl-8 pr-3 rounded-lg bg-white dark:bg-[#162019] border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] text-sm focus:outline-none focus:border-[#00C853] transition-colors"
-          />
-        </div>
+    <form onSubmit={handleVinSearch} className="w-full max-w-xl">
+      <div className="relative">
+        <input
+          type="text"
+          value={vin}
+          onChange={(e) => { setVin(e.target.value.toUpperCase()); setError('') }}
+          placeholder={t('vin_placeholder') ?? 'Enter VIN / Chassis Number e.g. KNAPC813BCK227399'}
+          className="w-full h-14 pl-5 pr-36 rounded-xl bg-white dark:bg-[#162019] border-2 border-[rgba(0,200,83,0.25)] focus:border-[#00C853] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] text-sm font-mono tracking-wide outline-none transition-colors"
+        />
         <button
           type="submit"
-          className="h-10 px-5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors shrink-0"
+          disabled={searching || !vin.trim()}
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-6 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors disabled:opacity-50"
         >
-          {t('finder_button')} →
+          {searching ? (
+            <span className="flex items-center gap-1.5">
+              <span className="w-4 h-4 border-2 border-[#07110A]/30 border-t-[#07110A] rounded-full animate-spin" />
+              {t('vin_searching') ?? 'Searching…'}
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5">
+              <Search className="w-4 h-4" />
+              {t('vin_search_btn') ?? 'Find Parts'}
+            </span>
+          )}
         </button>
       </div>
+      {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
       <p className="text-[10px] text-[#7A9A80] dark:text-[#3D5942] mt-2.5 font-mono">
-        {t('finder_guest_hint')}
+        {t('vin_hint') ?? 'Enter your 17‑character VIN to browse compatible parts'}
       </p>
     </form>
   )
 }
-
 function HeroVisual() {
   return (
     <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.15)] rounded-2xl p-5 space-y-3 shadow-[0_24px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">

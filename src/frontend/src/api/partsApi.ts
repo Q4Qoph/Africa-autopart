@@ -1,6 +1,6 @@
 //src/frontend/src/api/partsApi.ts
 import axios from 'axios'
-import type { PartSearchDTO, PartResult } from '@/types/parts'
+import type { PartSearchDTO, PartResult, VinResult, PartSearchRequest, CategoryGroup } from '@/types/parts'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -13,9 +13,9 @@ interface RawPartResult {
   price: string
   originalPrice: string
   supplier: string
-  availability: boolean,
+  availability: boolean
   imageURL: string
-}    
+}
 
 function mapPart(raw: RawPartResult, index: number): PartResult {
   const priceNum = parseFloat(raw.price.replace(/[^0-9.]/g, '')) || 0
@@ -34,8 +34,19 @@ function mapPart(raw: RawPartResult, index: number): PartResult {
 }
 
 export const partsApi = {
+  // existing method — untouched
   search: async (dto: PartSearchDTO): Promise<{ data: PartResult[] }> => {
     const response = await api.post<RawPartResult[]>('/api/Parts/search', dto)
     return { data: response.data.map(mapPart) }
   },
+
+  // ─── New methods ───────────────────────────────────────────────────────────
+
+  /** GET /api/Parts/search/free?vin=… */
+  searchByVin: (vin: string) =>
+    api.get<VinResult>(`/api/Parts/search/free?vin=${encodeURIComponent(vin)}`),
+
+  /** POST /api/Parts/search (with PartSearchRequest body) */
+  searchParts: (dto: PartSearchRequest) =>
+    api.post<CategoryGroup[]>('/api/Parts/search', dto),
 }

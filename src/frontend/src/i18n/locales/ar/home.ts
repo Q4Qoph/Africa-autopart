@@ -135,4 +135,20 @@ export default {
   cta_register_btn: 'إنشاء حساب مجاني',
   // Guest success
   finder_guest_hint: 'لا حاجة لحساب — اطلب كضيف',
+
+  vin_placeholder: 'أدخل رقم الهيكل (VIN) مثال: KNAPC813BCK227399',
+  vin_search_btn: 'ابحث عن قطع',
+  vin_searching: 'جارٍ البحث…',
+  vin_hint: 'أدخل رقم الهيكل المكون من 17 حرفًا لتصفح القطع المتوافقة',
+  vin_error_short: 'يجب أن يتكون رقم الهيكل من 11 حرفًا على الأقل',
+  vin_error_invalid: 'لم يتم العثور على المركبة. تأكد من رقم الهيكل وحاول مرة أخرى.',
+  no_vehicle: 'لم يتم اختيار مركبة',
+  back_home: 'ارجع وأدخل رقم الهيكل',
+  make: 'الشركة',
+  year: 'السنة',
+  engine: 'المحرك',
+  categories: 'الفئات',
+  parts: 'قطع',
+  no_parts_category: 'لا توجد قطع في هذا القسم',
+  no_parts_found: 'لا توجد قطع لهذه المركبة',
 } as const

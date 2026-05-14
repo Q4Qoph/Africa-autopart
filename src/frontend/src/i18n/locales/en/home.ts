@@ -149,4 +149,20 @@ export default {
 
   // Guest success (new request page)
   finder_guest_hint: 'No account needed — request as a guest',
+
+  vin_placeholder: 'Enter VIN / Chassis Number e.g. KNAPC813BCK227399',
+  vin_search_btn: 'Find Parts',
+  vin_searching: 'Searching…',
+  vin_hint: 'Enter your 17‑character VIN to browse compatible parts',
+  vin_error_short: 'VIN must be at least 11 characters',
+  vin_error_invalid: 'Could not find vehicle. Check the VIN and try again.',
+  no_vehicle: 'No vehicle selected',
+  back_home: 'Go back and enter a VIN',
+  make: 'Make',
+  year: 'Year',
+  engine: 'Engine',
+  categories: 'Categories',
+  parts: 'parts',
+  no_parts_category: 'No parts found in this category',
+  no_parts_found: 'No parts found for this vehicle',
 } as const
