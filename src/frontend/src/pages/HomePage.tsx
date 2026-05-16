@@ -1,7 +1,7 @@
 //src/frontend/src/pages/HomePage.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, MapPin, Truck } from 'lucide-react'
+import { Search} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
@@ -48,12 +48,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function HomePage() {
   const { t } = useTranslation('home')
 
-  const stats = [
-    { value: '14K', suffix: '+', label: t('stats_parts_sourced') },
-    { value: '1,240', suffix: '+', label: t('stats_verified_suppliers') },
-    { value: '18', suffix: '', label: t('stats_countries_served') },
-    { value: '96.8', suffix: '%', label: t('stats_delivery_success') },
-  ]
+  
 
   const steps = [
     { number: '01', title: t('steps_01_title'), desc: t('steps_01_desc') },
@@ -132,112 +127,36 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9] overflow-x-hidden">
       <Navbar />
 
-      {/* ── Hero ── */}
-      <section className="relative pt-[68px] md:pt-[132px] min-h-screen flex items-center overflow-hidden">
-        {/* Background: glow + grid */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 65% 55% at 72% 38%, rgba(0,200,83,0.08) 0%, transparent 68%), radial-gradient(ellipse 45% 60% at 8% 78%, rgba(0,200,83,0.05) 0%, transparent 60%)',
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.35]"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(0,200,83,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0,200,83,0.045) 1px, transparent 1px)',
-              backgroundSize: '56px 56px',
-              maskImage:
-                'radial-gradient(ellipse 85% 72% at 62% 42%, black 0%, transparent 72%)',
-            }}
-          />
-        </div>
+      {/* ── Hero (cleaned) ── */}
+<section className="relative pt-[68px] md:pt-[132px] flex items-center min-h-[90vh]">
+  <div className="relative z-10 max-w-[860px] mx-auto px-6 pt-20 pb-28 w-full text-center">
+    {/* Eyebrow */}
+    <div className="flex items-center justify-center gap-2.5 mb-6">
+      <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse shrink-0" />
+      <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#00C853]">
+        {t('hero_eyebrow')}
+      </p>
+    </div>
 
-        <div className="relative z-10 max-w-[1260px] mx-auto px-6 pt-12 pb-16 w-full">
-          <div className="grid lg:grid-cols-[1fr_1fr] xl:grid-cols-[1.05fr_0.95fr] gap-12 xl:gap-16 items-center">
+    {/* Headline – large, tight leading, maximum impact */}
+    <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold leading-[1.06] tracking-tight text-[#07110A] dark:text-white mb-6 max-w-[680px] mx-auto">
+      {t('hero_headline')}{' '}
+      <span className="text-[#00C853]">{t('hero_headline_accent')}</span>
+    </h1>
 
-            {/* ── Left: copy + finder ── */}
-            <div>
-              {/* Eyebrow */}
-              <div className="flex items-center gap-2.5 mb-5">
-                <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse shrink-0" />
-                <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#00C853]">
-                  {t('hero_eyebrow')}
-                </p>
-              </div>
+    {/* Short description – restrained width for readability */}
+    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[1rem] leading-[1.8] mb-10 max-w-[480px] mx-auto">
+      {t('hero_description')}
+    </p>
 
-              {/* Headline */}
-              <h1 className="font-display text-[clamp(2.2rem,4.5vw,3.7rem)] font-extrabold leading-[1.06] tracking-tight text-[#07110A] dark:text-white mb-5">
-                {t('hero_headline')}{' '}
-                <span className="text-[#00C853]">{t('hero_headline_accent')}</span>
-              </h1>
+    {/* VIN search – the star of the page, given more breathing room */}
+    <div className="max-w-[640px] mx-auto">
+      <VinSearchHero />
+    </div>
 
-              {/* Description */}
-              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[1rem] leading-[1.8] mb-7 max-w-[500px]">
-                {t('hero_description')}
-              </p>
-
-              {/* ── Vehicle Finder ── */}
-              <VinSearchHero />
-
-              {/* Feature tags */}
-              <div className="flex flex-wrap gap-2 mt-7">
-                {[
-                  { label: t('hero_tag_oem'), color: 'green' },
-                  { label: t('hero_tag_aftermarket'), color: 'green' },
-                  { label: t('hero_tag_secondhand'), color: 'green' },
-                  { label: t('hero_tag_countries'), color: 'dim' },
-                  { label: t('hero_tag_escrow'), color: 'dim' },
-                  { label: t('hero_tag_tracking'), color: 'dim' },
-                ].map((tag) => (
-                  <span
-                    key={tag.label}
-                    className={cn(
-                      'text-[11px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-md border',
-                      tag.color === 'green'
-                        ? 'bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.18)]'
-                        : 'bg-[rgba(0,0,0,0.04)] dark:bg-[rgba(255,255,255,0.04)] text-[#4A6B50] dark:text-[#7A9A80] border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)]',
-                    )}
-                  >
-                    {tag.label}
-                  </span>
-                ))}
-              </div>
-
-              {/* Extra CTAs */}
-              <div className="flex flex-wrap items-center gap-3 mt-6">
-                <Link to="/orders" className={btnOutline}>
-                  <Truck className="w-4 h-4 mr-1.5" />
-                  {t('hero_cta_track')}
-                </Link>
-                <Link to="/become-supplier" className={btnOutline}>
-                  <MapPin className="w-4 h-4 mr-1.5" />
-                  {t('hero_cta_become_supplier')}
-                </Link>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-4 gap-4 mt-10 pt-8 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)]">
-                {stats.map((s) => (
-                  <div key={s.label}>
-                    <p className="font-display text-2xl font-extrabold text-[#07110A] dark:text-white leading-none">
-                      {s.value}<span className="text-[#00C853]">{s.suffix}</span>
-                    </p>
-                    <p className="text-[11px] text-[#4A6B50] dark:text-[#7A9A80] mt-1 leading-snug">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* ── Right: platform visual ── */}
-            <div className="hidden lg:block">
-              <HeroVisual />
-            </div>
-          </div>
-        </div>
-      </section>
+    
+  </div>
+</section>
 
       {/* ── Parts Category Grid ── */}
       <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
@@ -709,112 +628,5 @@ function VinSearchHero() {
         {t('vin_hint') ?? 'Enter your 17‑character VIN to browse compatible parts'}
       </p>
     </form>
-  )
-}
-function HeroVisual() {
-  return (
-    <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.15)] rounded-2xl p-5 space-y-3 shadow-[0_24px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#3D5942]">Live Sourcing Flow</p>
-          <p className="text-[#07110A] dark:text-white font-semibold text-sm">Toyota Prado — Brake Pad Set</p>
-        </div>
-        <span className="flex items-center gap-1.5 text-[10px] font-mono text-[#00C853] bg-[rgba(0,200,83,0.1)] border border-[rgba(0,200,83,0.2)] px-2 py-1 rounded-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00C853] animate-pulse" />
-          LIVE
-        </span>
-      </div>
-
-      {/* Active RFQ matching progress */}
-      <div className="bg-[#EFF7F1] dark:bg-[#162019] rounded-xl p-3 border border-[rgba(0,200,83,0.1)]">
-        <div className="flex justify-between items-center mb-2">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-[#4A6B50] dark:text-[#3D5942]">Matching Suppliers</p>
-          <span className="text-[#00C853] text-[10px] font-mono font-bold">72%</span>
-        </div>
-        <div className="w-full bg-[#D0E8D5] dark:bg-[#0F1F13] rounded-full h-1.5 mb-2">
-          <div className="h-full w-[72%] rounded-full bg-gradient-to-r from-[#00C853] to-[#39FF88]" />
-        </div>
-        <p className="text-[#4A6B50] dark:text-[#3D5942] text-[10px] font-mono">8 of 11 suppliers matched · 3 responding</p>
-      </div>
-
-      {/* Active RFQ */}
-      <div className="bg-[#EFF7F1] dark:bg-[#162019] rounded-xl p-4 border border-[rgba(0,200,83,0.1)]">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-[#4A6B50] dark:text-[#3D5942] mb-2">Active RFQ</p>
-        <div className="space-y-1.5 text-xs">
-          {[
-            ['Part', 'Front Brake Pad Set'],
-            ['Vehicle', 'Toyota Prado 2021'],
-            ['Destination', 'Nairobi, Kenya'],
-            ['Condition', 'OEM / Aftermarket'],
-          ].map(([k, v]) => (
-            <div key={k} className="flex justify-between">
-              <span className="text-[#4A6B50] dark:text-[#3D5942]">{k}</span>
-              <span className="text-[#07110A] dark:text-[#E8F0E9]">{v}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Supplier responses */}
-      <div className="space-y-2">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-[#4A6B50] dark:text-[#3D5942]">3 Supplier Responses</p>
-        {[
-          { name: 'Al Barq OEM Hub', location: 'Jeddah, KSA', price: '$148', tag: 'OEM', color: 'green', eta: '3.5 days' },
-          { name: 'Nairobi Auto Parts', location: 'Nairobi, KE', price: '$94', tag: 'Aftermarket', color: 'amber', eta: '1 day' },
-          { name: 'Dar Reclaim Co.', location: 'Dar es Salaam', price: '$42', tag: 'Used', color: 'blue', eta: 'Ready' },
-        ].map((s) => (
-          <div key={s.name} className="flex items-center justify-between bg-[#E8F2EA] dark:bg-[#0F1F13] rounded-lg px-3 py-2.5 border border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.04)]">
-            <div>
-              <p className="text-[#07110A] dark:text-white text-xs font-medium">{s.name}</p>
-              <p className="text-[#4A6B50] dark:text-[#3D5942] text-[10px]">{s.location}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <span
-                className={cn(
-                  'text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded',
-                  s.color === 'green' && 'bg-[rgba(0,200,83,0.1)] text-[#00C853]',
-                  s.color === 'amber' && 'bg-amber-400/10 text-amber-400',
-                  s.color === 'blue' && 'bg-blue-400/10 text-blue-400',
-                )}
-              >
-                {s.tag}
-              </span>
-              <div className="text-right">
-                <p className="text-[#00C853] text-xs font-bold">{s.price}</p>
-                <p className="text-[#4A6B50] dark:text-[#3D5942] text-[9px]">{s.eta}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Delivery tracker */}
-      <div className="bg-[#EFF7F1] dark:bg-[#162019] rounded-xl p-4 border border-[rgba(0,200,83,0.1)]">
-        <div className="flex justify-between items-center mb-3">
-          <p className="text-[10px] font-mono uppercase tracking-wider text-[#4A6B50] dark:text-[#3D5942]">Delivery Lane</p>
-          <span className="text-[#00C853] text-[10px] font-mono">ETA 09 Apr, 16:30</span>
-        </div>
-        <div className="flex items-center gap-1 mb-2">
-          {['Jeddah', 'Customs', 'Mombasa', 'Nairobi'].map((point, i, arr) => (
-            <div key={point} className="flex items-center gap-1 flex-1">
-              <div className={cn(
-                'text-[9px] font-mono text-center flex-1',
-                i <= 2 ? 'text-[#00C853]' : 'text-[#4A6B50] dark:text-[#3D5942]',
-              )}>
-                {point}
-              </div>
-              {i < arr.length - 1 && (
-                <div className={cn('h-px flex-1', i < 2 ? 'bg-[#00C853]' : 'bg-[#D0E8D5] dark:bg-[#162019]')} />
-              )}
-            </div>
-          ))}
-        </div>
-        <div className="w-full bg-[#D0E8D5] dark:bg-[#0F1F13] rounded-full h-1.5">
-          <div className="h-full w-[65%] rounded-full bg-gradient-to-r from-[#00C853] to-[#39FF88]" />
-        </div>
-        <p className="text-[#4A6B50] dark:text-[#3D5942] text-[10px] mt-1.5 font-mono">In customs review · 65% complete</p>
-      </div>
-    </div>
   )
 }

@@ -2,17 +2,17 @@ import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { LanguageProvider } from '@/context/LanguageContext'
-import { CartProvider } from '@/context/CartContext'
 import { router } from '@/router'
+import { ExternalCartProvider } from './context/ExternalCartContext';
 
 export default function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <CartProvider>
+            <ExternalCartProvider>
             <RouterProvider router={router} />
-          </CartProvider>
+            </ExternalCartProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

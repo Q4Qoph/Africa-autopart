@@ -123,13 +123,16 @@ export function mapOrderToDisplay(o: Order): DisplayOrder {
 // ─── DTOs ───────────────────────────────────────────────────────────────────
 
 export interface AddOrderDTO {
-  supplierName: string
-  partName: string
-  partRequestId: number
-  userId?: number
-  price: number
-  pickUpLocation: string
-  pickUpLocationPhoneNumber: string
+  partRequestId: number;
+  userId?: number;
+  pickUpLocation: string;
+  pickUpLocationPhoneNumber: string;
+  orderItems: {
+    partName: string;
+    supplierName: string;
+    price: number;
+    quantity: number;
+  }[];
 }
 
 export interface AddOrderResponse {

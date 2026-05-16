@@ -2,12 +2,13 @@
 import { useEffect, useState, useRef } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Heart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import { partsApi } from '@/api/partsApi'
 import type { VinResult, CategoryGroup, SearchPart } from '@/types/parts'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { useExternalCart } from '@/context/ExternalCartContext';
 
 export default function PartsSearchPage() {
   const location = useLocation()
@@ -28,7 +29,8 @@ export default function PartsSearchPage() {
       setError('No vehicle information provided.')
       return
     }
-
+      sessionStorage.setItem('vinVehicleInfo', JSON.stringify(vehicleInfo));
+      
     const payload = {
       manufacturer: vehicleInfo.manufacturer || '',
       year: String(vehicleInfo.year ?? ''),
@@ -206,13 +208,18 @@ export default function PartsSearchPage() {
 function PartCard({ part }: { part: SearchPart }) {
   const [imageError, setImageError] = useState(false)
   const hasImage = part.imageURL && !imageError
+  const { addItem } = useExternalCart();
 
-  function handleAddToWishlist() {
-    const wishlist = JSON.parse(sessionStorage.getItem('partWishlist') ?? '[]')
-    wishlist.push(part)
-    sessionStorage.setItem('partWishlist', JSON.stringify(wishlist))
-    alert(part.name + ' added to wishlist!')
+  function handleAddToCart(e: React.MouseEvent) {
+    e.preventDefault();
+    addItem(part);
   }
+  // function handleAddToWishlist() {
+  //   const wishlist = JSON.parse(sessionStorage.getItem('partWishlist') ?? '[]')
+  //   wishlist.push(part)
+  //   sessionStorage.setItem('partWishlist', JSON.stringify(wishlist))
+  //   alert(part.name + ' added to wishlist!')
+  // }
 
   return (
     <div className="group relative bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-xl overflow-hidden hover:border-[rgba(0,200,83,0.3)] transition-colors flex flex-col">
@@ -243,11 +250,11 @@ function PartCard({ part }: { part: SearchPart }) {
       <div className="absolute bottom-0 left-0 right-0 p-3 pt-0 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-none group-hover:pointer-events-auto">
         <div className="flex flex-col gap-1.5">
           <button
-            onClick={(e) => { e.preventDefault(); handleAddToWishlist() }}
+            onClick={handleAddToCart}
             className="w-full flex items-center justify-center gap-1.5 bg-[#00C853] text-[#07110A] font-semibold text-[11px] px-3 py-2 rounded-lg hover:bg-[#39FF88] transition-colors"
           >
-            <Heart className="w-3.5 h-3.5" />
-            Add to Wishlist
+            <ShoppingCart className="w-3.5 h-3.5" />
+            Add to Cart
           </button>
         </div>
       </div>

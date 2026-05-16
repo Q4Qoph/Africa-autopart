@@ -28,8 +28,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LanguageDropdown } from "@/components/ui/LanguageDropdown";
 import { ShoppingCart } from "lucide-react";
-import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
+import { useExternalCart } from "@/context/ExternalCartContext";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -78,7 +78,9 @@ export default function Navbar() {
   const location = useLocation();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { itemCount } = useCart();
+  const { itemCount: externalItemCount } = useExternalCart();
+
+
 
   function handleLogout() {
     logout();
@@ -207,11 +209,12 @@ export default function Navbar() {
 
             {/* Right side */}
             <div className="ml-auto flex items-center gap-2">
+              
               <Link to="/cart" className="relative mr-2">
                 <ShoppingCart className="w-5 h-5 text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853]" />
-                {itemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-[#07110A] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {itemCount}
+                {externalItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {externalItemCount}
                   </span>
                 )}
               </Link>

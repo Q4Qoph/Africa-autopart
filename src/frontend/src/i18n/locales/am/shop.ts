@@ -29,4 +29,13 @@ export default {
   pay_with_mpesa: 'በM‑Pesa ይክፈሉ',
   processing: 'በማስኬድ ላይ…',
   order_not_found: 'ትእዛዝ አልተገኘም',
+  external_cart_heading: 'የውጭ ክፍሎች ጋሪዎ',
+  error_city_required: 'ከተማ፣ ካውንቲ እና ስልክ ያስፈልጋሉ።',
+  error_vehicle_missing: 'የተሽከርካሪ መረጃ ጠፍቷል። እባክዎ እንደገና ይፈልጉ።',
+  error_place_order: 'ትእዛዝ ማስገባት አልተሳካም። እባክዎ እንደገና ይሞክሩ።',
+  error_phone_required: 'ስልክ ቁጥር ያስፈልጋል',
+  mpesa_stk_sent: 'የክፍያ ማሳወቂያ ተልኳል። ክፍያውን ለማጠናቀቅ ስልክዎን ያረጋግጡ።',
+  mpesa_stk_failed: 'የክፍያ ማሳወቂያ መላክ አልተሳካም',
+  mpesa_error: 'የM‑Pesa ስህተት',
+  stripe_error: 'የStripe ክፍያ አልተሳካም',
 } as const

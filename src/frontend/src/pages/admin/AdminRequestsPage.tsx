@@ -77,7 +77,7 @@ export default function AdminRequestsPage() {
     requestApi
       .getAll(auth.token)
       .then(({ data }) => setRequests(data))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, [auth]);
 
@@ -200,15 +200,20 @@ export default function AdminRequestsPage() {
     try {
       const { data: ref } = await orderApi.create(
         {
-          supplierName: selectedPart.supplierName,
-          partName: selectedPart.partName,
           partRequestId: panel.requestId,
-          price: Number(price),
-          pickUpLocation: pickUpLocation.trim(),          // ← new
-        pickUpLocationPhoneNumber: pickUpPhone.trim(),  // ← new
+          pickUpLocation: pickUpLocation.trim(),
+          pickUpLocationPhoneNumber: pickUpPhone.trim(),
+          orderItems: [
+            {
+              partName: selectedPart.partName,
+              supplierName: selectedPart.supplierName,
+              price: Number(price),
+              quantity: 1,
+            },
+          ],
         },
         auth.token,
-      );
+      )
       setOrderRef(String(ref));
       setSelectedPart(null);
       setSearchResults([]);
@@ -252,11 +257,10 @@ export default function AdminRequestsPage() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-colors ${
-              filter === f
+            className={`px-4 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition-colors ${filter === f
                 ? "bg-[rgba(0,200,83,0.12)] text-[#00C853] border border-[rgba(0,200,83,0.3)]"
                 : "text-[#4A6B50] dark:text-[#7A9A80] border border-transparent hover:text-[#07110A] dark:hover:text-white"
-            }`}
+              }`}
           >
             {filterLabel[f]}
           </button>
@@ -414,19 +418,19 @@ export default function AdminRequestsPage() {
                         <p className="text-[10px] font-mono text-[#7A9A80] dark:text-[#3D5942] mb-3 mt-3">
                           {hasSearched
                             ? t(
-                                searchResults.length === 1
-                                  ? "requests_panel_result_one"
-                                  : "requests_panel_results",
-                                {
-                                  count: searchResults.length,
-                                  term: searchTerm,
-                                },
-                              )
+                              searchResults.length === 1
+                                ? "requests_panel_result_one"
+                                : "requests_panel_results",
+                              {
+                                count: searchResults.length,
+                                term: searchTerm,
+                              },
+                            )
                             : loadingAll
                               ? t("requests_panel_loading")
                               : t("requests_panel_all_parts", {
-                                  count: allParts.length,
-                                })}
+                                count: allParts.length,
+                              })}
                         </p>
 
                         {/* Parts list */}
@@ -444,11 +448,10 @@ export default function AdminRequestsPage() {
                               <button
                                 key={part.id}
                                 onClick={() => selectPart(part)}
-                                className={`w-full text-left grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 items-center px-4 py-3 transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0 ${
-                                  selectedPart?.id === part.id
+                                className={`w-full text-left grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 items-center px-4 py-3 transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0 ${selectedPart?.id === part.id
                                     ? "bg-[rgba(0,200,83,0.1)] border-l-2 border-l-[#00C853]"
                                     : "hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)]"
-                                }`}
+                                  }`}
                               >
                                 <div>
                                   <p className="text-[#07110A] dark:text-white text-sm font-medium leading-tight">

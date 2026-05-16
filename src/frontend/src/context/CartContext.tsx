@@ -1,3 +1,4 @@
+//src/frontend/src/context/CartContext.tsx
 import { createContext, useContext, useState, useCallback, type ReactNode, } from 'react';
 
 export interface CartItem {
