@@ -179,7 +179,7 @@ export default function Navbar() {
         </div>
 
         {/* ── Main nav bar ── */}
-        <header className="h-[96px] bg-[rgba(247,253,248,0.95)] dark:bg-[rgba(7,17,10,0.95)] backdrop-blur-md border-b border-[rgba(0,200,83,0.12)] flex items-center">
+        <header className="h-[80px] bg-[rgba(247,253,248,0.95)] dark:bg-[rgba(7,17,10,0.95)] backdrop-blur-md border-b border-[rgba(0,200,83,0.12)] flex items-center">
           <div className="max-w-[1260px] w-full mx-auto px-6 flex items-center gap-6">
             {/* Logo */}
             <Link to="/" className="flex items-center shrink-0 mr-2">
@@ -209,11 +209,11 @@ export default function Navbar() {
 
             {/* Right side */}
             <div className="ml-auto flex items-center gap-2">
-              
-              <Link to="/cart" className="relative mr-2">
-                <ShoppingCart className="w-5 h-5 text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853]" />
+
+              <Link to="/cart" onClick={() => setDrawerOpen(false)} className="relative ml-auto mr-4">
+                <ShoppingCart className="w-5 h-5" />
                 {externalItemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-[#07110A] text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {externalItemCount}
                   </span>
                 )}
@@ -234,34 +234,20 @@ export default function Navbar() {
 
               {auth ? (
                 <>
-                  {/* New request CTA — customer only */}
-                  {auth.role !== UserRole.Supplier &&
-                    auth.role !== UserRole.Admin && (
-                      <Link
-                        to="/requests/new"
-                        className={cn(
-                          btnBase,
-                          "bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] hidden sm:inline-flex text-xs px-3 py-1.5 gap-1.5",
-                        )}
-                      >
-                        <Package className="w-3.5 h-3.5" />
-                        {t("cta_newRequest")}
-                      </Link>
-                    )}
+
 
                   {/* Avatar dropdown */}
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center gap-1.5 focus:outline-none ml-1">
-                      <Avatar className="w-8 h-8">
+                    <DropdownMenuTrigger className="flex items-center gap-1.5 focus:outline-none ml-1 group">
+                      <Avatar className="w-9 h-9 ring-2 ring-transparent group-hover:ring-[rgba(0,200,83,0.3)] transition-all">
                         <AvatarFallback className="bg-[#00C853]/20 text-[#00C853] text-xs font-bold">
-                          {String(auth.userId).slice(0, 2)}
-                        </AvatarFallback>
+                          {auth.email ? auth.email.charAt(0).toUpperCase() : String(auth.userId).slice(0, 2)}                        </AvatarFallback>
                       </Avatar>
-                      <ChevronDown className="w-3 h-3 text-[rgba(0,0,0,0.4)] dark:text-[rgba(255,255,255,0.4)] hidden sm:block" />
+                      <ChevronDown className="w-3.5 h-3.5 text-[rgba(0,0,0,0.4)] dark:text-[rgba(255,255,255,0.4)] transition-transform group-data-[state=open]:rotate-180" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="w-52 bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(0,200,83,0.2)] text-[#07110A] dark:text-white shadow-lg"
+                      className="w-56 bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(0,200,83,0.2)] text-[#07110A] dark:text-white shadow-xl rounded-xl p-1"
                     >
                       {/* User info */}
                       <div className="px-3 py-2.5 border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)]">
@@ -348,15 +334,30 @@ export default function Navbar() {
                       )}
 
                       <DropdownMenuSeparator className="bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(255,255,255,0.06)]" />
-                      <DropdownMenuItem
-                        onClick={handleLogout}
-                        className="cursor-pointer text-red-500 dark:text-red-400 focus:text-red-500"
+                      <DropdownMenuItem onClick={handleLogout}
+                        className="cursor-pointer text-red-500 dark:text-red-400 focus:text-red-500 hover:bg-red-50 dark:hover:bg-red-400/10 rounded-lg"
                       >
-                        <LogOut className="w-3.5 h-3.5 mr-2" />
+                        <LogOut className="w-4 h-4 mr-2" />
                         {t("dropdown_logout")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+
+                  {/* New request CTA — customer only */}
+                  {auth.role !== UserRole.Supplier &&
+                    auth.role !== UserRole.Admin && (
+                      <Link
+                        to="/requests/new"
+                        className={cn(
+                          btnBase,
+                          "bg-[#00C853] text-[#07110A] font-bold px-5 py-2 text-sm rounded-full hover:bg-[#39FF88]",
+                          "inline-flex items-center gap-1.5"
+                        )}
+                      >
+                        <Package className="w-4 h-4" />
+                        {t("cta_newRequest")}
+                      </Link>
+                    )}
                 </>
               ) : (
                 <>

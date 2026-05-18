@@ -4,8 +4,7 @@ export default {
   hero_eyebrow: 'Africa + Saudi Arabia · OEM · Aftermarket · Second-Hand',
   hero_headline: 'Find any spare part,',
   hero_headline_accent: 'across any border.',
-  hero_description: 'Africa Autopart connects vehicle owners, workshops, and fleets to verified suppliers across Africa and Saudi Arabia — OEM, aftermarket, and second-hand parts with real-time tracking and secure payments.',
-  hero_tag_oem: 'OEM Parts',
+hero_description: 'Connect with verified suppliers across Africa for OEM, aftermarket, and used parts — with live tracking and secure payments.',
   hero_tag_aftermarket: 'Aftermarket',
   hero_tag_secondhand: 'Second-Hand',
   hero_tag_countries: '18 Countries',
@@ -150,7 +149,7 @@ export default {
   // Guest success (new request page)
   finder_guest_hint: 'No account needed — request as a guest',
 
-  vin_placeholder: 'Enter VIN / Chassis Number e.g. KNAPC813BCK227399',
+  vin_placeholder: 'Enter VIN e.g. KNAPC813BCK227399',
   vin_search_btn: 'Find Parts',
   vin_searching: 'Searching…',
   vin_hint: 'Enter your 17‑character VIN to browse compatible parts',

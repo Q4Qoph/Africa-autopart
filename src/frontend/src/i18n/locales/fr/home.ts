@@ -149,7 +149,7 @@ export default {
   // Guest success (new request page)
   finder_guest_hint: 'Sans compte requis — demandez en tant qu\'invité',
 
-  vin_placeholder: 'Entrez le VIN / numéro de châssis ex. KNAPC813BCK227399',
+  vin_placeholder: 'Entrez le VIN ex. KNAPC813BCK227399',
   vin_search_btn: 'Rechercher des pièces',
   vin_searching: 'Recherche…',
   vin_hint: 'Entrez votre VIN à 17 caractères pour parcourir les pièces compatibles',

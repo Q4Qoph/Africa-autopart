@@ -1,7 +1,7 @@
 //src/frontend/src/pages/HomePage.tsx
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search} from 'lucide-react'
+import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
@@ -48,7 +48,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 export default function HomePage() {
   const { t } = useTranslation('home')
 
-  
+
 
   const steps = [
     { number: '01', title: t('steps_01_title'), desc: t('steps_01_desc') },
@@ -127,36 +127,24 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9] overflow-x-hidden">
       <Navbar />
 
-      {/* ── Hero (cleaned) ── */}
-<section className="relative pt-[68px] md:pt-[132px] flex items-center min-h-[90vh]">
-  <div className="relative z-10 max-w-[860px] mx-auto px-6 pt-20 pb-28 w-full text-center">
-    {/* Eyebrow */}
-    <div className="flex items-center justify-center gap-2.5 mb-6">
-      <span className="w-2 h-2 rounded-full bg-[#00C853] animate-pulse shrink-0" />
-      <p className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#00C853]">
-        {t('hero_eyebrow')}
-      </p>
-    </div>
+      {/* ── Hero ── */}
+      <section className="relative pt-[68px] md:pt-[132px] flex flex-col items-center min-h-[85vh]">
+        {/* Search bar – full width, first thing visible */}
+        <div className="w-full max-w-[1440px] mx-auto px-6 pt-14">
+          <VinSearchHero />
+        </div>
 
-    {/* Headline – large, tight leading, maximum impact */}
-    <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold leading-[1.06] tracking-tight text-[#07110A] dark:text-white mb-6 max-w-[680px] mx-auto">
-      {t('hero_headline')}{' '}
-      <span className="text-[#00C853]">{t('hero_headline_accent')}</span>
-    </h1>
-
-    {/* Short description – restrained width for readability */}
-    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[1rem] leading-[1.8] mb-10 max-w-[480px] mx-auto">
-      {t('hero_description')}
-    </p>
-
-    {/* VIN search – the star of the page, given more breathing room */}
-    <div className="max-w-[640px] mx-auto">
-      <VinSearchHero />
-    </div>
-
-    
-  </div>
-</section>
+        {/* Headline + description – centered, constrained width */}
+        <div className="max-w-[860px] mx-auto px-6 pt-10 pb-24 w-full text-center">
+          <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold leading-[1.06] tracking-tight text-[#07110A] dark:text-white mb-5 mx-auto">
+            {t('hero_headline')}{' '}
+            <span className="text-[#00C853]">{t('hero_headline_accent')}</span>
+          </h1>
+          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed max-w-[520px] mx-auto">
+            {t('hero_description')}
+          </p>
+        </div>
+      </section>
 
       {/* ── Parts Category Grid ── */}
       <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
@@ -585,8 +573,6 @@ function VinSearchHero() {
     setSearching(true)
     try {
       const { data } = await partsApi.searchByVin(trimmed)
-      // ✅ Pass the FULL response — not just part of it
-      console.log('✅ VIN response:', data)               // <-- add this      
       navigate('/parts-search', { state: { vehicleInfo: data } })
     } catch {
       setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN and try again.')
@@ -596,35 +582,51 @@ function VinSearchHero() {
   }
 
   return (
-    <form onSubmit={handleVinSearch} className="w-full max-w-xl">
+    <form onSubmit={handleVinSearch} className="w-3/4 mx-auto">
       <div className="relative">
         <input
           type="text"
           value={vin}
           onChange={(e) => { setVin(e.target.value.toUpperCase()); setError('') }}
           placeholder={t('vin_placeholder') ?? 'Enter VIN / Chassis Number e.g. KNAPC813BCK227399'}
-          className="w-full h-14 pl-5 pr-36 rounded-xl bg-white dark:bg-[#162019] border-2 border-[rgba(0,200,83,0.25)] focus:border-[#00C853] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] text-sm font-mono tracking-wide outline-none transition-colors"
+          className="
+            w-full h-16 pl-6 pr-44 
+            rounded-full 
+            bg-white dark:bg-[#162019] 
+            border-2 border-[rgba(0,200,83,0.3)] 
+            focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/20
+            text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] 
+            text-base font-bold font-mono tracking-wide 
+            outline-none transition-all duration-200
+          "
         />
         <button
           type="submit"
           disabled={searching || !vin.trim()}
-          className="absolute right-2 top-1/2 -translate-y-1/2 h-10 px-6 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors disabled:opacity-50"
+          className="
+            absolute right-2 top-1/2 -translate-y-1/2 h-12 px-8 
+            rounded-full 
+            bg-[#00C853] text-[#07110A] font-bold text-base 
+            hover:bg-[#39FF88] transition-colors 
+            disabled:opacity-50 
+            flex items-center gap-2
+          "
         >
           {searching ? (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-2">
               <span className="w-4 h-4 border-2 border-[#07110A]/30 border-t-[#07110A] rounded-full animate-spin" />
               {t('vin_searching') ?? 'Searching…'}
             </span>
           ) : (
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-2">
               <Search className="w-4 h-4" />
               {t('vin_search_btn') ?? 'Find Parts'}
             </span>
           )}
         </button>
       </div>
-      {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
-      <p className="text-[10px] text-[#7A9A80] dark:text-[#3D5942] mt-2.5 font-mono">
+      {error && <p className="text-red-400 text-xs mt-2 text-center">{error}</p>}
+      <p className="text-[11px] text-[#7A9A80] dark:text-[#3D5942] mt-3 font-mono text-center">
         {t('vin_hint') ?? 'Enter your 17‑character VIN to browse compatible parts'}
       </p>
     </form>
