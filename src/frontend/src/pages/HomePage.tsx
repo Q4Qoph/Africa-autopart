@@ -1,12 +1,13 @@
 //src/frontend/src/pages/HomePage.tsx
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import { partsApi } from '@/api/partsApi';
+import { vinApi } from '@/api/vinApi'
+import type { VehicleSummary } from '@/types/vin'
 
 // ─── Static data (no i18n needed) ────────────────────────────────────────────
 
@@ -561,10 +562,16 @@ function VinSearchHero() {
   const [vin, setVin] = useState('')
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
+  const [demoVins, setDemoVins] = useState<VehicleSummary[]>([])
 
-  async function handleVinSearch(e: React.FormEvent) {
-    e.preventDefault()
-    const trimmed = vin.trim()
+  useEffect(() => {
+    vinApi.getAllVehicles()
+      .then(({ data }) => setDemoVins(data.slice(0, 2)))   // only two demo VINs
+      .catch(() => {})
+  }, [])
+
+  async function handleVinSearch(vinToSearch: string) {
+    const trimmed = vinToSearch.trim()
     if (trimmed.length < 11) {
       setError(t('vin_error_short') ?? 'VIN must be at least 11 characters')
       return
@@ -572,8 +579,8 @@ function VinSearchHero() {
     setError('')
     setSearching(true)
     try {
-      const { data } = await partsApi.searchByVin(trimmed)
-      navigate('/parts-search', { state: { vehicleInfo: data } })
+      const { data } = await vinApi.getPartsByVin(trimmed)
+      navigate('/parts-search', { state: { vinParts: data } })
     } catch {
       setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN and try again.')
     } finally {
@@ -581,8 +588,13 @@ function VinSearchHero() {
     }
   }
 
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    handleVinSearch(vin)
+  }
+
   return (
-    <form onSubmit={handleVinSearch} className="w-3/4 mx-auto">
+    <form onSubmit={handleSubmit} className="w-full">
       <div className="relative">
         <input
           type="text"
@@ -629,6 +641,29 @@ function VinSearchHero() {
       <p className="text-[11px] text-[#7A9A80] dark:text-[#3D5942] mt-3 font-mono text-center">
         {t('vin_hint') ?? 'Enter your 17‑character VIN to browse compatible parts'}
       </p>
+
+      {/* Two simple demo VIN chips */}
+      {demoVins.length > 0 && (
+        <div className="flex items-center justify-center gap-2 mt-3">
+          <span className="text-[10px] text-[#7A9A80] dark:text-[#3D5942] font-mono">
+            {t('demo_vin_title') ?? 'Try a demo VIN:'}
+          </span>
+          {demoVins.map((v) => (
+            <button
+              key={v.vin}
+              type="button"
+              onClick={() => {
+                setVin(v.vin)
+                handleVinSearch(v.vin)
+              }}
+              disabled={searching}
+              className="px-3 py-1 rounded-full border border-[rgba(0,200,83,0.3)] bg-white dark:bg-[#111C14] text-xs font-mono font-semibold text-[#00C853] hover:bg-[rgba(0,200,83,0.08)] transition-colors disabled:opacity-50"
+            >
+              {v.vin}
+            </button>
+          ))}
+        </div>
+      )}
     </form>
   )
 }

@@ -1,0 +1,21 @@
+import axios from 'axios'
+import type { VehicleSummary, VinPartsResponse, PartDetailResponse } from '@/types/vin'
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: { 'Content-Type': 'application/json' },
+})
+
+export const vinApi = {
+  /** GET /api/Vin/allVehicles — public */
+  getAllVehicles: () =>
+    api.get<VehicleSummary[]>('/api/Vin/allVehicles'),
+
+  /** GET /api/Vin/getPartsByVin/{vin} — public */
+  getPartsByVin: (vin: string) =>
+    api.get<VinPartsResponse>(`/api/Vin/getPartsByVin/${encodeURIComponent(vin)}`),
+
+  /** GET /api/Vin/getPartByPartId/{partId} — public */
+  getPartDetail: (partId: string) =>
+    api.get<PartDetailResponse>(`/api/Vin/getPartByPartId/${encodeURIComponent(partId)}`),
+}

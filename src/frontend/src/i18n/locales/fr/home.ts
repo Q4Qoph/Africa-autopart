@@ -164,4 +164,12 @@ export default {
   parts: 'pièces',
   no_parts_category: 'Aucune pièce trouvée dans cette catégorie',
   no_parts_found: 'Aucune pièce trouvée pour ce véhicule',
+  demo_vin_title: 'Essayez un VIN',
+  part_detail_loading: 'Chargement des détails…',
+  part_detail_error: 'Échec du chargement des détails.',
+  part_detail_price: 'Prix',
+  part_detail_supplier: 'Fournisseur',
+  part_detail_availability: 'Disponibilité',
+  part_detail_location: 'Emplacement',
+  select_category: 'Sélectionnez une catégorie',
 } as const

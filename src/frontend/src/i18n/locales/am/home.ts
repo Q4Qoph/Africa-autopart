@@ -151,4 +151,12 @@ export default {
   parts: 'ክፍሎች',
   no_parts_category: 'በዚህ ምድብ ውስጥ ምንም ክፍሎች አልተገኙም',
   no_parts_found: 'ለዚህ ተሽከርካሪ ምንም ክፍሎች አልተገኙም',
+  demo_vin_title: 'VIN ይሞክሩ',
+  part_detail_loading: 'ዝርዝሮች በመጫን ላይ…',
+  part_detail_error: 'ዝርዝሮችን መጫን አልተሳካም።',
+  part_detail_price: 'ዋጋ',
+  part_detail_supplier: 'አቅራቢ',
+  part_detail_availability: 'ተገኝነት',
+  part_detail_location: 'ቦታ',
+  select_category: 'ምድብ ይምረጡ',
 } as const

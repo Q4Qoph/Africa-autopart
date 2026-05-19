@@ -151,4 +151,12 @@ export default {
   parts: 'قطع',
   no_parts_category: 'لا توجد قطع في هذا القسم',
   no_parts_found: 'لا توجد قطع لهذه المركبة',
+  demo_vin_title: 'جرّب VIN',
+  part_detail_loading: 'جارٍ تحميل التفاصيل…',
+  part_detail_error: 'فشل تحميل التفاصيل.',
+  part_detail_price: 'السعر',
+  part_detail_supplier: 'المورد',
+  part_detail_availability: 'التوفر',
+  part_detail_location: 'الموقع',
+  select_category: 'اختر الفئة',
 } as const
