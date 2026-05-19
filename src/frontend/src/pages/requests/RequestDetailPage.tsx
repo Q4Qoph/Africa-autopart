@@ -384,7 +384,7 @@ export default function RequestDetailPage() {
                 ) : (
                   <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-5">
                     <Detail label={t('order_part')} value={display?.requestedPartName ?? '—'} />
-                    <Detail label={t('order_price')} value={`$${order.price.toLocaleString()}`} />
+                    <Detail label={t('order_price')} value={`$${(order.total ?? 0).toLocaleString()}`} />
                     <div>
                       <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('order_status')}</p>
                       <Badge className={cn('text-[10px]', statusBadgeClass(order.status))}>

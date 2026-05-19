@@ -1,17 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import {
   Search, Package, MapPin, Phone, Calendar, Truck,
-  Clock, CheckCircle, XCircle,
+  Clock, CheckCircle, XCircle, X,
 } from 'lucide-react'
 import { orderApi } from '@/api/orderApi'
 import type { Order } from '@/types/order'
 import { statusCodeToString, OrderStatus } from '@/types/order'
-import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -44,28 +43,37 @@ const PROGRESS_STEPS = [
   { key: OrderStatus.Delivered, labelKey: 'track_step_delivered' },
 ]
 
+// ─── Props ─────────────────────────────────────────────────────────────────
+
+interface TrackOrderModalProps {
+  open: boolean
+  onClose: () => void
+  /** Pre‑fill and auto‑search this tracking number */
+  initialTrackingNumber?: string
+}
+
 // ─── Component ─────────────────────────────────────────────────────────────
 
-export default function TrackOrderPage() {
+export default function TrackOrderModal({ open, onClose, initialTrackingNumber }: TrackOrderModalProps) {
   const { t } = useTranslation('orders')
-  const [searchParams] = useSearchParams()
 
-  const [trackingInput, setTrackingInput] = useState('')
+  const [trackingInput, setTrackingInput] = useState(initialTrackingNumber ?? '')
   const [order, setOrder] = useState<Order | null>(null)
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Auto‑search when opened with a tracking number
   useEffect(() => {
-    const q = searchParams.get('tracking')
-    if (q && q.trim()) {
-      setTrackingInput(q.trim())
-      handleSearch(q.trim())
+    if (!open) return
+    if (initialTrackingNumber) {
+      setTrackingInput(initialTrackingNumber)
+      handleSearch(initialTrackingNumber)
     } else {
       setTimeout(() => inputRef.current?.focus(), 100)
     }
-  }, [])
+  }, [open, initialTrackingNumber])
 
   async function handleSearch(query?: string) {
     const term = (query ?? trackingInput).trim()
@@ -94,7 +102,15 @@ export default function TrackOrderPage() {
     if (e.key === 'Enter') handleSearch()
   }
 
-  // Convert numeric status to string for UI
+  function handleClose() {
+    // Reset state when closing
+    setTrackingInput('')
+    setOrder(null)
+    setError('')
+    setHasSearched(false)
+    onClose()
+  }
+
   const statusString = order ? statusCodeToString(order.status) : ''
   const statusInfo = STATUS_CONFIG[statusString as StatusKey] ?? null
 
@@ -102,33 +118,43 @@ export default function TrackOrderPage() {
     statusString === OrderStatus.Shipped
       ? 50
       : statusString === OrderStatus.Delivered
-      ? 100
-      : 0
+        ? 100
+        : 0
 
-  // Determine if a step is "done"
   const stepDone = (stepKey: string) => {
     if (statusString === OrderStatus.Delivered) return true
     if (statusString === OrderStatus.Shipped) return stepKey !== OrderStatus.Delivered
     return stepKey === OrderStatus.Pending
   }
 
+  if (!open) return null
+
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
+    <div className="fixed inset-0 z-[80] flex items-center justify-center">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleClose} />
 
-      <main className="pt-[68px] md:pt-[132px]">
-        <div className="max-w-[720px] mx-auto px-6 py-12">
+      {/* Modal */}
+      <div className="relative z-10 bg-white dark:bg-[#111C14] rounded-2xl border border-[rgba(0,200,83,0.15)] shadow-2xl w-full max-w-[720px] max-h-[90vh] overflow-y-auto mx-4">
+        {/* Close button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#07110A] dark:hover:text-white transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
 
-          {/* ── Hero / Search ── */}
-          <div className="text-center mb-12">
-            <h1 className="text-3xl font-extrabold text-[#07110A] dark:text-white font-display">
+        <div className="p-6 md:p-8">
+          {/* ── Search ── */}
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-extrabold text-[#07110A] dark:text-white font-display">
               {t('track_heading')}
-            </h1>
-            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-2 max-w-md mx-auto">
+            </h2>
+            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mt-2">
               {t('track_subheading')}
             </p>
 
-            <div className="mt-8 flex gap-2 max-w-md mx-auto">
+            <div className="mt-6 flex gap-2 max-w-md mx-auto">
               <Input
                 ref={inputRef}
                 value={trackingInput}
@@ -165,9 +191,9 @@ export default function TrackOrderPage() {
             </div>
           )}
 
-          {/* ── Empty (no search yet) ── */}
+          {/* ── Empty ── */}
           {!hasSearched && !error && (
-            <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl px-6 py-16 text-center">
+            <div className="bg-[#F7FDF8] dark:bg-[#0D1810] rounded-2xl px-6 py-12 text-center">
               <Package className="w-10 h-10 text-[#7A9A80] dark:text-[#3D5942] mx-auto mb-3" />
               <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                 {t('track_enter_number')}
@@ -177,7 +203,7 @@ export default function TrackOrderPage() {
 
           {/* ── Order Found ── */}
           {order && statusInfo && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               {/* Top row */}
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
@@ -195,7 +221,7 @@ export default function TrackOrderPage() {
               </div>
 
               {/* Progress Tracker */}
-              <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-2xl px-5 py-6">
+              <div className="bg-[#F7FDF8] dark:bg-[#0D1810] border border-[rgba(0,200,83,0.12)] rounded-2xl px-5 py-5">
                 <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-4">
                   {t('track_progress')}
                 </p>
@@ -212,18 +238,20 @@ export default function TrackOrderPage() {
                     return (
                       <div key={step.key} className="relative flex flex-col items-center z-10">
                         <div
-                          className={`w-8 h-8 rounded-full grid place-items-center transition-colors ${
+                          className={cn(
+                            'w-8 h-8 rounded-full grid place-items-center transition-colors',
                             done
                               ? 'bg-[#00C853] text-[#07110A]'
                               : 'bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(255,255,255,0.06)] text-[#7A9A80] dark:text-[#3D5942]'
-                          }`}
+                          )}
                         >
                           {done ? <CheckCircle className="w-4 h-4" /> : idx + 1}
                         </div>
                         <p
-                          className={`text-[10px] mt-2 font-mono uppercase tracking-wider ${
+                          className={cn(
+                            'text-[10px] mt-2 font-mono uppercase tracking-wider',
                             done ? 'text-[#00C853]' : 'text-[#7A9A80] dark:text-[#3D5942]'
-                          }`}
+                          )}
                         >
                           {t(step.labelKey)}
                         </p>
@@ -235,7 +263,7 @@ export default function TrackOrderPage() {
 
               {/* Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-xl px-5 py-4">
+                <div className="bg-[#F7FDF8] dark:bg-[#0D1810] border border-[rgba(0,200,83,0.12)] rounded-xl px-5 py-4">
                   <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
                     {t('track_part_details')}
                   </p>
@@ -243,25 +271,23 @@ export default function TrackOrderPage() {
                     <div>
                       <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">Part</span>
                       <p className="text-[#07110A] dark:text-white text-sm font-medium">
-                        {order.partName}
+                          {order.partName || order.orderItems?.[0]?.partName || '—'}
                       </p>
                     </div>
                     <div>
                       <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">Supplier</span>
                       <p className="text-[#07110A] dark:text-white text-sm">
-                        {order.supplierName}
-                      </p>
+  {order.supplierName || order.orderItems?.[0]?.supplierName || '—'}                      </p>
                     </div>
                     <div>
                       <span className="text-[#7A9A80] dark:text-[#3D5942] text-xs">Price</span>
                       <p className="text-[#00C853] font-semibold text-lg">
-                        ${order.price.toLocaleString()}
-                      </p>
+                        ${((order.total ?? order.price) ?? 0).toLocaleString()}                      </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.12)] rounded-xl px-5 py-4">
+                <div className="bg-[#F7FDF8] dark:bg-[#0D1810] border border-[rgba(0,200,83,0.12)] rounded-xl px-5 py-4">
                   <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
                     {t('track_location')}
                   </p>
@@ -302,17 +328,10 @@ export default function TrackOrderPage() {
                   </div>
                 </div>
               </div>
-
-              <p className="text-center text-[#7A9A80] dark:text-[#3D5942] text-xs mt-8">
-                {t('track_support')}{' '}
-                <a href="tel:+25377577016" className="text-[#00C853] hover:underline">
-                  +253 775 770 16
-                </a>
-              </p>
             </div>
           )}
         </div>
-      </main>
+      </div>
     </div>
   )
 }

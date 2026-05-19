@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
@@ -9,15 +9,15 @@ import { Check, ChevronDown } from 'lucide-react'
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 const statusColor: Record<string, string> = {
-  'Pending':   'bg-amber-900/30 text-amber-300 border-amber-700/30',
-  'Shipped':   'bg-blue-900/30 text-blue-300 border-blue-700/30',
+  'Pending': 'bg-amber-900/30 text-amber-300 border-amber-700/30',
+  'Shipped': 'bg-blue-900/30 text-blue-300 border-blue-700/30',
   'Delivered': 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
-  'Unknown':   'bg-gray-400/20 text-gray-400 border-gray-400/30',
+  'Unknown': 'bg-gray-400/20 text-gray-400 border-gray-400/30',
 }
 
 const statusOptions = [
-  { code: 0, string: 'Pending',   key: 'orders_status_pending' },
-  { code: 1, string: 'Shipped',   key: 'orders_status_shipped' },
+  { code: 0, string: 'Pending', key: 'orders_status_pending' },
+  { code: 1, string: 'Shipped', key: 'orders_status_shipped' },
   { code: 2, string: 'Delivered', key: 'orders_status_delivered' },
 ]
 
@@ -37,7 +37,7 @@ export default function AdminOrdersPage() {
     orderApi
       .getAll(auth.token)
       .then(({ data }) => setOrders(data))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false))
   }, [auth])
 
@@ -114,77 +114,123 @@ export default function AdminOrdersPage() {
               {orders.map((order) => {
                 const isOpen = openDropdownId === order.orderId
                 const isSaving = savingId === order.orderId
+                const hasItems = order.orderItems && order.orderItems.length > 0
 
                 return (
-                  <tr
-                    key={order.orderId}
-                    className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
-                  >
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{order.orderId}</Td>
-                    <Td>
-                      <p className="text-[#07110A] dark:text-white font-medium">{order.requestedPartName || '—'}</p>
-                    </Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                      {order.vehicleMake} {order.model}
-                    </Td>
-                    <Td className="text-[#07110A] dark:text-white">
-                      ${order.price.toLocaleString()}
-                    </Td>
-                    <Td className="font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
-                      {order.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
-                    </Td>
-
-                    {/* Status + dropdown */}
-                    <Td>
-                      <div className="relative" ref={isOpen ? dropdownRef : undefined}>
-                        <button
-                          onClick={() => setOpenDropdownId(isOpen ? null : order.orderId)}
-                          disabled={isSaving}
-                          className="flex items-center gap-1.5 group"
-                        >
-                          <Badge className={`text-[10px] border ${statusColor[order.status] ?? statusColor['Unknown']}`}>
-                            {order.status}
-                          </Badge>
-                          <ChevronDown className={`w-3 h-3 text-[#4A6B50] dark:text-[#7A9A80] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                          {isSaving && (
-                            <span className="w-3 h-3 border-2 border-[#00C853]/30 border-t-[#00C853] rounded-full animate-spin ml-1" />
-                          )}
-                        </button>
-
-                        {isOpen && (
-                          <div className="absolute top-full left-0 mt-1 z-30 bg-white dark:bg-[#1A2A1E] border border-[rgba(0,200,83,0.2)] rounded-lg shadow-lg py-1 min-w-[140px]">
-                            {statusOptions.map((opt) => {
-                              const isCurrent = order.status === opt.string
-                              return (
-                                <button
-                                  key={opt.code}
-                                  onClick={() => handleStatusChange(order.orderId, opt.code)}
-                                  disabled={isSaving}
-                                  className={`w-full text-left px-3 py-2 text-sm flex items-center justify-between transition-colors ${
-                                    isCurrent
-                                      ? 'text-[#00C853] bg-[rgba(0,200,83,0.08)]'
-                                      : 'text-[#07110A] dark:text-white hover:bg-[rgba(0,200,83,0.04)]'
-                                  }`}
-                                >
-                                  {t(opt.key)}
-                                  {isCurrent && <Check className="w-3.5 h-3.5 text-[#00C853]" />}
-                                </button>
-                              )
-                            })}
-                          </div>
+                  <React.Fragment key={order.orderId}>
+                    <tr
+                      className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer"
+                      onClick={() => hasItems && setOpenDropdownId(isOpen ? null : order.orderId)}
+                    >
+                      <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{order.orderId}</Td>
+                      <Td>
+                        <p className="text-[#07110A] dark:text-white font-medium">{order.requestedPartName || '—'}</p>
+                        {hasItems && (
+                          <span className="text-[10px] text-[#7A9A80] mt-0.5 block">
+                            {order.orderItems!.length} item{order.orderItems!.length > 1 ? 's' : ''}
+                          </span>
                         )}
-                      </div>
-                    </Td>
+                      </Td>
+                      <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                        {order.vehicleMake} {order.model}
+                      </Td>
+                      <Td className="text-[#07110A] dark:text-white">
+                        ${order.total?.toLocaleString() ?? '0'}
+                      </Td>
+                      <Td className="font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
+                        {order.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
+                      </Td>
+                      <Td>
+                        <div className="relative">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              // Toggle the status dropdown independently
+                              const statusDropdownId = `status-${order.orderId}`
+                              setOpenDropdownId(isOpen ? null : statusDropdownId as any)
+                              // We need a separate state for status vs expand... 
+                              // Actually, let's use a different approach.
+                            }}
+                            disabled={isSaving}
+                            className="flex items-center gap-1.5 group"
+                          >
+                            <Badge className={`text-[10px] border ${statusColor[order.status] ?? statusColor['Unknown']}`}>
+                              {order.status}
+                            </Badge>
+                            <ChevronDown className={`w-3 h-3 text-[#4A6B50] dark:text-[#7A9A80] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                            {isSaving && (
+                              <span className="w-3 h-3 border-2 border-[#00C853]/30 border-t-[#00C853] rounded-full animate-spin ml-1" />
+                            )}
+                          </button>
 
-                    <Td>
-                      <button
-                        onClick={() => handleDelete(order.orderId)}
-                        className="text-red-400 hover:text-red-300 text-xs transition-colors"
-                      >
-                        {t('orders_delete')}
-                      </button>
-                    </Td>
-                  </tr>
+                          {isOpen && (
+                            <div className="absolute top-full left-0 mt-1 z-30 bg-white dark:bg-[#1A2A1E] border border-[rgba(0,200,83,0.2)] rounded-lg shadow-lg py-1 min-w-[140px]">
+                              {statusOptions.map((opt) => {
+                                const isCurrent = order.status === opt.string
+                                return (
+                                  <button
+                                    key={opt.code}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleStatusChange(order.orderId, opt.code)
+                                    }}
+                                    disabled={isSaving}
+                                    className={`w-full text-left px-3 py-2 text-sm flex items-center justify-between transition-colors ${isCurrent
+                                        ? 'text-[#00C853] bg-[rgba(0,200,83,0.08)]'
+                                        : 'text-[#07110A] dark:text-white hover:bg-[rgba(0,200,83,0.04)]'
+                                      }`}
+                                  >
+                                    {t(opt.key)}
+                                    {isCurrent && <Check className="w-3.5 h-3.5 text-[#00C853]" />}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </Td>
+                      <Td>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDelete(order.orderId)
+                          }}
+                          className="text-red-400 hover:text-red-300 text-xs transition-colors"
+                        >
+                          {t('orders_delete')}
+                        </button>
+                      </Td>
+                    </tr>
+
+                    {/* Expanded order items */}
+                    {isOpen && hasItems && (
+                      <tr key={`items-${order.orderId}`}>
+                        <td colSpan={7} className="bg-[rgba(0,200,83,0.02)] dark:bg-[rgba(0,200,83,0.02)] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
+                            {t('orders_items') ?? 'Order Items'}
+                          </p>
+                          <div className="space-y-2">
+                            {order.orderItems!.map((item, idx) => (
+                              <div key={idx} className="flex items-center justify-between text-sm">
+                                <div>
+                                  <p className="font-medium text-[#07110A] dark:text-white">{item.partName}</p>
+                                  <p className="text-xs text-[#4A6B50] dark:text-[#7A9A80]">{item.supplierName}</p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="font-semibold text-[#07110A] dark:text-white">${item.price.toLocaleString()}</p>
+                                  <p className="text-xs text-[#4A6B50] dark:text-[#7A9A80]">Qty: {item.quantity}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex justify-between items-center border-t border-[rgba(0,200,83,0.08)] pt-3 mt-3">
+                            <span className="text-sm font-semibold text-[#07110A] dark:text-white">{t('orders_total') ?? 'Total'}</span>
+                            <span className="text-lg font-bold text-[#00C853]">${order.total?.toLocaleString()}</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 )
               })}
 

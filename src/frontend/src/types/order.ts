@@ -1,3 +1,4 @@
+//src/frontend/src/types/order.ts
 // ─── Enums & Constants ──────────────────────────────────────────────────────
 
 export const OrderStatus = {
@@ -24,15 +25,26 @@ export interface Order {
   partRequestId: number
   partName: string
   status: number               // 0,1,2
-  price: number
+  price?: number
+  total?: number
   userId: number | null
   pickUpLocation: string
   pickUpLocationPhoneNumber: string
   trackingNumber: string
   partRequest: PartRequestRef | null
   payment: PaymentRef | null
+  inventoryPayment?: PaymentRef | null
+  orderItems?: OrderItem[]
 }
-
+// Add OrderItem type if not already present:
+export interface OrderItem {
+  id: number
+  orderId: number
+  partName: string
+  supplierName: string
+  price: number
+  quantity: number
+}
 interface PartRequestRef {
   id: number
   vehicleMake: string
@@ -75,17 +87,25 @@ interface PaymentRef {
   merchantRequestId: string
 }
 
-/** Shape returned by /api/Order/myOrder/{userId} (flat, different keys) */
+/** Shape returned by /api/Order/myOrder/{userId} */
 export interface CustomerOrder {
   orderId: number
   trackingNumber: string
-  status: string            // already a string like "Pending"
-  price: number
+  status: string            // "Pending" | "Shipped" | "Delivered"
+  total: number             // <-- new (the total order amount)
   vehicleMake: string
   model: string
   requestedPartName: string
   requestDescription: string
   dateCreated: string
+  orderItems?: CustomerOrderItem[]   // <-- new
+}
+
+export interface CustomerOrderItem {
+  partName: string
+  supplierName: string
+  price: number
+  quantity: number
 }
 
 // ─── Display‑ready type for admin tables ────────────────────────────────────
@@ -110,7 +130,7 @@ export function mapOrderToDisplay(o: Order): DisplayOrder {
     orderId: o.id,
     trackingNumber: o.trackingNumber,
     statusString: statusCodeToString(o.status),
-    price: o.price,
+    price: o.price ?? 0,
     vehicleMake: o.partRequest?.vehicleMake ?? '',
     model: o.partRequest?.model ?? '',
     requestedPartName: o.partRequest?.partName ?? o.partName,
@@ -219,7 +239,7 @@ export function getOrderDisplay(order: Order): OrderDisplayInfo {
     trackingNumber: order.trackingNumber,
     status: order.status,
     statusString: statusLabel(order.status),
-    price: order.price,
+    price: order.price ?? 0,
     vehicleMake: pr?.vehicleMake ?? '',
     model: pr?.model ?? '',
     requestedPartName: pr?.partName ?? order.partName,

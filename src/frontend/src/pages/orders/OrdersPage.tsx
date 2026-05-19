@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { CustomerOrder } from '@/types/order'
-import { OrderStatus,} from '@/types/order'
+import { OrderStatus, } from '@/types/order'
 import Navbar from '@/components/layout/Navbar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -93,7 +93,7 @@ export default function OrdersPage() {
                   </div>
 
                   <p className="text-[#00C853] font-semibold text-sm">
-                    ${order.price?.toLocaleString()}
+                    ${order.total?.toLocaleString()}
                   </p>
 
                   <p className={cn(
@@ -104,8 +104,8 @@ export default function OrdersPage() {
                   </p>
 
                   <Badge className={cn('text-[10px] w-fit', statusBadge(order.status))}>
-  {order.status}
-</Badge>
+                    {order.status}
+                  </Badge>
                 </div>
               ))}
             </div>

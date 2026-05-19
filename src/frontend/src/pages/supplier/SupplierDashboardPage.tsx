@@ -925,7 +925,7 @@ export default function SupplierDashboardPage() {
                                     {order.partRequest?.model ?? ""}
                                   </td>
                                   <td className="px-5 py-3 text-[#00C853] font-semibold">
-                                    ${order.price.toLocaleString()}
+                                    ${(order.total ?? 0).toLocaleString()}
                                   </td>
                                   <td className="px-5 py-3 font-mono text-xs">
                                     <span

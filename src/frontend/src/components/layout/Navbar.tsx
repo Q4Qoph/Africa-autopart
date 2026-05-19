@@ -10,26 +10,18 @@ import {
   X,
   MapPin,
   Package,
-  LayoutDashboard,
   LogOut,
-  ChevronDown,
   Truck,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { UserRole } from "@/types/user";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { LanguageDropdown } from "@/components/ui/LanguageDropdown";
 import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useExternalCart } from "@/context/ExternalCartContext";
+import TrackOrderModal from '@/components/ui/TrackOrderModal'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -79,6 +71,7 @@ export default function Navbar() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { itemCount: externalItemCount } = useExternalCart();
+  const [trackOpen, setTrackOpen] = useState(false)
 
 
 
@@ -150,13 +143,13 @@ export default function Navbar() {
               >
                 {t("topbar_contact")}
               </Link>
-              <Link
-                to="/track-order"
+              <button
+                onClick={() => setTrackOpen(true)}
                 className="flex items-center gap-1 text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] transition-colors"
               >
                 <Truck className="w-3 h-3" />
                 {t("topbar_trackOrder")}
-              </Link>
+              </button>
             </div>
 
             {/* Right: language + theme */}
@@ -210,154 +203,60 @@ export default function Navbar() {
             {/* Right side */}
             <div className="ml-auto flex items-center gap-2">
 
-              <Link to="/cart" onClick={() => setDrawerOpen(false)} className="relative ml-auto mr-4">
-                <ShoppingCart className="w-5 h-5" />
+              <Link to="/cart" className="relative mr-2">
+                <ShoppingCart className="w-5 h-5 text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853]" />
                 {externalItemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-[#07110A] text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-[#07110A] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {externalItemCount}
                   </span>
                 )}
               </Link>
 
-              {/* Theme toggle — mobile only (desktop has it in topbar) */}
+              {/* Theme toggle — mobile only */}
               <button
                 onClick={toggleTheme}
                 className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
                 aria-label="Toggle theme"
               >
-                {theme === "dark" ? (
-                  <Sun className="w-4 h-4" />
-                ) : (
-                  <Moon className="w-4 h-4" />
-                )}
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
 
               {auth ? (
                 <>
+                  {/* Avatar – links directly to the role‑appropriate dashboard */}
+                  <Link
+                    to={
+                      auth.role === UserRole.Supplier
+                        ? "/supplier/dashboard"
+                        : auth.role === UserRole.Admin
+                          ? "/admin"
+                          : "/dashboard"
+                    }
+                    className="flex items-center ml-1 group"
+                  >
+                    <Avatar className="w-9 h-9 ring-2 ring-transparent group-hover:ring-[rgba(0,200,83,0.3)] transition-all">
+                      <AvatarFallback className="bg-[#00C853]/20 text-[#00C853] text-xs font-bold">
+                        {auth.email
+                          ? auth.email.charAt(0).toUpperCase()
+                          : String(auth.userId).slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
 
-
-                  {/* Avatar dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="flex items-center gap-1.5 focus:outline-none ml-1 group">
-                      <Avatar className="w-9 h-9 ring-2 ring-transparent group-hover:ring-[rgba(0,200,83,0.3)] transition-all">
-                        <AvatarFallback className="bg-[#00C853]/20 text-[#00C853] text-xs font-bold">
-                          {auth.email ? auth.email.charAt(0).toUpperCase() : String(auth.userId).slice(0, 2)}                        </AvatarFallback>
-                      </Avatar>
-                      <ChevronDown className="w-3.5 h-3.5 text-[rgba(0,0,0,0.4)] dark:text-[rgba(255,255,255,0.4)] transition-transform group-data-[state=open]:rotate-180" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="w-56 bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.08)] dark:border-[rgba(0,200,83,0.2)] text-[#07110A] dark:text-white shadow-xl rounded-xl p-1"
+                  {/* New Request CTA — customer only */}
+                  {auth.role !== UserRole.Supplier && auth.role !== UserRole.Admin && (
+                    <Link
+                      to="/requests/new"
+                      className={cn(
+                        btnBase,
+                        "bg-[#00C853] text-[#07110A] font-bold px-5 py-2 text-sm rounded-full hover:bg-[#39FF88]",
+                        "inline-flex items-center gap-1.5"
+                      )}
                     >
-                      {/* User info */}
-                      <div className="px-3 py-2.5 border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)]">
-                        <p className="text-xs font-semibold text-[#07110A] dark:text-white">
-                          {auth.role === UserRole.Supplier
-                            ? t("dropdown_roleSupplier")
-                            : auth.role === UserRole.Admin
-                              ? t("dropdown_roleAdmin")
-                              : t("dropdown_roleCustomer")}
-                        </p>
-                        <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80] mt-0.5">
-                          ID #{auth.userId}
-                        </p>
-                      </div>
-
-                      {auth.role === UserRole.Admin && (
-                        <>
-                          <DropdownMenuItem>
-                            <Link
-                              to="/admin"
-                              className="w-full flex items-center gap-2 text-[#00C853] font-semibold"
-                            >
-                              <LayoutDashboard className="w-3.5 h-3.5" />
-                              {t("dropdown_adminPanel")}
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator className="bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(0,200,83,0.12)]" />
-                        </>
-                      )}
-
-                      {auth.role === UserRole.Supplier ? (
-                        <>
-                          <DropdownMenuItem>
-                            <Link
-                              to="/supplier/dashboard"
-                              className="w-full flex items-center gap-2"
-                            >
-                              <LayoutDashboard className="w-3.5 h-3.5 text-[#00C853]" />
-                              {t("dropdown_dashboard")}
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Link
-                              to="/supplier/dashboard"
-                              className="w-full flex items-center gap-2"
-                            >
-                              <Package className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                              {t("dropdown_myOffers")}
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Link
-                              to="/supplier/dashboard"
-                              className="w-full flex items-center gap-2"
-                            >
-                              <Truck className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                              {t("dropdown_myOrders")}
-                            </Link>
-                          </DropdownMenuItem>
-                        </>
-                      ) : (
-                        <>
-                          <DropdownMenuItem>
-                            <Link
-                              to="/dashboard"
-                              className="w-full flex items-center gap-2"
-                            >
-                              <LayoutDashboard className="w-3.5 h-3.5 text-[#00C853]" />
-                              {t("dropdown_dashboard")}
-                            </Link>
-                          </DropdownMenuItem>
-                          {auth.role !== UserRole.Admin && (
-                            <DropdownMenuItem>
-                              <Link
-                                to="/requests"
-                                className="w-full flex items-center gap-2"
-                              >
-                                <Package className="w-3.5 h-3.5 text-[#4A6B50] dark:text-[#7A9A80]" />
-                                {t("dropdown_myRequests")}
-                              </Link>
-                            </DropdownMenuItem>
-                          )}
-                        </>
-                      )}
-
-                      <DropdownMenuSeparator className="bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(255,255,255,0.06)]" />
-                      <DropdownMenuItem onClick={handleLogout}
-                        className="cursor-pointer text-red-500 dark:text-red-400 focus:text-red-500 hover:bg-red-50 dark:hover:bg-red-400/10 rounded-lg"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        {t("dropdown_logout")}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* New request CTA — customer only */}
-                  {auth.role !== UserRole.Supplier &&
-                    auth.role !== UserRole.Admin && (
-                      <Link
-                        to="/requests/new"
-                        className={cn(
-                          btnBase,
-                          "bg-[#00C853] text-[#07110A] font-bold px-5 py-2 text-sm rounded-full hover:bg-[#39FF88]",
-                          "inline-flex items-center gap-1.5"
-                        )}
-                      >
-                        <Package className="w-4 h-4" />
-                        {t("cta_newRequest")}
-                      </Link>
-                    )}
+                      <Package className="w-4 h-4" />
+                      {t("cta_newRequest")}
+                    </Link>
+                  )}
                 </>
               ) : (
                 <>
@@ -365,7 +264,8 @@ export default function Navbar() {
                     to="/login"
                     className={cn(
                       btnBase,
-                      "hidden sm:inline-flex border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] hover:text-[#07110A] dark:hover:text-white text-xs px-3 py-1.5",
+                      "border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] font-bold px-5 py-2 text-sm rounded-full hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] hover:text-[#07110A] dark:hover:text-white",
+                      "inline-flex items-center gap-1.5"
                     )}
                   >
                     {t("cta_login")}
@@ -374,7 +274,8 @@ export default function Navbar() {
                     to="/requests/new"
                     className={cn(
                       btnBase,
-                      "bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] text-xs px-4 py-1.5 gap-1.5",
+                      "bg-[#00C853] text-[#07110A] font-bold px-5 py-2 text-sm rounded-full hover:bg-[#39FF88]",
+                      "inline-flex items-center gap-1.5"
                     )}
                   >
                     <MapPin className="w-3.5 h-3.5 hidden sm:block" />
@@ -554,6 +455,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      <TrackOrderModal open={trackOpen} onClose={() => setTrackOpen(false)} />
     </>
   );
 }

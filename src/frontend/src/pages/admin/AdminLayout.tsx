@@ -2,9 +2,19 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Navbar from '@/components/layout/Navbar'
+import { useAuth } from '@/context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button';
 
 export default function AdminLayout() {
   const { t } = useTranslation('admin')
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/')
+  }
 
   const sidebarLinks = [
     { label: t('sidebar_dashboard'), href: '/admin', end: true },
@@ -32,17 +42,24 @@ export default function AdminLayout() {
                 to={l.href}
                 end={l.end}
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-[rgba(0,200,83,0.12)] text-[#00C853]'
-                      : 'text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.6)] hover:text-[#07110A] dark:hover:text-white hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)]'
+                  `px-3 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
+                    ? 'bg-[rgba(0,200,83,0.12)] text-[#00C853]'
+                    : 'text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.6)] hover:text-[#07110A] dark:hover:text-white hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)]'
                   }`
                 }
               >
                 {l.label}
               </NavLink>
             ))}
+
           </nav>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="mt-auto border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 text-xs"
+          >
+            Logout
+          </Button>
         </aside>
 
         {/* Mobile subnav */}
@@ -53,8 +70,7 @@ export default function AdminLayout() {
               to={l.href}
               end={l.end}
               className={({ isActive }) =>
-                `flex-1 py-3 text-center text-[10px] font-mono uppercase tracking-wider transition-colors ${
-                  isActive ? 'text-[#00C853]' : 'text-[rgba(0,0,0,0.45)] dark:text-[rgba(255,255,255,0.5)]'
+                `flex-1 py-3 text-center text-[10px] font-mono uppercase tracking-wider transition-colors ${isActive ? 'text-[#00C853]' : 'text-[rgba(0,0,0,0.45)] dark:text-[rgba(255,255,255,0.5)]'
                 }`
               }
             >
