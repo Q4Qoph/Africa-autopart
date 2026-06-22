@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { paymentApi } from '@/api/paymentApi'
-import Navbar from '@/components/layout/Navbar'
+
 
 export default function SuccessPage() {
   const { auth } = useAuth()
@@ -28,9 +28,7 @@ export default function SuccessPage() {
   }, [auth])
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
           {status === 'verifying' && (
             <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('payment_verifying')}</p>
@@ -70,7 +68,6 @@ export default function SuccessPage() {
             </>
           )}
         </div>
-      </main>
     </div>
   )
 }

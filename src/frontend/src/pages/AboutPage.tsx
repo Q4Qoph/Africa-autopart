@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Zap, ShieldCheck, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import Navbar from '@/components/layout/Navbar'
+
 
 export default function AboutPage() {
   const { t } = useTranslation('pages')
@@ -25,10 +25,7 @@ export default function AboutPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans">
 
         {/* Hero */}
         <section className="bg-[#07110A] py-16 px-6">
@@ -121,7 +118,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-      </main>
     </div>
   )
 }

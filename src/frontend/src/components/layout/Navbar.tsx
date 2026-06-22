@@ -1,32 +1,23 @@
-//src/frontend/src/components/layout/Navbar.tsx
+// src/frontend/src/components/layout/Navbar.tsx
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  Sun,
-  Moon,
-  Phone,
+  ChevronDown,
+  User,
+  UserPlus,
+  ShoppingCart,
   Menu,
   X,
-  MapPin,
-  Package,
-  LogOut,
-  Truck,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useTheme } from "@/context/ThemeContext";
+import { useLanguage, type Language } from "@/context/LanguageContext";
 import { UserRole } from "@/types/user";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LanguageDropdown } from "@/components/ui/LanguageDropdown";
-import { ShoppingCart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useExternalCart } from "@/context/ExternalCartContext";
-import TrackOrderModal from '@/components/ui/TrackOrderModal'
+import TrackOrderModal from "@/components/ui/TrackOrderModal";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const btnBase =
-  "inline-flex items-center justify-center rounded-lg text-sm font-semibold px-4 py-2 transition-all";
 
 function NavLink({
   href,
@@ -40,10 +31,10 @@ function NavLink({
   onClick?: () => void;
 }) {
   const cls = cn(
-    "text-sm transition-colors",
+    "text-sm font-semibold transition-colors",
     active
-      ? "text-[#00C853] font-semibold"
-      : "text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] hover:text-[#07110A] dark:hover:text-white",
+      ? "text-[#00C853]"
+      : "text-slate-200 hover:text-[#00C853]",
   );
 
   if (href.startsWith("/") && !href.includes("#")) {
@@ -64,16 +55,15 @@ function NavLink({
 
 export default function Navbar() {
   const { auth, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage } = useLanguage();
   const { t } = useTranslation("nav");
   const navigate = useNavigate();
   const location = useLocation();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [currency, setCurrency] = useState("USD");
   const { itemCount: externalItemCount } = useExternalCart();
-  const [trackOpen, setTrackOpen] = useState(false)
-
-
+  const [trackOpen, setTrackOpen] = useState(false);
 
   function handleLogout() {
     logout();
@@ -85,7 +75,6 @@ export default function Navbar() {
   const publicLinks = [
     { label: t("nav_howItWorks"), href: "/#how-it-works" },
     { label: t("nav_suppliers"), href: "/suppliers" },
-    { label: t("nav_trackOrder"), href: "/track-order" },
     { label: t("nav_becomeSupplier"), href: "/become-supplier" },
     { label: t("nav_shop"), href: "/shop" },
   ];
@@ -117,113 +106,93 @@ export default function Navbar() {
   return (
     <>
       {/* ── Fixed wrapper ── */}
-      <div className="fixed top-0 inset-x-0 z-50 flex flex-col">
-        {/* ── Topbar — desktop only ── */}
-        <div className="hidden md:flex items-center h-9 bg-[#E8F2EA] dark:bg-[#07110A] border-b border-[rgba(0,200,83,0.15)] dark:border-[rgba(0,200,83,0.1)] px-6">
-          <div className="max-w-[1260px] w-full mx-auto flex items-center justify-between">
-            {/* Left: phone + links */}
-            <div className="flex items-center gap-5">
-              <a
-                href="tel:+254700225100"
-                className="flex items-center gap-1.5 text-[#4A6B50] dark:text-[rgba(255,255,255,0.55)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] font-mono transition-colors"
-              >
-                <Phone className="w-3 h-3" />
-                +25377577016
-              </a>
-              <span className="w-px h-3 bg-[rgba(0,0,0,0.12)] dark:bg-[rgba(255,255,255,0.12)]" />
-              <Link
-                to="/about"
-                className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors"
-              >
-                {t("topbar_about")}
-              </Link>
-              <Link
-                to="/contact"
-                className="text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.8)] text-[11px] transition-colors"
-              >
-                {t("topbar_contact")}
-              </Link>
-              <button
-                onClick={() => setTrackOpen(true)}
-                className="flex items-center gap-1 text-[#4A6B50] dark:text-[rgba(255,255,255,0.45)] hover:text-[#00C853] dark:hover:text-[#00C853] text-[11px] transition-colors"
-              >
-                <Truck className="w-3 h-3" />
-                {t("topbar_trackOrder")}
-              </button>
-            </div>
-
-            {/* Right: language + theme */}
-            <div className="flex items-center gap-3">
-              <LanguageDropdown variant="topbar" />
-              <span className="w-px h-3 bg-[rgba(0,0,0,0.12)] dark:bg-[rgba(255,255,255,0.12)]" />
-              <button
-                onClick={toggleTheme}
-                className="w-6 h-6 flex items-center justify-center rounded text-[#4A6B50] dark:text-[rgba(255,255,255,0.55)] hover:text-[#07110A] dark:hover:text-[rgba(255,255,255,0.9)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.08)] transition-colors"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? (
-                  <Sun className="w-3.5 h-3.5" />
-                ) : (
-                  <Moon className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Main nav bar ── */}
-        <header className="h-[80px] bg-[rgba(247,253,248,0.95)] dark:bg-[rgba(7,17,10,0.95)] backdrop-blur-md border-b border-[rgba(0,200,83,0.12)] flex items-center">
-          <div className="max-w-[1260px] w-full mx-auto px-6 flex items-center gap-6">
-            {/* Logo */}
-            <Link to="/" className="flex items-center shrink-0 mr-2">
-              <img
-                src="/images/logo.png"
-                alt="Africa Autopart"
-                className="w-52 h-auto"
-              />
+      <div className="fixed top-0 inset-x-0 z-50 flex flex-col shadow-md">
+        
+        {/* ── Main nav bar (PartSouq UI & Africa Autopart Brand) ── */}
+        <header className="h-[65px] bg-[#0c1524] border-b border-slate-800 text-white flex items-center select-none">
+          <div className="max-w-[1240px] w-full mx-auto px-4 flex items-center justify-between">
+            
+            {/* Left: Brand Logo (Africa Autopart Branding) */}
+            <Link to="/" className="flex items-center group font-sans shrink-0 mr-4">
+              {/* AA Badge in Green branding colors */}
+              <svg viewBox="0 0 100 100" className="w-9 h-9 mr-2.5 transition-transform duration-500 group-hover:rotate-180" fill="none">
+                <circle cx="50" cy="50" r="45" fill="#00933C" />
+                <circle cx="50" cy="50" r="35" stroke="#00C853" strokeWidth="6" strokeDasharray="12 6" />
+                <circle cx="50" cy="50" r="20" fill="#00C853" />
+                <text x="50" y="58" fontFamily="sans-serif" fontWeight="900" fontSize="22" fill="#07110A" textAnchor="middle">AA</text>
+              </svg>
+              {/* Text logo */}
+              <span className="font-extrabold text-xl tracking-tight italic">
+                <span className="text-white">Africa</span>
+                <span className="text-[#00C853] ml-1">Autopart</span>
+              </span>
             </Link>
 
-            {/* Desktop nav links */}
-            <nav className="hidden lg:flex items-center gap-6 flex-1">
-              {navLinks.map((l) => (
-                <NavLink key={l.href} href={l.href} active={isActive(l.href)}>
-                  {l.label}
-                </NavLink>
-              ))}
-              {auth?.role === UserRole.Admin && (
-                <Link
-                  to="/admin"
-                  className="text-sm font-semibold text-[#00C853] hover:text-[#39FF88] transition-colors"
+            {/* Middle: Language & Currency Selectors + Navlinks */}
+            <div className="hidden lg:flex items-center gap-5 flex-1 font-sans ml-4">
+              {/* Language Selection */}
+              <div className="relative shrink-0">
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as Language)}
+                  className="appearance-none bg-[#0c1524] border border-slate-700 text-slate-100 font-bold text-xs rounded px-3 py-1.5 pr-8 outline-none cursor-pointer hover:bg-slate-800 transition-colors"
                 >
-                  {t("nav_adminPanel")}
-                </Link>
-              )}
-            </nav>
+                  <option value="en">🇬🇧 ENGLISH</option>
+                  <option value="fr">🇫🇷 FRANÇAIS</option>
+                  <option value="am">🇪🇹 አማርኛ</option>
+                  <option value="ar">🇸🇦 العربية</option>
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
 
-            {/* Right side */}
-            <div className="ml-auto flex items-center gap-2">
+              {/* Currency Selection */}
+              <div className="relative shrink-0">
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                  className="appearance-none bg-[#0c1524] border border-slate-700 text-slate-100 font-bold text-xs rounded px-3 py-1.5 pr-8 outline-none cursor-pointer hover:bg-slate-800 transition-colors"
+                >
+                  <option value="USD">USD</option>
+                  <option value="KES">KES</option>
+                  <option value="SAR">SAR</option>
+                  <option value="EUR">EUR</option>
+                  <option value="AED">AED</option>
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
 
-              <Link to="/cart" className="relative mr-2">
-                <ShoppingCart className="w-5 h-5 text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#00C853]" />
-                {externalItemCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-[#00C853] text-[#07110A] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {externalItemCount}
-                  </span>
+              <span className="w-px h-5 bg-slate-800 mx-2" />
+
+              {/* Desktop Nav Links */}
+              <nav className="flex items-center gap-5">
+                {navLinks.map((l) => (
+                  <NavLink key={l.href} href={l.href} active={isActive(l.href)}>
+                    {l.label}
+                  </NavLink>
+                ))}
+                {auth?.role === UserRole.Admin && (
+                  <Link
+                    to="/admin"
+                    className="text-sm font-semibold text-[#00C853] hover:text-[#39FF88] transition-colors"
+                  >
+                    {t("nav_adminPanel")}
+                  </Link>
                 )}
-              </Link>
+                <button
+                  type="button"
+                  onClick={() => setTrackOpen(true)}
+                  className="text-sm font-semibold text-slate-200 hover:text-[#00C853] transition-colors"
+                >
+                  Track Order
+                </button>
+              </nav>
+            </div>
 
-              {/* Theme toggle — mobile only */}
-              <button
-                onClick={toggleTheme}
-                className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-
+            {/* Right side controls */}
+            <div className="flex items-center gap-3 font-sans shrink-0">
+              
               {auth ? (
-                <>
-                  {/* Avatar – links directly to the role‑appropriate dashboard */}
+                <div className="hidden md:flex items-center gap-2">
                   <Link
                     to={
                       auth.role === UserRole.Supplier
@@ -232,229 +201,176 @@ export default function Navbar() {
                           ? "/admin"
                           : "/dashboard"
                     }
-                    className="flex items-center ml-1 group"
+                    className="bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs px-4 py-2 rounded flex items-center gap-1.5 transition-all shadow-sm"
                   >
-                    <Avatar className="w-9 h-9 ring-2 ring-transparent group-hover:ring-[rgba(0,200,83,0.3)] transition-all">
-                      <AvatarFallback className="bg-[#00C853]/20 text-[#00C853] text-xs font-bold">
-                        {auth.email
-                          ? auth.email.charAt(0).toUpperCase()
-                          : String(auth.userId).slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
+                    <User className="w-3.5 h-3.5" />
+                    Dashboard
                   </Link>
-
-                  {/* New Request CTA — customer only */}
-                  {auth.role !== UserRole.Supplier && auth.role !== UserRole.Admin && (
-                    <Link
-                      to="/requests/new"
-                      className={cn(
-                        btnBase,
-                        "bg-[#00C853] text-[#07110A] font-bold px-5 py-2 text-sm rounded-full hover:bg-[#39FF88]",
-                        "inline-flex items-center gap-1.5"
-                      )}
-                    >
-                      <Package className="w-4 h-4" />
-                      {t("cta_newRequest")}
-                    </Link>
-                  )}
-                </>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2 rounded flex items-center gap-1.5 transition-all shadow-sm"
+                  >
+                    Log Out
+                  </button>
+                </div>
               ) : (
-                <>
+                <div className="hidden md:flex items-center gap-2">
                   <Link
                     to="/login"
-                    className={cn(
-                      btnBase,
-                      "border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.65)] dark:text-[rgba(255,255,255,0.7)] font-bold px-5 py-2 text-sm rounded-full hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] hover:text-[#07110A] dark:hover:text-white",
-                      "inline-flex items-center gap-1.5"
-                    )}
+                    className="bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs px-4 py-2 rounded flex items-center gap-1.5 transition-all shadow-sm"
                   >
-                    {t("cta_login")}
+                    <User className="w-3.5 h-3.5" />
+                    Log In
                   </Link>
                   <Link
-                    to="/requests/new"
-                    className={cn(
-                      btnBase,
-                      "bg-[#00C853] text-[#07110A] font-bold px-5 py-2 text-sm rounded-full hover:bg-[#39FF88]",
-                      "inline-flex items-center gap-1.5"
-                    )}
+                    to="/register"
+                    className="bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs px-4 py-2 rounded flex items-center gap-1.5 transition-all shadow-sm"
                   >
-                    <MapPin className="w-3.5 h-3.5 hidden sm:block" />
-                    {t("cta_requestPart")}
+                    <UserPlus className="w-3.5 h-3.5" />
+                    Sign Up
                   </Link>
-                </>
+                </div>
               )}
 
-              {/* Hamburger — mobile */}
+              {/* Shopping Cart Pill */}
+              <Link
+                to="/cart"
+                className="bg-black border border-slate-700 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2 rounded flex items-center gap-2 transition-all shadow-sm"
+              >
+                <ShoppingCart className="w-3.5 h-3.5" />
+                <span>{externalItemCount}</span>
+              </Link>
+
+              {/* Hamburger menu trigger */}
               <button
                 onClick={() => setDrawerOpen(true)}
-                className="lg:hidden w-9 h-9 rounded-lg flex items-center justify-center border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[rgba(0,0,0,0.6)] dark:text-[rgba(255,255,255,0.6)] hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors ml-1"
+                className="lg:hidden w-9 h-9 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-white hover:bg-slate-700 transition-colors"
                 aria-label="Open menu"
               >
                 <Menu className="w-4.5 h-4.5" />
               </button>
             </div>
+
           </div>
         </header>
       </div>
 
-      {/* ── Mobile Drawer ── */}
-      {/* Backdrop */}
-      <div
-        className={cn(
-          "fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
-          drawerOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none",
-        )}
-        onClick={() => setDrawerOpen(false)}
-      />
-
-      {/* Drawer panel */}
-      <div
-        className={cn(
-          "fixed top-0 left-0 h-full w-[300px] z-[70] flex flex-col",
-          "bg-white dark:bg-[#0F1F13]",
-          "border-r border-[rgba(0,200,83,0.12)]",
-          "transition-transform duration-300 ease-in-out lg:hidden",
-          drawerOpen ? "translate-x-0" : "-translate-x-full",
-        )}
-      >
-        {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 h-[68px] border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] shrink-0">
-          <Link
-            to="/"
-            className="flex items-center gap-2.5"
-            onClick={() => setDrawerOpen(false)}
-          >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
-              AA
+      {/* ── MOBILE DRAWER ──────────────────────────────────────────────────────── */}
+      {drawerOpen && (
+        <div className="fixed inset-0 z-[70] flex justify-end">
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
+          
+          {/* Content */}
+          <div className="relative w-80 max-w-full bg-[#0c1524] h-full shadow-2xl p-6 flex flex-col gap-6 text-white z-[80] font-sans">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-4">
+              <div className="flex items-center">
+                {/* Logo badge (Africa Autopart Branding) */}
+                <svg viewBox="0 0 100 100" className="w-8 h-8 mr-2" fill="none">
+                  <circle cx="50" cy="50" r="45" fill="#00933C" />
+                  <circle cx="50" cy="50" r="35" stroke="#00C853" strokeWidth="6" strokeDasharray="12 6" />
+                  <circle cx="50" cy="50" r="20" fill="#00C853" />
+                  <text x="50" y="58" fontFamily="sans-serif" fontWeight="900" fontSize="22" fill="#07110A" textAnchor="middle">AA</text>
+                </svg>
+                <span className="font-extrabold text-lg italic text-white">
+                  <span>Africa</span>
+                  <span className="text-[#00C853] ml-1">Autopart</span>
+                </span>
+              </div>
+              <button onClick={() => setDrawerOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-6 h-6" />
+              </button>
             </div>
-            <span className="text-[#07110A] dark:text-white font-bold text-sm">
-              Africa Autopart
-            </span>
-          </Link>
-          <button
-            onClick={() => setDrawerOpen(false)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] hover:bg-[rgba(0,0,0,0.06)] dark:hover:bg-[rgba(255,255,255,0.06)] transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
 
-        {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto px-4 py-5 space-y-1">
-          {navLinks.map((l) => (
-            <NavLink
-              key={l.href}
-              href={l.href}
-              active={isActive(l.href)}
-              onClick={() => setDrawerOpen(false)}
-            >
-              <span className="block px-3 py-2.5 rounded-lg hover:bg-[rgba(0,200,83,0.06)] transition-colors text-sm">
-                {l.label}
-              </span>
-            </NavLink>
-          ))}
+            <div className="flex flex-col gap-4 text-sm font-semibold">
+              <Link to="/" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Home</Link>
+              <Link to="/shop" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Catalog / Shop</Link>
+              <Link to="/suppliers" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Suppliers</Link>
+              <Link to="/become-supplier" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Become a Supplier</Link>
+              <button
+                onClick={() => { setDrawerOpen(false); setTrackOpen(true); }}
+                className="text-left hover:text-amber-500 py-2 border-b border-slate-800 flex items-center gap-1.5"
+              >
+                Track Order
+              </button>
+            </div>
 
-          {auth?.role === UserRole.Admin && (
-            <Link
-              to="/admin"
-              className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-[#00C853] hover:bg-[rgba(0,200,83,0.06)] transition-colors"
-              onClick={() => setDrawerOpen(false)}
-            >
-              {t("nav_adminPanel")}
-            </Link>
-          )}
+            {/* Language & Currency in mobile drawer */}
+            <div className="flex flex-col gap-3 py-4 border-t border-slate-800 mt-4">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] uppercase text-slate-500 font-bold">Language</span>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as Language)}
+                  className="bg-slate-900 border border-slate-800 text-slate-100 font-bold text-xs rounded px-3 py-2 outline-none w-full"
+                >
+                  <option value="en">🇬🇧 ENGLISH</option>
+                  <option value="fr">🇫🇷 FRANÇAIS</option>
+                  <option value="am">🇪🇹 አማርኛ</option>
+                  <option value="ar">🇸🇦 العربية</option>
+                </select>
+              </div>
 
-          <div className="pt-4 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] mt-4 space-y-2">
-            {auth ? (
-              <>
-                <div className="px-3 py-2 rounded-lg bg-[rgba(0,200,83,0.06)] mb-3">
-                  <p className="text-xs font-semibold text-[#07110A] dark:text-white">
-                    {auth.role === UserRole.Supplier
-                      ? t("dropdown_roleSupplier")
-                      : auth.role === UserRole.Admin
-                        ? t("dropdown_roleAdmin")
-                        : t("dropdown_roleCustomer")}
-                  </p>
-                  <p className="text-[10px] text-[#4A6B50] dark:text-[#7A9A80]">
-                    ID #{auth.userId}
-                  </p>
-                </div>
-                {auth.role !== UserRole.Supplier &&
-                  auth.role !== UserRole.Admin && (
-                    <Link
-                      to="/requests/new"
-                      className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors"
-                      onClick={() => setDrawerOpen(false)}
-                    >
-                      <Package className="w-4 h-4" />
-                      {t("cta_newRequest")}
-                    </Link>
-                  )}
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-400/10 transition-colors"
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] uppercase text-slate-500 font-bold">Currency</span>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                  className="bg-slate-900 border border-slate-800 text-slate-100 font-bold text-xs rounded px-3 py-2 outline-none w-full"
                 >
-                  <LogOut className="w-4 h-4" />
-                  {t("dropdown_logout")}
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/requests/new"
-                  className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg bg-[#00C853] text-[#07110A] font-semibold text-sm hover:bg-[#39FF88] transition-colors"
-                  onClick={() => setDrawerOpen(false)}
-                >
-                  <MapPin className="w-4 h-4" />
-                  {t("cta_requestPart")}
-                </Link>
-                <Link
-                  to="/login"
-                  className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[rgba(0,0,0,0.7)] dark:text-[rgba(255,255,255,0.7)] text-sm hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)] transition-colors"
-                  onClick={() => setDrawerOpen(false)}
-                >
-                  {t("cta_login")}
-                </Link>
-                <Link
-                  to="/register"
-                  className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[rgba(0,0,0,0.7)] dark:text-[rgba(255,255,255,0.7)] text-sm hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)] transition-colors"
-                  onClick={() => setDrawerOpen(false)}
-                >
-                  {t("drawer_createAccount")}
-                </Link>
-              </>
-            )}
-          </div>
-        </nav>
+                  <option value="USD">USD</option>
+                  <option value="KES">KES</option>
+                  <option value="SAR">SAR</option>
+                  <option value="EUR">EUR</option>
+                  <option value="AED">AED</option>
+                </select>
+              </div>
+            </div>
 
-        {/* Drawer footer */}
-        <div className="px-5 py-4 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] shrink-0 space-y-3">
-          <a
-            href="tel:+254700225100"
-            className="flex items-center gap-2 text-[#4A6B50] dark:text-[#7A9A80] text-xs"
-          >
-            <Phone className="w-3.5 h-3.5 text-[#00C853]" />
-            +25377577016
-          </a>
-          <div className="flex items-center gap-3">
-            <LanguageDropdown variant="drawer" />
-            <span className="w-px h-3 bg-[rgba(0,0,0,0.1)] dark:bg-[rgba(255,255,255,0.1)]" />
-            <button
-              onClick={toggleTheme}
-              className="flex items-center gap-1.5 text-[rgba(0,0,0,0.5)] dark:text-[rgba(255,255,255,0.5)] text-xs hover:text-[#07110A] dark:hover:text-white transition-colors"
-            >
-              {theme === "dark" ? (
-                <Sun className="w-3.5 h-3.5" />
+            <div className="mt-auto flex flex-col gap-4">
+              {auth ? (
+                <>
+                  <div className="bg-slate-800/50 p-3 rounded text-xs">
+                    Logged in as: <strong className="text-white block mt-0.5">{auth.email}</strong>
+                  </div>
+                  <Link
+                    to={auth.role === UserRole.Supplier ? "/supplier/dashboard" : auth.role === UserRole.Admin ? "/admin" : "/dashboard"}
+                    className="bg-blue-600 text-center text-white py-2.5 rounded font-bold hover:bg-blue-700"
+                    onClick={() => setDrawerOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => { handleLogout(); setDrawerOpen(false); }}
+                    className="bg-red-600 text-white py-2.5 rounded font-bold hover:bg-red-700"
+                  >
+                    Log Out
+                  </button>
+                </>
               ) : (
-                <Moon className="w-3.5 h-3.5" />
+                <>
+                  <Link
+                    to="/login"
+                    className="bg-blue-600 text-center text-white py-2.5 rounded font-bold hover:bg-blue-700"
+                    onClick={() => setDrawerOpen(false)}
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-slate-700 text-center text-white py-2.5 rounded font-bold hover:bg-slate-600"
+                    onClick={() => setDrawerOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
               )}
-              {theme === "dark" ? t("drawer_lightMode") : t("drawer_darkMode")}
-            </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Track Order Modal */}
       <TrackOrderModal open={trackOpen} onClose={() => setTrackOpen(false)} />
     </>
   );

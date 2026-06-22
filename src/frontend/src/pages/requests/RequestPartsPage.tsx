@@ -9,7 +9,7 @@ import { orderApi } from '@/api/orderApi'
 import { paymentApi } from '@/api/paymentApi'
 import type { PartRequest } from '@/types/request'
 import type { PartResult } from '@/types/parts'
-import Navbar from '@/components/layout/Navbar'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -189,9 +189,7 @@ export default function RequestPartsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[1000px] mx-auto px-6 py-12">
           <Link
             to={`/requests/${id}`}
@@ -420,7 +418,6 @@ export default function RequestPartsPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   )
 }

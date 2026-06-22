@@ -1,576 +1,255 @@
-//src/frontend/src/pages/HomePage.tsx
+// src/frontend/src/pages/HomePage.tsx
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import {
+  Search,
+  Menu,
+  Mail,
+  Phone,
+} from 'lucide-react'
+
+// Custom SVG Brand Icons since older lucide-react doesn't export them
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M9 8H7v3h2v9h4v-9h3.6l.4-3H13V6c0-.5.5-1 1-1h3V1h-4c-2.8 0-5 2.2-5 5v2z" />
+  </svg>
+)
+
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+)
+
+const TwitterIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.2 2.4h3.3L14.3 11l8.5 11.3h-6.7L11 15.8l-6 6.5H1.6l7.7-8.9L1.3 2.4h6.9l4.6 6.1 5.4-6.1zM17 20.3h1.8L7.1 4H5.1l11.9 16.3z" />
+  </svg>
+)
+
+const YoutubeIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M23.5 6.2c-.3-1.1-1.1-2-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12 0 12s0 3.8.5 5.8c.3 1.1 1.1 2 2.2 2.2 2 .5 9.3.5 9.3.5s7.3 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-5.8.5-5.8s0-3.8-.5-5.8z" />
+    <polygon points="9.8,8 9.8,16 16.6,12" fill="white" />
+  </svg>
+)
 import { useTranslation } from 'react-i18next'
-import Navbar from '@/components/layout/Navbar'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 import { vinApi } from '@/api/vinApi'
 import type { VehicleSummary } from '@/types/vin'
+import { cn } from '@/lib/utils'
 
-// ─── Static data (no i18n needed) ────────────────────────────────────────────
+// ─── SVG Brand Logos (Exact replicas of the 27 PartSouq brands) ──────────────────────
 
-// const vehicleYears = Array.from({ length: 20 }, (_, i) => String(2025 - i))
-
-// const vehicleMakes = [
-//   'Toyota', 'Nissan', 'Mitsubishi', 'Isuzu', 'Land Rover',
-//   'Mercedes-Benz', 'BMW', 'Ford', 'Honda', 'Hyundai',
-//   'Kia', 'Mazda', 'Subaru', 'Jeep', 'Volkswagen',
-//   'Peugeot', 'Renault', 'Suzuki', 'Daihatsu', 'Other',
-// ]
-
-const brands = Array.from({ length: 16 }, (_, i) => ({
-  id: i + 1,
-  img: `/images/brands/brand-${i + 1}.png`,
-  alt: `Brand ${i + 1}`,
-}))
-
-type PartCondition = 'OEM' | 'Aftermarket' | 'Used'
-
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
-const btnPrimary =
-  'inline-flex items-center justify-center rounded-lg bg-[#00C853] text-[#07110A] font-semibold px-6 py-3 text-sm hover:bg-[#39FF88] transition-colors'
-const btnOutline =
-  'inline-flex items-center justify-center rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.12)] text-[rgba(0,0,0,0.7)] dark:text-[rgba(255,255,255,0.8)] px-6 py-3 text-sm hover:bg-[rgba(0,0,0,0.05)] dark:hover:bg-[rgba(255,255,255,0.06)] hover:text-[#07110A] dark:hover:text-white transition-colors'
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-3">
-      <span className="block w-6 h-px bg-[#00C853]" />
-      {children}
-    </p>
-  )
+const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
+  Toyota: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <ellipse cx="50" cy="30" rx="42" ry="24" />
+      <ellipse cx="50" cy="30" rx="30" ry="15" />
+      <ellipse cx="50" cy="30" rx="12" ry="24" />
+    </svg>
+  ),
+  Lexus: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <ellipse cx="50" cy="30" rx="40" ry="24" />
+      <path d="M30,42 L52,18 L70,18 L48,42 L30,42 Z" fill={color} stroke="none" />
+      <path d="M48,42 L68,42 L68,36 L54,36 Z" fill={color} stroke="none" />
+    </svg>
+  ),
+  Nissan: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <circle cx="50" cy="30" r="20" />
+      <rect x="15" y="24" width="70" height="12" fill={color} rx="1" stroke="none" />
+      <text x="50" y="33" fontFamily="sans-serif" fontWeight="900" fontSize="8" fill="white" stroke="none" textAnchor="middle" letterSpacing="1">NISSAN</text>
+    </svg>
+  ),
+  Infiniti: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <ellipse cx="50" cy="30" rx="38" ry="22" />
+      <path d="M28,40 L50,16 L72,40" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M50,16 L50,45" strokeWidth="3" />
+    </svg>
+  ),
+  Mitsubishi: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 80" className="w-16 h-12" fill={color}>
+      <path d="M50,5 L62,26 L50,47 L38,26 Z" />
+      <path d="M36,49 L48,70 L24,70 L12,49 Z" />
+      <path d="M64,49 L88,49 L76,70 L64,70 Z" />
+    </svg>
+  ),
+  Subaru: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="2">
+      <ellipse cx="50" cy="30" rx="42" ry="24" fill="#003399" stroke="none" />
+      <path d="M30,30 L32,23 L39,21 L32,19 L30,12 L28,19 L21,21 L28,23 Z" fill="white" stroke="none" />
+      <path d="M55,20 L56,17 L60,17 L57,15 L58,12 L55,14 L52,12 L53,15 L50,17 L54,17 Z" fill="white" stroke="none" />
+      <path d="M68,26 L69,23 L73,23 L70,21 L71,18 L68,20 L65,18 L66,21 L63,23 L67,23 Z" fill="white" stroke="none" />
+      <path d="M60,38 L61,35 L65,35 L62,33 L63,30 L60,32 L57,30 L58,33 L55,35 L59,35 Z" fill="white" stroke="none" />
+      <path d="M72,36 L73,33 L77,33 L74,31 L75,28 L72,30 L69,28 L70,31 L67,33 L71,33 Z" fill="white" stroke="none" />
+      <path d="M50,30 L51,27 L55,27 L52,25 L53,22 L50,24 L47,22 L48,25 L45,27 L49,27 Z" fill="white" stroke="none" />
+    </svg>
+  ),
+  Hyundai: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <ellipse cx="50" cy="30" rx="40" ry="24" />
+      <path d="M34,42 L42,18 H48 L40,42 Z" fill={color} stroke="none" />
+      <path d="M52,42 L60,18 H66 L58,42 Z" fill={color} stroke="none" />
+      <path d="M38,32 H62 V26 H38 Z" fill={color} stroke="none" />
+    </svg>
+  ),
+  Kia: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="6">
+      <path d="M15,45 L15,15 L32,32 L32,15 M32,45 L32,32 M44,15 L44,45 M56,45 L70,15 L84,45" />
+    </svg>
+  ),
+  Suzuki: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 80" className="w-16 h-12" fill="none">
+      <path d="M25,10 H65 L35,42 H75 L55,70 H15 L45,38 Z" fill={color === 'currentColor' ? '#E60012' : color} />
+    </svg>
+  ),
+  Mazda: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <circle cx="50" cy="30" r="24" />
+      <path d="M28,28 C36,36 44,40 50,40 C56,40 64,36 72,28 C64,22 58,20 50,32 C42,20 36,22 28,28 Z" fill={color} stroke="none" />
+    </svg>
+  ),
+  Honda: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <path d="M24,10 C24,8 26,6 28,6 H72 C74,6 76,8 76,10 V50 C76,52 74,54 72,54 H28 C26,54 24,52 24,50 Z" />
+      <path d="M34,16 V44 H40 V30 H60 V44 H66 V16 H60 V27 H40 V16 Z" fill={color} stroke="none" />
+    </svg>
+  ),
+  Isuzu: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none">
+      <text x="50" y="40" fontFamily="sans-serif" fontWeight="900" fontSize="24" fill={color === 'currentColor' ? '#E60012' : color} textAnchor="middle" letterSpacing="1">ISUZU</text>
+    </svg>
+  ),
+  Mercedes: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <circle cx="50" cy="30" r="25" />
+      <path d="M50,5 L50,30 L28,42.5 M50,30 L72,42.5" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  ),
+  Renault: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 80" className="w-16 h-12" fill="none" stroke={color} strokeWidth="5">
+      <path d="M50,5 L80,35 L50,75 L20,35 Z" />
+      <path d="M50,20 L68,38 L50,60 L32,38 Z" fill={color} opacity="0.15" stroke="none" />
+    </svg>
+  ),
+  BMW: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 100" className="w-16 h-12" fill="none" stroke={color} strokeWidth="2">
+      <circle cx="50" cy="50" r="48" fill="black" stroke="none" />
+      <circle cx="50" cy="50" r="38" fill="white" stroke="none" />
+      <circle cx="50" cy="50" r="34" fill="black" stroke="none" />
+      <path d="M50,50 L50,16 A34,34 0 0,1 84,50 Z" fill="#0066CC" stroke="none" />
+      <path d="M50,50 L16,50 A34,34 0 0,1 50,16 Z" fill="white" stroke="none" />
+      <path d="M50,50 L50,84 A34,34 0 0,1 16,50 Z" fill="#0066CC" stroke="none" />
+      <path d="M50,50 L84,50 A34,34 0 0,1 50,84 Z" fill="white" stroke="none" />
+      <text x="50" y="14" fontFamily="sans-serif" fontWeight="900" fontSize="10" fill="white" stroke="none" textAnchor="middle">BMW</text>
+    </svg>
+  ),
+  Volkswagen: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 100" className="w-16 h-12" fill="none" stroke={color} strokeWidth="5">
+      <circle cx="50" cy="50" r="44" />
+      <path d="M26,30 L42,75 H47 L34,30 Z M74,30 L58,75 H53 L66,30 Z" fill={color} stroke="none" />
+      <path d="M38,30 L50,60 L62,30 H56 L50,45 L44,30 Z" fill={color} stroke="none" />
+    </svg>
+  ),
+  Audi: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 40" className="w-16 h-8" fill="none" stroke={color} strokeWidth="4">
+      <circle cx="26" cy="20" r="12" />
+      <circle cx="42" cy="20" r="12" />
+      <circle cx="58" cy="20" r="12" />
+      <circle cx="74" cy="20" r="12" />
+    </svg>
+  ),
+  Chevrolet: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 50" className="w-16 h-12" fill="none">
+      <path d="M35,10 H65 L68,20 H88 V30 H65 L62,40 H32 L29,30 H12 V20 H32 Z" fill={color === 'currentColor' ? '#D3A13B' : color} stroke="currentColor" strokeWidth="2" />
+    </svg>
+  ),
+  'Land Rover': (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none">
+      <ellipse cx="50" cy="30" rx="44" ry="24" fill={color === 'currentColor' ? '#005A36' : color} />
+      <ellipse cx="50" cy="30" rx="40" ry="20" fill="none" stroke="white" strokeWidth="1.5" />
+      <text x="50" y="34" fontFamily="sans-serif" fontWeight="900" fontSize="8" fill="white" textAnchor="middle" letterSpacing="0.5">LAND ROVER</text>
+    </svg>
+  ),
+  Porsche: (color = 'currentColor') => (
+    <svg viewBox="0 0 80 100" className="w-12 h-12" fill="none" stroke={color} strokeWidth="2">
+      <path d="M10,10 H70 V40 C70,65 50,85 40,90 C30,85 10,65 10,40 Z" fill={color === 'currentColor' ? '#FFCC00' : 'none'} />
+      <path d="M20,20 H60 V40 C60,55 48,70 40,75 C32,70 20,55 20,40 Z" fill="black" />
+      <path d="M40,25 L40,70" stroke="#FF3300" strokeWidth="4" />
+      <text x="40" y="16" fontFamily="sans-serif" fontWeight="900" fontSize="6" fill="black" stroke="none" textAnchor="middle" letterSpacing="0.5">PORSCHE</text>
+    </svg>
+  ),
+  Volvo: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 100" className="w-16 h-12" fill="none" stroke={color} strokeWidth="5">
+      <circle cx="45" cy="55" r="28" />
+      <path d="M65,35 L80,20 M60,20 H80 V40" strokeWidth="7" strokeLinecap="square" />
+      <rect x="20" y="47" width="50" height="16" fill={color} stroke="none" />
+      <text x="45" y="59" fontFamily="sans-serif" fontWeight="900" fontSize="10" fill="white" stroke="none" textAnchor="middle">VOLVO</text>
+    </svg>
+  ),
+  Ford: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none">
+      <ellipse cx="50" cy="30" rx="44" ry="24" fill={color === 'currentColor' ? '#003399' : 'none'} stroke={color} strokeWidth="2" />
+      <text x="50" y="38" fontFamily="sans-serif" fontStyle="italic" fontWeight="bold" fontSize="20" fill="white" textAnchor="middle">Ford</text>
+    </svg>
+  ),
+  Chrysler: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 40" className="w-16 h-8" fill="none" stroke={color} strokeWidth="2">
+      <path d="M10,20 L30,12 L50,18 L70,12 L90,20 L50,24 Z" />
+      <circle cx="50" cy="18" r="6" fill={color} stroke="none" />
+    </svg>
+  ),
+  Peugeot: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 80" className="w-16 h-12" fill="none" stroke={color} strokeWidth="3">
+      <path d="M30,70 L35,50 H45 L50,70 M55,70 L60,45 C60,35 70,30 80,30 H75 C60,30 50,40 50,50 L45,35 C40,25 30,20 20,20 V25 C25,25 35,30 35,45 L30,55 Z" />
+    </svg>
+  ),
+  Jeep: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 50" className="w-16 h-12" fill="none">
+      <text x="50" y="36" fontFamily="sans-serif" fontWeight="900" fontSize="28" fill={color} textAnchor="middle" letterSpacing="-1">Jeep</text>
+    </svg>
+  ),
+  Dodge: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 50" className="w-16 h-12" fill="none">
+      <text x="45" y="36" fontFamily="sans-serif" fontWeight="900" fontSize="24" fontStyle="italic" fill={color} textAnchor="middle">DODGE</text>
+      <path d="M72,15 L85,15 L77,35 L64,35 Z" fill="#E60012" />
+      <path d="M82,15 L95,15 L87,35 L74,35 Z" fill="#E60012" />
+    </svg>
+  ),
+  Ram: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 80" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
+      <path d="M20,10 H80 L75,40 C75,55 50,70 50,70 C50,70 25,55 25,40 Z" />
+      <path d="M35,25 C30,15 45,15 50,30 C55,15 70,15 65,25 C60,35 50,38 50,45 Z" fill={color} stroke="none" />
+    </svg>
+  ),
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+const BRANDS = Object.keys(BRAND_LOGOS)
 
 export default function HomePage() {
-  const { t } = useTranslation('home')
-
-
-
-  const steps = [
-    { number: '01', title: t('steps_01_title'), desc: t('steps_01_desc') },
-    { number: '02', title: t('steps_02_title'), desc: t('steps_02_desc') },
-    { number: '03', title: t('steps_03_title'), desc: t('steps_03_desc') },
-    { number: '04', title: t('steps_04_title'), desc: t('steps_04_desc') },
-    { number: '05', title: t('steps_05_title'), desc: t('steps_05_desc') },
-  ]
-
-  const capabilities = [
-    { icon: '🔍', title: t('cap_rfq_title'), desc: t('cap_rfq_desc') },
-    { icon: '⚖️', title: t('cap_oem_title'), desc: t('cap_oem_desc') },
-    { icon: '🌍', title: t('cap_logistics_title'), desc: t('cap_logistics_desc') },
-    { icon: '📍', title: t('cap_tracking_title'), desc: t('cap_tracking_desc') },
-    { icon: '🔒', title: t('cap_escrow_title'), desc: t('cap_escrow_desc') },
-    { icon: '✅', title: t('cap_verify_title'), desc: t('cap_verify_desc') },
-  ]
-
-  const kpis = [
-    { value: '3,800+', label: t('kpi_categories') },
-    { value: '1,240+', label: t('kpi_suppliers') },
-    { value: '18', label: t('kpi_countries') },
-    { value: '96.8%', label: t('kpi_delivery') },
-    { value: '42 min', label: t('kpi_quote') },
-    { value: '4.8 / 5', label: t('kpi_satisfaction') },
-  ]
-
-  const testimonials = [
-    {
-      quote: t('testimonial_1_quote'),
-      author: t('testimonial_1_author'),
-      company: t('testimonial_1_company'),
-      tag: t('testimonial_1_tag'),
-      tagColor: 'green' as const,
-      avatar: '/images/testimonials/testimonial-1-190x190.jpg',
-    },
-    {
-      quote: t('testimonial_2_quote'),
-      author: t('testimonial_2_author'),
-      company: t('testimonial_2_company'),
-      tag: t('testimonial_2_tag'),
-      tagColor: 'amber' as const,
-      avatar: '/images/testimonials/testimonial-2-190x190.jpg',
-    },
-    {
-      quote: t('testimonial_3_quote'),
-      author: t('testimonial_3_author'),
-      company: t('testimonial_3_company'),
-      tag: t('testimonial_3_tag'),
-      tagColor: 'blue' as const,
-      avatar: '/images/testimonials/testimonial-3-190x190.jpg',
-    },
-  ]
-
-  const categories = [
-    { id: 1, label: t('category_brakes'), img: '/images/categories/category-1-200x200.jpg' },
-    { id: 2, label: t('category_engine'), img: '/images/categories/category-2-200x200.jpg' },
-    { id: 3, label: t('category_suspension'), img: '/images/categories/category-3-200x200.jpg' },
-    { id: 4, label: t('category_filters'), img: '/images/categories/category-4-200x200.jpg' },
-    { id: 5, label: t('category_electrical'), img: '/images/categories/category-5-200x200.jpg' },
-    { id: 6, label: t('category_body'), img: '/images/categories/category-6-200x200.jpg' },
-    { id: 7, label: t('category_transmission'), img: '/images/categories/category-7-200x200.jpg' },
-    { id: 8, label: t('category_cooling'), img: '/images/categories/category-8-200x200.jpg' },
-  ]
-
-  const featuredParts: { id: number; name: string; condition: PartCondition; img: string; conditionColor: 'green' | 'amber' | 'blue' }[] = [
-    { id: 1, name: 'Front Brake Pad Set', condition: 'OEM', conditionColor: 'green', img: '/images/products/product-1-245x245.jpg' },
-    { id: 2, name: 'Air Filter Assembly', condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-2-245x245.jpg' },
-    { id: 3, name: 'Alternator Unit', condition: 'OEM', conditionColor: 'green', img: '/images/products/product-3-245x245.jpg' },
-    { id: 4, name: 'Shock Absorber — Rear', condition: 'Aftermarket', conditionColor: 'amber', img: '/images/products/product-4-245x245.jpg' },
-    { id: 5, name: 'Radiator Cooling Fan', condition: 'Used', conditionColor: 'blue', img: '/images/products/product-5-245x245.jpg' },
-    { id: 6, name: 'Starter Motor', condition: 'OEM', conditionColor: 'green', img: '/images/products/product-6-245x245.jpg' },
-  ]
-
-  return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9] overflow-x-hidden">
-      <Navbar />
-
-      {/* ── Hero ── */}
-      <section className="relative pt-[68px] md:pt-[132px] flex flex-col items-center min-h-[85vh]">
-        {/* Search bar – full width, first thing visible */}
-        <div className="w-full max-w-[1440px] mx-auto px-6 pt-14">
-          <VinSearchHero />
-        </div>
-
-        {/* Headline + description – centered, constrained width */}
-        <div className="max-w-[860px] mx-auto px-6 pt-10 pb-24 w-full text-center">
-          <h1 className="font-display text-[clamp(2.2rem,5.5vw,4rem)] font-extrabold leading-[1.06] tracking-tight text-[#07110A] dark:text-white mb-5 mx-auto">
-            {t('hero_headline')}{' '}
-            <span className="text-[#00C853]">{t('hero_headline_accent')}</span>
-          </h1>
-          <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed max-w-[520px] mx-auto">
-            {t('hero_description')}
-          </p>
-        </div>
-      </section>
-
-      {/* ── Parts Category Grid ── */}
-      <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="max-w-xl mb-14">
-            <SectionLabel>{t('categories_label')}</SectionLabel>
-            <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-              {t('categories_heading')}
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                to="/requests/new"
-                className="group relative rounded-2xl overflow-hidden aspect-square block bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] hover:border-[rgba(0,200,83,0.3)] transition-colors"
-              >
-                <img
-                  src={cat.img}
-                  alt={cat.label}
-                  className="w-full h-full object-cover opacity-80 dark:opacity-70 group-hover:opacity-100 dark:group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(7,17,10,0.85)] via-[rgba(7,17,10,0.2)] to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <p className="text-white font-semibold text-sm leading-snug">{cat.label}</p>
-                </div>
-                <div className="absolute inset-0 bg-[rgba(0,200,83,0.12)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-[#00C853] font-mono text-xs uppercase tracking-widest translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    {t('categories_browse')}
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── How It Works ── */}
-      <section id="how-it-works" className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="max-w-xl mb-14">
-            <SectionLabel>{t('how_label')}</SectionLabel>
-            <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-              {t('how_heading')}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            {steps.map((step, i) => (
-              <div key={step.number} className="relative">
-                {/* Connector */}
-                {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-[38px] left-[calc(100%+2px)] w-[calc(100%-4px)] h-px bg-gradient-to-r from-[rgba(0,200,83,0.4)] to-transparent z-10" />
-                )}
-                <div className="h-full bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.1)] rounded-2xl p-6 hover:border-[rgba(0,200,83,0.3)] transition-colors shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none">
-                  <div className="w-10 h-10 rounded-xl bg-[rgba(0,200,83,0.1)] border border-[rgba(0,200,83,0.2)] grid place-items-center mb-4">
-                    <span className="text-[#00C853] font-mono font-bold text-sm">{step.number}</span>
-                  </div>
-                  <h3 className="text-[#07110A] dark:text-white font-semibold text-sm leading-snug mb-2">{step.title}</h3>
-                  <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Capabilities ── */}
-      <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-6 items-end mb-14">
-            <div>
-              <SectionLabel>{t('capabilities_label')}</SectionLabel>
-              <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-                {t('capabilities_heading')}
-              </h2>
-            </div>
-            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed lg:text-right lg:max-w-md lg:ml-auto">
-              {t('capabilities_subtext')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {capabilities.map((c) => (
-              <div
-                key={c.title}
-                className="bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-2xl p-6 hover:border-[rgba(0,200,83,0.2)] transition-colors group shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none"
-              >
-                <div className="text-2xl mb-4">{c.icon}</div>
-                <h3 className="text-[#07110A] dark:text-white font-semibold mb-2 group-hover:text-[#00C853] transition-colors">
-                  {c.title}
-                </h3>
-                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed">{c.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Brand Logo Strip ── */}
-      <section className="py-16 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6 mb-10">
-          <SectionLabel>{t('brands_label')}</SectionLabel>
-          <p className="font-display text-[clamp(1.4rem,2.5vw,2rem)] font-extrabold text-[#07110A] dark:text-white">
-            {t('brands_heading')}
-          </p>
-        </div>
-        <div className="overflow-hidden relative">
-          <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-gradient-to-r from-[#F7FDF8] dark:from-[#07110A] to-transparent" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-gradient-to-l from-[#F7FDF8] dark:from-[#07110A] to-transparent" />
-          <div className="flex gap-8 w-max animate-marquee">
-            {[...brands, ...brands].map((brand, idx) => (
-              <div
-                key={`${brand.id}-${idx}`}
-                className="flex-shrink-0 w-28 h-16 flex items-center justify-center rounded-xl border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] bg-white dark:bg-[#111C14] px-4 py-3 group hover:border-[rgba(0,200,83,0.25)] transition-colors"
-              >
-                <img
-                  src={brand.img}
-                  alt={brand.alt}
-                  className="max-w-full max-h-full object-contain filter grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── KPI Bar ── */}
-      <section className="py-16 border-t border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)] bg-[rgba(0,200,83,0.04)] dark:bg-[rgba(0,200,83,0.03)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-            {kpis.map((k) => (
-              <div key={k.label} className="text-center">
-                <p className="font-display text-3xl font-extrabold text-[#07110A] dark:text-white mb-1">{k.value}</p>
-                <p className="text-xs font-mono uppercase tracking-wider text-[#4A6B50] dark:text-[#7A9A80]">{k.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Testimonials ── */}
-      <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="mb-14">
-            <SectionLabel>{t('testimonials_label')}</SectionLabel>
-            <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white">
-              {t('testimonials_heading')}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {testimonials.map((tmn) => (
-              <div
-                key={tmn.author}
-                className="bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-2xl p-6 flex flex-col gap-4 hover:border-[rgba(0,200,83,0.2)] transition-colors shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none"
-              >
-                <Badge
-                  className={cn(
-                    'w-fit text-[10px]',
-                    tmn.tagColor === 'green' &&
-                    'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]',
-                    tmn.tagColor === 'amber' &&
-                    'bg-amber-400/10 text-amber-400 border-amber-400/20',
-                    tmn.tagColor === 'blue' &&
-                    'bg-blue-400/10 text-blue-400 border-blue-400/20',
-                  )}
-                >
-                  {tmn.tag}
-                </Badge>
-                <span className="text-[#00C853] font-display text-4xl leading-none opacity-30 select-none">"</span>
-                <p className="text-[#07110A] dark:text-[#E8F0E9] text-sm leading-relaxed flex-1 -mt-4">
-                  {tmn.quote}
-                </p>
-                <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] pt-4 flex items-center gap-3">
-                  <img
-                    src={tmn.avatar}
-                    alt={tmn.author}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-[rgba(0,200,83,0.2)] flex-shrink-0"
-                  />
-                  <div>
-                    <p className="text-[#07110A] dark:text-white font-semibold text-sm">{tmn.author}</p>
-                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mt-0.5">{tmn.company}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Featured Parts ── */}
-      <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-6 items-end mb-14">
-            <div>
-              <SectionLabel>{t('featured_label')}</SectionLabel>
-              <h2 className="font-display text-[clamp(1.8rem,3vw,2.8rem)] font-extrabold text-[#07110A] dark:text-white leading-tight">
-                {t('featured_heading')}
-              </h2>
-            </div>
-            <div className="lg:text-right">
-              <Link to="/requests/new" className={cn(btnOutline, 'lg:ml-auto')}>
-                {t('featured_cta')}
-              </Link>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {featuredParts.map((part) => (
-              <div
-                key={part.id}
-                className="group bg-white dark:bg-[#111C14] border border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] rounded-2xl overflow-hidden hover:border-[rgba(0,200,83,0.25)] transition-colors flex flex-col shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none"
-              >
-                <div className="relative bg-[#EFF7F1] dark:bg-[#162019] aspect-square overflow-hidden">
-                  <img
-                    src={part.img}
-                    alt={part.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <span
-                    className={cn(
-                      'absolute top-2 right-2 text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md',
-                      part.conditionColor === 'green' &&
-                      'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-[#00C853] border border-[rgba(0,200,83,0.3)]',
-                      part.conditionColor === 'amber' &&
-                      'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-amber-400 border border-amber-400/30',
-                      part.conditionColor === 'blue' &&
-                      'bg-[rgba(7,17,10,0.8)] dark:bg-[rgba(7,17,10,0.85)] text-blue-400 border border-blue-400/30',
-                    )}
-                  >
-                    {part.condition}
-                  </span>
-                </div>
-                <div className="p-3 flex flex-col gap-2 flex-1">
-                  <p className="text-[#07110A] dark:text-white text-xs font-semibold leading-snug line-clamp-2 flex-1">{part.name}</p>
-                  <Link
-                    to="/requests/new"
-                    className="text-center text-[10px] font-mono uppercase tracking-wider py-1.5 rounded-lg bg-[rgba(0,200,83,0.08)] text-[#00C853] border border-[rgba(0,200,83,0.15)] hover:bg-[rgba(0,200,83,0.18)] hover:border-[rgba(0,200,83,0.3)] transition-colors"
-                  >
-                    {t('featured_request_quote')}
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Become a Supplier ── */}
-      <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="bg-white dark:bg-[#111C14] border border-[rgba(0,200,83,0.15)] rounded-3xl p-10 md:p-16 grid md:grid-cols-2 gap-10 items-center relative overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06)] dark:shadow-none">
-            {/* Glow */}
-            <div
-              className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle, rgba(0,200,83,0.08) 0%, transparent 70%)',
-              }}
-            />
-            <div className="relative z-10">
-              <SectionLabel>{t('supplier_label')}</SectionLabel>
-              <h2 className="font-display text-[clamp(1.6rem,3vw,2.4rem)] font-extrabold text-[#07110A] dark:text-white leading-tight mb-4">
-                {t('supplier_heading')}
-              </h2>
-              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm leading-relaxed mb-6">
-                {t('supplier_desc')}
-              </p>
-              <ul className="space-y-2 mb-8">
-                {[t('supplier_benefit1'), t('supplier_benefit2'), t('supplier_benefit3'), t('supplier_benefit4')].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-[#07110A] dark:text-[#E8F0E9]">
-                    <span className="text-[#00C853] mt-0.5 shrink-0">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/become-supplier" className={btnPrimary}>
-                {t('supplier_cta')}
-              </Link>
-            </div>
-
-            {/* Right side: supplier stats */}
-            <div className="relative z-10 grid grid-cols-2 gap-4">
-              {[
-                { value: '1,240+', label: t('supplier_stat1_label'), sub: t('supplier_stat1_sub') },
-                { value: '14', label: t('supplier_stat2_label'), sub: t('supplier_stat2_sub') },
-                { value: '92%', label: t('supplier_stat3_label'), sub: t('supplier_stat3_sub') },
-                { value: 'Gold', label: t('supplier_stat4_label'), sub: t('supplier_stat4_sub') },
-              ].map((s) => (
-                <div
-                  key={s.label}
-                  className="bg-[rgba(0,200,83,0.05)] border border-[rgba(0,200,83,0.12)] rounded-xl p-4"
-                >
-                  <p className="font-display text-2xl font-extrabold text-[#07110A] dark:text-white">{s.value}</p>
-                  <p className="text-[#00C853] text-xs font-semibold mt-1">{s.label}</p>
-                  <p className="text-[#4A6B50] dark:text-[#3D5942] text-[11px] mt-0.5">{s.sub}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Final CTA ── */}
-      <section className="py-24 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
-        <div className="max-w-[1260px] mx-auto px-6 text-center">
-          <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-4">
-            {t('cta_eyebrow')}
-          </p>
-          <h2 className="font-display text-[clamp(2rem,4vw,3.2rem)] font-extrabold text-[#07110A] dark:text-white mb-4">
-            {t('cta_heading')}
-          </h2>
-          <p className="text-[#4A6B50] dark:text-[#7A9A80] mb-10 max-w-lg mx-auto leading-relaxed">
-            {t('cta_subtext')}
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/requests/new" className={cn(btnPrimary, 'px-10 py-4 text-base')}>
-              {t('cta_request_btn')}
-            </Link>
-            <Link to="/register" className={cn(btnOutline, 'px-10 py-4 text-base')}>
-              {t('cta_register_btn')}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Footer ── */}
-      <footer className="border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.06)] py-16 bg-[#EFF7F1] dark:bg-[#07110A]">
-        <div className="max-w-[1260px] mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
-            {/* Brand */}
-            <div className="col-span-2">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00C853] to-[#00933C] grid place-items-center font-extrabold text-[#07110A] text-xs">
-                  AA
-                </div>
-                <span className="text-[#07110A] dark:text-white font-bold font-display">Africa Autopart</span>
-              </div>
-              <p className="text-[#4A6B50] dark:text-[#3D5942] text-sm leading-relaxed max-w-xs">
-                {t('footer_tagline')}
-              </p>
-            </div>
-
-            <FooterCol
-              title={t('footer_col_platform')}
-              links={[
-                { label: t('footer_link_howItWorks'), href: '/#how-it-works' },
-                { label: t('footer_link_requestPart'), href: '/requests/new' },
-                { label: t('footer_link_suppliers'), href: '/suppliers' },
-                { label: t('footer_link_trackOrder'), href: '/orders' },
-              ]}
-            />
-            <FooterCol
-              title={t('supplier_label')}
-              links={[
-                { label: t('footer_link_becomeSupplier'), href: '/become-supplier' },
-                { label: t('footer_link_login'), href: '/dashboard' },
-              ]}
-            />
-            <FooterCol
-              title={t('footer_col_company')}
-              links={[
-                { label: t('footer_link_about'), href: '/about' },
-                { label: t('footer_link_contact'), href: '/contact' },
-              ]}
-            />
-          </div>
-
-          <div className="border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#4A6B50] dark:text-[#3D5942] text-xs">
-              © {new Date().getFullYear()} Africa Autopart. {t('footer_rights')}
-            </p>
-            <div className="flex items-center gap-4">
-              {['Kenya', 'Uganda', 'Tanzania', 'Saudi Arabia', '+14 more'].map((c) => (
-                <span key={c} className="text-[#4A6B50] dark:text-[#3D5942] text-[11px] font-mono">
-                  {c}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
-  return (
-    <div>
-      <p className="text-[#07110A] dark:text-white font-semibold text-sm mb-4">{title}</p>
-      <ul className="space-y-2.5">
-        {links.map((l) => (
-          <li key={l.label}>
-            {l.href.startsWith('/') ? (
-              <Link to={l.href} className="text-[#4A6B50] dark:text-[#3D5942] text-sm hover:text-[#00C853] dark:hover:text-[#7A9A80] transition-colors">
-                {l.label}
-              </Link>
-            ) : (
-              <a href={l.href} className="text-[#4A6B50] dark:text-[#3D5942] text-sm hover:text-[#00C853] dark:hover:text-[#7A9A80] transition-colors">
-                {l.label}
-              </a>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function VinSearchHero() {
   const navigate = useNavigate()
   const { t } = useTranslation('home')
+
+  // Search States
   const [vin, setVin] = useState('')
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
   const [demoVins, setDemoVins] = useState<VehicleSummary[]>([])
 
+  // UI States
+  const [activeTab, setActiveTab] = useState<'easy' | 'catalog' | 'prices' | 'range' | 'shipping'>('easy')
+
   useEffect(() => {
     vinApi.getAllVehicles()
-      .then(({ data }) => setDemoVins(data.slice(0, 2)))   // only two demo VINs
+      .then(({ data }) => setDemoVins(data.slice(0, 3)))
       .catch(() => {})
   }, [])
 
-  async function handleVinSearch(vinToSearch: string) {
+  async function handleSearch(vinToSearch: string) {
     const trimmed = vinToSearch.trim()
     if (trimmed.length < 11) {
       setError(t('vin_error_short') ?? 'VIN must be at least 11 characters')
@@ -582,7 +261,7 @@ function VinSearchHero() {
       const { data } = await vinApi.getPartsByVin(trimmed)
       navigate('/parts-search', { state: { vinParts: data } })
     } catch {
-      setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN and try again.')
+      setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN/Part number and try again.')
     } finally {
       setSearching(false)
     }
@@ -590,80 +269,309 @@ function VinSearchHero() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    handleVinSearch(vin)
+    handleSearch(vin)
+  }
+
+  // Helper scroll function to direct to video
+  const scrollToVideo = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const element = document.getElementById('how-to-order-video')
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  // Render proper tabs contents
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'easy':
+        return (
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+            <p>
+              First of all we take care of comfort for our customers. With{' '}
+              <strong>Africa Autopart</strong>, purchasing OEM body parts, engine parts, etc. will be fluent and
+              pleasant process. It will be no problem for you to find and order, for example, OEM Subaru parts,
+              Honda Civic OEM parts, Toyota UK parts or any other auto spare parts. If you need bearings, for
+              instance, it will be easy for you to find the necessary ones in our Toyota catalog or catalogs of
+              other manufacturers.
+            </p>
+            <p>
+              Why is it so easy to buy with Africa Autopart? Easy-to-use online catalogue will help you quickly
+              find needed parts. Sourcing components on our website is simple and intuitive. For your information
+              we have prepared a detailed help section. If necessary, our online support team will personally
+              assist you. We are not limited by local warehouse stocks as we have an extensive network of verified
+              sub-suppliers who instantly dispatch ordered items available at their facilities. Flexible logistics
+              allows us to deliver goods within the shortest time. Sourcing automotive components has never been this
+              transparent and accessible.
+            </p>
+          </div>
+        )
+      case 'catalog':
+        return (
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+            <p>
+              Our online catalog offers access to millions of unique, high-quality auto parts catalogued logically by
+              makes, categories, models, and assembly groups. With integrated VIN decoding and part number search,
+              locating correct replacement parts takes seconds.
+            </p>
+            <p>
+              We provide detail specifications, compatibility lists, and real-time inventory updates so you never
+              order the wrong component. Whether you drive a Toyota, BMW, or Suzuki, find any spare part across any border.
+            </p>
+          </div>
+        )
+      case 'prices':
+        return (
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+            <p>
+              By direct collaboration with leading parts distributors and manufacturers, Africa Autopart bypasses
+              traditional middle-man markup chains to deliver wholesale pricing directly to workshops, fleets, and
+              private vehicle owners.
+            </p>
+            <p>
+              Compare different pricing tiers side-by-side: Choose OEM parts for absolute reliability, or high-grade
+              aftermarket parts for affordable maintenance. Get structural price clarity in every order.
+            </p>
+          </div>
+        )
+      case 'range':
+        return (
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+            <p>
+              Over 17,000,000 spare parts catalogued. We supply parts for all primary systems: brake rotors and pads,
+              engine assemblies, transmission components, radiators, filtration systems, electrical accessories, and
+              outer body panels.
+            </p>
+            <p>
+              We stock parts for common vehicles as well as rare, vintage, or high-performance models. No matter how rare
+              the component is, our regional and global supplier networks can secure it for you.
+            </p>
+          </div>
+        )
+      case 'shipping':
+        return (
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+            <p>
+              We offer fast shipping across Africa, the Middle East, and worldwide. Through partnerships with top-tier
+              freight services and courier networks (DHL, FedEx, UPS), we guarantee fast and secure parcel dispatch.
+            </p>
+            <p>
+              Enjoy live shipping milestone updates and custom declarations handling. Your parts are packed to meet strict
+              safeguard standards, assuring they reach your garage in pristine condition.
+            </p>
+          </div>
+        )
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="relative">
-        <input
-          type="text"
-          value={vin}
-          onChange={(e) => { setVin(e.target.value.toUpperCase()); setError('') }}
-          placeholder={t('vin_placeholder') ?? 'Enter VIN / Chassis Number e.g. KNAPC813BCK227399'}
-          className="
-            w-full h-16 pl-6 pr-44 
-            rounded-full 
-            bg-white dark:bg-[#162019] 
-            border-2 border-[rgba(0,200,83,0.3)] 
-            focus:border-[#00C853] focus:ring-2 focus:ring-[#00C853]/20
-            text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] 
-            text-base font-bold font-mono tracking-wide 
-            outline-none transition-all duration-200
-          "
-        />
-        <button
-          type="submit"
-          disabled={searching || !vin.trim()}
-          className="
-            absolute right-2 top-1/2 -translate-y-1/2 h-12 px-8 
-            rounded-full 
-            bg-[#00C853] text-[#07110A] font-bold text-base 
-            hover:bg-[#39FF88] transition-colors 
-            disabled:opacity-50 
-            flex items-center gap-2
-          "
-        >
-          {searching ? (
-            <span className="flex items-center gap-2">
-              <span className="w-4 h-4 border-2 border-[#07110A]/30 border-t-[#07110A] rounded-full animate-spin" />
-              {t('vin_searching') ?? 'Searching…'}
-            </span>
-          ) : (
-            <span className="flex items-center gap-2">
-              <Search className="w-4 h-4" />
-              {t('vin_search_btn') ?? 'Find Parts'}
-            </span>
-          )}
-        </button>
-      </div>
-      {error && <p className="text-red-400 text-xs mt-2 text-center">{error}</p>}
-      <p className="text-[11px] text-[#7A9A80] dark:text-[#3D5942] mt-3 font-mono text-center">
-        {t('vin_hint') ?? 'Enter your 17‑character VIN to browse compatible parts'}
-      </p>
-
-      {/* Two simple demo VIN chips */}
-      {demoVins.length > 0 && (
-        <div className="flex items-center justify-center gap-2 mt-3">
-          <span className="text-[10px] text-[#7A9A80] dark:text-[#3D5942] font-mono">
-            {t('demo_vin_title') ?? 'Try a demo VIN:'}
-          </span>
-          {demoVins.map((v) => (
-            <button
-              key={v.vin}
-              type="button"
-              onClick={() => {
-                setVin(v.vin)
-                handleVinSearch(v.vin)
-              }}
-              disabled={searching}
-              className="px-3 py-1 rounded-full border border-[rgba(0,200,83,0.3)] bg-white dark:bg-[#111C14] text-xs font-mono font-semibold text-[#00C853] hover:bg-[rgba(0,200,83,0.08)] transition-colors disabled:opacity-50"
-            >
-              {v.vin}
-            </button>
-          ))}
+    <div className="px-6 md:px-8 py-8">
+        
+        {/* Headline Subbar */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-300 pb-3 mb-6">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 font-sans">
+            Auto Parts Around the World
+          </h1>
+          <div className="flex items-center gap-1.5 mt-3 sm:mt-0">
+            <a href="mailto:info@africa-autopart.com" className="w-7 h-7 rounded bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-colors" title="Email">
+              <Mail className="w-4 h-4" />
+            </a>
+            <a href="https://wa.me/25377577016" className="w-7 h-7 rounded bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-colors" title="WhatsApp">
+              <Phone className="w-4 h-4" />
+            </a>
+            <a href="https://facebook.com" className="w-7 h-7 rounded bg-[#1877f2] hover:bg-[#166fe5] text-white flex items-center justify-center transition-colors" title="Facebook">
+              <FacebookIcon className="w-4 h-4" />
+            </a>
+            <a href="https://instagram.com" className="w-7 h-7 rounded bg-[#c13584] hover:bg-[#b13079] text-white flex items-center justify-center transition-colors" title="Instagram">
+              <InstagramIcon className="w-4 h-4" />
+            </a>
+            <a href="https://twitter.com" className="w-7 h-7 rounded bg-black hover:bg-neutral-800 text-white flex items-center justify-center transition-colors" title="Twitter/X">
+              <TwitterIcon className="w-4 h-4" />
+            </a>
+          </div>
         </div>
-      )}
-    </form>
+
+        {/* ── SEARCH BAR CONTAINER ───────────────────────────────────────────────── */}
+        <section className="bg-white border border-slate-200 shadow-sm rounded p-6 mb-8 font-sans max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} className="w-full">
+            <div className="flex items-center bg-white border border-slate-300 rounded overflow-hidden shadow-inner focus-within:border-slate-500 transition-colors">
+              <input
+                type="text"
+                value={vin}
+                onChange={(e) => {
+                  setVin(e.target.value.toUpperCase())
+                  setError('')
+                }}
+                placeholder={t('vin_placeholder') ?? 'Part Number or VIN/Frame'}
+                className="flex-grow h-12 px-4 outline-none text-slate-800 text-base font-bold tracking-wide"
+              />
+              <button
+                type="button"
+                className="h-12 px-3.5 border-l border-slate-200 text-slate-400 hover:text-slate-600 transition-colors"
+                title="Catalog Index"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              <button
+                type="submit"
+                disabled={searching || !vin.trim()}
+                className="h-12 px-6 bg-[#5cb85c] hover:bg-[#4cae4c] text-white flex items-center justify-center font-extrabold transition-colors disabled:opacity-65"
+              >
+                {searching ? (
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Search className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+
+            {error && <p className="text-red-600 text-xs mt-2 text-center font-semibold">{error}</p>}
+
+            {/* Clickable Examples */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-slate-500 mt-3 font-medium">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span>Example:</span>
+                {['5330160470', '2360059105', 'KMHCU51DAFU223139'].map((exVin) => (
+                  <button
+                    key={exVin}
+                    type="button"
+                    onClick={() => {
+                      setVin(exVin)
+                      handleSearch(exVin)
+                    }}
+                    className="text-blue-600 hover:underline cursor-pointer"
+                  >
+                    {exVin}
+                  </button>
+                ))}
+                {demoVins.map((v) => (
+                  <button
+                    key={v.vin}
+                    type="button"
+                    onClick={() => {
+                      setVin(v.vin)
+                      handleSearch(v.vin)
+                    }}
+                    className="text-blue-600 hover:underline cursor-pointer"
+                  >
+                    {v.vin}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 mt-2 sm:mt-0">
+                <a
+                  href="#how-to-order-video"
+                  onClick={scrollToVideo}
+                  className="text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <YoutubeIcon className="w-3.5 h-3.5 text-red-500 fill-current" />
+                  How to make order ?
+                </a>
+                <button
+                  type="button"
+                  onClick={() => alert('VIN (Vehicle Identification Number) is a 17-digit code found on your vehicle registration document, door pillar, or windshield edge.')}
+                  className="text-blue-600 hover:underline cursor-pointer"
+                >
+                  Where is VIN/Frame ?
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        {/* ── STATS COUNTER GRID ─────────────────────────────────────────────────── */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8 font-sans">
+          {[
+            { value: '199,985', label: 'SATISFIED CLIENTS' },
+            { value: '190', label: 'COUNTRIES WE SHIP' },
+            { value: '17,000,000', label: 'PARTS IN DATABASE' },
+            { value: '2 DAYS', label: 'AVERAGE DISPATCH' },
+          ].map((stat) => (
+            <div key={stat.label} className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded p-4 text-center shadow-sm">
+              <p className="text-2xl font-black text-slate-800">{stat.value}</p>
+              <p className="text-[10px] font-bold text-slate-500 tracking-wider mt-1">{stat.label}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* ── BRAND CATALOG GRID (Online Catalogs) ───────────────────────────────── */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-slate-800 mb-4 text-center sm:text-left font-sans border-b border-slate-200 pb-2">
+            Genuine Parts Online Catalogs
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {BRANDS.map((brand) => (
+              <div
+                key={brand}
+                onClick={() => navigate('/requests/new', { state: { make: brand } })}
+                className="bg-white border border-slate-200 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 transition-all duration-200 group"
+              >
+                {/* SVG Logo Container */}
+                <div className="h-16 flex items-center justify-center text-slate-700 group-hover:scale-105 transition-transform duration-300">
+                  {BRAND_LOGOS[brand] ? BRAND_LOGOS[brand]('currentColor') : null}
+                </div>
+                {/* Name */}
+                <span className="text-sm font-semibold text-slate-700 mt-3 group-hover:text-slate-900 font-sans">
+                  {brand}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── HOW TO ORDER VIDEO ─────────────────────────────────────────────────── */}
+        <section id="how-to-order-video" className="mb-12 scroll-mt-20">
+          <h2 className="text-xl font-bold text-slate-800 mb-4 text-center font-sans border-b border-slate-200 pb-2">
+            How to make order
+          </h2>
+          <div className="w-full max-w-4xl mx-auto bg-slate-950 aspect-video rounded overflow-hidden shadow-lg relative border-4 border-white">
+            <iframe
+              className="w-full h-full border-0"
+              src="https://www.youtube.com/embed/H8lCcr4T_D8"
+              title="Auto parts ordering guide"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </section>
+
+        {/* ── ABOUT AFRICA AUTOPART TABS SECTION ───────────────────────────────────────── */}
+        <section className="bg-white border border-slate-200 shadow-sm rounded p-6 mb-8 font-sans">
+          <h2 className="text-xl font-bold text-slate-800 mb-5 font-sans border-b border-slate-200 pb-2">
+            About Africa Autopart
+          </h2>
+          
+          {/* Tab buttons */}
+          <div className="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded mb-5">
+            {[
+              { id: 'easy', label: 'Easy to Use' },
+              { id: 'catalog', label: 'Online catalogue' },
+              { id: 'prices', label: 'Best prices' },
+              { id: 'range', label: 'Extensive Range' },
+              { id: 'shipping', label: 'World Wide Shipping' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={cn(
+                  'flex-1 min-w-[120px] py-2 px-3 text-xs font-bold rounded transition-colors text-center',
+                  activeTab === tab.id
+                    ? 'bg-[#374151] text-white shadow-sm'
+                    : 'text-slate-600 hover:bg-slate-200 hover:text-slate-800'
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Dynamic text block */}
+          <div className="border border-slate-100 p-4 rounded bg-slate-50/50 min-h-[160px]">
+            {renderTabContent()}
+          </div>
+        </section>
+
+    </div>
   )
 }

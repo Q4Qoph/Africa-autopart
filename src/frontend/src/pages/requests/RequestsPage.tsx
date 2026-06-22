@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { requestApi } from '@/api/requestApi'
 import type { PartRequest } from '@/types/request'
-import Navbar from '@/components/layout/Navbar'
+
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -36,9 +36,7 @@ export default function RequestsPage() {
   }, [auth]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
           {/* Header */}
           <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
@@ -122,7 +120,6 @@ export default function RequestsPage() {
             </div>
           )}
         </div>
-      </main>
     </div>
   )
 }

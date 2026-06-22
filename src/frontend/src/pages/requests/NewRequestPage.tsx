@@ -10,7 +10,7 @@ import { requestApi } from '@/api/requestApi'
 import { partsApi } from '@/api/partsApi'
 import { imageApi } from '@/api/imageApi'
 import { ConditionPreference, Urgency } from '@/types/request'
-import Navbar from '@/components/layout/Navbar'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -135,9 +135,7 @@ export default function NewRequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         {/* Guest success screen */}
         {submitted && (
           <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
@@ -341,7 +339,6 @@ export default function NewRequestPage() {
           </form>
         </div>
         )}
-      </main>
     </div>
   )
 }

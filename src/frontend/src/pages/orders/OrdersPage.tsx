@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { CustomerOrder } from '@/types/order'
 import { OrderStatus, } from '@/types/order'
-import Navbar from '@/components/layout/Navbar'
+
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -35,9 +35,7 @@ export default function OrdersPage() {
   }, [auth]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
           <div className="mb-8">
             <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
@@ -111,7 +109,6 @@ export default function OrdersPage() {
             </div>
           )}
         </div>
-      </main>
     </div>
   )
 }

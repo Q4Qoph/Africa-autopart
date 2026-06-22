@@ -33,6 +33,7 @@ import MpesaStatusPage from "@/pages/orders/MpesaStatusPage"
 import ShopPage from '@/pages/shop/ShopPage'
 import PartsSearchPage from '@/pages/parts/PartsSearchPage'
 import CartExternalPage from '@/pages/parts/CartExternalPage';
+import RootLayout from '@/components/layout/RootLayout'
 
 function ProtectedRoute() {
   const { auth } = useAuth()
@@ -54,35 +55,38 @@ function SupplierRoute() {
 }
 
 export const router = createBrowserRouter([
-  { path: '/', element: <HomePage /> },
-  { path: '/login', element: <LoginPage /> },
-  { path: '/register', element: <RegisterPage /> },
-  { path: '/become-supplier', element: <SupplierRegisterPage /> },
-  { path: '/forgot-password', element: <ForgotPasswordPage /> },
-  // { path: '/reset-password', element: <ResetPasswordPage /> },
-  { path: '/reset-password/:token?', element: <ResetPasswordPage /> },
-  { path: '/suppliers', element: <SuppliersPage /> },
-  { path: '/contact', element: <ContactPage /> },
-  { path: '/about', element: <AboutPage /> },
-  { path: '/shop', element: <ShopPage /> },
-  { path: '/parts-search', element: <PartsSearchPage /> },
-  { path: '/requests/new', element: <NewRequestPage /> },
-  { path: '/success', element: <SuccessPage /> },
-  { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
-  { path: '/orders/mpesa-status/:orderId', element: <MpesaStatusPage /> },
-  { path: '/cart', element: <CartExternalPage /> },
-
-
   {
-    element: <ProtectedRoute />,
+    element: <RootLayout />,
     children: [
-      { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/requests', element: <RequestsPage /> },
-      { path: '/requests/:id', element: <RequestDetailPage /> },
-      { path: '/requests/:id/parts', element: <RequestPartsPage /> },
-      { path: '/orders', element: <OrdersPage /> },
-      { path: '/orders/payment-callback', element: <PaymentCallbackPage /> },
-      // { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
+      { path: '/', element: <HomePage /> },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/become-supplier', element: <SupplierRegisterPage /> },
+      { path: '/forgot-password', element: <ForgotPasswordPage /> },
+      // { path: '/reset-password', element: <ResetPasswordPage /> },
+      { path: '/reset-password/:token?', element: <ResetPasswordPage /> },
+      { path: '/suppliers', element: <SuppliersPage /> },
+      { path: '/contact', element: <ContactPage /> },
+      { path: '/about', element: <AboutPage /> },
+      { path: '/shop', element: <ShopPage /> },
+      { path: '/parts-search', element: <PartsSearchPage /> },
+      { path: '/requests/new', element: <NewRequestPage /> },
+      { path: '/success', element: <SuccessPage /> },
+      { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
+      { path: '/orders/mpesa-status/:orderId', element: <MpesaStatusPage /> },
+      { path: '/cart', element: <CartExternalPage /> },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/requests', element: <RequestsPage /> },
+          { path: '/requests/:id', element: <RequestDetailPage /> },
+          { path: '/requests/:id/parts', element: <RequestPartsPage /> },
+          { path: '/orders', element: <OrdersPage /> },
+          { path: '/orders/payment-callback', element: <PaymentCallbackPage /> },
+          // { path: '/orders/payment-cancelled', element: <PaymentCancelledPage /> },
+        ],
+      },
     ],
   },
   {

@@ -8,7 +8,7 @@ import { requestApi } from '@/api/requestApi';
 import { orderApi } from '@/api/orderApi';
 import { paymentApi } from '@/api/paymentApi';
 import type { AddOrderDTO, PaymentResponse, StkPushResponseDto } from '@/types/order';
-import Navbar from '@/components/layout/Navbar';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { X } from 'lucide-react';
@@ -148,20 +148,15 @@ export default function CartExternalPage() {
   // Empty cart view
   if (items.length === 0 && !paymentOpen) {
     return (
-      <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A]">
-        <Navbar />
-        <main className="pt-[68px] md:pt-[132px] max-w-[900px] mx-auto px-6 py-12 text-center">
-          <h1 className="text-2xl font-extrabold mb-4">{t('cart_empty')}</h1>
-          <Link to="/" className="text-[#00C853] hover:underline">{t('continue_shopping')}</Link>
-        </main>
+      <div className="flex-grow max-w-[900px] mx-auto px-6 py-12 text-center font-sans">
+        <h1 className="text-2xl font-extrabold mb-4">{t('cart_empty')}</h1>
+        <Link to="/" className="text-[#00C853] hover:underline">{t('continue_shopping')}</Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px] max-w-[900px] mx-auto px-6 py-10">
+    <div className="flex-grow max-w-[900px] mx-auto px-6 py-10 font-sans">
         <h1 className="text-2xl font-extrabold mb-6">Your External Parts Cart</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-4">
@@ -243,7 +238,6 @@ export default function CartExternalPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

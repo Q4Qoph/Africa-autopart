@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Phone, Mail, MapPin, Send, CheckCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import Navbar from '@/components/layout/Navbar'
+
 import { contactApi } from '@/api/contactApi'
 
 const inputCls =
@@ -38,10 +38,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans">
         {/* Hero */}
         <section className="bg-[#07110A] py-14 px-6">
           <div className="max-w-[1260px] mx-auto">
@@ -180,7 +177,6 @@ export default function ContactPage() {
             </div>
           </div>
         </section>
-      </main>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ShoppingCart, Heart } from 'lucide-react'
-import Navbar from '@/components/layout/Navbar'
+
 import { inventoryApi } from '@/api/inventoryApi'
 import type { InventoryItem } from '@/types/inventory'
 import { useCart } from '@/context/CartContext'
@@ -21,10 +21,8 @@ export default function ShopPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9] overflow-x-hidden">
-      <Navbar />
-
-      <section className="pt-[68px] md:pt-[132px] pb-8 border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
+    <div className="flex-grow font-sans">
+      <section className="pb-8 border-b border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.05)]">
         <div className="max-w-[1260px] mx-auto px-6 pb-4">
           <p className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#00C853] mb-2">
             <span className="block w-6 h-px bg-[#00C853]" />

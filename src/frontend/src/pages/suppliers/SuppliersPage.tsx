@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { supplierApi } from '@/api/supplierApi'
 import type { Supplier, PartResponse } from '@/types/supplier'
 import { useAuth } from '@/context/AuthContext'
-import Navbar from '@/components/layout/Navbar'
+
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 
@@ -45,9 +45,7 @@ export default function SuppliersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[1260px] mx-auto px-6 py-12">
           {/* Header */}
           <div className="mb-8">
@@ -109,7 +107,6 @@ export default function SuppliersPage() {
             </>
           )}
         </div>
-      </main>
     </div>
   )
 }

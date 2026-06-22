@@ -8,7 +8,7 @@ import { userApi } from '@/api/userApi'
 import type { PartRequest } from '@/types/request'
 import type { CustomerOrder, } from '@/types/order'   
 import type { User } from '@/types/user'
-import Navbar from '@/components/layout/Navbar'
+
 import { Button } from '@/components/ui/button'
 import TrackOrderModal from '@/components/ui/TrackOrderModal'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -66,10 +66,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-
-      <div className="pt-[68px] md:pt-[132px] flex">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
+      <div className="flex">
         {/* ── Sidebar ── */}
         <aside className="hidden md:flex flex-col w-60 shrink-0 min-h-[calc(100vh-68px)] bg-white dark:bg-[#111C14] border-r border-[rgba(0,200,83,0.12)] px-3 py-8">
           {/* User avatar + name at top */}

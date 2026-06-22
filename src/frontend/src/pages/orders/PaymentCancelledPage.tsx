@@ -1,15 +1,13 @@
 // src/frontend/src/pages/orders/PaymentCancelledPage.tsx
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import Navbar from '@/components/layout/Navbar'
+
 
 export default function PaymentCancelledPage() {
   const { t } = useTranslation('orders')
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
           <div className="w-16 h-16 rounded-full bg-amber-400/10 border border-amber-400/20 grid place-items-center mx-auto mb-6">
             <span className="text-amber-400 text-3xl">⚠</span>
@@ -27,7 +25,6 @@ export default function PaymentCancelledPage() {
             {t('back_to_requests')}
           </Link>
         </div>
-      </main>
     </div>
   )
 }

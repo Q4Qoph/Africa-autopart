@@ -8,7 +8,7 @@ import type { PartRequest } from '@/types/request'
 import { ConditionPreference, Urgency } from '@/types/request'
 import type { Order } from '@/types/order'
 import { getOrderDisplay, statusLabel } from '@/types/order'
-import Navbar from '@/components/layout/Navbar'
+
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -157,9 +157,7 @@ export default function RequestDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[900px] mx-auto px-6 py-12">
           <Link to="/requests" className="text-[#4A6B50] dark:text-[#7A9A80] text-xs hover:text-[#07110A] dark:hover:text-white mb-6 inline-block">
             {t('detail_back')}
@@ -399,7 +397,6 @@ export default function RequestDetailPage() {
             </>
           )}
         </div>
-      </main>
     </div>
   )
 }

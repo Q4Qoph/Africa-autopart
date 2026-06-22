@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { paymentApi } from '@/api/paymentApi'
-import Navbar from '@/components/layout/Navbar'
+
 
 export default function MpesaStatusPage() {
   const { orderId } = useParams<{ orderId: string }>()
@@ -49,9 +49,7 @@ export default function MpesaStatusPage() {
   }, [orderId, auth])
 
   return (
-    <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] text-[#07110A] dark:text-[#E8F0E9]">
-      <Navbar />
-      <main className="pt-[68px] md:pt-[132px]">
+    <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">
         <div className="max-w-[560px] mx-auto px-6 py-20 text-center">
           {status === 'waiting' && (
             <>
@@ -99,7 +97,6 @@ export default function MpesaStatusPage() {
             </>
           )}
         </div>
-      </main>
     </div>
   )
 }
