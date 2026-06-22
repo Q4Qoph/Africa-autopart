@@ -14,7 +14,7 @@ import {
   Search,
 } from 'lucide-react'
 import { vinApi } from '@/api/vinApi'
-import type { VinPartsResponse, PartDetailResponse, VinPart } from '@/types/vin'
+import type { VinSearchResponse, VinSearchPart } from '@/types/vin'
 import { useExternalCart } from '@/context/ExternalCartContext'
 
 import { Button } from '@/components/ui/button'
@@ -343,92 +343,91 @@ function getDiagramIndex(partName: string): number {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+const CATEGORIES = [
+  'ENGINE',
+  'TRANSMISSION',
+  'CHASSIS',
+  'BODY',
+  'TRIM',
+  'ELECTRICAL',
+]
+
 export default function PartsSearchPage() {
   const location = useLocation()
   const { t } = useTranslation('home')
   const { addItem } = useExternalCart()
 
-  const vinData = location.state?.vinParts as VinPartsResponse | undefined
-  const [activeCategory, setActiveCategory] = useState<string>('')
+  const vinSearchDetails = location.state?.vinSearchDetails as VinSearchResponse | undefined
+  const [activeCategory, setActiveCategory] = useState<string>('ENGINE')
+  const [parts, setParts] = useState<VinSearchPart[]>([])
+  const [loadingParts, setLoadingParts] = useState(false)
+  const [errorLoadingParts, setErrorLoadingParts] = useState('')
   const [filterQuery, setFilterQuery] = useState<string>('')
 
   // Modal state
-  const [selectedPart, setSelectedPart] = useState<PartDetailResponse | null>(null)
-  const [loadingDetail, setLoadingDetail] = useState(false)
+  const [selectedPart, setSelectedPart] = useState<VinSearchPart | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-
-  // Navigation through current category parts
-  const [currentParts, setCurrentParts] = useState<VinPart[]>([])
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
 
   useEffect(() => {
-    if (vinData && vinData.categories.length > 0) {
-      setActiveCategory(vinData.categories[0].category_code)
-    }
-  }, [vinData])
+    if (!vinSearchDetails) return
 
-  const currentCategory = vinData?.categories.find(c => c.category_code === activeCategory)
+    async function fetchParts() {
+      setLoadingParts(true)
+      setErrorLoadingParts('')
+      try {
+        const { data } = await vinApi.searchPartsByCategory(activeCategory, vinSearchDetails!)
+        setParts(data)
+      } catch (err) {
+        console.error(err)
+        setErrorLoadingParts('Failed to load parts for this category.')
+      } finally {
+        setLoadingParts(false)
+      }
+    }
+
+    fetchParts()
+  }, [activeCategory, vinSearchDetails])
 
   // Filter parts locally based on search input
-  const filteredParts = currentCategory
-    ? currentCategory.parts.filter(p =>
-        p.part_name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-        p.part_number.toLowerCase().includes(filterQuery.toLowerCase())
-      )
-    : []
+  const filteredParts = parts.filter(p =>
+    p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
+    p.partNumber.toLowerCase().includes(filterQuery.toLowerCase()) ||
+    p.description.toLowerCase().includes(filterQuery.toLowerCase())
+  )
 
-  // When a part is clicked, store the current category's parts list and the index
-  async function handlePartClick(partId: string) {
-    if (!currentCategory) return
-    const parts = currentCategory.parts
-    const idx = parts.findIndex(p => p.part_id === partId)
-    if (idx === -1) return
-
-    setCurrentParts(parts)
+  function handlePartClick(part: VinSearchPart, idx: number) {
+    setSelectedPart(part)
     setCurrentPartIndex(idx)
-    await loadPartDetail(parts[idx].part_id)
     setModalOpen(true)
   }
 
-  async function loadPartDetail(partId: string) {
-    setLoadingDetail(true)
-    try {
-      const { data } = await vinApi.getPartDetail(partId)
-      const detail = Array.isArray(data) ? data[0] : data
-      setSelectedPart(detail)
-    } catch {
-      setSelectedPart(null)
-    } finally {
-      setLoadingDetail(false)
-    }
-  }
-
-  async function goToPrev() {
+  function goToPrev() {
     if (currentPartIndex <= 0) return
     const newIdx = currentPartIndex - 1
     setCurrentPartIndex(newIdx)
-    await loadPartDetail(currentParts[newIdx].part_id)
+    setSelectedPart(filteredParts[newIdx])
   }
 
-  async function goToNext() {
-    if (currentPartIndex >= currentParts.length - 1) return
+  function goToNext() {
+    if (currentPartIndex >= filteredParts.length - 1) return
     const newIdx = currentPartIndex + 1
     setCurrentPartIndex(newIdx)
-    await loadPartDetail(currentParts[newIdx].part_id)
+    setSelectedPart(filteredParts[newIdx])
   }
 
   function handleAddToCart() {
     if (!selectedPart) return
     const part = selectedPart
     const cartItem = {
-      name: part.marketData.display_name || part.marketData.part_number,
-      partNumber: part.marketData.part_number,
-      price: `$${part.marketData.demo_price_usd.toFixed(2)}`,
+      name: part.name,
+      partNumber: part.partNumber,
+      price: `$${part.price.toFixed(2)}`,
       originalPrice: '',
-      supplier: part.marketData.supplier_name,
+      supplier: vinSearchDetails?.manufacturer || 'Genuine OEM Supplier',
       availability: true,
-      location: part.marketData.warehouse_location,
-      imageURL: part.imageURL || '',
+      location: vinSearchDetails?.plantCountry || 'South Korea',
+      imageURL: '',
     }
     addItem(cartItem)
     setModalOpen(false)
@@ -437,13 +436,19 @@ export default function PartsSearchPage() {
   function closeModal() {
     setModalOpen(false)
     setSelectedPart(null)
-    setCurrentParts([])
   }
 
   const canGoPrev = currentPartIndex > 0
-  const canGoNext = currentPartIndex < currentParts.length - 1
+  const canGoNext = currentPartIndex < filteredParts.length - 1
 
-  if (!vinData) {
+  const getBrandLogo = (makeName: string, color = 'currentColor') => {
+    if (!makeName) return null
+    const normalized = makeName.charAt(0).toUpperCase() + makeName.slice(1).toLowerCase()
+    const logoFn = BRAND_LOGOS[normalized] || BRAND_LOGOS[makeName]
+    return logoFn ? logoFn(color) : null
+  }
+
+  if (!vinSearchDetails) {
     return (
       <div className="px-6 md:px-8 py-16 text-center font-sans">
         <h1 className="text-2xl font-black text-slate-800 mb-4">{t('no_vehicle') ?? 'No vehicle selected'}</h1>
@@ -464,13 +469,13 @@ export default function PartsSearchPage() {
             <span>•</span>
             <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
             <span>•</span>
-            <span className="text-slate-800 font-bold uppercase">{vinData.brand}</span>
+            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.make}</span>
             <span>•</span>
-            <span className="text-slate-500 font-mono text-[10px]">{vinData.vin}</span>
+            <span className="text-slate-500 font-mono text-[10px]">{vinSearchDetails.vin}</span>
             <span>•</span>
-            <span className="text-slate-800 font-bold uppercase">{vinData.model_name} {vinData.engine_code}</span>
+            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.model}</span>
             <span>•</span>
-            <span className="text-[#33b5e5] font-extrabold uppercase">{currentCategory?.category_name || 'Parts list'}</span>
+            <span className="text-[#33b5e5] font-extrabold uppercase">{activeCategory}</span>
           </div>
 
           {/* Center Content Padding Area */}
@@ -478,21 +483,21 @@ export default function PartsSearchPage() {
             
             {/* Vehicle Info Table Card */}
             <h2 className="text-sm font-black text-slate-800 mb-2 uppercase tracking-wide">
-              {vinData.brand} Parts Catalogs {vinData.model_name}
+              {vinSearchDetails.make} Parts Catalogs {vinSearchDetails.model}
             </h2>
             <div className="overflow-x-auto border border-slate-200 rounded mb-6 select-none shadow-sm">
               <table className="min-w-full divide-y divide-slate-200 text-left text-[11px] bg-slate-50">
                 <thead className="bg-slate-100 text-slate-600 font-bold uppercase">
                   <tr>
                     <th className="px-4 py-2">Brand</th>
-                    <th className="px-4 py-2">Name</th>
-                    <th className="px-4 py-2">Vehicle Date</th>
-                    <th className="px-4 py-2">Description</th>
-                    <th className="px-4 py-2">Color</th>
                     <th className="px-4 py-2">Model</th>
-                    <th className="px-4 py-2">Options</th>
-                    <th className="px-4 py-2">Prod Period</th>
-                    <th className="px-4 py-2">Interior Color</th>
+                    <th className="px-4 py-2">Year</th>
+                    <th className="px-4 py-2">Engine</th>
+                    <th className="px-4 py-2">Trim</th>
+                    <th className="px-4 py-2">Manufacturer</th>
+                    <th className="px-4 py-2">Plant</th>
+                    <th className="px-4 py-2">Doors</th>
+                    <th className="px-4 py-2">Body Class</th>
                     <th className="px-4 py-2 text-center">i</th>
                   </tr>
                 </thead>
@@ -501,19 +506,23 @@ export default function PartsSearchPage() {
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-1.5">
                         <div className="w-6 h-6 text-slate-800 flex items-center justify-center">
-                          {BRAND_LOGOS[vinData.brand] ? BRAND_LOGOS[vinData.brand]('currentColor') : null}
+                          {getBrandLogo(vinSearchDetails.make)}
                         </div>
-                        <span className="font-extrabold text-slate-900">{vinData.brand.toUpperCase()}</span>
+                        <span className="font-extrabold text-slate-900">{vinSearchDetails.make.toUpperCase()}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-2 font-bold uppercase">{vinData.model_name}</td>
-                    <td className="px-4 py-2">{vinData.model_year || '06.2010'}</td>
-                    <td className="px-4 py-2 text-slate-500 font-mono text-[10px]">{vinData.engine_code ? `${vinData.engine_code}#,WWT27#` : 'ADT27#,WWT27#,ZRT27#'}</td>
-                    <td className="px-4 py-2">{'1F7'}</td>
-                    <td className="px-4 py-2 font-mono text-[10px]">{vinData.engine_code || 'ZRT271L'}</td>
-                    <td className="px-4 py-2 text-[10px]">{vinData.engine_displacement ? `${vinData.engine_displacement}; MANUAL` : 'ATM,MTM; MANUAL;'}</td>
-                    <td className="px-4 py-2">{'11.2008 - 07.2018'}</td>
-                    <td className="px-4 py-2">{'FA20'}</td>
+                    <td className="px-4 py-2 font-bold uppercase">{vinSearchDetails.model}</td>
+                    <td className="px-4 py-2">{vinSearchDetails.modelYear}</td>
+                    <td className="px-4 py-2 text-slate-500 font-mono text-[10px]">
+                      {vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L` : ''} {vinSearchDetails.fuelTypePrimary}
+                    </td>
+                    <td className="px-4 py-2">{vinSearchDetails.trim || 'N/A'}</td>
+                    <td className="px-4 py-2 font-mono text-[10px]">{vinSearchDetails.manufacturer}</td>
+                    <td className="px-4 py-2 text-[10px]">
+                      {vinSearchDetails.plantCity}, {vinSearchDetails.plantCountry}
+                    </td>
+                    <td className="px-4 py-2">{vinSearchDetails.doors || 'N/A'}</td>
+                    <td className="px-4 py-2">{vinSearchDetails.bodyClass || 'N/A'}</td>
                     <td className="px-4 py-2 text-center">
                       <Info className="w-4 h-4 text-slate-400 mx-auto cursor-pointer hover:text-slate-600" />
                     </td>
@@ -556,24 +565,26 @@ export default function PartsSearchPage() {
 
                 <div className="sticky top-[100px]">
                   <nav className="space-y-1 max-h-[50vh] overflow-y-auto pr-1">
-                    {vinData.categories.map((cat) => (
+                    {CATEGORIES.map((cat) => (
                       <button
-                        key={cat.category_code}
+                        key={cat}
                         onClick={() => {
-                          setActiveCategory(cat.category_code)
+                          setActiveCategory(cat)
                           setFilterQuery('')
                         }}
                         className={cn(
                           'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between uppercase font-bold tracking-wide border border-transparent',
-                          activeCategory === cat.category_code
+                          activeCategory === cat
                             ? 'bg-sky-50 text-sky-600 border-sky-200'
                             : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
                         )}
                       >
-                        <span className="truncate mr-1">{cat.category_name}</span>
-                        <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
-                          {cat.parts.length}
-                        </span>
+                        <span className="truncate mr-1">{cat}</span>
+                        {activeCategory === cat && !loadingParts && (
+                          <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
+                            {filteredParts.length}
+                          </span>
+                        )}
                       </button>
                     ))}
                   </nav>
@@ -582,42 +593,47 @@ export default function PartsSearchPage() {
 
               {/* Right Sidebar Blueprint Diagrams Grid */}
               <div className="flex-grow min-w-0">
-                {currentCategory ? (
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
-                      {currentCategory.category_name} Diagrams
-                    </h3>
-                    
-                    {filteredParts.length === 0 ? (
-                      <p className="text-slate-400 text-sm py-16 text-center font-medium">
-                        {filterQuery ? 'No parts match your filter' : (t('no_parts_category') ?? 'No parts found in this category')}
-                      </p>
-                    ) : (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {filteredParts.map((part) => {
-                          const diagIndex = getDiagramIndex(part.part_name)
-                          return (
-                            <div
-                              key={part.part_id}
-                              onClick={() => handlePartClick(part.part_id)}
-                              className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
-                            >
-                              {/* Schematic Diagram Outlines */}
-                              <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner">
-                                <DiagramSVG code={diagIndex} />
-                              </div>
-                              {/* Label */}
-                              <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
-                                {part.part_number}: {part.part_name.toUpperCase()}
-                              </span>
+                <div>
+                  <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
+                    {activeCategory} Diagrams
+                  </h3>
+                  
+                  {loadingParts ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <span className="w-8 h-8 border-4 border-slate-200 border-t-sky-500 rounded-full animate-spin mb-2" />
+                      <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog...</p>
+                    </div>
+                  ) : errorLoadingParts ? (
+                    <p className="text-red-500 text-sm py-16 text-center font-medium font-sans">
+                      {errorLoadingParts}
+                    </p>
+                  ) : filteredParts.length === 0 ? (
+                    <p className="text-slate-400 text-sm py-16 text-center font-medium font-sans">
+                      {filterQuery ? 'No parts match your filter' : `No parts found in ${activeCategory}`}
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {filteredParts.map((part, index) => {
+                        const diagIndex = getDiagramIndex(part.name)
+                        return (
+                          <div
+                            key={part.partNumber}
+                            onClick={() => handlePartClick(part, index)}
+                            className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
+                          >
+                            {/* Schematic Diagram Outlines */}
+                            <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner">
+                              <DiagramSVG code={diagIndex} />
                             </div>
-                          )})}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-slate-400 text-sm py-16 text-center font-medium">Select a category to browse diagrams</p>
-                )}
+                            {/* Label */}
+                            <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
+                              {part.partNumber}: {part.name.toUpperCase()}
+                            </span>
+                          </div>
+                        )})}
+                    </div>
+                  )}
+                </div>
               </div>
 
             </div>
@@ -625,11 +641,9 @@ export default function PartsSearchPage() {
           </div>
         </div>
 
-
-
       {/* Part Detail Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center font-sans select-none">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center font-sans select-none animate-fadeIn">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeModal} />
           <div className="relative z-10 bg-white dark:bg-[#111C14] rounded border border-slate-300 shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
             
@@ -644,7 +658,7 @@ export default function PartsSearchPage() {
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <span className="text-xs text-slate-500 font-bold">
-                  {currentPartIndex + 1} / {currentParts.length}
+                  {currentPartIndex + 1} / {filteredParts.length}
                 </span>
                 <button
                   onClick={goToNext}
@@ -662,48 +676,50 @@ export default function PartsSearchPage() {
               </button>
             </div>
 
-            {loadingDetail ? (
-              <div className="p-12 text-center text-sm text-slate-500 font-medium">Loading part details…</div>
-            ) : selectedPart ? (
+            {selectedPart ? (
               <div className="p-6">
                 
-                {selectedPart.imageURL && (
-                  <div className="w-full h-44 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-4 mb-4">
-                    <img
-                      src={selectedPart.imageURL}
-                      alt={selectedPart.marketData.display_name}
-                      className="max-w-full max-h-full object-contain"
-                    />
+                {/* Schematic SVG image to look exactly like PartsSouq blueprint diagrams */}
+                <div className="w-full h-44 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-4 mb-4 shadow-inner">
+                  <div className="w-36 h-36">
+                    <DiagramSVG code={getDiagramIndex(selectedPart.name)} />
                   </div>
-                )}
+                </div>
                 
-                <h3 className="text-base font-extrabold text-slate-900 mb-1">
-                  {selectedPart.marketData.display_name.toUpperCase() || selectedPart.marketData.part_number}
+                <h3 className="text-sm font-extrabold text-slate-900 mb-1 uppercase">
+                  {selectedPart.name}
                 </h3>
-                <p className="text-xs font-mono font-bold text-sky-600 mb-4">
-                  CODE: {selectedPart.marketData.part_number}
+                <p className="text-xs font-mono font-bold text-sky-600 mb-2">
+                  PART NUMBER: {selectedPart.partNumber}
+                </p>
+                <p className="text-xs text-slate-500 mb-4 italic leading-relaxed">
+                  {selectedPart.description}
                 </p>
 
                 <div className="space-y-2 text-xs font-semibold border-t border-b border-slate-100 py-4 mb-6">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">PRICE</span>
                     <span className="text-sm font-black text-amber-600">
-                      ${selectedPart.marketData.demo_price_usd.toFixed(2)}
+                      ${selectedPart.price.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
+                    <span className="text-slate-400">BRAND</span>
+                    <span className="text-slate-700 font-bold uppercase">{vinSearchDetails?.make}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
                     <span className="text-slate-400">SUPPLIER</span>
-                    <span className="text-slate-700">{selectedPart.marketData.supplier_name}</span>
+                    <span className="text-slate-700">{vinSearchDetails?.manufacturer || 'Genuine OEM Supplier'}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">STATUS</span>
                     <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold">
-                      {selectedPart.marketData.availability_status.toUpperCase()}
+                      IN STOCK
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">WAREHOUSE LOCATION</span>
-                    <span className="text-slate-700 font-mono">{selectedPart.marketData.warehouse_location}</span>
+                    <span className="text-slate-400">DISPATCH ORIGIN</span>
+                    <span className="text-slate-700">{vinSearchDetails?.plantCountry || 'South Korea'}</span>
                   </div>
                 </div>
 

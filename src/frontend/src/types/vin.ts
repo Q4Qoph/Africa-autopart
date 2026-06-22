@@ -133,3 +133,39 @@ export interface PartDetailResponse {
   marketData: PartMarketData
   imageURL: string
 }
+
+// ─── POST /api/Vin/search/{vin} response ──────────────────────────────────
+export interface VinSearchResponse {
+  vin: string
+  isValid: boolean
+  errorCode: string
+  errorText: string
+  make: string
+  model: string
+  modelYear: string
+  manufacturer: string
+  vehicleType: string
+  bodyClass: string
+  series: string | null
+  trim: string | null
+  driveType: string | null
+  transmissionStyle: string | null
+  engineCylinders: string | null
+  engineHP: string | null
+  displacementL: string
+  fuelTypePrimary: string
+  plantCity: string
+  plantState: string | null
+  plantCountry: string
+  gvwr: string
+  doors: string
+  rawAttributes: Record<string, string>
+}
+
+// ─── POST /api/Vin/search/parts/{category} response item ───────────────────
+export interface VinSearchPart {
+  partNumber: string
+  name: string
+  description: string
+  price: number
+}

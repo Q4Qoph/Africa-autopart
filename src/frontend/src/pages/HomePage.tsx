@@ -258,8 +258,8 @@ export default function HomePage() {
     setError('')
     setSearching(true)
     try {
-      const { data } = await vinApi.getPartsByVin(trimmed)
-      navigate('/parts-search', { state: { vinParts: data } })
+      const { data } = await vinApi.searchVin(trimmed)
+      navigate('/parts-search', { state: { vinSearchDetails: data } })
     } catch {
       setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN/Part number and try again.')
     } finally {
