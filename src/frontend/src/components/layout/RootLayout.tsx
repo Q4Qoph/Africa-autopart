@@ -41,7 +41,7 @@ export default function RootLayout() {
     >
       <Navbar />
 
-      <main className="pt-[65px] w-full max-w-[1240px] mx-auto bg-white border-x border-slate-200 shadow-sm relative z-10 min-h-[90vh] flex flex-col justify-between font-sans">
+      <main className="pt-[90px] w-full max-w-[1240px] mx-auto bg-white border-x border-slate-200 shadow-sm relative z-10 min-h-[90vh] flex flex-col justify-between font-sans">
         <div className="flex-grow flex flex-col">
           <Outlet />
         </div>

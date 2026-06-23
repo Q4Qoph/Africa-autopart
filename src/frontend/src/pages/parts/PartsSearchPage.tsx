@@ -1,5 +1,5 @@
 // src/frontend/src/pages/parts/PartsSearchPage.tsx
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -369,8 +369,17 @@ export default function PartsSearchPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
 
+  // Cache to avoid refetching parts when changing categories
+  const partsCacheRef = useRef<Record<string, VinSearchPart[]>>({})
+
   useEffect(() => {
     if (!vinSearchDetails) return
+
+    const cached = partsCacheRef.current[activeCategory]
+    if (cached) {
+      setParts(cached)
+      return
+    }
 
     async function fetchParts() {
       setLoadingParts(true)
@@ -378,6 +387,7 @@ export default function PartsSearchPage() {
       try {
         const { data } = await vinApi.searchPartsByCategory(activeCategory, vinSearchDetails!)
         setParts(data)
+        partsCacheRef.current[activeCategory] = data
       } catch (err) {
         console.error(err)
         setErrorLoadingParts('Failed to load parts for this category.')
@@ -441,7 +451,7 @@ export default function PartsSearchPage() {
   const canGoPrev = currentPartIndex > 0
   const canGoNext = currentPartIndex < filteredParts.length - 1
 
-  const getBrandLogo = (makeName: string, color = 'currentColor') => {
+  const getBrandLogo = (makeName: string | null | undefined, color = 'currentColor') => {
     if (!makeName) return null
     const normalized = makeName.charAt(0).toUpperCase() + makeName.slice(1).toLowerCase()
     const logoFn = BRAND_LOGOS[normalized] || BRAND_LOGOS[makeName]
@@ -469,11 +479,11 @@ export default function PartsSearchPage() {
             <span>•</span>
             <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
             <span>•</span>
-            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.make}</span>
+            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.make || 'UNKNOWN'}</span>
             <span>•</span>
             <span className="text-slate-500 font-mono text-[10px]">{vinSearchDetails.vin}</span>
             <span>•</span>
-            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.model}</span>
+            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.model || 'UNKNOWN'}</span>
             <span>•</span>
             <span className="text-[#33b5e5] font-extrabold uppercase">{activeCategory}</span>
           </div>
@@ -483,7 +493,7 @@ export default function PartsSearchPage() {
             
             {/* Vehicle Info Table Card */}
             <h2 className="text-sm font-black text-slate-800 mb-2 uppercase tracking-wide">
-              {vinSearchDetails.make} Parts Catalogs {vinSearchDetails.model}
+              {vinSearchDetails.make || 'UNKNOWN'} Parts Catalogs {vinSearchDetails.model || 'UNKNOWN'}
             </h2>
             <div className="overflow-x-auto border border-slate-200 rounded mb-6 select-none shadow-sm">
               <table className="min-w-full divide-y divide-slate-200 text-left text-[11px] bg-slate-50">
@@ -508,18 +518,18 @@ export default function PartsSearchPage() {
                         <div className="w-6 h-6 text-slate-800 flex items-center justify-center">
                           {getBrandLogo(vinSearchDetails.make)}
                         </div>
-                        <span className="font-extrabold text-slate-900">{vinSearchDetails.make.toUpperCase()}</span>
+                        <span className="font-extrabold text-slate-900">{(vinSearchDetails.make || 'UNKNOWN').toUpperCase()}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-2 font-bold uppercase">{vinSearchDetails.model}</td>
-                    <td className="px-4 py-2">{vinSearchDetails.modelYear}</td>
+                    <td className="px-4 py-2 font-bold uppercase">{vinSearchDetails.model || 'N/A'}</td>
+                    <td className="px-4 py-2">{vinSearchDetails.modelYear || 'N/A'}</td>
                     <td className="px-4 py-2 text-slate-500 font-mono text-[10px]">
-                      {vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L` : ''} {vinSearchDetails.fuelTypePrimary}
+                      {vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L` : ''} {vinSearchDetails.fuelTypePrimary || ''}
                     </td>
                     <td className="px-4 py-2">{vinSearchDetails.trim || 'N/A'}</td>
-                    <td className="px-4 py-2 font-mono text-[10px]">{vinSearchDetails.manufacturer}</td>
+                    <td className="px-4 py-2 font-mono text-[10px]">{vinSearchDetails.manufacturer || 'N/A'}</td>
                     <td className="px-4 py-2 text-[10px]">
-                      {vinSearchDetails.plantCity}, {vinSearchDetails.plantCountry}
+                      {vinSearchDetails.plantCity || ''}{vinSearchDetails.plantCity && vinSearchDetails.plantCountry ? ', ' : ''}{vinSearchDetails.plantCountry || ''}
                     </td>
                     <td className="px-4 py-2">{vinSearchDetails.doors || 'N/A'}</td>
                     <td className="px-4 py-2">{vinSearchDetails.bodyClass || 'N/A'}</td>
@@ -705,7 +715,7 @@ export default function PartsSearchPage() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">BRAND</span>
-                    <span className="text-slate-700 font-bold uppercase">{vinSearchDetails?.make}</span>
+                    <span className="text-slate-700 font-bold uppercase">{vinSearchDetails?.make || 'UNKNOWN'}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">SUPPLIER</span>

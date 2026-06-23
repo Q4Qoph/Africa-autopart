@@ -109,7 +109,7 @@ export default function Navbar() {
       <div className="fixed top-0 inset-x-0 z-50 flex flex-col shadow-md">
         
         {/* ── Main nav bar (PartSouq UI & Africa Autopart Brand) ── */}
-        <header className="h-[80px] bg-[#003020] border-b border-slate-800 text-white flex items-center select-none">
+        <header className="h-[90px] bg-[#003020] border-b border-slate-800 text-white flex items-center select-none">
           <div className="w-full px-4 flex items-center justify-between">
             
             {/* Left: Brand Logo (Africa Autopart Branding) */}

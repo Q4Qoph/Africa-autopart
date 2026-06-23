@@ -140,25 +140,25 @@ export interface VinSearchResponse {
   isValid: boolean
   errorCode: string
   errorText: string
-  make: string
-  model: string
-  modelYear: string
-  manufacturer: string
-  vehicleType: string
-  bodyClass: string
+  make: string | null
+  model: string | null
+  modelYear: string | null
+  manufacturer: string | null
+  vehicleType: string | null
+  bodyClass: string | null
   series: string | null
   trim: string | null
   driveType: string | null
   transmissionStyle: string | null
   engineCylinders: string | null
   engineHP: string | null
-  displacementL: string
-  fuelTypePrimary: string
-  plantCity: string
+  displacementL: string | null
+  fuelTypePrimary: string | null
+  plantCity: string | null
   plantState: string | null
-  plantCountry: string
-  gvwr: string
-  doors: string
+  plantCountry: string | null
+  gvwr: string | null
+  doors: string | null
   rawAttributes: Record<string, string>
 }
 
