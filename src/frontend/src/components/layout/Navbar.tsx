@@ -109,8 +109,8 @@ export default function Navbar() {
       <div className="fixed top-0 inset-x-0 z-50 flex flex-col shadow-md">
         
         {/* ── Main nav bar (PartSouq UI & Africa Autopart Brand) ── */}
-        <header className="h-[65px] bg-[#0c1524] border-b border-slate-800 text-white flex items-center select-none">
-          <div className="max-w-[1240px] w-full mx-auto px-4 flex items-center justify-between">
+        <header className="h-[80px] bg-[#003020] border-b border-slate-800 text-white flex items-center select-none">
+          <div className="w-full px-4 flex items-center justify-between">
             
             {/* Left: Brand Logo (Africa Autopart Branding) */}
             <Link to="/" className="flex items-center group font-sans shrink-0 mr-4">
@@ -135,7 +135,7 @@ export default function Navbar() {
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as Language)}
-                  className="appearance-none bg-[#0c1524] border border-slate-700 text-slate-100 font-bold text-xs rounded px-3 py-1.5 pr-8 outline-none cursor-pointer hover:bg-slate-800 transition-colors"
+                  className="appearance-none bg-[#002514] border border-slate-700 text-slate-100 font-bold text-xs rounded px-3 py-1.5 pr-8 outline-none cursor-pointer hover:bg-slate-800 transition-colors"
                 >
                   <option value="en">🇬🇧 ENGLISH</option>
                   <option value="fr">🇫🇷 FRANÇAIS</option>
@@ -150,7 +150,7 @@ export default function Navbar() {
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="appearance-none bg-[#0c1524] border border-slate-700 text-slate-100 font-bold text-xs rounded px-3 py-1.5 pr-8 outline-none cursor-pointer hover:bg-slate-800 transition-colors"
+                  className="appearance-none bg-[#002514] border border-slate-700 text-slate-100 font-bold text-xs rounded px-3 py-1.5 pr-8 outline-none cursor-pointer hover:bg-slate-800 transition-colors"
                 >
                   <option value="USD">USD</option>
                   <option value="KES">KES</option>

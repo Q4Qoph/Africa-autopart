@@ -508,9 +508,9 @@ export default function HomePage() {
                 className="bg-white border border-slate-200 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 transition-all duration-200 group"
               >
                 {/* SVG Logo Container */}
-                <div className="h-16 flex items-center justify-center text-slate-700 group-hover:scale-105 transition-transform duration-300">
-                  {BRAND_LOGOS[brand] ? BRAND_LOGOS[brand]('currentColor') : null}
-                </div>
+              <div className="h-16 flex items-center justify-center text-slate-700 group-hover:scale-105 transition-transform duration-300">
+                <img src={`/images/brands/${brand.toLowerCase().replace(/\s+/g, '-')}${['lexus','volkswagen'].includes(brand.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`} alt={brand} className="h-full w-full object-contain" />
+              </div>
                 {/* Name */}
                 <span className="text-sm font-semibold text-slate-700 mt-3 group-hover:text-slate-900 font-sans">
                   {brand}
