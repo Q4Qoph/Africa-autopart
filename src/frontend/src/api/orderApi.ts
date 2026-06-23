@@ -16,7 +16,7 @@ export const orderApi = {
     api.post<AddOrderResponse>('/api/Order/addOrder', dto, authHeader(token)),
 
   createNewOrder: (dto: AddNewOrderDTO, token: string) =>
-    api.post<string>('/api/NewOrder', dto, authHeader(token)),
+    api.post<AddOrderResponse>('/api/NewOrder', dto, authHeader(token)),
 
    getAll: (token: string) =>
     api.get<CustomerOrder[]>('/api/Order/getAllOrders', authHeader(token)),

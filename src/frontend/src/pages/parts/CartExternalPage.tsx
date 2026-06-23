@@ -96,7 +96,7 @@ export default function CartExternalPage() {
 
       const orderRes = await orderApi.createNewOrder(newOrderPayload, auth.token)
       // Extract created order ID returned from API
-      const orderId = Number(orderRes.data)
+      const orderId = orderRes.data.orderId
 
       if (!orderId) {
         throw new Error('Failed to parse order ID.')
