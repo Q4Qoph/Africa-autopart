@@ -247,3 +247,20 @@ export function getOrderDisplay(order: Order): OrderDisplayInfo {
     raw: order,
   }
 }
+
+// ─── POST /api/NewOrder DTO ───────────────────────────────────────────────
+export interface AddNewOrderDTO {
+  userId: number
+  items: {
+    partNumber: string
+    name: string
+    description: string
+    price: number
+    quantity: number
+  }[]
+  shipping: {
+    city: string
+    postalCode: string
+    county: string
+  }
+}
