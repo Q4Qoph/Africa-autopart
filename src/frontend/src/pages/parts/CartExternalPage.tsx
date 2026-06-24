@@ -129,20 +129,22 @@ export default function CartExternalPage() {
 
       if (paymentMethod === 'stripe') {
         // 4. Initiate Stripe Checkout Payment
-        const paymentRes = await paymentApi.addPayment({ orderId }, auth.token)
+        const paymentRes = await paymentApi.addNewPayment({ orderId }, auth.token)
         const paymentData = paymentRes.data
 
         // Save Stripe session details for callback verification on /success page
         sessionStorage.setItem('pendingStripeSessionId', paymentData.stripeSessionId)
         sessionStorage.setItem('pendingOrderId', String(orderId))
+        sessionStorage.setItem('isNewOrder', 'true')
 
         // 5. Redirect browser directly to Stripe hosted checkout page
         window.location.href = paymentData.url
       } else {
         // 4. Initiate M-Pesa STK Push
         const formattedPhone = formatMpesaPhone(phoneToUse)
-        const mpesaRes = await paymentApi.initiateStkPush(orderId, formattedPhone, auth.token)
+        const mpesaRes = await paymentApi.initiateNewStkPush(orderId, formattedPhone, auth.token)
         if (mpesaRes.data.isSuccessful) {
+          sessionStorage.setItem('isNewOrder', 'true')
           navigate(`/orders/mpesa-status/${orderId}`)
         } else {
           throw new Error(mpesaRes.data.customerMessage || 'Failed to initiate M-Pesa STK push.')

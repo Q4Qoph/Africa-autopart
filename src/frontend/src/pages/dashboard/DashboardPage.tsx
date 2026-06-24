@@ -12,6 +12,7 @@ import type { User } from '@/types/user'
 
 import { Button } from '@/components/ui/button'
 import TrackOrderModal from '@/components/ui/TrackOrderModal'
+import OrderCard from '@/components/ui/OrderCard'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -43,7 +44,20 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!auth) return
     requestApi.getByEmail(auth.email, auth.token).then(({ data }) => setRequests(data)).catch(() => { })
-    orderApi.getNewOrdersByUserId(auth.userId, auth.token).then(({ data }) => setOrders(data.map(mapNewOrderToCustomerOrder))).catch(() => { })
+    
+    // Fetch both legacy request orders and new VIN/Cart orders
+    Promise.all([
+      orderApi.getNewOrdersByUserId(auth.userId, auth.token),
+      orderApi.getByUserId(auth.userId, auth.token)
+    ]).then(([newRes, legacyRes]) => {
+      const newMapped = newRes.data.map(o => ({ ...mapNewOrderToCustomerOrder(o), isNew: true }))
+      const legacyMapped = legacyRes.data.map(o => ({ ...o, isNew: false }))
+      const merged = [...newMapped, ...legacyMapped].sort((a, b) =>
+        new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+      )
+      setOrders(merged)
+    }).catch(() => { })
+
     // Fetch full user profile (assuming getUserById exists)
     userApi.getUserById(auth.userId, auth.token).then(({ data }) => setUserProfile(data)).catch(() => { })
   }, [auth])
@@ -304,8 +318,8 @@ export default function DashboardPage() {
             </div>
           )}
         </main>
-
       </div>
+
       <TrackOrderModal
         open={trackOpen}
         onClose={() => { setTrackOpen(false); setTrackingToView('') }}
@@ -313,125 +327,6 @@ export default function DashboardPage() {
       />
     </div>
   )
-}
-
-function OrderCard({ order, t, onTrack }: { order: CustomerOrder; t: (key: string) => string; onTrack: (tracking: string) => void }) {
-  const [expanded, setExpanded] = useState(false)
-
-  const statusColor =
-    order.status === 'Delivered'
-      ? 'bg-[rgba(0,200,83,0.1)] text-[#00C853]'
-      : order.status === 'Shipped'
-        ? 'bg-blue-400/10 text-blue-400'
-        : 'bg-amber-400/10 text-amber-400'
-
-  return (
-    <Card className="bg-white dark:bg-[#111C14] border-[rgba(0,200,83,0.1)] overflow-hidden transition-all">
-      {/* Header – always visible */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full text-left px-5 py-4 flex items-center justify-between hover:bg-[rgba(0,200,83,0.02)] transition-colors"
-      >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono text-[#7A9A80]">#{order.orderId}</span>
-            <h3 className="text-sm font-semibold truncate">{order.requestedPartName}</h3>
-          </div>
-          <div className="flex items-center gap-3 mt-1.5 text-xs text-[#4A6B50] dark:text-[#7A9A80]">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              {new Date(order.dateCreated).toLocaleDateString()}
-            </span>
-            <span>{order.vehicleMake} {order.model}</span>
-            <span className="font-mono">{order.trackingNumber || t('not_assigned')}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 ml-4">
-          <Badge className={cn('text-[10px]', statusColor)}>{order.status}</Badge>
-          <p className="text-sm font-bold text-[#00C853]">${order.total?.toLocaleString() ?? '0'}</p>
-          <ChevronRight className={cn('w-4 h-4 text-[#4A6B50] transition-transform', expanded && 'rotate-90')} />
-        </div>
-      </button>
-
-      {/* Expanded detail */}
-      {expanded && (
-        <div className="border-t border-[rgba(0,200,83,0.12)] px-5 py-4 bg-[rgba(0,200,83,0.02)] dark:bg-[rgba(0,200,83,0.02)]">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4 text-sm">
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-[#7A9A80]">{t('order_date') ?? 'Date'}</p>
-              <p className="font-medium">{new Date(order.dateCreated).toLocaleDateString()}</p>
-            </div>
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-[#7A9A80]">{t('tracking') ?? 'Tracking'}</p>
-              <p className="font-medium font-mono">{order.trackingNumber || '—'}</p>
-            </div>
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-[#7A9A80]">{t('vehicle') ?? 'Vehicle'}</p>
-              <p className="font-medium">{order.vehicleMake} {order.model}</p>
-            </div>
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-[#7A9A80]">{t('description') ?? 'Description'}</p>
-              <p className="font-medium text-xs leading-snug">{order.requestDescription || '—'}</p>
-            </div>
-          </div>
-
-          {/* Order Items */}
-          <div className="border-t border-[rgba(0,200,83,0.08)] pt-4">
-            <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
-              {t('order_items') ?? 'Order Items'}
-            </p>
-            <div className="space-y-2">
-              {order.orderItems?.map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between text-sm">
-                  <div>
-                    <p className="font-medium">{item.partName}</p>
-                    <p className="text-xs text-[#4A6B50] dark:text-[#7A9A80]">{item.supplierName}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">${item.price.toLocaleString()}</p>
-                    <p className="text-xs text-[#4A6B50]">Qty: {item.quantity}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between items-center border-t border-[rgba(0,200,83,0.08)] pt-3 mt-3">
-              <span className="text-sm font-semibold">{t('total') ?? 'Total'}</span>
-              <span className="text-lg font-bold text-[#00C853]">${order.total?.toLocaleString() ?? '0'}</span>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-3 mt-4">
-            {order.trackingNumber && (
-              <button
-                onClick={() => onTrack(order.trackingNumber!)}
-                className="text-xs font-medium text-[#00C853] hover:underline flex items-center gap-1"
-              >
-                <Truck className="w-3.5 h-3.5" />
-                {t('track_order') ?? 'Track Order'}
-              </button>
-            )}
-            {/* Delete button only for pending orders */}
-            {order.status === 'Pending' && (
-              <button
-                onClick={() => {
-                  // We'll need to pass a delete handler or use a confirmation dialog
-                  if (window.confirm(t('delete_confirm') ?? 'Delete this order?')) {
-                    // Call delete API – requires auth and token from parent
-                    // We'll handle this by lifting state or using context
-                  }
-                }}
-                className="text-xs text-red-400 hover:underline"
-              >
-                {t('delete_order') ?? 'Delete'}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </Card>
-  )
-
 }
 
 function MiniStatCard({ label, value, color }: { label: string; value: number; color: 'green' | 'blue' }) {

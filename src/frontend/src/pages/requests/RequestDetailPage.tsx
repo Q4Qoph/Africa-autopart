@@ -6,22 +6,17 @@ import { requestApi } from '@/api/requestApi'
 import { orderApi } from '@/api/orderApi'
 import type { PartRequest } from '@/types/request'
 import { ConditionPreference, Urgency } from '@/types/request'
-import type { Order } from '@/types/order'
-import { getOrderDisplay, statusLabel } from '@/types/order'
+import { statusLabel } from '@/types/order'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { paymentApi } from '@/api/paymentApi'
+import TrackOrderModal from '@/components/ui/TrackOrderModal'
 
-function statusBadgeClass(status: number) {
-  if (status === 2) // Delivered
-    return 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
-  if (status === 1) // Shipped
-    return 'bg-blue-400/10 text-blue-400 border-blue-400/20'
-  return 'bg-amber-400/10 text-amber-400 border-amber-400/20' // Pending = 0
-}
+
 
 const selectClass =
   'w-full h-9 px-3 rounded-lg bg-[#EFF7F1] dark:bg-[#162019] border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] text-[#07110A] dark:text-white focus:outline-none focus:border-[#00C853] text-sm'
@@ -59,10 +54,17 @@ export default function RequestDetailPage() {
     { value: Urgency.Urgent, label: t('urgency_urgent_short') },
   ]
   const [request, setRequest] = useState<PartRequest | null>(null)
-  const [order, setOrder] = useState<Order | null>(null)
-  const display = order ? getOrderDisplay(order) : null
+  const [order, setOrder] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [trackOpen, setTrackOpen] = useState(false)
+  const [trackingToView, setTrackingToView] = useState('')
+
+  // Payment states
+  const [payMethod, setPayMethod] = useState<'stripe' | 'mpesa'>('stripe')
+  const [mpesaPhone, setMpesaPhone] = useState('')
+  const [paying, setPaying] = useState(false)
+  const [payError, setPayError] = useState('')
 
   // Edit state
   const [editing, setEditing] = useState(false)
@@ -153,6 +155,55 @@ export default function RequestDetailPage() {
     } catch {
       alert(t('detail_cancel_fail'))
       setDeleting(false)
+    }
+  }
+
+  function formatMpesaPhone(phone: string): string {
+    let cleaned = phone.replace(/\D/g, '')
+    if (cleaned.startsWith('0')) {
+      cleaned = '254' + cleaned.slice(1)
+    }
+    if (cleaned.startsWith('7') || cleaned.startsWith('1')) {
+      cleaned = '254' + cleaned
+    }
+    return cleaned
+  }
+
+  async function handlePayClick() {
+    if (!auth || !order) return
+    const orderIdToUse = order.orderId ?? order.id
+    setPaying(true)
+    setPayError('')
+    try {
+      if (payMethod === 'stripe') {
+        const res = await paymentApi.addPayment({ orderId: orderIdToUse }, auth.token)
+        const paymentData = res.data
+
+        sessionStorage.setItem('pendingStripeSessionId', paymentData.stripeSessionId)
+        sessionStorage.setItem('pendingOrderId', String(orderIdToUse))
+        sessionStorage.removeItem('isNewOrder')
+
+        window.location.href = paymentData.url
+      } else {
+        const phoneToUse = mpesaPhone.trim() || ''
+        if (!phoneToUse) {
+          setPayError(t('mpesa_phone_required') || 'Phone number is required.')
+          setPaying(false)
+          return
+        }
+        const formattedPhone = formatMpesaPhone(phoneToUse)
+        const res = await paymentApi.initiateStkPush(orderIdToUse, formattedPhone, auth.token)
+        if (res.data.isSuccessful) {
+          sessionStorage.removeItem('isNewOrder')
+          navigate(`/orders/mpesa-status/${orderIdToUse}`)
+        } else {
+          throw new Error(res.data.customerMessage || 'Failed to initiate M-Pesa payment.')
+        }
+      }
+    } catch (err: any) {
+      console.error(err)
+      setPayError(err?.message || 'Payment initiation failed. Please try again.')
+      setPaying(false)
     }
   }
 
@@ -357,15 +408,13 @@ export default function RequestDetailPage() {
               </div>
 
               {/* Order */}
-              <div className="rounded-2xl border border-[rgba(0,200,83,0.15)] overflow-hidden">
-                <div className="bg-[#E8F2EA] dark:bg-[#0D1810] px-6 py-3 border-b border-[rgba(0,200,83,0.12)]">
-                  <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-                    {t('order_label')} {order ? `· ${order.trackingNumber ?? ''}` : ''}
-                  </p>
-                </div>
+              <div className="mt-8">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
+                  {t('order_label') ?? 'Associated Order'}
+                </p>
 
                 {!order ? (
-                  <div className="px-6 py-12 text-center">
+                  <div className="rounded-2xl border border-[rgba(0,200,83,0.15)] overflow-hidden bg-white dark:bg-[#111C14] px-6 py-12 text-center">
                     <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm mb-1">{t('order_awaiting')}</p>
                     <p className="text-[#7A9A80] dark:text-[#3D5942] text-xs mb-5">
                       {t('order_awaiting_desc')}
@@ -380,23 +429,108 @@ export default function RequestDetailPage() {
                     )}
                   </div>
                 ) : (
-                  <div className="px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-5">
-                    <Detail label={t('order_part')} value={display?.requestedPartName ?? '—'} />
-                    <Detail label={t('order_price')} value={`$${(order.total ?? 0).toLocaleString()}`} />
+                  <div className="rounded-2xl border border-[rgba(0,200,83,0.15)] overflow-hidden bg-white dark:bg-[#111C14] px-6 py-5 grid grid-cols-2 sm:grid-cols-3 gap-5">
+                    <Detail label={t('order_part')} value={order.partRequest?.partName ?? order.partName ?? order.requestedPartName ?? '—'} />
+                    <Detail label={t('order_price')} value={`$${(order.total ?? order.price ?? 0).toLocaleString()}`} />
                     <div>
                       <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('order_status')}</p>
-                      <Badge className={cn('text-[10px]', statusBadgeClass(order.status))}>
-                        {statusLabel(order.status)}
+                      <Badge className={cn('text-[10px]',
+                        (order.status === 2 || order.status === 'Delivered') ? 'bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)]'
+                        : (order.status === 1 || order.status === 'Shipped') ? 'bg-blue-400/10 text-blue-400 border-blue-400/20'
+                        : 'bg-amber-400/10 text-amber-400 border-amber-400/20'
+                      )}>
+                        {typeof order.status === 'number' ? statusLabel(order.status) : (order.status || '—')}
                       </Badge>
                     </div>
-                    <Detail label={t('order_tracking')} value={order.trackingNumber || tCommon('not_assigned')} />
-                    <Detail label={t('order_date')} value={display?.dateCreated ? new Date(display.dateCreated).toLocaleDateString() : '—'} />
+                    <div>
+                      <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-0.5">{t('order_tracking')}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-mono text-[#07110A] dark:text-white">{order.trackingNumber || tCommon('not_assigned') || 'Not assigned'}</span>
+                        {order.trackingNumber && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setTrackingToView(order.trackingNumber)
+                              setTrackOpen(true)
+                            }}
+                            className="text-xs text-[#00C853] hover:underline"
+                          >
+                            Track
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <Detail label={t('order_date')} value={(order.partRequest?.dateCreated ?? order.dateCreated) ? new Date(order.partRequest?.dateCreated ?? order.dateCreated).toLocaleDateString() : '—'} />
+
+                    {/* Pay Action Section for Pending status */}
+                    {(order.status === 0 || order.status === 'Pending') && (
+                      <div className="col-span-2 sm:col-span-3 border-t border-[rgba(0,200,83,0.08)] pt-4 mt-2">
+                        <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
+                          Pay for this Order
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                          <div className="flex items-center gap-4 text-xs font-semibold">
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="payMethod"
+                                checked={payMethod === 'stripe'}
+                                onChange={() => {
+                                  setPayMethod('stripe')
+                                  setPayError('')
+                                }}
+                                className="accent-[#00C853]"
+                              />
+                              Stripe (Card)
+                            </label>
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input
+                                type="radio"
+                                name="payMethod"
+                                checked={payMethod === 'mpesa'}
+                                onChange={() => {
+                                  setPayMethod('mpesa')
+                                  setPayError('')
+                                }}
+                                className="accent-[#00C853]"
+                              />
+                              M-Pesa Mobile
+                            </label>
+                          </div>
+
+                          {payMethod === 'mpesa' && (
+                            <Input
+                              type="text"
+                              placeholder="M-Pesa phone (e.g. 2547...)"
+                              value={mpesaPhone}
+                              onChange={(e) => setMpesaPhone(e.target.value)}
+                              className="h-8 text-xs max-w-[200px] border-[rgba(0,200,83,0.2)] focus:border-[#00C853]"
+                            />
+                          )}
+
+                          <Button
+                            size="sm"
+                            disabled={paying}
+                            onClick={handlePayClick}
+                            className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-8 px-4 text-xs font-semibold"
+                          >
+                            {paying ? 'Processing...' : 'Pay Now'}
+                          </Button>
+                        </div>
+                        {payError && <p className="text-red-400 text-xs mt-2 font-semibold">{payError}</p>}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             </>
           )}
         </div>
+      <TrackOrderModal
+        open={trackOpen}
+        onClose={() => { setTrackOpen(false); setTrackingToView('') }}
+        initialTrackingNumber={trackingToView}
+      />
     </div>
   )
 }

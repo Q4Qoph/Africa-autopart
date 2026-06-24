@@ -17,27 +17,35 @@ export default function MpesaStatusPage() {
     }
 
     const id = Number(orderId)
+    const isNew = sessionStorage.getItem('isNewOrder') === 'true'
+
     let attempts = 0
     const maxAttempts = 30
     let timer: ReturnType<typeof setTimeout> | null = null
 
     const poll = async () => {
       try {
-        const { data } = await paymentApi.validateMpesa(id, auth.token)
+        const { data } = isNew
+          ? await paymentApi.validateNewMpesa(id, auth.token)
+          : await paymentApi.validateMpesa(id, auth.token)
+
         if (data) {
           setStatus('success')
+          sessionStorage.removeItem('isNewOrder')
           return
         }
 
         attempts += 1
         if (attempts >= maxAttempts) {
           setStatus('failed')
+          sessionStorage.removeItem('isNewOrder')
           return
         }
 
         timer = setTimeout(poll, 10000)
       } catch {
         setStatus('failed')
+        sessionStorage.removeItem('isNewOrder')
       }
     }
 

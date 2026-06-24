@@ -29,18 +29,31 @@ export default function AdminOrdersPage() {
   const { t } = useTranslation('admin')
   const [orders, setOrders] = useState<CustomerOrder[]>([])
   const [loading, setLoading] = useState(true)
-  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null)
+  const [openDropdownId, setOpenDropdownId] = useState<number | string | null>(null)
   const [savingId, setSavingId] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  async function refreshOrders() {
+    if (!auth) return
+    try {
+      const [newRes, legacyRes] = await Promise.all([
+        orderApi.getAllNewOrders(auth.token),
+        orderApi.getAll(auth.token)
+      ])
+      const newMapped = newRes.data.map(o => ({ ...mapNewOrderToCustomerOrder(o), isNew: true }))
+      const legacyMapped = legacyRes.data.map(o => ({ ...o, isNew: false }))
+      const merged = [...newMapped, ...legacyMapped].sort((a, b) =>
+        new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+      )
+      setOrders(merged)
+    } catch {}
+  }
+
   useEffect(() => {
     if (!auth) return
-    orderApi
-      .getAllNewOrders(auth.token)
-      .then(({ data }) => setOrders(data.map(mapNewOrderToCustomerOrder)))
-      .catch(() => { })
-      .finally(() => setLoading(false))
-  }, [auth])
+    setLoading(true)
+    refreshOrders().finally(() => setLoading(false))
+  }, [auth]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -59,10 +72,13 @@ export default function AdminOrdersPage() {
     if (!auth) return
     setSavingId(orderId)
     try {
-      await orderApi.updateNewOrderStatus(orderId, newStatusNumber, auth.token)
-      // Refresh list
-      const { data } = await orderApi.getAllNewOrders(auth.token)
-      setOrders(data.map(mapNewOrderToCustomerOrder))
+      const orderToUpdate = orders.find(o => o.orderId === orderId)
+      if (orderToUpdate?.isNew) {
+        await orderApi.updateNewOrderStatus(orderId, newStatusNumber, auth.token)
+      } else {
+        await orderApi.updateStatus(orderId, { status: newStatusNumber }, auth.token)
+      }
+      await refreshOrders()
       setOpenDropdownId(null)
     } catch {
       alert(t('orders_save_error'))
@@ -114,6 +130,7 @@ export default function AdminOrdersPage() {
             <tbody>
               {orders.map((order) => {
                 const isOpen = openDropdownId === order.orderId
+                const isStatusOpen = openDropdownId === `status-${order.orderId}`
                 const isSaving = savingId === order.orderId
                 const hasItems = order.orderItems && order.orderItems.length > 0
 
@@ -125,7 +142,14 @@ export default function AdminOrdersPage() {
                     >
                       <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{order.orderId}</Td>
                       <Td>
-                        <p className="text-[#07110A] dark:text-white font-medium">{order.requestedPartName || '—'}</p>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-[#07110A] dark:text-white font-medium">{order.requestedPartName || '—'}</p>
+                          {order.isNew && (
+                            <Badge className="bg-sky-500/10 text-sky-500 hover:bg-sky-500/20 text-[9px] px-1.5 py-0.5 border border-sky-500/20 font-normal">
+                              VIN Catalog
+                            </Badge>
+                          )}
+                        </div>
                         {hasItems && (
                           <span className="text-[10px] text-[#7A9A80] mt-0.5 block">
                             {order.orderItems!.length} item{order.orderItems!.length > 1 ? 's' : ''}
@@ -146,11 +170,7 @@ export default function AdminOrdersPage() {
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
-                              // Toggle the status dropdown independently
-                              const statusDropdownId = `status-${order.orderId}`
-                              setOpenDropdownId(isOpen ? null : statusDropdownId as any)
-                              // We need a separate state for status vs expand... 
-                              // Actually, let's use a different approach.
+                              setOpenDropdownId(isStatusOpen ? null : `status-${order.orderId}`)
                             }}
                             disabled={isSaving}
                             className="flex items-center gap-1.5 group"
@@ -158,13 +178,13 @@ export default function AdminOrdersPage() {
                             <Badge className={`text-[10px] border ${statusColor[order.status] ?? statusColor['Unknown']}`}>
                               {order.status}
                             </Badge>
-                            <ChevronDown className={`w-3 h-3 text-[#4A6B50] dark:text-[#7A9A80] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                            <ChevronDown className={`w-3 h-3 text-[#4A6B50] dark:text-[#7A9A80] transition-transform ${isStatusOpen ? 'rotate-180' : ''}`} />
                             {isSaving && (
                               <span className="w-3 h-3 border-2 border-[#00C853]/30 border-t-[#00C853] rounded-full animate-spin ml-1" />
                             )}
                           </button>
 
-                          {isOpen && (
+                          {isStatusOpen && (
                             <div className="absolute top-full left-0 mt-1 z-30 bg-white dark:bg-[#1A2A1E] border border-[rgba(0,200,83,0.2)] rounded-lg shadow-lg py-1 min-w-[140px]">
                               {statusOptions.map((opt) => {
                                 const isCurrent = order.status === opt.string

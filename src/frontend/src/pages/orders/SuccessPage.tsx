@@ -18,11 +18,17 @@ export default function SuccessPage() {
       return
     }
 
+    const isNew = sessionStorage.getItem('isNewOrder') === 'true'
+
     // Clear immediately so it can’t be reused
     sessionStorage.removeItem('pendingStripeSessionId')
+    sessionStorage.removeItem('isNewOrder')
 
-    paymentApi
-      .validatePayment(sessionId, auth.token)
+    const validatePromise = isNew
+      ? paymentApi.validateNewPayment(sessionId, auth.token)
+      : paymentApi.validatePayment(sessionId, auth.token)
+
+    validatePromise
       .then(() => setStatus('success'))
       .catch(() => setStatus('failed'))
   }, [auth])

@@ -99,6 +99,7 @@ export interface CustomerOrder {
   requestDescription: string
   dateCreated: string
   orderItems?: CustomerOrderItem[]   // <-- new
+  isNew?: boolean
 }
 
 export interface CustomerOrderItem {
