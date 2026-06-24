@@ -13,20 +13,20 @@ function authHeader(token: string) {
 
 export const paymentApi = {
   addPayment: (dto: AddPaymentDTO, token: string) =>
-    api.post<PaymentResponse>('/api/Payment/addPayment', dto, authHeader(token)),
+    api.post<PaymentResponse>('/new/addPayment', dto, authHeader(token)),
 
   validatePayment: (stripeSessionId: string, token: string) =>
-    api.put<string>('/api/Payment/validatePayment', null, {
+    api.put<string>('/api/Payment/new/validatePayment', null, {
       params: { StripeSessionId: stripeSessionId },
       ...authHeader(token),
     }),
 
   initiateStkPush: (orderId: number, phoneNumber: string, token: string) =>
-    api.post<StkPushResponseDto>('/api/Mpesa/initiateStkPush', null, {
+    api.post<StkPushResponseDto>('/api/Mpesa/new/initiateStkPush', null, {
       params: { phoneNumber, Id: orderId },
       ...authHeader(token),
     }),
 
   validateMpesa: (orderId: number, token: string) =>
-    api.get<boolean>(`/api/Mpesa/validate/${orderId}`, authHeader(token)),
+    api.get<boolean>(`/api/Mpesa/new/validate/${orderId}`, authHeader(token)),
 }
