@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { CustomerOrder } from '@/types/order'
-import { OrderStatus, } from '@/types/order'
+import { OrderStatus, mapNewOrderToCustomerOrder } from '@/types/order'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -28,8 +28,8 @@ export default function OrdersPage() {
   useEffect(() => {
     if (!auth) return
     orderApi
-      .getByUserId(auth.userId, auth.token)
-      .then(({ data }) => setOrders(data))
+      .getNewOrdersByUserId(auth.userId, auth.token)
+      .then(({ data }) => setOrders(data.map(mapNewOrderToCustomerOrder)))
       .catch(() => setError(t('error_load')))
       .finally(() => setLoading(false))
   }, [auth]) // eslint-disable-line react-hooks/exhaustive-deps

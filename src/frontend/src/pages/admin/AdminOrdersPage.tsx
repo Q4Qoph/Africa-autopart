@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { orderApi } from '@/api/orderApi'
 import type { CustomerOrder } from '@/types/order'
+import { mapNewOrderToCustomerOrder } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
 import { Check, ChevronDown } from 'lucide-react'
 
@@ -35,8 +36,8 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     if (!auth) return
     orderApi
-      .getAll(auth.token)
-      .then(({ data }) => setOrders(data))
+      .getAllNewOrders(auth.token)
+      .then(({ data }) => setOrders(data.map(mapNewOrderToCustomerOrder)))
       .catch(() => { })
       .finally(() => setLoading(false))
   }, [auth])
@@ -58,10 +59,10 @@ export default function AdminOrdersPage() {
     if (!auth) return
     setSavingId(orderId)
     try {
-      await orderApi.updateStatus(orderId, { status: newStatusNumber }, auth.token)
+      await orderApi.updateNewOrderStatus(orderId, newStatusNumber, auth.token)
       // Refresh list
-      const { data } = await orderApi.getAll(auth.token)
-      setOrders(data)
+      const { data } = await orderApi.getAllNewOrders(auth.token)
+      setOrders(data.map(mapNewOrderToCustomerOrder))
       setOpenDropdownId(null)
     } catch {
       alert(t('orders_save_error'))

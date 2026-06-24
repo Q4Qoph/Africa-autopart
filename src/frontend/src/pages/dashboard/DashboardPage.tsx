@@ -6,7 +6,8 @@ import { requestApi } from '@/api/requestApi'
 import { orderApi } from '@/api/orderApi'
 import { userApi } from '@/api/userApi'
 import type { PartRequest } from '@/types/request'
-import type { CustomerOrder, } from '@/types/order'   
+import type { CustomerOrder } from '@/types/order'
+import { mapNewOrderToCustomerOrder } from '@/types/order'
 import type { User } from '@/types/user'
 
 import { Button } from '@/components/ui/button'
@@ -42,7 +43,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!auth) return
     requestApi.getByEmail(auth.email, auth.token).then(({ data }) => setRequests(data)).catch(() => { })
-    orderApi.getByUserId(auth.userId, auth.token).then(({ data }) => setOrders(data)).catch(() => { })
+    orderApi.getNewOrdersByUserId(auth.userId, auth.token).then(({ data }) => setOrders(data.map(mapNewOrderToCustomerOrder))).catch(() => { })
     // Fetch full user profile (assuming getUserById exists)
     userApi.getUserById(auth.userId, auth.token).then(({ data }) => setUserProfile(data)).catch(() => { })
   }, [auth])

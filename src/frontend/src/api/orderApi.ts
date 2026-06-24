@@ -1,6 +1,6 @@
 //src/frontend/src/api/orderApi.ts
 import axios from 'axios'
-import type { Order, AddOrderDTO, AddOrderResponse, UpdateOrderDTO, UpdateOrderStatusDTO, CustomerOrder, AddNewOrderDTO } from '@/types/order'
+import type { Order, AddOrderDTO, AddOrderResponse, UpdateOrderDTO, UpdateOrderStatusDTO, CustomerOrder, AddNewOrderDTO, NewOrderResponse } from '@/types/order'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -17,6 +17,15 @@ export const orderApi = {
 
   createNewOrder: (dto: AddNewOrderDTO, token: string) =>
     api.post<AddOrderResponse>('/api/NewOrder', dto, authHeader(token)),
+
+  getAllNewOrders: (token: string) =>
+    api.get<NewOrderResponse[]>('/api/NewOrder', authHeader(token)),
+
+  getNewOrdersByUserId: (userId: number, token: string) =>
+    api.get<NewOrderResponse[]>(`/api/NewOrder/user/${userId}`, authHeader(token)),
+
+  getNewOrderById: (orderId: number, token: string) =>
+    api.get<NewOrderResponse>(`/api/NewOrder/${orderId}`, authHeader(token)),
 
    getAll: (token: string) =>
     api.get<CustomerOrder[]>('/api/Order/getAllOrders', authHeader(token)),
@@ -37,6 +46,10 @@ export const orderApi = {
   // Only status update (dedicated endpoint)
   updateStatus: (id: number, dto: UpdateOrderStatusDTO, token: string) =>
     api.put<string>(`/api/Order/updateOrderStatus/${id}`, dto, authHeader(token)),
+
+  // Dedicated new status update endpoint
+  updateNewOrderStatus: (orderId: number, status: number, token: string) =>
+    api.put<string>(`/api/NewOrder/status/${orderId}?status=${status}`, null, authHeader(token)),
 
   delete: (id: number, token: string) =>
     api.delete<string>(`/api/Order/deleteOrder/${id}`, authHeader(token)),

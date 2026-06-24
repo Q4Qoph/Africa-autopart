@@ -264,3 +264,44 @@ export interface AddNewOrderDTO {
     county: string
   }
 }
+
+// ─── GET /api/NewOrder response shape ──────────────────────────────────────
+export interface NewOrderResponse {
+  id: number
+  status: number
+  totalCost: number
+  createdAt: string
+  shipment: {
+    city: string
+    postalCode: string
+    county: string
+  }
+  items: {
+    id: number
+    partNumber: string
+    name: string
+    description: string
+    price: number
+    quantity: number
+  }[]
+}
+
+export function mapNewOrderToCustomerOrder(newOrder: NewOrderResponse): CustomerOrder {
+  return {
+    orderId: newOrder.id,
+    trackingNumber: "AAP-" + newOrder.id + "F" + (newOrder.shipment?.postalCode || "0000"),
+    status: newOrder.status === 2 ? 'Delivered' : newOrder.status === 1 ? 'Shipped' : 'Pending',
+    total: newOrder.totalCost,
+    vehicleMake: newOrder.shipment?.county || '',
+    model: newOrder.shipment?.city || '',
+    requestedPartName: newOrder.items.map(it => it.name).join(', '),
+    requestDescription: newOrder.items.map(it => it.description).join('; '),
+    dateCreated: newOrder.createdAt,
+    orderItems: newOrder.items.map(it => ({
+      partName: it.name,
+      supplierName: it.description,
+      price: it.price,
+      quantity: it.quantity
+    }))
+  }
+}
