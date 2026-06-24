@@ -1,6 +1,6 @@
 // src/frontend/src/pages/parts/CartExternalPage.tsx
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { useExternalCart } from '@/context/ExternalCartContext'
 import { orderApi } from '@/api/orderApi'
@@ -13,6 +13,7 @@ import { Home, Trash2, ShieldCheck, CheckCircle2, CreditCard } from 'lucide-reac
 
 export default function CartExternalPage() {
   const { auth } = useAuth()
+  const navigate = useNavigate()
   const { items, removeItem, updateQuantity, clearCart } = useExternalCart()
   
   // Delivery address form
@@ -29,6 +30,10 @@ export default function CartExternalPage() {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [placing, setPlacing] = useState(false)
   const [error, setError] = useState('')
+
+  // Payment Method: 'stripe' | 'mpesa'
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'mpesa'>('stripe')
+  const [mpesaPhone, setMpesaPhone] = useState('')
 
   // Dummy credit card form details (for matching PartSouq card UI input look)
   const [cardNumber, setCardNumber] = useState('')
@@ -52,6 +57,17 @@ export default function CartExternalPage() {
   const shippingCost = getShippingCost()
   const total = subtotal + shippingCost
 
+  function formatMpesaPhone(phone: string): string {
+    let cleaned = phone.replace(/\D/g, '')
+    if (cleaned.startsWith('0')) {
+      cleaned = '254' + cleaned.slice(1)
+    }
+    if (cleaned.startsWith('7') || cleaned.startsWith('1')) {
+      cleaned = '254' + cleaned
+    }
+    return cleaned
+  }
+
   async function handleCheckout(e: React.FormEvent) {
     e.preventDefault()
     if (!auth) {
@@ -64,6 +80,12 @@ export default function CartExternalPage() {
     }
     if (!termsAccepted) {
       setError('You must accept the terms and conditions to proceed.')
+      return
+    }
+
+    const phoneToUse = (mpesaPhone || delivery.phone).trim()
+    if (paymentMethod === 'mpesa' && !phoneToUse) {
+      setError('M-Pesa Phone Number is required.')
       return
     }
 
@@ -105,19 +127,30 @@ export default function CartExternalPage() {
       // 3. Clear local shopping cart
       clearCart()
 
-      // 4. Initiate Stripe Checkout Payment
-      const paymentRes = await paymentApi.addPayment({ orderId }, auth.token)
-      const paymentData = paymentRes.data
+      if (paymentMethod === 'stripe') {
+        // 4. Initiate Stripe Checkout Payment
+        const paymentRes = await paymentApi.addPayment({ orderId }, auth.token)
+        const paymentData = paymentRes.data
 
-      // Save Stripe session details for callback verification on /success page
-      sessionStorage.setItem('pendingStripeSessionId', paymentData.stripeSessionId)
-      sessionStorage.setItem('pendingOrderId', String(orderId))
+        // Save Stripe session details for callback verification on /success page
+        sessionStorage.setItem('pendingStripeSessionId', paymentData.stripeSessionId)
+        sessionStorage.setItem('pendingOrderId', String(orderId))
 
-      // 5. Redirect browser directly to Stripe hosted checkout page
-      window.location.href = paymentData.url
-    } catch (err) {
+        // 5. Redirect browser directly to Stripe hosted checkout page
+        window.location.href = paymentData.url
+      } else {
+        // 4. Initiate M-Pesa STK Push
+        const formattedPhone = formatMpesaPhone(phoneToUse)
+        const mpesaRes = await paymentApi.initiateStkPush(orderId, formattedPhone, auth.token)
+        if (mpesaRes.data.isSuccessful) {
+          navigate(`/orders/mpesa-status/${orderId}`)
+        } else {
+          throw new Error(mpesaRes.data.customerMessage || 'Failed to initiate M-Pesa STK push.')
+        }
+      }
+    } catch (err: any) {
       console.error('Checkout creation error:', err)
-      setError('Could not process checkout order creation. Please check inputs.')
+      setError(err?.message || 'Could not process checkout order creation. Please check inputs.')
       setPlacing(false)
     }
   }
@@ -136,6 +169,23 @@ export default function CartExternalPage() {
             SIGN IN TO PROCEED
           </Button>
         </Link>
+      </div>
+    )
+  }
+
+  // Placing order loader
+  if (placing) {
+    return (
+      <div className="flex-grow max-w-[600px] mx-auto px-6 py-20 text-center font-sans select-none flex flex-col items-center justify-center animate-fade-in">
+        <div className="w-12 h-12 rounded-full border-4 border-[#33b5e5] border-t-transparent animate-spin mb-6" />
+        <h1 className="text-lg font-black text-[#07110A] uppercase tracking-wider mb-2">
+          {paymentMethod === 'stripe' ? 'Redirecting to Stripe...' : 'Sending M-Pesa Prompt...'}
+        </h1>
+        <p className="text-slate-500 text-xs max-w-xs leading-relaxed font-semibold">
+          {paymentMethod === 'stripe'
+            ? 'Please wait while we establish a secure connection to the checkout gateway. Do not close this page.'
+            : 'Please wait while we initiate the M-Pesa payment prompt on your phone. Enter your PIN to proceed.'}
+        </p>
       </div>
     )
   }
@@ -404,52 +454,113 @@ export default function CartExternalPage() {
                 I accept the <span className="text-[#33b5e5] underline hover:text-[#2892b9]">terms and conditions</span>
               </label>
 
-              {/* CARD PREVIEW INPUTS */}
+              {/* PAYMENT METHOD SELECTOR */}
               <div className="border-t border-slate-100 pt-6">
-                <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                  <CreditCard className="w-4 h-4 text-sky-600" />
-                  Stripe Checkout Guarantee
-                </h3>
-                <div className="space-y-4 max-w-md">
-                  <div>
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Card Number</label>
-                    <Input
-                      type="text"
-                      maxLength={19}
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim())}
-                      placeholder="1234 5678 1234 5678"
-                      className="h-9 text-xs font-mono font-bold tracking-wider"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-3">Payment Method</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  <div
+                    onClick={() => setPaymentMethod('stripe')}
+                    className={`border rounded p-4 flex items-center gap-3 cursor-pointer transition-colors ${
+                      paymentMethod === 'stripe'
+                        ? 'border-[#33b5e5] bg-sky-50/10'
+                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === 'stripe' ? 'border-[#33b5e5]' : 'border-slate-300'}`}>
+                      {paymentMethod === 'stripe' && <div className="w-2.5 h-2.5 rounded-full bg-[#33b5e5]" />}
+                    </div>
                     <div>
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Expiry Date</label>
+                      <span className="text-xs font-black text-slate-800 block">Credit / Debit Card</span>
+                      <span className="text-[9px] font-semibold text-slate-400 block mt-0.5">Pay securely via Stripe</span>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setPaymentMethod('mpesa')}
+                    className={`border rounded p-4 flex items-center gap-3 cursor-pointer transition-colors ${
+                      paymentMethod === 'mpesa'
+                        ? 'border-[#33b5e5] bg-sky-50/10'
+                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === 'mpesa' ? 'border-[#33b5e5]' : 'border-slate-300'}`}>
+                      {paymentMethod === 'mpesa' && <div className="w-2.5 h-2.5 rounded-full bg-[#33b5e5]" />}
+                    </div>
+                    <div>
+                      <span className="text-xs font-black text-slate-800 block">M-Pesa Mobile Money</span>
+                      <span className="text-[9px] font-semibold text-slate-400 block mt-0.5">Pay instantly via M-Pesa STK Push</span>
+                    </div>
+                  </div>
+                </div>
+
+                {paymentMethod === 'stripe' ? (
+                  <div className="space-y-4 max-w-md">
+                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <CreditCard className="w-4 h-4 text-sky-600" />
+                      Stripe Checkout Guarantee
+                    </h3>
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Card Number</label>
                       <Input
                         type="text"
-                        maxLength={5}
-                        placeholder="MM/YY"
-                        value={expiry}
-                        onChange={(e) => setExpiry(e.target.value)}
+                        maxLength={19}
+                        value={cardNumber}
+                        onChange={(e) => setCardNumber(e.target.value.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim())}
+                        placeholder="1234 5678 1234 5678"
                         className="h-9 text-xs font-mono font-bold tracking-wider"
                       />
                     </div>
-                    <div>
-                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">CVV / CVN</label>
-                      <Input
-                        type="password"
-                        maxLength={4}
-                        placeholder="123"
-                        value={cvv}
-                        onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
-                        className="h-9 text-xs font-mono font-bold tracking-wider"
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Expiry Date</label>
+                        <Input
+                          type="text"
+                          maxLength={5}
+                          placeholder="MM/YY"
+                          value={expiry}
+                          onChange={(e) => setExpiry(e.target.value)}
+                          className="h-9 text-xs font-mono font-bold tracking-wider"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">CVV / CVN</label>
+                        <Input
+                          type="password"
+                          maxLength={4}
+                          placeholder="123"
+                          value={cvv}
+                          onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
+                          className="h-9 text-xs font-mono font-bold tracking-wider"
+                        />
+                      </div>
                     </div>
+                    <p className="text-[10px] text-slate-400 leading-relaxed font-semibold">
+                      * By clicking "PAY WITH STRIPE" below, you will be redirected to the secure Stripe Checkout gateway to complete your payment transaction.
+                    </p>
                   </div>
-                  <p className="text-[10px] text-slate-400 leading-relaxed font-semibold">
-                    * By clicking "Pay" below, you will be redirected to the secure Stripe Checkout gateway to complete your payment transaction.
-                  </p>
-                </div>
+                ) : (
+                  <div className="space-y-4 max-w-md">
+                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-2">
+                      M-Pesa Express Checkout
+                    </h3>
+                    <div>
+                      <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">M-Pesa Phone Number</label>
+                      <Input
+                        type="text"
+                        placeholder="254700000000"
+                        value={mpesaPhone}
+                        onChange={(e) => setMpesaPhone(e.target.value)}
+                        className="h-9 text-xs font-bold tracking-wider border-slate-300 outline-none"
+                      />
+                      <p className="text-[9px] text-slate-400 mt-1 font-semibold">
+                        Format: Starting with 254 (e.g. 254712345678). If left blank, receiver phone number ({delivery.phone || 'not set'}) will be used.
+                      </p>
+                    </div>
+                    <p className="text-[10px] text-slate-400 leading-relaxed font-semibold">
+                      * By clicking "PAY WITH M-PESA" below, an M-Pesa STK push prompt will be sent to your phone. Enter your MPESA PIN to authorize.
+                    </p>
+                  </div>
+                )}
               </div>
 
             </div>
@@ -493,10 +604,12 @@ export default function CartExternalPage() {
                 {placing ? (
                   <>
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1" />
-                    CREATING ORDER...
+                    PROCESSING ORDER...
                   </>
-                ) : (
+                ) : paymentMethod === 'stripe' ? (
                   'PAY WITH STRIPE'
+                ) : (
+                  'PAY WITH M-PESA'
                 )}
               </Button>
             </div>
