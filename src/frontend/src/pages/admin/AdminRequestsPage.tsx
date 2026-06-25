@@ -11,6 +11,20 @@ import { Urgency } from "@/types/request";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 const urgencyClass: Record<number, string> = {
   [Urgency.Standard]:
@@ -272,358 +286,340 @@ export default function AdminRequestsPage() {
           {t("loading")}
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                <Th>{t("requests_col_id")}</Th>
-                <Th>{t("requests_col_part")}</Th>
-                <Th>{t("requests_col_vehicle")}</Th>
-                <Th>{t("requests_col_urgency")}</Th>
-                <Th>{t("requests_col_orders")}</Th>
-                <Th>{t("requests_col_status")}</Th>
-                <Th>{t("requests_col_date")}</Th>
-                <Th>{t("requests_col_actions")}</Th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="rounded-xl border border-border/80 overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_id")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_part")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_vehicle")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_urgency")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_orders")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_status")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_date")}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("requests_col_actions")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map((r) => (
-                <>
-                  <tr
-                    key={r.id}
-                    className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
-                  >
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono">
-                      #{r.id}
-                    </Td>
-                    <Td className="text-[#07110A] dark:text-white font-medium">
-                      {r.partName}
-                    </Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">
-                      {r.vehicleMake} {r.model} {r.year}
-                    </Td>
-                    <Td>
-                      <Badge
-                        className={`text-[10px] border ${urgencyClass[r.urgency] ?? ""}`}
-                      >
-                        {urgencyLabel[r.urgency] ?? r.urgency}
+                <TableRow
+                  key={r.id}
+                  className="border-b border-border/50 hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors"
+                >
+                  <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80] font-mono">
+                    #{r.id}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-[#07110A] dark:text-white font-medium">
+                    {r.partName}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80]">
+                    {r.vehicleMake} {r.model} {r.year}
+                  </TableCell>
+                  <TableCell className="px-4 py-3">
+                    <Badge
+                      className={`text-[10px] border ${urgencyClass[r.urgency] ?? ""}`}
+                    >
+                      {urgencyLabel[r.urgency] ?? r.urgency}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="px-4 py-3">
+                    <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">
+                      {r.orders?.length ?? 0}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3">
+                    {r.isSorted ? (
+                      <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
+                        {t("requests_status_sorted")}
                       </Badge>
-                    </Td>
-                    <Td>
-                      <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">
-                        {r.orders?.length ?? 0}
-                      </span>
-                    </Td>
-                    <Td>
-                      {r.isSorted ? (
-                        <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
-                          {t("requests_status_sorted")}
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-amber-900/30 text-amber-300 border-amber-700/30 text-[10px]">
-                          {t("requests_status_open")}
-                        </Badge>
-                      )}
-                    </Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                      {new Date(r.dateCreated).toLocaleDateString()}
-                    </Td>
-                    <Td>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {!r.isSorted && (
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              panel?.requestId === r.id
-                                ? closePanel()
-                                : openPanel(r)
-                            }
-                            className="bg-blue-600 text-[#07110A] dark:text-white hover:bg-blue-500 h-7 text-xs px-3"
-                          >
-                            {panel?.requestId === r.id
-                              ? t("requests_close")
-                              : t("requests_create_order")}
-                          </Button>
-                        )}
-                        {!r.isSorted && (
-                          <Button
-                            size="sm"
-                            onClick={() => handleMarkSorted(r.id)}
-                            className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-7 text-xs px-3"
-                          >
-                            {t("requests_mark_sorted")}
-                          </Button>
-                        )}
+                    ) : (
+                      <Badge className="bg-amber-900/30 text-amber-300 border-amber-700/30 text-[10px]">
+                        {t("requests_status_open")}
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                    {new Date(r.dateCreated).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell className="px-4 py-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {!r.isSorted && (
                         <Button
                           size="sm"
-                          variant="outline"
-                          onClick={() => handleDelete(r.id, r.partName)}
-                          className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
+                          onClick={() => openPanel(r)}
+                          className="bg-blue-600 text-white hover:bg-blue-500 h-7 text-xs px-3 font-semibold"
                         >
-                          {t("requests_delete")}
+                          {t("requests_create_order")}
                         </Button>
-                      </div>
-                    </Td>
-                  </tr>
-
-                  {/* Inline create-order panel */}
-                  {panel?.requestId === r.id && (
-                    <tr key={`panel-${r.id}`}>
-                      <td
-                        colSpan={8}
-                        className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-6 py-5"
+                      )}
+                      {!r.isSorted && (
+                        <Button
+                          size="sm"
+                          onClick={() => handleMarkSorted(r.id)}
+                          className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-7 text-xs px-3 font-semibold"
+                        >
+                          {t("requests_mark_sorted")}
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDelete(r.id, r.partName)}
+                        className="border-red-400/30 text-red-400 bg-transparent hover:bg-red-400/10 h-7 text-xs px-3"
                       >
-                        <p className="text-[10px] font-mono uppercase tracking-widest text-[#00C853] mb-4">
-                          {t("requests_panel_title", {
-                            partName: panel.partName,
-                          })}
-                        </p>
-
-                        {/* Search bar */}
-                        <div className="flex gap-2 mb-1">
-                          <Input
-                            ref={searchRef}
-                            value={searchTerm}
-                            onChange={(e) => {
-                              setSearchTerm(e.target.value);
-                              if (!e.target.value) clearSearch();
-                            }}
-                            onKeyDown={(e) =>
-                              e.key === "Enter" && handleSearch()
-                            }
-                            placeholder={t("requests_panel_search_placeholder")}
-                            className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-9 max-w-sm"
-                          />
-                          <Button
-                            onClick={handleSearch}
-                            disabled={searching || !searchTerm.trim()}
-                            className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-4 text-xs font-semibold"
-                          >
-                            {searching
-                              ? t("requests_panel_searching")
-                              : t("requests_panel_search")}
-                          </Button>
-                          {hasSearched && (
-                            <Button
-                              onClick={clearSearch}
-                              variant="outline"
-                              className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-3 text-xs"
-                            >
-                              {t("requests_panel_clear")}
-                            </Button>
-                          )}
-                        </div>
-
-                        {/* List label */}
-                        <p className="text-[10px] font-mono text-[#7A9A80] dark:text-[#3D5942] mb-3 mt-3">
-                          {hasSearched
-                            ? t(
-                              searchResults.length === 1
-                                ? "requests_panel_result_one"
-                                : "requests_panel_results",
-                              {
-                                count: searchResults.length,
-                                term: searchTerm,
-                              },
-                            )
-                            : loadingAll
-                              ? t("requests_panel_loading")
-                              : t("requests_panel_all_parts", {
-                                count: allParts.length,
-                              })}
-                        </p>
-
-                        {/* Parts list */}
-                        {!loadingAll && displayParts.length > 0 && (
-                          <div className="mb-4 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-[rgba(255,255,255,0.08)] overflow-hidden max-h-64 overflow-y-auto">
-                            {/* Mini table header */}
-                            <div className="grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 px-4 py-2 bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942]">
-                              <span>{t("requests_panel_col_part")}</span>
-                              <span>{t("requests_panel_col_supplier")}</span>
-                              <span>{t("requests_panel_col_condition")}</span>
-                              <span>{t("requests_panel_col_stock")}</span>
-                              <span>{t("requests_panel_col_price")}</span>
-                            </div>
-                            {displayParts.map((part) => (
-                              <button
-                                key={part.id}
-                                onClick={() => selectPart(part)}
-                                className={`w-full text-left grid grid-cols-[1fr_1fr_auto_auto_auto] gap-3 items-center px-4 py-3 transition-colors border-b border-[rgba(255,255,255,0.04)] last:border-0 ${selectedPart?.id === part.id
-                                    ? "bg-[rgba(0,200,83,0.1)] border-l-2 border-l-[#00C853]"
-                                    : "hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-[rgba(255,255,255,0.04)]"
-                                  }`}
-                              >
-                                <div>
-                                  <p className="text-[#07110A] dark:text-white text-sm font-medium leading-tight">
-                                    {part.partName}
-                                  </p>
-                                  {part.partNumber && (
-                                    <p className="text-[#7A9A80] dark:text-[#3D5942] text-[10px] font-mono">
-                                      {part.partNumber}
-                                    </p>
-                                  )}
-                                </div>
-                                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                                  {part.supplierName}
-                                </p>
-                                <Badge className="bg-[rgba(0,200,83,0.06)] text-[#00C853] border-[rgba(0,200,83,0.15)] text-[10px] whitespace-nowrap">
-                                  {part.condition}
-                                </Badge>
-                                <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">
-                                  {part.stock}
-                                </span>
-                                <span className="text-[#00C853] font-semibold text-sm whitespace-nowrap">
-                                  ${part.price.toLocaleString()}
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
-
-                        {hasSearched &&
-                          searchResults.length === 0 &&
-                          !searching && (
-                            <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs mb-4">
-                              {t("requests_panel_no_match", {
-                                term: searchTerm,
-                              })}
-                            </p>
-                          )}
-
-                        {/* Confirm order */}
-                        {selectedPart && (
-                          <div className="flex items-end gap-3 flex-wrap mt-2">
-                            <div className="bg-[rgba(0,200,83,0.06)] border border-[rgba(0,200,83,0.2)] rounded-lg px-4 py-2">
-                              <p className="text-[#00C853] text-[10px] font-mono mb-0.5">
-                                {t("requests_panel_selected")}
-                              </p>
-                              <p className="text-[#07110A] dark:text-white text-sm font-semibold">
-                                {selectedPart.partName}
-                              </p>
-                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
-                                {selectedPart.supplierName}
-                              </p>
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">
-                                {t("requests_panel_price_label")}
-                              </p>
-                              <Input
-                                type="number"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 w-32"
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">
-                                {t("requests_panel_location_label")}
-                              </p>
-                              <Input
-                                value={pickUpLocation}
-                                onChange={(e) =>
-                                  setPickUpLocation(e.target.value)
-                                }
-                                placeholder="e.g. Nairobi CBD"
-                                className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 w-44"
-                              />
-                            </div>
-                            <div className="space-y-1">
-                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-widest">
-                                {t("requests_panel_phone_label")}
-                              </p>
-                              <Input
-                                value={pickUpPhone}
-                                onChange={(e) => setPickUpPhone(e.target.value)}
-                                placeholder="2547XXXXXXXX"
-                                className="bg-white dark:bg-[#111C14] border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#07110A] dark:text-white focus:border-[#00C853] h-9 w-44"
-                              />
-                            </div>
-                            <Button
-                              onClick={handleCreateOrder}
-                              disabled={creating || !price}
-                              className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-9 px-5 text-sm font-semibold"
-                            >
-                              {creating
-                                ? t("requests_panel_confirming")
-                                : t("requests_panel_confirm")}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              onClick={() => setSelectedPart(null)}
-                              className="border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-[#07110A] dark:hover:text-white h-9 px-4 text-sm"
-                            >
-                              {t("requests_panel_deselect")}
-                            </Button>
-                          </div>
-                        )}
-
-                        {/* Success */}
-                        {orderRef && (
-                          <div className="mt-4 flex items-center gap-3 bg-[rgba(0,200,83,0.08)] border border-[rgba(0,200,83,0.25)] rounded-lg px-4 py-3">
-                            <span className="text-[#00C853] text-lg">✓</span>
-                            <div>
-                              <p className="text-[#00C853] text-sm font-semibold">
-                                {t("requests_panel_success")}
-                              </p>
-                              <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono mt-0.5">
-                                {t("requests_panel_order_ref")}{" "}
-                                <span className="text-[#07110A] dark:text-white">
-                                  {orderRef}
-                                </span>
-                              </p>
-                            </div>
-                            <button
-                              onClick={closePanel}
-                              className="ml-auto text-[#4A6B50] dark:text-[#7A9A80] hover:text-[#07110A] dark:hover:text-white text-xs transition-colors"
-                            >
-                              {t("requests_panel_close")}
-                            </button>
-                          </div>
-                        )}
-
-                        {createError && (
-                          <p className="text-red-400 text-xs mt-3">
-                            {createError}
-                          </p>
-                        )}
-                      </td>
-                    </tr>
-                  )}
-                </>
+                        {t("requests_delete")}
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
               ))}
               {filtered.length === 0 && (
-                <tr>
-                  <td
+                <TableRow>
+                  <TableCell
                     colSpan={8}
                     className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm"
                   >
                     {t("requests_no_requests")}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
+
+      {/* Dialog for Creating Order */}
+      <Dialog open={!!panel} onOpenChange={(open) => !open && closePanel()}>
+        <DialogContent className="sm:max-w-3xl bg-card dark:bg-[#111C14] text-foreground border border-border shadow-2xl p-6 rounded-xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-extrabold text-[#00C853] dark:text-[#39FF88]">
+              {panel ? t("requests_panel_title", { partName: panel.partName }) : ""}
+            </DialogTitle>
+          </DialogHeader>
+
+          {panel && (
+            <div className="space-y-4 my-2">
+              {/* Search bar */}
+              <div className="flex gap-2">
+                <Input
+                  ref={searchRef}
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    if (!e.target.value) clearSearch();
+                  }}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && handleSearch()
+                  }
+                  placeholder={t("requests_panel_search_placeholder")}
+                  className="bg-white dark:bg-[#07110A] border-[rgba(0,0,0,0.12)] dark:border-slate-800 text-[#07110A] dark:text-white placeholder:text-[#7A9A80] dark:placeholder:text-[#3D5942] focus:border-[#00C853] h-10 w-full"
+                />
+                <Button
+                  onClick={handleSearch}
+                  disabled={searching || !searchTerm.trim()}
+                  className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-10 px-5 font-semibold shrink-0"
+                >
+                  {searching ? t("requests_panel_searching") : t("requests_panel_search")}
+                </Button>
+                {hasSearched && (
+                  <Button
+                    onClick={clearSearch}
+                    variant="outline"
+                    className="border-[rgba(0,0,0,0.12)] dark:border-slate-800 text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:bg-slate-100 dark:hover:bg-slate-900 h-10 px-4"
+                  >
+                    {t("requests_panel_clear")}
+                  </Button>
+                )}
+              </div>
+
+              {/* Status/Header text */}
+              <p className="text-xs font-mono text-[#7A9A80] dark:text-[#3D5942]">
+                {hasSearched
+                  ? t(
+                      searchResults.length === 1
+                        ? "requests_panel_result_one"
+                        : "requests_panel_results",
+                      {
+                        count: searchResults.length,
+                        term: searchTerm,
+                      },
+                    )
+                  : loadingAll
+                    ? t("requests_panel_loading")
+                    : t("requests_panel_all_parts", {
+                      count: allParts.length,
+                    })}
+              </p>
+
+              {/* Parts selection list */}
+              {!loadingAll && displayParts.length > 0 && (
+                <div className="rounded-lg border border-[rgba(0,0,0,0.1)] dark:border-slate-800 overflow-hidden max-h-60 overflow-y-auto">
+                  <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-3 px-4 py-2 bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,0,0,0.1)] dark:border-slate-800 text-[10px] font-mono uppercase tracking-widest text-[#7A9A80] dark:text-[#3D5942] sticky top-0 z-10">
+                    <span>{t("requests_panel_col_part")}</span>
+                    <span>{t("requests_panel_col_supplier")}</span>
+                    <span>{t("requests_panel_col_condition")}</span>
+                    <span>{t("requests_panel_col_stock")}</span>
+                    <span>{t("requests_panel_col_price")}</span>
+                  </div>
+                  <div className="divide-y divide-[rgba(0,0,0,0.06)] dark:divide-slate-800/60">
+                    {displayParts.map((part) => (
+                      <button
+                        key={part.id}
+                        type="button"
+                        onClick={() => selectPart(part)}
+                        className={`w-full text-left grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-3 items-center px-4 py-2.5 transition-colors ${
+                          selectedPart?.id === part.id
+                            ? "bg-[rgba(0,200,83,0.1)] border-l-2 border-l-[#00C853]"
+                            : "hover:bg-[rgba(0,0,0,0.04)] dark:hover:bg-slate-900/60"
+                        }`}
+                      >
+                        <div>
+                          <p className="text-[#07110A] dark:text-white text-sm font-medium leading-tight">
+                            {part.partName}
+                          </p>
+                          {part.partNumber && (
+                            <p className="text-[#7A9A80] dark:text-[#3D5942] text-[10px] font-mono">
+                              {part.partNumber}
+                            </p>
+                          )}
+                        </div>
+                        <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs truncate">
+                          {part.supplierName}
+                        </p>
+                        <div>
+                          <Badge className="bg-[rgba(0,200,83,0.06)] text-[#00C853] border-[rgba(0,200,83,0.15)] text-[10px] py-0 px-1.5 whitespace-nowrap">
+                            {part.condition}
+                          </Badge>
+                        </div>
+                        <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono">
+                          {part.stock}
+                        </span>
+                        <span className="text-[#00C853] font-semibold text-sm whitespace-nowrap">
+                          ${part.price.toLocaleString()}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {hasSearched && searchResults.length === 0 && !searching && (
+                <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs py-4 text-center">
+                  {t("requests_panel_no_match", { term: searchTerm })}
+                </p>
+              )}
+
+              {/* Confirm details form */}
+              {selectedPart && (
+                <div className="space-y-3 p-4 bg-[rgba(0,200,83,0.04)] dark:bg-[#07110A]/40 border border-[rgba(0,200,83,0.15)] rounded-xl mt-3 animate-in fade-in duration-200">
+                  <div className="flex justify-between items-start gap-4">
+                    <div>
+                      <p className="text-[#00C853] text-[10px] font-mono uppercase tracking-wider mb-0.5">
+                        {t("requests_panel_selected")}
+                      </p>
+                      <p className="text-[#07110A] dark:text-white text-base font-bold">
+                        {selectedPart.partName}
+                      </p>
+                      <p className="text-xs text-[#4A6B50] dark:text-[#7A9A80]">
+                        Supplier: <span className="font-semibold">{selectedPart.supplierName}</span>
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[#7A9A80] text-[10px] font-mono uppercase">Original Price</p>
+                      <p className="text-base font-extrabold text-[#00C853]">${selectedPart.price}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                    <div className="space-y-1">
+                      <label className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-wider">
+                        {t("requests_panel_price_label")}
+                      </label>
+                      <Input
+                        type="number"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        className="bg-white dark:bg-[#07110A] border-[rgba(0,0,0,0.12)] dark:border-slate-800 text-[#07110A] dark:text-white focus:border-[#00C853] h-10 w-full"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-wider">
+                        {t("requests_panel_location_label")}
+                      </label>
+                      <Input
+                        value={pickUpLocation}
+                        onChange={(e) => setPickUpLocation(e.target.value)}
+                        placeholder="e.g. Nairobi CBD"
+                        className="bg-white dark:bg-[#07110A] border-[rgba(0,0,0,0.12)] dark:border-slate-800 text-[#07110A] dark:text-white focus:border-[#00C853] h-10 w-full"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[#4A6B50] dark:text-[#7A9A80] text-[10px] font-mono uppercase tracking-wider">
+                        {t("requests_panel_phone_label")}
+                      </label>
+                      <Input
+                        value={pickUpPhone}
+                        onChange={(e) => setPickUpPhone(e.target.value)}
+                        placeholder="2547XXXXXXXX"
+                        className="bg-white dark:bg-[#07110A] border-[rgba(0,0,0,0.12)] dark:border-slate-800 text-[#07110A] dark:text-white focus:border-[#00C853] h-10 w-full"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 justify-end pt-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => setSelectedPart(null)}
+                      className="border-[rgba(0,0,0,0.12)] dark:border-slate-800 text-[#4A6B50] dark:text-[#7A9A80] bg-transparent hover:text-slate-800 dark:hover:text-white h-10 px-4"
+                    >
+                      {t("requests_panel_deselect")}
+                    </Button>
+                    <Button
+                      onClick={handleCreateOrder}
+                      disabled={creating || !price}
+                      className="bg-[#00C853] text-[#07110A] hover:bg-[#39FF88] h-10 px-5 font-semibold"
+                    >
+                      {creating ? t("requests_panel_confirming") : t("requests_panel_confirm")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Success */}
+              {orderRef && (
+                <div className="mt-4 flex items-center gap-3 bg-[rgba(0,200,83,0.08)] border border-[rgba(0,200,83,0.25)] rounded-lg px-4 py-3 animate-in zoom-in-95 duration-200">
+                  <span className="text-[#00C853] text-lg font-bold">✓</span>
+                  <div>
+                    <p className="text-[#00C853] text-sm font-semibold">
+                      {t("requests_panel_success")}
+                    </p>
+                    <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs font-mono mt-0.5">
+                      {t("requests_panel_order_ref")}{" "}
+                      <span className="text-[#07110A] dark:text-white font-bold">
+                        {orderRef}
+                      </span>
+                    </p>
+                  </div>
+                  <Button
+                    onClick={closePanel}
+                    className="ml-auto bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] h-9 text-xs px-4"
+                  >
+                    {t("requests_panel_close")}
+                  </Button>
+                </div>
+              )}
+
+              {createError && (
+                <p className="text-red-400 text-xs mt-3 bg-red-950/20 border border-red-900/30 rounded p-2.5">
+                  {createError}
+                </p>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-      {children}
-    </th>
-  );
-}
 
-function Td({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <td className={`px-4 py-3 ${className ?? ""}`}>{children}</td>;
-}

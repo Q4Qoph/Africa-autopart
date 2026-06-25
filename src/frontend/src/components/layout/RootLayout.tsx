@@ -32,16 +32,11 @@ const BRANDS = [
 export default function RootLayout() {
   return (
     <div
-      className="min-h-screen text-slate-900 bg-slate-50 relative selection:bg-amber-500 selection:text-white"
-      style={{
-        backgroundImage: "url('/images/car_blueprint_pattern.jpg')",
-        backgroundSize: '320px 320px',
-        backgroundRepeat: 'repeat',
-      }}
+      className="min-h-screen text-foreground bg-background relative selection:bg-amber-500 selection:text-white blueprint-bg transition-colors duration-200"
     >
       <Navbar />
 
-      <main className="pt-[90px] w-full max-w-[1240px] mx-auto bg-white border-x border-slate-200 shadow-sm relative z-10 min-h-[90vh] flex flex-col justify-between font-sans">
+      <main className="pt-[90px] w-full max-w-[1240px] mx-auto bg-card text-card-foreground border-x border-border shadow-sm relative z-10 min-h-[90vh] flex flex-col justify-between font-sans transition-colors duration-200">
         <div className="flex-grow flex flex-col">
           <Outlet />
         </div>
@@ -107,6 +102,8 @@ export default function RootLayout() {
             </h3>
             <ul className="space-y-2 text-xs font-semibold">
               <li><Link to="/about" className="hover:text-amber-500 transition-colors">About Us</Link></li>
+              <li><Link to="/suppliers" className="hover:text-amber-500 transition-colors">Suppliers</Link></li>
+              <li><Link to="/become-supplier" className="hover:text-amber-500 transition-colors">Become a Supplier</Link></li>
               <li><a href="#policies" onClick={(e) => e.preventDefault()} className="hover:text-amber-500 transition-colors">Policies</a></li>
               <li><a href="#terms" onClick={(e) => e.preventDefault()} className="hover:text-amber-500 transition-colors">Terms & Conditions</a></li>
               <li><a href="#news" onClick={(e) => e.preventDefault()} className="hover:text-amber-500 transition-colors">News</a></li>

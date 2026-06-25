@@ -6,6 +6,14 @@ import type { CustomerOrder } from '@/types/order'
 import { mapNewOrderToCustomerOrder } from '@/types/order'
 import { Badge } from '@/components/ui/badge'
 import { Check, ChevronDown } from 'lucide-react'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -114,20 +122,20 @@ export default function AdminOrdersPage() {
       {loading ? (
         <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                <Th>{t('orders_col_id')}</Th>
-                <Th>{t('orders_col_part')}</Th>
-                <Th>{t('orders_col_vehicle')}</Th>
-                <Th>{t('orders_col_price')}</Th>
-                <Th>{t('orders_col_tracking')}</Th>
-                <Th>{t('orders_col_status')}</Th>
-                <Th>{t('orders_col_actions')}</Th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="overflow-x-auto rounded-xl border border-border/80">
+          <Table>
+            <TableHeader className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
+              <TableRow className="hover:bg-transparent border-none">
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_id')}</TableHead>
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_part')}</TableHead>
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_vehicle')}</TableHead>
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_price')}</TableHead>
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_tracking')}</TableHead>
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_status')}</TableHead>
+                <TableHead className="px-4 py-3 text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('orders_col_actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {orders.map((order) => {
                 const isOpen = openDropdownId === order.orderId
                 const isStatusOpen = openDropdownId === `status-${order.orderId}`
@@ -136,12 +144,12 @@ export default function AdminOrdersPage() {
 
                 return (
                   <React.Fragment key={order.orderId}>
-                    <tr
-                      className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer"
+                    <TableRow
+                      className="border-b border-border/50 hover:bg-slate-50/50 dark:hover:bg-slate-900/20 cursor-pointer"
                       onClick={() => hasItems && setOpenDropdownId(isOpen ? null : order.orderId)}
                     >
-                      <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{order.orderId}</Td>
-                      <Td>
+                      <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80] font-mono text-xs">#{order.orderId}</TableCell>
+                      <TableCell className="px-4 py-3">
                         <div className="flex items-center gap-2 flex-wrap">
                           <p className="text-[#07110A] dark:text-white font-medium">{order.requestedPartName || '—'}</p>
                           {order.isNew && (
@@ -155,17 +163,17 @@ export default function AdminOrdersPage() {
                             {order.orderItems!.length} item{order.orderItems!.length > 1 ? 's' : ''}
                           </span>
                         )}
-                      </Td>
-                      <Td className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
                         {order.vehicleMake} {order.model}
-                      </Td>
-                      <Td className="text-[#07110A] dark:text-white">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-[#07110A] dark:text-white">
                         ${order.total?.toLocaleString() ?? '0'}
-                      </Td>
-                      <Td className="font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
+                      </TableCell>
+                      <TableCell className="px-4 py-3 font-mono text-xs text-[#4A6B50] dark:text-[#7A9A80]">
                         {order.trackingNumber || <span className="text-[#7A9A80] dark:text-[#3D5942]">—</span>}
-                      </Td>
-                      <Td>
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
                         <div className="relative">
                           <button
                             onClick={(e) => {
@@ -209,8 +217,8 @@ export default function AdminOrdersPage() {
                             </div>
                           )}
                         </div>
-                      </Td>
-                      <Td>
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -220,13 +228,13 @@ export default function AdminOrdersPage() {
                         >
                           {t('orders_delete')}
                         </button>
-                      </Td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
 
                     {/* Expanded order items */}
                     {isOpen && hasItems && (
-                      <tr key={`items-${order.orderId}`}>
-                        <td colSpan={7} className="bg-[rgba(0,200,83,0.02)] dark:bg-[rgba(0,200,83,0.02)] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
+                      <TableRow key={`items-${order.orderId}`} className="hover:bg-transparent">
+                        <TableCell colSpan={7} className="bg-[rgba(0,200,83,0.02)] dark:bg-[rgba(0,200,83,0.02)] border-b border-[rgba(0,200,83,0.12)] px-6 py-4">
                           <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
                             {t('orders_items') ?? 'Order Items'}
                           </p>
@@ -248,36 +256,24 @@ export default function AdminOrdersPage() {
                             <span className="text-sm font-semibold text-[#07110A] dark:text-white">{t('orders_total') ?? 'Total'}</span>
                             <span className="text-lg font-bold text-[#00C853]">${order.total?.toLocaleString()}</span>
                           </div>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     )}
                   </React.Fragment>
                 )
               })}
 
               {orders.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
+                <TableRow>
+                  <TableCell colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     {t('orders_no_orders')}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>
   )
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-      {children}
-    </th>
-  )
-}
-
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-4 py-3 ${className ?? ''}`}>{children}</td>
 }

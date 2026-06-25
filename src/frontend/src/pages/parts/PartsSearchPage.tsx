@@ -19,6 +19,14 @@ import { useExternalCart } from '@/context/ExternalCartContext'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 // ─── BRAND LOGOS (Same as home page for consistency in the vehicle info block) ──────────
 
@@ -492,66 +500,66 @@ export default function PartsSearchPage() {
           <div className="px-6 py-6">
             
             {/* Vehicle Info Table Card */}
-            <h2 className="text-sm font-black text-slate-800 mb-2 uppercase tracking-wide">
+            <h2 className="text-sm font-black text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
               {vinSearchDetails.make || 'UNKNOWN'} Parts Catalogs {vinSearchDetails.model || 'UNKNOWN'}
             </h2>
-            <div className="overflow-x-auto border border-slate-200 rounded mb-6 select-none shadow-sm">
-              <table className="min-w-full divide-y divide-slate-200 text-left text-[11px] bg-slate-50">
-                <thead className="bg-slate-100 text-slate-600 font-bold uppercase">
-                  <tr>
-                    <th className="px-4 py-2">Brand</th>
-                    <th className="px-4 py-2">Model</th>
-                    <th className="px-4 py-2">Year</th>
-                    <th className="px-4 py-2">Engine</th>
-                    <th className="px-4 py-2">Trim</th>
-                    <th className="px-4 py-2">Manufacturer</th>
-                    <th className="px-4 py-2">Plant</th>
-                    <th className="px-4 py-2">Doors</th>
-                    <th className="px-4 py-2">Body Class</th>
-                    <th className="px-4 py-2 text-center">i</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 bg-white text-slate-700 font-medium">
-                  <tr>
-                    <td className="px-4 py-2">
+            <div className="overflow-x-auto border border-border/80 rounded mb-6 select-none shadow-sm bg-white dark:bg-[#0A110C]">
+              <Table>
+                <TableHeader className="bg-slate-100 dark:bg-[#0D1810] text-slate-650 dark:text-[#7A9A80] font-bold uppercase">
+                  <TableRow className="hover:bg-transparent border-b border-border/80 border-none">
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Brand</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Model</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Year</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Engine</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Trim</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">Manufacturer</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Plant</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Doors</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Body Class</TableHead>
+                    <TableHead className="px-4 py-2 text-[11px] text-center whitespace-normal">i</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell className="px-4 py-2 whitespace-normal">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-6 h-6 text-slate-800 flex items-center justify-center">
+                        <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
                           {getBrandLogo(vinSearchDetails.make)}
                         </div>
-                        <span className="font-extrabold text-slate-900">{(vinSearchDetails.make || 'UNKNOWN').toUpperCase()}</span>
+                        <span className="font-extrabold text-slate-900 dark:text-white">{(vinSearchDetails.make || 'UNKNOWN').toUpperCase()}</span>
                       </div>
-                    </td>
-                    <td className="px-4 py-2 font-bold uppercase">{vinSearchDetails.model || 'N/A'}</td>
-                    <td className="px-4 py-2">{vinSearchDetails.modelYear || 'N/A'}</td>
-                    <td className="px-4 py-2 text-slate-500 font-mono text-[10px]">
+                    </TableCell>
+                    <TableCell className="px-4 py-2 font-bold uppercase text-slate-800 dark:text-white whitespace-normal">{vinSearchDetails.model || 'N/A'}</TableCell>
+                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.modelYear || 'N/A'}</TableCell>
+                    <TableCell className="px-4 py-2 text-slate-500 dark:text-[#7A9A80] font-mono text-[10px] whitespace-normal">
                       {vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L` : ''} {vinSearchDetails.fuelTypePrimary || ''}
-                    </td>
-                    <td className="px-4 py-2">{vinSearchDetails.trim || 'N/A'}</td>
-                    <td className="px-4 py-2 font-mono text-[10px]">{vinSearchDetails.manufacturer || 'N/A'}</td>
-                    <td className="px-4 py-2 text-[10px]">
+                    </TableCell>
+                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.trim || 'N/A'}</TableCell>
+                    <TableCell className="px-4 py-2 font-mono text-[10px] whitespace-normal">{vinSearchDetails.manufacturer || 'N/A'}</TableCell>
+                    <TableCell className="px-4 py-2 text-[10px] whitespace-normal">
                       {vinSearchDetails.plantCity || ''}{vinSearchDetails.plantCity && vinSearchDetails.plantCountry ? ', ' : ''}{vinSearchDetails.plantCountry || ''}
-                    </td>
-                    <td className="px-4 py-2">{vinSearchDetails.doors || 'N/A'}</td>
-                    <td className="px-4 py-2">{vinSearchDetails.bodyClass || 'N/A'}</td>
-                    <td className="px-4 py-2 text-center">
-                      <Info className="w-4 h-4 text-slate-400 mx-auto cursor-pointer hover:text-slate-600" />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </TableCell>
+                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.doors || 'N/A'}</TableCell>
+                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.bodyClass || 'N/A'}</TableCell>
+                    <TableCell className="px-4 py-2 text-center whitespace-normal">
+                      <Info className="w-4 h-4 text-slate-400 dark:text-[#4A6B50] mx-auto cursor-pointer hover:text-slate-600 dark:hover:text-white" />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
 
             {/* Part Category Navigation Tabs */}
-            <div className="flex items-center gap-1 border-b-2 border-sky-400 mb-5">
-              <button className="bg-[#4bc0db] hover:bg-[#39a9c4] text-white text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+            <div className="flex items-center gap-1 border-b-2 border-[#00C853] mb-5">
+              <button className="bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
                 <ListFilter className="w-3.5 h-3.5" />
                 Categories
               </button>
-              <button className="bg-white border border-slate-200 border-b-0 hover:bg-slate-50 text-slate-500 text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+              <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
                 <Search className="w-3.5 h-3.5" />
                 Search
               </button>
-              <button className="bg-white border border-slate-200 border-b-0 hover:bg-slate-50 text-slate-500 text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+              <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
                 <Package className="w-3.5 h-3.5" />
                 Groups
               </button>

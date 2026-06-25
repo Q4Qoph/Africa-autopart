@@ -286,7 +286,7 @@ export default function HomePage() {
     switch (activeTab) {
       case 'easy':
         return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
             <p>
               First of all we take care of comfort for our customers. With{' '}
               <strong>Africa Autopart</strong>, purchasing OEM body parts, engine parts, etc. will be fluent and
@@ -308,7 +308,7 @@ export default function HomePage() {
         )
       case 'catalog':
         return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
             <p>
               Our online catalog offers access to millions of unique, high-quality auto parts catalogued logically by
               makes, categories, models, and assembly groups. With integrated VIN decoding and part number search,
@@ -322,7 +322,7 @@ export default function HomePage() {
         )
       case 'prices':
         return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
             <p>
               By direct collaboration with leading parts distributors and manufacturers, Africa Autopart bypasses
               traditional middle-man markup chains to deliver wholesale pricing directly to workshops, fleets, and
@@ -336,7 +336,7 @@ export default function HomePage() {
         )
       case 'range':
         return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
             <p>
               Over 17,000,000 spare parts catalogued. We supply parts for all primary systems: brake rotors and pads,
               engine assemblies, transmission components, radiators, filtration systems, electrical accessories, and
@@ -350,7 +350,7 @@ export default function HomePage() {
         )
       case 'shipping':
         return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 font-sans">
+          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
             <p>
               We offer fast shipping across Africa, the Middle East, and worldwide. Through partnerships with top-tier
               freight services and courier networks (DHL, FedEx, UPS), we guarantee fast and secure parcel dispatch.
@@ -368,8 +368,8 @@ export default function HomePage() {
     <div className="px-6 md:px-8 py-8">
         
         {/* Headline Subbar */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-300 pb-3 mb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 font-sans">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-300 dark:border-slate-800 pb-3 mb-6">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 font-sans">
             Auto Parts Around the World
           </h1>
           <div className="flex items-center gap-1.5 mt-3 sm:mt-0">
@@ -392,9 +392,9 @@ export default function HomePage() {
         </div>
 
         {/* ── SEARCH BAR CONTAINER ───────────────────────────────────────────────── */}
-        <section className="bg-white border border-slate-200 shadow-sm rounded p-6 mb-8 font-sans max-w-4xl mx-auto">
+        <section className="bg-white dark:bg-brand-card/50 border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans max-w-4xl mx-auto">
           <form onSubmit={handleSubmit} className="w-full">
-            <div className="flex items-center bg-white border border-slate-300 rounded overflow-hidden shadow-inner focus-within:border-slate-500 transition-colors">
+            <div className="flex items-center bg-white dark:bg-brand-ink border border-slate-300 dark:border-slate-800 rounded overflow-hidden shadow-inner focus-within:border-slate-500 dark:focus-within:border-[#00C853] transition-colors">
               <input
                 type="text"
                 value={vin}
@@ -403,11 +403,11 @@ export default function HomePage() {
                   setError('')
                 }}
                 placeholder={t('vin_placeholder') ?? 'Part Number or VIN/Frame'}
-                className="flex-grow h-12 px-4 outline-none text-slate-800 text-base font-bold tracking-wide"
+                className="flex-grow h-12 px-4 outline-none bg-transparent text-slate-800 dark:text-slate-100 text-base font-bold tracking-wide"
               />
               <button
                 type="button"
-                className="h-12 px-3.5 border-l border-slate-200 text-slate-400 hover:text-slate-600 transition-colors"
+                className="h-12 px-3.5 border-l border-slate-200 dark:border-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                 title="Catalog Index"
               >
                 <Menu className="w-5 h-5" />
@@ -488,16 +488,16 @@ export default function HomePage() {
             { value: '17,000,000', label: 'PARTS IN DATABASE' },
             { value: '2 DAYS', label: 'AVERAGE DISPATCH' },
           ].map((stat) => (
-            <div key={stat.label} className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded p-4 text-center shadow-sm">
-              <p className="text-2xl font-black text-slate-800">{stat.value}</p>
-              <p className="text-[10px] font-bold text-slate-500 tracking-wider mt-1">{stat.label}</p>
+            <div key={stat.label} className="bg-white/80 dark:bg-brand-card/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded p-4 text-center shadow-sm">
+              <p className="text-2xl font-black text-slate-800 dark:text-slate-200">{stat.value}</p>
+              <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mt-1">{stat.label}</p>
             </div>
           ))}
         </section>
 
         {/* ── BRAND CATALOG GRID (Online Catalogs) ───────────────────────────────── */}
         <section className="mb-12">
-          <h2 className="text-xl font-bold text-slate-800 mb-4 text-center sm:text-left font-sans border-b border-slate-200 pb-2">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center sm:text-left font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
             Genuine Parts Online Catalogs
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -505,14 +505,14 @@ export default function HomePage() {
               <div
                 key={brand}
                 onClick={() => navigate('/requests/new', { state: { make: brand } })}
-                className="bg-white border border-slate-200 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 transition-all duration-200 group"
+                className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 dark:hover:border-brand-green transition-all duration-200 group"
               >
                 {/* SVG Logo Container */}
-              <div className="h-16 flex items-center justify-center text-slate-700 group-hover:scale-105 transition-transform duration-300">
-                <img src={`/images/brands/${brand.toLowerCase().replace(/\s+/g, '-')}${['lexus','volkswagen'].includes(brand.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`} alt={brand} className="h-full w-full object-contain" />
+              <div className="h-16 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:scale-105 transition-transform duration-300">
+                <img src={`/images/brands/${brand.toLowerCase().replace(/\s+/g, '-')}${['lexus','volkswagen'].includes(brand.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`} alt={brand} className="h-full w-full object-contain dark:brightness-90 dark:contrast-125" />
               </div>
                 {/* Name */}
-                <span className="text-sm font-semibold text-slate-700 mt-3 group-hover:text-slate-900 font-sans">
+                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-3 group-hover:text-slate-900 dark:group-hover:text-white font-sans">
                   {brand}
                 </span>
               </div>
@@ -522,10 +522,10 @@ export default function HomePage() {
 
         {/* ── HOW TO ORDER VIDEO ─────────────────────────────────────────────────── */}
         <section id="how-to-order-video" className="mb-12 scroll-mt-20">
-          <h2 className="text-xl font-bold text-slate-800 mb-4 text-center font-sans border-b border-slate-200 pb-2">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
             How to make order
           </h2>
-          <div className="w-full max-w-4xl mx-auto bg-slate-950 aspect-video rounded overflow-hidden shadow-lg relative border-4 border-white">
+          <div className="w-full max-w-4xl mx-auto bg-slate-950 aspect-video rounded overflow-hidden shadow-lg relative border-4 border-white dark:border-slate-800">
             <iframe
               className="w-full h-full border-0"
               src="https://www.youtube.com/embed/H8lCcr4T_D8"
@@ -537,13 +537,13 @@ export default function HomePage() {
         </section>
 
         {/* ── ABOUT AFRICA AUTOPART TABS SECTION ───────────────────────────────────────── */}
-        <section className="bg-white border border-slate-200 shadow-sm rounded p-6 mb-8 font-sans">
-          <h2 className="text-xl font-bold text-slate-800 mb-5 font-sans border-b border-slate-200 pb-2">
+        <section className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans">
+          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-5 font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
             About Africa Autopart
           </h2>
           
           {/* Tab buttons */}
-          <div className="flex flex-wrap gap-1 bg-slate-100 p-1.5 rounded mb-5">
+          <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-brand-ink p-1.5 rounded mb-5">
             {[
               { id: 'easy', label: 'Easy to Use' },
               { id: 'catalog', label: 'Online catalogue' },
@@ -557,8 +557,8 @@ export default function HomePage() {
                 className={cn(
                   'flex-1 min-w-[120px] py-2 px-3 text-xs font-bold rounded transition-colors text-center',
                   activeTab === tab.id
-                    ? 'bg-[#374151] text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-200 hover:text-slate-800'
+                    ? 'bg-[#374151] dark:bg-brand-green text-white dark:text-brand-ink shadow-sm'
+                    : 'text-slate-600 dark:text-brand-muted hover:bg-slate-200 dark:hover:bg-brand-card-2 hover:text-slate-800 dark:hover:text-white'
                 )}
               >
                 {tab.label}
@@ -567,7 +567,7 @@ export default function HomePage() {
           </div>
 
           {/* Dynamic text block */}
-          <div className="border border-slate-100 p-4 rounded bg-slate-50/50 min-h-[160px]">
+          <div className="border border-slate-100 dark:border-slate-800 p-4 rounded bg-slate-50/50 dark:bg-[#07110A]/50 min-h-[160px]">
             {renderTabContent()}
           </div>
         </section>

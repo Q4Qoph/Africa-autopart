@@ -72,6 +72,14 @@
   .animate-marquee:hover {
     animation-play-state: paused;
   }
+  .blueprint-bg {
+    background-image: url('/images/car_blueprint_pattern.jpg');
+    background-size: 320px 320px;
+    background-repeat: repeat;
+  }
+  .dark .blueprint-bg {
+    background-image: linear-gradient(rgba(7, 17, 10, 0.94), rgba(7, 17, 10, 0.94)), url('/images/car_blueprint_pattern.jpg');
+  }
 }
 
 @keyframes marquee {

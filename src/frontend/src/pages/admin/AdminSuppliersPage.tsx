@@ -1,10 +1,18 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
 import { supplierApi } from '@/api/supplierApi'
 import type { Supplier } from '@/types/supplier'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 export default function AdminSuppliersPage() {
   const { auth } = useAuth()
@@ -61,37 +69,36 @@ export default function AdminSuppliersPage() {
       {loading ? (
         <p className="text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('loading')}</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                <Th>{t('suppliers_col_id')}</Th>
-                <Th>{t('suppliers_col_name')}</Th>
-                <Th>{t('suppliers_col_category')}</Th>
-                <Th>{t('suppliers_col_email')}</Th>
-                <Th>{t('suppliers_col_phone')}</Th>
-                <Th>{t('suppliers_col_parts')}</Th>
-                <Th>{t('suppliers_col_actions')}</Th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="overflow-x-auto rounded-xl border border-border/80">
+          <Table>
+            <TableHeader className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
+              <TableRow className="hover:bg-transparent border-none">
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_id')}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_name')}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_category')}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_email')}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_phone')}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_parts')}</TableHead>
+                <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('suppliers_col_actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map((s) => (
-                <>
-                  <tr
-                    key={s.id}
-                    className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                <React.Fragment key={s.id}>
+                  <TableRow
+                    className="border-b border-border/50 hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors"
                   >
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{s.id}</Td>
-                    <Td className="font-medium text-[#07110A] dark:text-white">{s.businessName}</Td>
-                    <Td>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{s.id}</TableCell>
+                    <TableCell className="px-4 py-3 font-medium text-[#07110A] dark:text-white">{s.businessName}</TableCell>
+                    <TableCell className="px-4 py-3">
                       <Badge className="bg-[rgba(0,200,83,0.08)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
                         {s.category}
                       </Badge>
-                    </Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{s.email}</Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{s.phone}</Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{s.parts.length}</Td>
-                    <Td>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80]">{s.email}</TableCell>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80]">{s.phone}</TableCell>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80]">{s.parts.length}</TableCell>
+                    <TableCell className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {s.parts.length > 0 && (
                           <Button
@@ -114,11 +121,11 @@ export default function AdminSuppliersPage() {
                           {t('suppliers_delete')}
                         </Button>
                       </div>
-                    </Td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                   {expandedId === s.id && (
-                    <tr key={`${s.id}-parts`} className="bg-[#E8F2EA] dark:bg-[#0D1810]">
-                      <td colSpan={7} className="px-6 py-4">
+                    <TableRow className="bg-[#E8F2EA] dark:bg-[#0D1810] hover:bg-transparent">
+                      <TableCell colSpan={7} className="px-6 py-4">
                         <p className="text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80] mb-3">
                           {t('suppliers_parts_section', { count: s.parts.length })}
                         </p>
@@ -136,34 +143,22 @@ export default function AdminSuppliersPage() {
                             </div>
                           ))}
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )}
-                </>
+                </React.Fragment>
               ))}
               {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
+                <TableRow>
+                  <TableCell colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                     {t('suppliers_no_suppliers')}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>
   )
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-      {children}
-    </th>
-  )
-}
-
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-4 py-3 ${className ?? ''}`}>{children}</td>
 }

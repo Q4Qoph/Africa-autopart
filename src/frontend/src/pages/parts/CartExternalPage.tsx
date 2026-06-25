@@ -10,6 +10,14 @@ import type { AddNewOrderDTO } from '@/types/order'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Home, Trash2, ShieldCheck, CheckCircle2, CreditCard } from 'lucide-react'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
 
 export default function CartExternalPage() {
   const { auth } = useAuth()
@@ -240,48 +248,48 @@ export default function CartExternalPage() {
           <div className="lg:col-span-2 space-y-6">
             
             {/* 1. PRODUCT SUMMARY TABLE */}
-            <div className="bg-white border border-slate-200 rounded shadow-sm overflow-hidden select-none">
-              <table className="min-w-full divide-y divide-slate-200 text-left text-[11px]">
-                <thead className="bg-slate-50 text-slate-500 font-bold uppercase">
-                  <tr>
-                    <th className="px-4 py-3">Number</th>
-                    <th className="px-4 py-3">Name</th>
-                    <th className="px-4 py-3">Brand</th>
-                    <th className="px-4 py-3">Processing, days</th>
-                    <th className="px-4 py-3 text-right">Price</th>
-                    <th className="px-4 py-3 text-center">Qty</th>
-                    <th className="px-4 py-3 text-right">Sum</th>
-                    <th className="px-4 py-3 text-center"></th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 bg-white text-slate-700 font-medium">
+            <div className="bg-white dark:bg-[#0A110C] border border-border/80 rounded shadow-sm overflow-hidden select-none">
+              <Table>
+                <TableHeader className="bg-slate-50 dark:bg-[#0D1810] text-slate-500 dark:text-[#7A9A80] font-bold uppercase">
+                  <TableRow className="hover:bg-transparent border-b border-border/80 border-none">
+                    <TableHead className="px-4 py-3 text-[11px] font-bold">Number</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold">Name</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold">Brand</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold">Processing, days</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold text-right">Price</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold text-center">Qty</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold text-right">Sum</TableHead>
+                    <TableHead className="px-4 py-3 text-[11px] font-bold text-center"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
                   {items.map((item) => {
                     const priceNum = parseFloat(item.part.price.replace(/[^0-9.]/g, '')) || 0
                     const itemSum = priceNum * item.quantity
                     return (
-                      <tr key={item.part.partNumber}>
-                        <td className="px-4 py-3.5 font-mono text-[10px] font-bold text-slate-900">
+                      <TableRow key={item.part.partNumber} className="border-b border-border/50 hover:bg-slate-50/50 dark:hover:bg-slate-900/20">
+                        <TableCell className="px-4 py-3.5 font-mono text-[10px] font-bold text-slate-900 dark:text-white">
                           {item.part.partNumber}
-                        </td>
-                        <td className="px-4 py-3.5 text-xs text-slate-800 font-bold uppercase">
+                        </TableCell>
+                        <TableCell className="px-4 py-3.5 text-xs text-slate-800 dark:text-white font-bold uppercase">
                           {item.part.name}
-                        </td>
-                        <td className="px-4 py-3.5 font-semibold text-slate-500">
+                        </TableCell>
+                        <TableCell className="px-4 py-3.5 font-semibold text-slate-500 dark:text-[#7A9A80]">
                           {item.part.supplier?.toUpperCase() || 'GENUINE'}
-                        </td>
-                        <td className="px-4 py-3.5 text-slate-400">2-3</td>
-                        <td className="px-4 py-3.5 text-right font-bold">${priceNum.toFixed(2)}</td>
-                        <td className="px-4 py-3.5">
+                        </TableCell>
+                        <TableCell className="px-4 py-3.5 text-slate-400 dark:text-[#4A6B50]">2-3</TableCell>
+                        <TableCell className="px-4 py-3.5 text-right font-bold text-slate-800 dark:text-white">${priceNum.toFixed(2)}</TableCell>
+                        <TableCell className="px-4 py-3.5 text-center">
                           <input
                             type="number"
                             min="1"
                             value={item.quantity}
                             onChange={(e) => updateQuantity(item.part, Math.max(1, parseInt(e.target.value) || 1))}
-                            className="w-12 border border-slate-300 rounded px-1.5 py-0.5 text-center text-xs text-slate-800 focus:outline-none focus:border-sky-500"
+                            className="w-12 bg-white dark:bg-[#111C14] border border-slate-300 dark:border-slate-800 rounded px-1.5 py-0.5 text-center text-xs text-slate-800 dark:text-white focus:outline-none focus:border-sky-500"
                           />
-                        </td>
-                        <td className="px-4 py-3.5 text-right font-black text-slate-900">${itemSum.toFixed(2)}</td>
-                        <td className="px-4 py-3.5 text-center">
+                        </TableCell>
+                        <TableCell className="px-4 py-3.5 text-right font-black text-[#00C853] dark:text-[#39FF88]">${itemSum.toFixed(2)}</TableCell>
+                        <TableCell className="px-4 py-3.5 text-center">
                           <button
                             type="button"
                             onClick={() => removeItem(item.part)}
@@ -289,12 +297,12 @@ export default function CartExternalPage() {
                           >
                             <Trash2 className="w-4 h-4 mx-auto" />
                           </button>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     )
                   })}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
 
             {/* 2. SHIPPING METHODS SELECTOR */}

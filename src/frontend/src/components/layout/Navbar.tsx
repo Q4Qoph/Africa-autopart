@@ -9,9 +9,12 @@ import {
   ShoppingCart,
   Menu,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage, type Language } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 import { UserRole } from "@/types/user";
 import { cn } from "@/lib/utils";
 import { useExternalCart } from "@/context/ExternalCartContext";
@@ -56,6 +59,7 @@ function NavLink({
 export default function Navbar() {
   const { auth, logout } = useAuth();
   const { language, setLanguage } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
   const { t } = useTranslation("nav");
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,18 +78,17 @@ export default function Navbar() {
   // Nav link sets — defined inside component so labels react to language changes
   const publicLinks = [
     { label: t("nav_howItWorks"), href: "/#how-it-works" },
-    { label: t("nav_suppliers"), href: "/suppliers" },
-    { label: t("nav_becomeSupplier"), href: "/become-supplier" },
+    { label: t("cta_requestPart"), href: "/requests/new" },
     { label: t("nav_shop"), href: "/shop" },
   ];
 
   const customerLinks = [
     { label: t("nav_myRequests"), href: "/requests" },
-    { label: t("nav_suppliers"), href: "/suppliers" },
+    { label: t("cta_requestPart"), href: "/requests/new" },
     { label: t("nav_shop"), href: "/shop" },
   ];
 
-  const adminLinks = [{ label: t("nav_suppliers"), href: "/suppliers" }];
+  const adminLinks = [{ label: t("cta_requestPart"), href: "/requests/new" }];
 
   const supplierNavLinks = [
     { label: t("nav_rfqInbox"), href: "/supplier/dashboard" },
@@ -232,6 +235,8 @@ export default function Navbar() {
                 </div>
               )}
 
+              
+
               {/* Shopping Cart Pill */}
               <Link
                 to="/cart"
@@ -240,6 +245,19 @@ export default function Navbar() {
                 <ShoppingCart className="w-3.5 h-3.5" />
                 <span>{externalItemCount}</span>
               </Link>
+              {/* Theme Toggle Button */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="w-9 h-9 bg-black border border-slate-700 hover:bg-slate-900 text-white rounded flex items-center justify-center transition-all shadow-sm hover:scale-105 active:scale-95"
+                title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              >
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4 text-amber-400 transition-transform duration-500 hover:rotate-90" />
+                ) : (
+                  <Moon className="w-4 h-4 text-slate-300 transition-transform duration-500 hover:-rotate-12" />
+                )}
+              </button>
 
               {/* Hamburger menu trigger */}
               <button
@@ -262,8 +280,8 @@ export default function Navbar() {
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
           
           {/* Content */}
-          <div className="relative w-80 max-w-full bg-[#0c1524] h-full shadow-2xl p-6 flex flex-col gap-6 text-white z-[80] font-sans">
-            <div className="flex justify-between items-center border-b border-slate-800 pb-4">
+          <div className="relative w-80 max-w-full bg-card text-card-foreground border-l border-border h-full shadow-2xl p-6 flex flex-col gap-6 z-[80] font-sans transition-colors duration-200">
+            <div className="flex justify-between items-center border-b border-border pb-4">
               <div className="flex items-center">
                 {/* Logo badge (Africa Autopart Branding) */}
                 <svg viewBox="0 0 100 100" className="w-8 h-8 mr-2" fill="none">
@@ -272,37 +290,36 @@ export default function Navbar() {
                   <circle cx="50" cy="50" r="20" fill="#00C853" />
                   <text x="50" y="58" fontFamily="sans-serif" fontWeight="900" fontSize="22" fill="#07110A" textAnchor="middle">AA</text>
                 </svg>
-                <span className="font-extrabold text-lg italic text-white">
+                <span className="font-extrabold text-lg italic text-slate-900 dark:text-white">
                   <span>Africa</span>
                   <span className="text-[#00C853] ml-1">Autopart</span>
                 </span>
               </div>
-              <button onClick={() => setDrawerOpen(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setDrawerOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             <div className="flex flex-col gap-4 text-sm font-semibold">
-              <Link to="/" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Home</Link>
-              <Link to="/shop" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Catalog / Shop</Link>
-              <Link to="/suppliers" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Suppliers</Link>
-              <Link to="/become-supplier" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-slate-800">Become a Supplier</Link>
+              <Link to="/" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-border">Home</Link>
+              <Link to="/shop" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-border">Catalog / Shop</Link>
+              <Link to="/requests/new" onClick={() => setDrawerOpen(false)} className="hover:text-amber-500 py-2 border-b border-border">{t("cta_requestPart")}</Link>
               <button
                 onClick={() => { setDrawerOpen(false); setTrackOpen(true); }}
-                className="text-left hover:text-amber-500 py-2 border-b border-slate-800 flex items-center gap-1.5"
+                className="text-left hover:text-amber-500 py-2 border-b border-border flex items-center gap-1.5"
               >
                 Track Order
               </button>
             </div>
 
             {/* Language & Currency in mobile drawer */}
-            <div className="flex flex-col gap-3 py-4 border-t border-slate-800 mt-4">
+            <div className="flex flex-col gap-3 py-4 border-t border-border mt-4">
               <div className="flex flex-col gap-1">
                 <span className="text-[10px] uppercase text-slate-500 font-bold">Language</span>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value as Language)}
-                  className="bg-slate-900 border border-slate-800 text-slate-100 font-bold text-xs rounded px-3 py-2 outline-none w-full"
+                  className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 font-bold text-xs rounded px-3 py-2 outline-none w-full transition-colors"
                 >
                   <option value="en">🇬🇧 ENGLISH</option>
                   <option value="fr">🇫🇷 FRANÇAIS</option>
@@ -316,7 +333,7 @@ export default function Navbar() {
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="bg-slate-900 border border-slate-800 text-slate-100 font-bold text-xs rounded px-3 py-2 outline-none w-full"
+                  className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 font-bold text-xs rounded px-3 py-2 outline-none w-full transition-colors"
                 >
                   <option value="USD">USD</option>
                   <option value="KES">KES</option>
@@ -330,8 +347,8 @@ export default function Navbar() {
             <div className="mt-auto flex flex-col gap-4">
               {auth ? (
                 <>
-                  <div className="bg-slate-800/50 p-3 rounded text-xs">
-                    Logged in as: <strong className="text-white block mt-0.5">{auth.email}</strong>
+                  <div className="bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 p-3 rounded text-xs">
+                    Logged in as: <strong className="text-slate-900 dark:text-white block mt-0.5">{auth.email}</strong>
                   </div>
                   <Link
                     to={auth.role === UserRole.Supplier ? "/supplier/dashboard" : auth.role === UserRole.Admin ? "/admin" : "/dashboard"}
@@ -358,7 +375,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     to="/register"
-                    className="bg-slate-700 text-center text-white py-2.5 rounded font-bold hover:bg-slate-600"
+                    className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-center py-2.5 rounded font-bold transition-colors"
                     onClick={() => setDrawerOpen(false)}
                   >
                     Sign Up

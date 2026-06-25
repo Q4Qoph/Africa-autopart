@@ -1,5 +1,5 @@
 // src/frontend/src/pages/supplier/SupplierDashboardPage.tsx
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/AuthContext";
@@ -17,6 +17,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { EditProfilePanel } from "@/components/supplier/EdirProfilePanel";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 // import { AdvertModal } from "@/components/supplier/AdvertModal";
 
@@ -636,32 +644,31 @@ export default function SupplierDashboardPage() {
                         </p>
                       </div>
                     ) : (
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
-                            <Th>{t("supplier_col_part_name")}</Th>
-                            <Th>Vehicle</Th>
-                            <Th>{t("supplier_col_price")}</Th>
-                            <Th>{t("supplier_col_actions")}</Th>
-                          </tr>
-                        </thead>
-                        <tbody>
+                      <Table>
+                        <TableHeader className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
+                          <TableRow className="hover:bg-transparent border-none">
+                            <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_part_name")}</TableHead>
+                            <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">Vehicle</TableHead>
+                            <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_price")}</TableHead>
+                            <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_actions")}</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
                           {inventory.map((item) => (
-                            <>
-                              <tr
-                                key={item.id}
+                            <React.Fragment key={item.id}>
+                              <TableRow
                                 className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                               >
-                                <td className="px-5 py-3 text-[#07110A] dark:text-white">
+                                <TableCell className="px-5 py-3 text-[#07110A] dark:text-white">
                                   {item.partName}
-                                </td>
-                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                                </TableCell>
+                                <TableCell className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
                                   {item.vehicleMake} {item.vehicleModel}
-                                </td>
-                                <td className="px-5 py-3 text-[#4A6B50] dark:text-[#C5DEC8]">
+                                </TableCell>
+                                <TableCell className="px-5 py-3 text-[#4A6B50] dark:text-[#C5DEC8]">
                                   ${item.price.toLocaleString()}
-                                </td>
-                                <td className="px-5 py-3">
+                                </TableCell>
+                                <TableCell className="px-5 py-3">
                                   <Button
                                     size="sm"
                                     onClick={() =>
@@ -675,13 +682,13 @@ export default function SupplierDashboardPage() {
                                       ? t("supplier_close")
                                       : t("supplier_edit_part")}
                                   </Button>
-                                </td>
-                              </tr>
+                                </TableCell>
+                              </TableRow>
 
                               {/* Inline edit row for inventory */}
                               {editingInventoryId === item.id && (
-                                <tr key={`edit-${item.id}`}>
-                                  <td
+                                <TableRow key={`edit-${item.id}`} className="hover:bg-transparent">
+                                  <TableCell
                                     colSpan={4}
                                     className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-5 py-5"
                                   >
@@ -859,13 +866,13 @@ export default function SupplierDashboardPage() {
                                         {t("supplier_cancel")}
                                       </Button>
                                     </div>
-                                  </td>
-                                </tr>
+                                  </TableCell>
+                                </TableRow>
                               )}
-                            </>
+                            </React.Fragment>
                           ))}
-                        </tbody>
-                      </table>
+                        </TableBody>
+                      </Table>
                     )}
                   </div>
                 </div>
@@ -893,41 +900,40 @@ export default function SupplierDashboardPage() {
                       </div>
                     ) : (
                       <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
-                              <Th>#</Th>
-                              <Th>{t("supplier_col_part_name")}</Th>
-                              <Th>{t("supplier_col_vehicle")}</Th>
-                              <Th>{t("supplier_col_price")}</Th>
-                              <Th>{t("supplier_col_tracking")}</Th>
-                              <Th>{t("supplier_col_status")}</Th>
-                              <Th>{t("supplier_col_actions")}</Th>
-                            </tr>
-                          </thead>
-                          <tbody>
+                        <Table>
+                          <TableHeader className="bg-[#E8F2EA] dark:bg-[#0D1810] border-b border-[rgba(0,200,83,0.12)]">
+                            <TableRow className="hover:bg-transparent border-none">
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">#</TableHead>
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_part_name")}</TableHead>
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_vehicle")}</TableHead>
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_price")}</TableHead>
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_tracking")}</TableHead>
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_status")}</TableHead>
+                              <TableHead className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t("supplier_col_actions")}</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
                             {orders.map((order) => (
-                              <>
-                                <tr
-                                  key={order.id}
+                              <React.Fragment key={order.id}>
+                                <TableRow
                                   className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
                                 >
-                                  <td className="px-5 py-3 text-[#7A9A80] dark:text-[#3D5942] font-mono text-xs">
+                                  <TableCell className="px-5 py-3 text-[#7A9A80] dark:text-[#3D5942] font-mono text-xs">
                                     #{order.id}
-                                  </td>
-                                  <td className="px-5 py-3 text-[#07110A] dark:text-white">
+                                  </TableCell>
+                                  <TableCell className="px-5 py-3 text-[#07110A] dark:text-white">
                                     {order.partRequest?.partName ??
                                       order.partName ??
                                       "—"}
-                                  </td>
-                                  <td className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
+                                  </TableCell>
+                                  <TableCell className="px-5 py-3 text-[#4A6B50] dark:text-[#7A9A80] text-xs">
                                     {order.partRequest?.vehicleMake ?? "—"}{" "}
                                     {order.partRequest?.model ?? ""}
-                                  </td>
-                                  <td className="px-5 py-3 text-[#00C853] font-semibold">
+                                  </TableCell>
+                                  <TableCell className="px-5 py-3 text-[#00C853] font-semibold">
                                     ${(order.total ?? 0).toLocaleString()}
-                                  </td>
-                                  <td className="px-5 py-3 font-mono text-xs">
+                                  </TableCell>
+                                  <TableCell className="px-5 py-3 font-mono text-xs">
                                     <span
                                       className={
                                         order.trackingNumber
@@ -937,8 +943,8 @@ export default function SupplierDashboardPage() {
                                     >
                                       {order.trackingNumber || "—"}
                                     </span>
-                                  </td>
-                                  <td className="px-5 py-3">
+                                  </TableCell>
+                                  <TableCell className="px-5 py-3">
                                     <Badge
                                       className={cn(
                                         "text-[10px]",
@@ -948,8 +954,8 @@ export default function SupplierDashboardPage() {
                                       {orderStatusLabel[order.status] ??
                                         String(order.status)}
                                     </Badge>
-                                  </td>
-                                  <td className="px-5 py-3">
+                                  </TableCell>
+                                  <TableCell className="px-5 py-3">
                                     <Button
                                       size="sm"
                                       onClick={() =>
@@ -963,11 +969,11 @@ export default function SupplierDashboardPage() {
                                         ? t("supplier_close")
                                         : t("supplier_update_order")}
                                     </Button>
-                                  </td>
-                                </tr>
+                                  </TableCell>
+                                </TableRow>
                                 {editingOrderId === order.id && (
-                                  <tr key={`edit-${order.id}`}>
-                                    <td
+                                  <TableRow key={`edit-${order.id}`} className="hover:bg-transparent">
+                                    <TableCell
                                       colSpan={7}
                                       className="bg-[#0A1510] border-b border-[rgba(0,200,83,0.12)] px-5 py-4"
                                     >
@@ -1043,40 +1049,32 @@ export default function SupplierDashboardPage() {
                                           {orderEdit.error}
                                         </p>
                                       )}
-                                    </td>
-                                  </tr>
-                                )}
-                              </>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-
-            {/* ── Advertisement Modal (commented out, you can enable later) ── */}
-            {/* <AdvertModal ... /> */}
-          </>
-        )}
-      </main>
-    </div>
-  );
-}
-
-// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-// Helper components
-// ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-5 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-      {children}
-    </th>
-  );
-}
+                                     </TableCell>
+                                   </TableRow>
+                                 )}
+                               </React.Fragment>
+                             ))}
+                           </TableBody>
+                         </Table>
+                       </div>
+                     )}
+                   </div>
+                 )}
+               </>
+             )}
+ 
+             {/* ── Advertisement Modal (commented out, you can enable later) ── */}
+             {/* <AdvertModal ... /> */}
+           </>
+         )}
+       </main>
+     </div>
+   );
+ }
+ 
+ // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+ // Helper components
+ // ‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
 
 function InfoCard({ label, value }: { label: string; value: React.ReactNode }) {
   return (

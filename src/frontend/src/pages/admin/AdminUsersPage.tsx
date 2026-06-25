@@ -8,6 +8,14 @@ import type { User } from '@/types/user';
 import { UserRole } from '@/types/user';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 const roleBadgeClass: Record<number, string> = {
   [UserRole.Admin]: 'bg-purple-900/40 text-purple-300 border-purple-700/30',
@@ -148,35 +156,35 @@ export default function AdminUsersPage() {
       ) : (
         <>
           {/* Table – same as before but without the search filter */}
-          <div className="overflow-x-auto rounded-xl border border-[rgba(0,200,83,0.15)]">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
-                  <Th>{t('users_col_id')}</Th>
-                  <Th>{t('users_col_name')}</Th>
-                  <Th>{t('users_col_email')}</Th>
-                  <Th>{t('users_col_phone')}</Th>
-                  <Th>{t('users_col_role')}</Th>
-                  <Th>{t('users_col_status')}</Th>
-                  <Th>{t('users_col_actions')}</Th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="rounded-xl border border-border/80 overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-[rgba(0,200,83,0.12)] bg-[#E8F2EA] dark:bg-[#0D1810]">
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_id')}</TableHead>
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_name')}</TableHead>
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_email')}</TableHead>
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_phone')}</TableHead>
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_role')}</TableHead>
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_status')}</TableHead>
+                  <TableHead className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">{t('users_col_actions')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {users.map((u) => (
-                  <tr
+                  <TableRow
                     key={u.id}
-                    className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                    className="border-b border-border/50 hover:bg-slate-50/50 dark:hover:bg-slate-900/20 transition-colors"
                   >
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{u.id}</Td>
-                    <Td className="font-medium text-[#07110A] dark:text-white">{u.firstName} {u.lastName}</Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{u.email}</Td>
-                    <Td className="text-[#4A6B50] dark:text-[#7A9A80]">{u.phone}</Td>
-                    <Td>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80] font-mono">#{u.id}</TableCell>
+                    <TableCell className="px-4 py-3 font-medium text-[#07110A] dark:text-white">{u.firstName} {u.lastName}</TableCell>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80]">{u.email}</TableCell>
+                    <TableCell className="px-4 py-3 text-[#4A6B50] dark:text-[#7A9A80]">{u.phone}</TableCell>
+                    <TableCell className="px-4 py-3">
                       <Badge className={`text-[10px] border ${roleBadgeClass[u.role] ?? ''}`}>
                         {roleLabel[u.role] ?? u.role}
                       </Badge>
-                    </Td>
-                    <Td>
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
                       {u.role === UserRole.Supplier ? (
                         u.isApproved ? (
                           <Badge className="bg-[rgba(0,200,83,0.1)] text-[#00C853] border-[rgba(0,200,83,0.2)] text-[10px]">
@@ -190,8 +198,8 @@ export default function AdminUsersPage() {
                       ) : (
                         <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs">—</span>
                       )}
-                    </Td>
-                    <Td>
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {u.role === UserRole.Supplier && !u.isApproved && (
                           <Button size="sm" onClick={() => handleApprove(u.id)}
@@ -209,18 +217,18 @@ export default function AdminUsersPage() {
                           </Button>
                         )}
                       </div>
-                    </Td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
                 {users.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
+                  <TableRow>
+                    <TableCell colSpan={7} className="py-8 text-center text-[#4A6B50] dark:text-[#7A9A80] text-sm">
                       {t('users_no_users')}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
 
           {/* Page info at bottom (duplicate navigation optional) */}
@@ -242,17 +250,4 @@ export default function AdminUsersPage() {
       )}
     </div>
   );
-}
-
-// Th / Td helpers (unchanged)
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-4 py-3 text-left text-[10px] font-mono uppercase tracking-widest text-[#4A6B50] dark:text-[#7A9A80]">
-      {children}
-    </th>
-  );
-}
-
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-4 py-3 ${className ?? ''}`}>{children}</td>;
 }

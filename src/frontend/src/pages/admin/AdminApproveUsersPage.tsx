@@ -135,12 +135,12 @@ export default function AdminApproveUsersPage() {
             <p className="px-4 py-6 text-[#4A6B50] dark:text-[#7A9A80] text-sm">{t('approvals_loading_list')}</p>
           ) : (
             <>
-              <ul className="divide-y divide-[rgba(255,255,255,0.04)] flex-1 overflow-y-auto max-h-[60vh]">
+              <ul className="divide-y divide-border/50 flex-1 overflow-y-auto max-h-[60vh]">
                 {users.map((u) => (
                   <li key={u.id}>
                     <button
                       onClick={() => selectUser(u.id)}
-                      className={`w-full text-left px-4 py-3 transition-colors hover:bg-[rgba(255,255,255,0.03)] ${
+                      className={`w-full text-left px-4 py-3 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-900/20 ${
                         selectedId === u.id
                           ? 'bg-[rgba(0,200,83,0.06)] border-l-2 border-[#00C853]'
                           : 'border-l-2 border-transparent'
