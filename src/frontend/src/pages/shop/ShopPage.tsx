@@ -22,6 +22,9 @@ const getPageNumbers = (current: number, total: number) => {
   return pages
 }
 
+// Hardcoded suppliers from Supplier1 to Supplier10
+const HARDCODED_SUPPLIERS = Array.from({ length: 10 }, (_, i) => `Supplier${i + 1}`)
+
 // Skeleton Loader Component
 const PartCardSkeleton = () => (
   <div className="animate-pulse border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-4 bg-white dark:bg-[#111C14]">
@@ -64,13 +67,6 @@ export default function ShopPage() {
     if (!data?.items) return []
     const models = data.items.map((item) => item.applicableModel).filter(Boolean)
     return [...new Set(models)] as string[]
-  }, [data])
-
-  // 2. Extract unique suppliers for the dropdown filter
-  const availableSuppliers = useMemo(() => {
-    if (!data?.items) return []
-    const suppliers = data.items.map((item) => item.supplier).filter(Boolean)
-    return [...new Set(suppliers)] as string[]
   }, [data])
 
   // 3. Client-side filtering by Model
@@ -188,7 +184,7 @@ export default function ShopPage() {
                 className="w-full p-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-[#00C853]/50 focus:border-[#00C853] outline-none transition-all"
               >
                 <option value="">All Suppliers</option>
-                {availableSuppliers.map((sup) => (
+                {HARDCODED_SUPPLIERS.map((sup) => (
                   <option key={sup} value={sup}>
                     {sup}
                   </option>

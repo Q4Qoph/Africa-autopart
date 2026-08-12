@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { partsApi } from '@/api/partsApi'
 import { useExternalCart } from '@/context/ExternalCartContext'
-import { ShoppingCart, ArrowLeft, ShieldCheck, Tag, Loader2, Award, Calendar, Layers } from 'lucide-react'
+import { ShoppingCart, ArrowLeft, ShieldCheck, Tag, Loader2, Award, Layers } from 'lucide-react'
 
 export default function PartDetailPage() {
   const { id } = useParams<{ id: string }>()
