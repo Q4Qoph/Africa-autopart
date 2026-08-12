@@ -4,17 +4,22 @@ import { ThemeProvider } from '@/context/ThemeContext'
 import { LanguageProvider } from '@/context/LanguageContext'
 import { router } from '@/router'
 import { ExternalCartProvider } from './context/ExternalCartContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
             <ExternalCartProvider>
-            <RouterProvider router={router} />
+              <RouterProvider router={router} />
             </ExternalCartProvider>
-        </AuthProvider>
-      </LanguageProvider>
-    </ThemeProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }

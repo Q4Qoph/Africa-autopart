@@ -33,6 +33,27 @@ function mapPart(raw: RawPartResult, index: number): PartResult {
   }
 }
 
+export interface PartSeed {
+  id: string
+  sourceFile: string
+  supplier: string
+  rowNo: number
+  partCode: string
+  partName: string
+  applicableModel: string
+  price: number | null
+  imageUrl: string
+  createdAtUtc: string
+}
+
+export interface PaginatedPartsResponse {
+  page: number
+  pageSize: number
+  totalCount: number
+  totalPages: number
+  items: PartSeed[]
+}
+
 export const partsApi = {
   // existing method — untouched
   search: async (dto: PartSearchDTO): Promise<{ data: PartResult[] }> => {
@@ -49,4 +70,26 @@ export const partsApi = {
   /** POST /api/Parts/search (with PartSearchRequest body) */
   searchParts: (dto: PartSearchRequest) =>
     api.post<CategoryGroup[]>('/api/Parts/search', dto),
+
+  /** Fetch the paginated catalog */
+  fetchCatalogParts: async (
+    page: number = 1,
+    pageSize: number = 24,
+    supplier?: string
+  ): Promise<PaginatedPartsResponse> => {
+    const response = await api.get<PaginatedPartsResponse>('/api/PartsSeed', {
+      params: {
+        page,
+        pageSize,
+        ...(supplier && { supplier }),
+      },
+    })
+    return response.data
+  },
+
+  /** Fetch a single catalog part by ID */
+  fetchCatalogPartById: async (id: string): Promise<PartSeed> => {
+    const response = await api.get<PartSeed>(`/api/PartsSeed/${id}`)
+    return response.data
+  },
 }

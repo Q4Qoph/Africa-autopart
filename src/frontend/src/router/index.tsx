@@ -31,6 +31,7 @@ import PaymentCancelledPage from '@/pages/orders/PaymentCancelledPage'
 import SuccessPage from '@/pages/orders/SuccessPage'
 import MpesaStatusPage from "@/pages/orders/MpesaStatusPage"
 import ShopPage from '@/pages/shop/ShopPage'
+import PartDetailPage from '@/pages/shop/PartDetailPage'
 import PartsSearchPage from '@/pages/parts/PartsSearchPage'
 import CartExternalPage from '@/pages/parts/CartExternalPage';
 import RootLayout from '@/components/layout/RootLayout'
@@ -69,6 +70,7 @@ export const router = createBrowserRouter([
       { path: '/contact', element: <ContactPage /> },
       { path: '/about', element: <AboutPage /> },
       { path: '/shop', element: <ShopPage /> },
+      { path: '/part-detail/:id', element: <PartDetailPage /> },
       { path: '/parts-search', element: <PartsSearchPage /> },
       { path: '/requests/new', element: <NewRequestPage /> },
       { path: '/success', element: <SuccessPage /> },
