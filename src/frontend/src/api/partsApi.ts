@@ -71,25 +71,51 @@ export const partsApi = {
   searchParts: (dto: PartSearchRequest) =>
     api.post<CategoryGroup[]>('/api/Parts/search', dto),
 
-  /** Fetch the paginated catalog */
+  /** Fetch the paginated catalog with server-side filters */
   fetchCatalogParts: async (
     page: number = 1,
     pageSize: number = 24,
-    supplier?: string
+    supplier?: string,
+    search?: string,
+    model?: string,
+    sortBy?: string,
+    sortDirection?: string
   ): Promise<PaginatedPartsResponse> => {
     const response = await api.get<PaginatedPartsResponse>('/api/PartsSeed', {
       params: {
         page,
         pageSize,
         ...(supplier && { supplier }),
+        ...(search && { search }),
+        ...(model && { model }),
+        ...(sortBy && { sortBy }),
+        ...(sortDirection && { sortDirection }),
       },
     })
+    return response.data
+  },
+
+  /** Fetch all available compatibility models in the catalog database */
+  fetchCatalogModels: async (): Promise<{ models: string[] }> => {
+    const response = await api.get<{ models: string[] }>('/api/PartsSeed/Models')
     return response.data
   },
 
   /** Fetch a single catalog part by ID */
   fetchCatalogPartById: async (id: string): Promise<PartSeed> => {
     const response = await api.get<PartSeed>(`/api/PartsSeed/${id}`)
+    return response.data
+  },
+
+  /** Upload parts seed spreadsheet file */
+  uploadPartsSeed: async (file: File): Promise<any> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await api.post('/api/PartsSeed/seed', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     return response.data
   },
 }

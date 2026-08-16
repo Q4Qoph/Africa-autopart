@@ -3,7 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom'
 import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import { partsApi, type PartSeed } from '@/api/partsApi'
 import { useExternalCart } from '@/context/ExternalCartContext'
-import { ShoppingCart, Tag, Filter, X, ChevronRight, Layers } from 'lucide-react'
+import { ShoppingCart, Tag, Filter, X, ChevronRight, Layers, Search, RotateCcw } from 'lucide-react'
 
 // Page numbers generator helper
 const getPageNumbers = (current: number, total: number) => {
@@ -45,36 +45,59 @@ export default function ShopPage() {
   // Read state from URL
   const page = Number(searchParams.get('page')) || 1
   const supplier = searchParams.get('supplier') || ''
-  const [selectedModel, setSelectedModel] = useState<string>('')
+  const model = searchParams.get('model') || ''
+  const search = searchParams.get('search') || ''
+  const sortBy = searchParams.get('sortBy') || ''
+  const sortDirection = searchParams.get('sortDirection') || ''
 
-  // Scroll to top when page or supplier changes
+  // Controlled search input local state
+  const [searchInput, setSearchInput] = useState(search)
+
+  // Sync search input when search param changes externally (e.g. clear filters)
+  useEffect(() => {
+    setSearchInput(search)
+  }, [search])
+
+  // Scroll to top when any page, search, model, supplier or sorting changes
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [page, supplier])
+  }, [page, supplier, model, search, sortBy, sortDirection])
 
   const pageSize = 48
 
+  // React Query to fetch catalog models
+  const { data: modelsData } = useQuery({
+    queryKey: ['catalogModels'],
+    queryFn: () => partsApi.fetchCatalogModels(),
+    staleTime: 60 * 60 * 1000, // Cache for 1 hour
+  })
+
   // React Query with keepPreviousData for smooth pagination transition
   const { data, isLoading, isFetching, isError } = useQuery({
-    queryKey: ['catalog', page, supplier],
-    queryFn: () => partsApi.fetchCatalogParts(page, pageSize, supplier || undefined),
+    queryKey: ['catalog', page, supplier, search, model, sortBy, sortDirection],
+    queryFn: () =>
+      partsApi.fetchCatalogParts(
+        page,
+        pageSize,
+        supplier || undefined,
+        search || undefined,
+        model || undefined,
+        sortBy || undefined,
+        sortDirection || undefined
+      ),
     placeholderData: keepPreviousData,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 
-  // 1. Extract unique models for the filter sidebar from current page parts
+  // Extract and clean unique models list
   const availableModels = useMemo(() => {
-    if (!data?.items) return []
-    const models = data.items.map((item) => item.applicableModel).filter(Boolean)
-    return [...new Set(models)] as string[]
-  }, [data])
+    if (!modelsData?.models) return []
+    const cleaned = modelsData.models.map((m) => m?.trim()).filter(Boolean)
+    return [...new Set(cleaned)].sort((a, b) => a.localeCompare(b))
+  }, [modelsData])
 
-  // 3. Client-side filtering by Model
-  const filteredItems = useMemo(() => {
-    if (!data?.items) return []
-    if (!selectedModel) return data.items
-    return data.items.filter((item) => item.applicableModel === selectedModel)
-  }, [data?.items, selectedModel])
+  // Direct reference to API items
+  const items = data?.items || []
 
   // Pagination Handlers
   const handlePageChange = (newPage: number) => {
@@ -82,7 +105,7 @@ export default function ShopPage() {
       prev.set('page', String(newPage))
       return prev
     })
-  };
+  }
 
   const handleSupplierChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSearchParams((prev) => {
@@ -91,7 +114,41 @@ export default function ShopPage() {
       prev.set('page', '1') // Reset to first page
       return prev
     })
-    setSelectedModel('') // Reset model filter
+  }
+
+  const handleModelChange = (selected: string) => {
+    setSearchParams((prev) => {
+      if (selected) prev.set('model', selected)
+      else prev.delete('model')
+      prev.set('page', '1') // Reset to first page
+      return prev
+    })
+  }
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSearchParams((prev) => {
+      if (searchInput.trim()) prev.set('search', searchInput.trim())
+      else prev.delete('search')
+      prev.set('page', '1') // Reset on new search
+      return prev
+    })
+  }
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value
+    setSearchParams((prev) => {
+      if (val) {
+        const [field, direction] = val.split(':')
+        prev.set('sortBy', field)
+        prev.set('sortDirection', direction)
+      } else {
+        prev.delete('sortBy')
+        prev.delete('sortDirection')
+      }
+      prev.set('page', '1') // Reset on sorting change
+      return prev
+    })
   }
 
   const handleAddToCart = (part: PartSeed, e: React.MouseEvent) => {
@@ -111,7 +168,7 @@ export default function ShopPage() {
 
   const handleClearFilters = () => {
     setSearchParams(new URLSearchParams())
-    setSelectedModel('')
+    setSearchInput('')
   }
 
   if (isError) {
@@ -163,11 +220,12 @@ export default function ShopPage() {
                 <Filter className="w-4 h-4 text-[#00C853]" />
                 Filters
               </h3>
-              {(supplier || selectedModel) && (
+              {(supplier || model || search || sortBy) && (
                 <button
                   onClick={handleClearFilters}
-                  className="text-xs font-semibold text-red-500 hover:text-red-600 transition-colors"
+                  className="text-xs font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center gap-1"
                 >
+                  <RotateCcw className="w-3 h-3" />
                   Clear All
                 </button>
               )}
@@ -199,29 +257,29 @@ export default function ShopPage() {
               </label>
               <div className="space-y-1 max-h-60 overflow-y-auto pr-1 select-none custom-scrollbar">
                 <button
-                  onClick={() => setSelectedModel('')}
+                  onClick={() => handleModelChange('')}
                   className={`flex items-center justify-between w-full text-left px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                    !selectedModel
+                    !model
                       ? 'bg-[#00C853]/10 text-[#00C853]'
                       : 'hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   <span>All Models</span>
-                  {!selectedModel && <span className="w-1.5 h-1.5 rounded-full bg-[#00C853]" />}
+                  {!model && <span className="w-1.5 h-1.5 rounded-full bg-[#00C853]" />}
                 </button>
-                {availableModels.map((model) => (
+                {availableModels.map((m) => (
                   <button
-                    key={model}
-                    onClick={() => setSelectedModel(model)}
+                    key={m}
+                    onClick={() => handleModelChange(m)}
                     className={`flex items-center justify-between w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all truncate ${
-                      selectedModel === model
+                      model === m
                         ? 'bg-[#00C853]/10 text-[#00C853] font-semibold'
                         : 'hover:bg-slate-50 dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400'
                     }`}
-                    title={model}
+                    title={m}
                   >
-                    <span className="truncate">{model}</span>
-                    {selectedModel === model && <span className="w-1.5 h-1.5 rounded-full bg-[#00C853]" />}
+                    <span className="truncate">{m}</span>
+                    {model === m && <span className="w-1.5 h-1.5 rounded-full bg-[#00C853]" />}
                   </button>
                 ))}
               </div>
@@ -230,7 +288,7 @@ export default function ShopPage() {
             {/* Results counter */}
             {data && (
               <div className="border-t border-slate-100 dark:border-slate-900 pt-3 flex items-center justify-between text-xs text-slate-400 font-mono">
-                <span>Total Catalog:</span>
+                <span>Total Items:</span>
                 <span className="font-bold text-slate-700 dark:text-slate-300">{data.totalCount}</span>
               </div>
             )}
@@ -239,6 +297,47 @@ export default function ShopPage() {
 
         {/* Right Product Grid */}
         <main className="flex-1 flex flex-col">
+          {/* Top toolbar with server search and sort */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl bg-white dark:bg-[#111C14] shadow-sm mb-6 w-full">
+            {/* Search form */}
+            <form onSubmit={handleSearchSubmit} className="w-full sm:w-auto flex-grow max-w-lg relative flex items-center">
+              <input
+                type="text"
+                placeholder="Search part name or part code..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-full pl-10 pr-20 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-sm rounded-xl focus:ring-2 focus:ring-[#00C853]/50 focus:border-[#00C853] outline-none transition-all"
+              />
+              <div className="absolute left-3.5 text-slate-400">
+                <Search className="w-4 h-4" />
+              </div>
+              <button
+                type="submit"
+                className="absolute right-1.5 px-3 py-1 bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] font-bold text-xs rounded-lg transition-colors"
+              >
+                Search
+              </button>
+            </form>
+
+            {/* Sort selection dropdown */}
+            <div className="w-full sm:w-auto flex items-center gap-2 shrink-0">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 shrink-0">
+                Sort By
+              </span>
+              <select
+                value={sortBy ? `${sortBy}:${sortDirection}` : ''}
+                onChange={handleSortChange}
+                className="w-full sm:w-auto p-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-xl focus:ring-2 focus:ring-[#00C853]/50 focus:border-[#00C853] outline-none transition-all cursor-pointer"
+              >
+                <option value="">Default (Relevancy)</option>
+                <option value="price:asc">Price: Low to High</option>
+                <option value="price:desc">Price: High to Low</option>
+                <option value="partName:asc">Name: A to Z</option>
+                <option value="partName:desc">Name: Z to A</option>
+              </select>
+            </div>
+          </div>
+
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {Array.from({ length: 8 }).map((_, i) => (
@@ -247,10 +346,10 @@ export default function ShopPage() {
             </div>
           ) : (
             <>
-              {filteredItems.length === 0 ? (
+              {items.length === 0 ? (
                 <div className="flex-grow flex flex-col items-center justify-center text-center py-20 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50/30 dark:bg-[#111C14]/10">
                   <Layers className="w-12 h-12 text-slate-300 dark:text-slate-700 mb-3" />
-                  <p className="text-slate-500 dark:text-slate-400 text-sm font-semibold">No parts found matching filters</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm font-semibold">No parts found matching your criteria</p>
                   <button
                     onClick={handleClearFilters}
                     className="mt-4 px-4 py-2 text-xs font-bold text-[#00C853] hover:underline"
@@ -260,7 +359,7 @@ export default function ShopPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {filteredItems.map((part) => (
+                  {items.map((part) => (
                     <Link
                       to={`/part-detail/${part.id}`}
                       key={part.id}

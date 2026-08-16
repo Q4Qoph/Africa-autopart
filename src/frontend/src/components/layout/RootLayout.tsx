@@ -104,6 +104,7 @@ export default function RootLayout() {
               <li><Link to="/about" className="hover:text-amber-500 transition-colors">About Us</Link></li>
               <li><Link to="/suppliers" className="hover:text-amber-500 transition-colors">Suppliers</Link></li>
               <li><Link to="/become-supplier" className="hover:text-amber-500 transition-colors">Become a Supplier</Link></li>
+              <li><Link to="/upload" className="hover:text-amber-500 transition-colors">Database Seeding</Link></li>
               <li><a href="#policies" onClick={(e) => e.preventDefault()} className="hover:text-amber-500 transition-colors">Policies</a></li>
               <li><a href="#terms" onClick={(e) => e.preventDefault()} className="hover:text-amber-500 transition-colors">Terms & Conditions</a></li>
               <li><a href="#news" onClick={(e) => e.preventDefault()} className="hover:text-amber-500 transition-colors">News</a></li>
