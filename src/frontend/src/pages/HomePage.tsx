@@ -37,6 +37,7 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
 )
 import { useTranslation } from 'react-i18next'
 import { vinApi } from '@/api/vinApi'
+import { partNewApi } from '@/api/partNewApi'
 import type { VehicleSummary } from '@/types/vin'
 import { cn } from '@/lib/utils'
 
@@ -249,19 +250,50 @@ export default function HomePage() {
       .catch(() => {})
   }, [])
 
-  async function handleSearch(vinToSearch: string) {
-    const trimmed = vinToSearch.trim()
-    if (trimmed.length < 11) {
-      setError(t('vin_error_short') ?? 'VIN must be at least 11 characters')
+  async function handleSearch(termToSearch: string) {
+    const trimmed = termToSearch.trim()
+    if (!trimmed) {
+      setError(t('vin_error_short') ?? 'Please enter a search term, part number, or VIN')
       return
     }
     setError('')
     setSearching(true)
+
+    // Standard VINs are 17 characters alphanumeric without spaces
+    const isVinPattern = /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(trimmed)
+
+    if (isVinPattern) {
+      try {
+        const { data } = await vinApi.searchVin(trimmed)
+        if (data && (data.make || data.model || data.isValid)) {
+          navigate('/parts-search', { state: { vinSearchDetails: data } })
+          return
+        }
+      } catch (vinErr) {
+        console.warn('VIN search failed, attempting part search:', vinErr)
+      }
+    }
+
+    // Call /api/PartNew/search endpoint for model, part name, or part number
     try {
-      const { data } = await vinApi.searchVin(trimmed)
-      navigate('/parts-search', { state: { vinSearchDetails: data } })
+      // 1. Try as searchTerm (part number / part name)
+      const res = await partNewApi.search({ searchTerm: trimmed, model: '', pageNumber: 1, pageSize: 42 })
+      if (res.totalCount > 0) {
+        navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, data: res } } })
+        return
+      }
+
+      // 2. If 0 results, try as model name
+      const modelRes = await partNewApi.search({ model: trimmed, searchTerm: '', pageNumber: 1, pageSize: 42 })
+      if (modelRes.totalCount > 0) {
+        navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, model: trimmed, data: modelRes } } })
+        return
+      }
+
+      // 3. If no matches, still navigate to parts-search to show empty state
+      navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, data: res } } })
     } catch {
-      setError(t('vin_error_invalid') ?? 'Could not find vehicle. Check the VIN/Part number and try again.')
+      setError(t('vin_error_invalid') ?? 'Could not find matching parts or vehicle. Check the input and try again.')
     } finally {
       setSearching(false)
     }
@@ -431,7 +463,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-slate-500 mt-3 font-medium">
               <div className="flex flex-wrap items-center gap-1.5">
                 <span>Example:</span>
-                {['5330160470', '2360059105', 'KMHCU51DAFU223139'].map((exVin) => (
+                {['8403300XST23A', '09110A0000', 'KMHCU51DAFU223139'].map((exVin) => (
                   <button
                     key={exVin}
                     type="button"

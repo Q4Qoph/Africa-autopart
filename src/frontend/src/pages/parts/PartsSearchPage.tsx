@@ -1,5 +1,5 @@
 // src/frontend/src/pages/parts/PartsSearchPage.tsx
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { vinApi } from '@/api/vinApi'
 import type { VinSearchResponse, VinSearchPart } from '@/types/vin'
+import type { PartNewItem, PartNewSearchResponse } from '@/types/partNew'
 import { useExternalCart } from '@/context/ExternalCartContext'
 
 import { Button } from '@/components/ui/button'
@@ -28,7 +29,7 @@ import {
   TableCell,
 } from '@/components/ui/table'
 
-// ─── BRAND LOGOS (Same as home page for consistency in the vehicle info block) ──────────
+// ─── BRAND LOGOS ─────────────────────────────────────────────────────────────
 
 const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
   Toyota: (color = 'currentColor') => (
@@ -214,11 +215,14 @@ const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
       <path d="M35,25 C30,15 45,15 50,30 C55,15 70,15 65,25 C60,35 50,38 50,45 Z" fill={color} stroke="none" />
     </svg>
   ),
+  Haval: (color = 'currentColor') => (
+    <svg viewBox="0 0 100 60" className="w-full h-full" fill="none">
+      <text x="50" y="38" fontFamily="sans-serif" fontWeight="900" fontSize="20" fill={color} textAnchor="middle" letterSpacing="1">HAVAL</text>
+    </svg>
+  ),
 }
 
-
-
-// ─── TECHNICAL DIAGRAM VECTORS (Schematic Drawings) ────────────────────────────────
+// ─── TECHNICAL DIAGRAM VECTORS ────────────────────────────────────────────────
 
 function DiagramSVG({ code }: { code: number }) {
   switch (code) {
@@ -349,9 +353,7 @@ function getDiagramIndex(partName: string): number {
   return Math.abs(hash % 10) + 1
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
-const CATEGORIES = [
+const VIN_CATEGORIES = [
   'ENGINE',
   'TRANSMISSION',
   'CHASSIS',
@@ -360,32 +362,56 @@ const CATEGORIES = [
   'ELECTRICAL',
 ]
 
+// Unified Part interface for display
+interface UnifiedPart {
+  partNumber: string
+  name: string
+  description: string
+  price: number
+  imageUrl?: string | null
+  groupName?: string | null
+  pnc?: string | null
+  model?: string | null
+  source?: string | null
+  vin?: string | null
+}
+
 export default function PartsSearchPage() {
   const location = useLocation()
   const { t } = useTranslation('home')
   const { addItem } = useExternalCart()
 
   const vinSearchDetails = location.state?.vinSearchDetails as VinSearchResponse | undefined
+  const partNewSearch = location.state?.partNewSearch as { searchTerm: string; model?: string; data: PartNewSearchResponse } | undefined
+
+  // State for VIN category search
   const [activeCategory, setActiveCategory] = useState<string>('ENGINE')
-  const [parts, setParts] = useState<VinSearchPart[]>([])
+  const [vinParts, setVinParts] = useState<VinSearchPart[]>([])
   const [loadingParts, setLoadingParts] = useState(false)
   const [errorLoadingParts, setErrorLoadingParts] = useState('')
   const [filterQuery, setFilterQuery] = useState<string>('')
 
+  // State for PartNew results
+  const [partNewData] = useState<PartNewItem[]>(partNewSearch?.data?.data || [])
+  const [activeGroup, setActiveGroup] = useState<string>('ALL')
+
+  const isPartNewMode = Boolean(partNewSearch)
+
   // Modal state
-  const [selectedPart, setSelectedPart] = useState<VinSearchPart | null>(null)
+  const [selectedPart, setSelectedPart] = useState<UnifiedPart | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
 
-  // Cache to avoid refetching parts when changing categories
+  // Cache for VIN parts
   const partsCacheRef = useRef<Record<string, VinSearchPart[]>>({})
 
+  // Fetch VIN parts when active category changes
   useEffect(() => {
     if (!vinSearchDetails) return
 
     const cached = partsCacheRef.current[activeCategory]
     if (cached) {
-      setParts(cached)
+      setVinParts(cached)
       return
     }
 
@@ -394,7 +420,7 @@ export default function PartsSearchPage() {
       setErrorLoadingParts('')
       try {
         const { data } = await vinApi.searchPartsByCategory(activeCategory, vinSearchDetails!)
-        setParts(data)
+        setVinParts(data)
         partsCacheRef.current[activeCategory] = data
       } catch (err) {
         console.error(err)
@@ -407,14 +433,56 @@ export default function PartsSearchPage() {
     fetchParts()
   }, [activeCategory, vinSearchDetails])
 
-  // Filter parts locally based on search input
-  const filteredParts = parts.filter(p =>
-    p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-    p.partNumber.toLowerCase().includes(filterQuery.toLowerCase()) ||
-    p.description.toLowerCase().includes(filterQuery.toLowerCase())
-  )
+  // Groups extracted from PartNew results
+  const availableGroups = useMemo(() => {
+    if (!partNewData.length) return []
+    const groups = partNewData.map(p => p.groupName?.trim()).filter(Boolean) as string[]
+    return ['ALL', ...new Set(groups)]
+  }, [partNewData])
 
-  function handlePartClick(part: VinSearchPart, idx: number) {
+  // Normalization for PartNew items -> UnifiedPart
+  const partNewUnified: UnifiedPart[] = useMemo(() => {
+    return partNewData.map(p => ({
+      partNumber: p.partNumber,
+      name: p.partName,
+      description: `${p.groupName ? p.groupName + ' ' : ''}${p.subgroupName ? '› ' + p.subgroupName : ''}`.trim() || 'OEM Genuine Auto Part',
+      price: 45.00,
+      imageUrl: p.imageUrl,
+      groupName: p.groupName,
+      pnc: p.pnc,
+      model: p.model,
+      source: p.source || p.oem,
+      vin: p.vin,
+    }))
+  }, [partNewData])
+
+  // Normalization for VinSearchPart items -> UnifiedPart
+  const vinUnified: UnifiedPart[] = useMemo(() => {
+    return vinParts.map(p => ({
+      partNumber: p.partNumber,
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      groupName: activeCategory,
+    }))
+  }, [vinParts, activeCategory])
+
+  // Active parts list depending on mode
+  const currentPartsList = isPartNewMode ? partNewUnified : vinUnified
+
+  // Filter parts locally based on search input and active group
+  const filteredParts = currentPartsList.filter(p => {
+    const matchesQuery = !filterQuery ||
+      p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
+      p.partNumber.toLowerCase().includes(filterQuery.toLowerCase()) ||
+      p.description.toLowerCase().includes(filterQuery.toLowerCase())
+
+    const matchesGroup = !isPartNewMode || activeGroup === 'ALL' || p.groupName === activeGroup
+
+    return matchesQuery && matchesGroup
+  })
+
+  function handlePartClick(part: UnifiedPart, idx: number) {
     setSelectedPart(part)
     setCurrentPartIndex(idx)
     setModalOpen(true)
@@ -442,10 +510,10 @@ export default function PartsSearchPage() {
       partNumber: part.partNumber,
       price: `$${part.price.toFixed(2)}`,
       originalPrice: '',
-      supplier: vinSearchDetails?.manufacturer || 'Genuine OEM Supplier',
+      supplier: part.source || vinSearchDetails?.manufacturer || 'Genuine OEM Supplier',
       availability: true,
-      location: vinSearchDetails?.plantCountry || 'South Korea',
-      imageURL: '',
+      location: part.model || vinSearchDetails?.plantCountry || 'Genuine Parts',
+      imageURL: part.imageUrl || '',
     }
     addItem(cartItem)
     setModalOpen(false)
@@ -466,124 +534,211 @@ export default function PartsSearchPage() {
     return logoFn ? logoFn(color) : null
   }
 
-  if (!vinSearchDetails) {
+  if (!vinSearchDetails && !partNewSearch) {
     return (
       <div className="px-6 md:px-8 py-16 text-center font-sans">
-        <h1 className="text-2xl font-black text-slate-800 mb-4">{t('no_vehicle') ?? 'No vehicle selected'}</h1>
-        <Link to="/" className="text-sky-600 hover:underline font-bold">{t('back_home') ?? 'Go back and enter a VIN'}</Link>
+        <h1 className="text-2xl font-black text-slate-800 mb-4">{t('no_vehicle') ?? 'No search results'}</h1>
+        <Link to="/" className="text-sky-600 hover:underline font-bold">{t('back_home') ?? 'Go back and enter a VIN or Part Number'}</Link>
       </div>
     )
   }
+
+  // Model & vehicle details for PartNew mode
+  const partNewMeta = isPartNewMode && partNewData.length > 0 ? partNewData[0] : null
 
   return (
     <div className="flex-grow flex flex-col font-sans">
       {/* Top Centered Content Area */}
       <div className="flex-grow">
-          {/* Breadcrumbs Subbar */}
-          <div className="bg-slate-50 border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 font-medium select-none">
-            <Link to="/" className="hover:text-amber-600 flex items-center">
-              <Home className="w-3.5 h-3.5 text-slate-400 hover:text-amber-600" />
-            </Link>
-            <span>•</span>
-            <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
-            <span>•</span>
-            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.make || 'UNKNOWN'}</span>
-            <span>•</span>
-            <span className="text-slate-500 font-mono text-[10px]">{vinSearchDetails.vin}</span>
-            <span>•</span>
-            <span className="text-slate-800 font-bold uppercase">{vinSearchDetails.model || 'UNKNOWN'}</span>
-            <span>•</span>
-            <span className="text-[#33b5e5] font-extrabold uppercase">{activeCategory}</span>
+        {/* Breadcrumbs Subbar */}
+        <div className="bg-slate-50 border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 font-medium select-none">
+          <Link to="/" className="hover:text-amber-600 flex items-center">
+            <Home className="w-3.5 h-3.5 text-slate-400 hover:text-amber-600" />
+          </Link>
+          <span>•</span>
+          <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
+          <span>•</span>
+          {isPartNewMode ? (
+            <>
+              <span className="text-slate-800 font-bold uppercase">
+                {partNewMeta?.source || partNewMeta?.oem || 'OEM'}
+              </span>
+              <span>•</span>
+              <span className="text-slate-500 font-mono text-[10px]">
+                {partNewSearch?.searchTerm || 'SEARCH'}
+              </span>
+              {partNewMeta?.model && (
+                <>
+                  <span>•</span>
+                  <span className="text-slate-800 font-bold uppercase">{partNewMeta.model}</span>
+                </>
+              )}
+              <span>•</span>
+              <span className="text-[#33b5e5] font-extrabold uppercase">
+                {activeGroup === 'ALL' ? 'ALL GROUPS' : activeGroup}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="text-slate-800 font-bold uppercase">{vinSearchDetails?.make || 'UNKNOWN'}</span>
+              <span>•</span>
+              <span className="text-slate-500 font-mono text-[10px]">{vinSearchDetails?.vin}</span>
+              <span>•</span>
+              <span className="text-slate-800 font-bold uppercase">{vinSearchDetails?.model || 'UNKNOWN'}</span>
+              <span>•</span>
+              <span className="text-[#33b5e5] font-extrabold uppercase">{activeCategory}</span>
+            </>
+          )}
+        </div>
+
+        {/* Center Content Padding Area */}
+        <div className="px-6 py-6">
+          {/* Vehicle Info Table Card */}
+          <h2 className="text-sm font-black text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
+            {isPartNewMode
+              ? `${partNewMeta?.source || partNewMeta?.oem || 'GENUINE'} Parts Catalog ${partNewMeta?.model ? `— ${partNewMeta.model}` : ''}`
+              : `${vinSearchDetails?.make || 'UNKNOWN'} Parts Catalogs ${vinSearchDetails?.model || 'UNKNOWN'}`}
+          </h2>
+
+          <div className="overflow-x-auto border border-border/80 rounded mb-6 select-none shadow-sm bg-white dark:bg-[#0A110C]">
+            <Table>
+              <TableHeader className="bg-slate-100 dark:bg-[#0D1810] text-slate-650 dark:text-[#7A9A80] font-bold uppercase">
+                <TableRow className="hover:bg-transparent border-b border-border/80 border-none">
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Brand / Source</TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Model</TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Year</TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">
+                    {isPartNewMode ? 'Target VIN' : 'Engine'}
+                  </TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
+                    {isPartNewMode ? 'Group' : 'Trim'}
+                  </TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">
+                    {isPartNewMode ? 'Subgroup' : 'Manufacturer'}
+                  </TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
+                    {isPartNewMode ? 'PNC' : 'Plant'}
+                  </TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
+                    {isPartNewMode ? 'Found Records' : 'Body Class'}
+                  </TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] text-center whitespace-normal">i</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
+                <TableRow className="hover:bg-transparent">
+                  <TableCell className="px-4 py-2 whitespace-normal">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
+                        {getBrandLogo(isPartNewMode ? partNewMeta?.source || partNewMeta?.oem : vinSearchDetails?.make)}
+                      </div>
+                      <span className="font-extrabold text-slate-900 dark:text-white">
+                        {(isPartNewMode
+                          ? partNewMeta?.source || partNewMeta?.oem || 'GENUINE'
+                          : vinSearchDetails?.make || 'UNKNOWN'
+                        ).toUpperCase()}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-4 py-2 font-bold uppercase text-slate-800 dark:text-white whitespace-normal">
+                    {(isPartNewMode ? partNewMeta?.model : vinSearchDetails?.model) || 'N/A'}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 whitespace-normal">
+                    {(isPartNewMode ? partNewMeta?.modelYear : vinSearchDetails?.modelYear) || 'N/A'}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 text-slate-500 dark:text-[#7A9A80] font-mono text-[10px] whitespace-normal">
+                    {isPartNewMode ? (
+                      partNewMeta?.vin || 'N/A'
+                    ) : (
+                      `${vinSearchDetails?.displacementL ? `${vinSearchDetails.displacementL}L` : ''} ${vinSearchDetails?.fuelTypePrimary || ''}`
+                    )}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 whitespace-normal">
+                    {(isPartNewMode ? partNewMeta?.groupName : vinSearchDetails?.trim) || 'N/A'}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 font-mono text-[10px] whitespace-normal">
+                    {(isPartNewMode ? partNewMeta?.subgroupName : vinSearchDetails?.manufacturer) || 'N/A'}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 text-[10px] whitespace-normal">
+                    {isPartNewMode ? (
+                      partNewMeta?.pnc || 'N/A'
+                    ) : (
+                      `${vinSearchDetails?.plantCity || ''}${vinSearchDetails?.plantCity && vinSearchDetails?.plantCountry ? ', ' : ''}${vinSearchDetails?.plantCountry || ''}`
+                    )}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 whitespace-normal">
+                    {isPartNewMode ? (
+                      <span className="font-bold text-emerald-600">{partNewData.length} items</span>
+                    ) : (
+                      vinSearchDetails?.bodyClass || 'N/A'
+                    )}
+                  </TableCell>
+                  <TableCell className="px-4 py-2 text-center whitespace-normal">
+                    <Info className="w-4 h-4 text-slate-400 dark:text-[#4A6B50] mx-auto cursor-pointer hover:text-slate-600 dark:hover:text-white" />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
 
-          {/* Center Content Padding Area */}
-          <div className="px-6 py-6">
-            
-            {/* Vehicle Info Table Card */}
-            <h2 className="text-sm font-black text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
-              {vinSearchDetails.make || 'UNKNOWN'} Parts Catalogs {vinSearchDetails.model || 'UNKNOWN'}
-            </h2>
-            <div className="overflow-x-auto border border-border/80 rounded mb-6 select-none shadow-sm bg-white dark:bg-[#0A110C]">
-              <Table>
-                <TableHeader className="bg-slate-100 dark:bg-[#0D1810] text-slate-650 dark:text-[#7A9A80] font-bold uppercase">
-                  <TableRow className="hover:bg-transparent border-b border-border/80 border-none">
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Brand</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Model</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Year</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Engine</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Trim</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">Manufacturer</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Plant</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Doors</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Body Class</TableHead>
-                    <TableHead className="px-4 py-2 text-[11px] text-center whitespace-normal">i</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
-                  <TableRow className="hover:bg-transparent">
-                    <TableCell className="px-4 py-2 whitespace-normal">
-                      <div className="flex items-center gap-1.5">
-                        <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
-                          {getBrandLogo(vinSearchDetails.make)}
-                        </div>
-                        <span className="font-extrabold text-slate-900 dark:text-white">{(vinSearchDetails.make || 'UNKNOWN').toUpperCase()}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-4 py-2 font-bold uppercase text-slate-800 dark:text-white whitespace-normal">{vinSearchDetails.model || 'N/A'}</TableCell>
-                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.modelYear || 'N/A'}</TableCell>
-                    <TableCell className="px-4 py-2 text-slate-500 dark:text-[#7A9A80] font-mono text-[10px] whitespace-normal">
-                      {vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L` : ''} {vinSearchDetails.fuelTypePrimary || ''}
-                    </TableCell>
-                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.trim || 'N/A'}</TableCell>
-                    <TableCell className="px-4 py-2 font-mono text-[10px] whitespace-normal">{vinSearchDetails.manufacturer || 'N/A'}</TableCell>
-                    <TableCell className="px-4 py-2 text-[10px] whitespace-normal">
-                      {vinSearchDetails.plantCity || ''}{vinSearchDetails.plantCity && vinSearchDetails.plantCountry ? ', ' : ''}{vinSearchDetails.plantCountry || ''}
-                    </TableCell>
-                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.doors || 'N/A'}</TableCell>
-                    <TableCell className="px-4 py-2 whitespace-normal">{vinSearchDetails.bodyClass || 'N/A'}</TableCell>
-                    <TableCell className="px-4 py-2 text-center whitespace-normal">
-                      <Info className="w-4 h-4 text-slate-400 dark:text-[#4A6B50] mx-auto cursor-pointer hover:text-slate-600 dark:hover:text-white" />
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
+          {/* Part Category Navigation Tabs */}
+          <div className="flex items-center gap-1 border-b-2 border-[#00C853] mb-5">
+            <button className="bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+              <ListFilter className="w-3.5 h-3.5" />
+              {isPartNewMode ? 'Assembly Groups' : 'Categories'}
+            </button>
+            <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+              <Search className="w-3.5 h-3.5" />
+              Search
+            </button>
+            <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+              <Package className="w-3.5 h-3.5" />
+              Parts ({filteredParts.length})
+            </button>
+          </div>
 
-            {/* Part Category Navigation Tabs */}
-            <div className="flex items-center gap-1 border-b-2 border-[#00C853] mb-5">
-              <button className="bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
-                <ListFilter className="w-3.5 h-3.5" />
-                Categories
-              </button>
-              <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
-                <Search className="w-3.5 h-3.5" />
-                Search
-              </button>
-              <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
-                <Package className="w-3.5 h-3.5" />
-                Groups
-              </button>
-            </div>
+          {/* Split layout: Sidebar & Diagrams */}
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left Sidebar Category / Group Sorter */}
+            <aside className="w-full lg:w-60 shrink-0">
+              {/* Search query input */}
+              <div className="mb-4">
+                <input
+                  type="text"
+                  value={filterQuery}
+                  onChange={(e) => setFilterQuery(e.target.value)}
+                  placeholder="Filter part name or code..."
+                  className="w-full border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-sky-500 transition-colors shadow-inner"
+                />
+              </div>
 
-            {/* Split layout: Sidebar & Diagrams */}
-            <div className="flex flex-col lg:flex-row gap-8">
-              
-              {/* Left Sidebar Category Sorter */}
-              <aside className="w-full lg:w-60 shrink-0">
-                {/* Search query input */}
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    value={filterQuery}
-                    onChange={(e) => setFilterQuery(e.target.value)}
-                    placeholder="For example: engine"
-                    className="w-full border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-sky-500 transition-colors shadow-inner"
-                  />
-                </div>
-
-                <div className="sticky top-[100px]">
-                  <nav className="space-y-1 max-h-[50vh] overflow-y-auto pr-1">
-                    {CATEGORIES.map((cat) => (
+              <div className="sticky top-[100px]">
+                <nav className="space-y-1 max-h-[50vh] overflow-y-auto pr-1">
+                  {isPartNewMode ? (
+                    availableGroups.map((group) => (
+                      <button
+                        key={group}
+                        onClick={() => {
+                          setActiveGroup(group)
+                          setFilterQuery('')
+                        }}
+                        className={cn(
+                          'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between uppercase font-bold tracking-wide border border-transparent',
+                          activeGroup === group
+                            ? 'bg-sky-50 text-sky-600 border-sky-200'
+                            : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                        )}
+                      >
+                        <span className="truncate mr-1">{group === 'ALL' ? 'ALL GROUPS' : group}</span>
+                        {activeGroup === group && (
+                          <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
+                            {filteredParts.length}
+                          </span>
+                        )}
+                      </button>
+                    ))
+                  ) : (
+                    VIN_CATEGORIES.map((cat) => (
                       <button
                         key={cat}
                         onClick={() => {
@@ -604,67 +759,85 @@ export default function PartsSearchPage() {
                           </span>
                         )}
                       </button>
-                    ))}
-                  </nav>
-                </div>
-              </aside>
-
-              {/* Right Sidebar Blueprint Diagrams Grid */}
-              <div className="flex-grow min-w-0">
-                <div>
-                  <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
-                    {activeCategory} Diagrams
-                  </h3>
-                  
-                  {loadingParts ? (
-                    <div className="flex flex-col items-center justify-center py-16">
-                      <span className="w-8 h-8 border-4 border-slate-200 border-t-sky-500 rounded-full animate-spin mb-2" />
-                      <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog...</p>
-                    </div>
-                  ) : errorLoadingParts ? (
-                    <p className="text-red-500 text-sm py-16 text-center font-medium font-sans">
-                      {errorLoadingParts}
-                    </p>
-                  ) : filteredParts.length === 0 ? (
-                    <p className="text-slate-400 text-sm py-16 text-center font-medium font-sans">
-                      {filterQuery ? 'No parts match your filter' : `No parts found in ${activeCategory}`}
-                    </p>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {filteredParts.map((part, index) => {
-                        const diagIndex = getDiagramIndex(part.name)
-                        return (
-                          <div
-                            key={part.partNumber}
-                            onClick={() => handlePartClick(part, index)}
-                            className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
-                          >
-                            {/* Schematic Diagram Outlines */}
-                            <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner">
-                              <DiagramSVG code={diagIndex} />
-                            </div>
-                            {/* Label */}
-                            <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
-                              {part.partNumber}: {part.name.toUpperCase()}
-                            </span>
-                          </div>
-                        )})}
-                    </div>
+                    ))
                   )}
-                </div>
+                </nav>
               </div>
+            </aside>
 
+            {/* Right Sidebar Blueprint Diagrams Grid */}
+            <div className="flex-grow min-w-0">
+              <div>
+                <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
+                  {isPartNewMode
+                    ? `${activeGroup === 'ALL' ? 'All Matching' : activeGroup} Diagrams & Components`
+                    : `${activeCategory} Diagrams`}
+                </h3>
+
+                {loadingParts ? (
+                  <div className="flex flex-col items-center justify-center py-16">
+                    <span className="w-8 h-8 border-4 border-slate-200 border-t-sky-500 rounded-full animate-spin mb-2" />
+                    <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog...</p>
+                  </div>
+                ) : errorLoadingParts ? (
+                  <p className="text-red-500 text-sm py-16 text-center font-medium font-sans">
+                    {errorLoadingParts}
+                  </p>
+                ) : filteredParts.length === 0 ? (
+                  <p className="text-slate-400 text-sm py-16 text-center font-medium font-sans">
+                    {filterQuery ? 'No parts match your filter' : 'No parts found'}
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredParts.map((part, index) => {
+                      const diagIndex = getDiagramIndex(part.name)
+                      return (
+                        <div
+                          key={`${part.partNumber}-${index}`}
+                          onClick={() => handlePartClick(part, index)}
+                          className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
+                        >
+                          {/* Schematic Diagram Outlines or Image */}
+                          <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner overflow-hidden">
+                            {part.imageUrl ? (
+                              <img
+                                src={part.imageUrl}
+                                alt={part.name}
+                                className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                                onError={(e) => {
+                                  // Fallback to SVG diagram
+                                  (e.target as HTMLElement).style.display = 'none'
+                                }}
+                              />
+                            ) : (
+                              <DiagramSVG code={diagIndex} />
+                            )}
+                          </div>
+                          {/* Label */}
+                          <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
+                            {part.partNumber}: {part.name.toUpperCase()}
+                          </span>
+                          {part.groupName && (
+                            <span className="text-[9px] text-slate-400 mt-1 font-semibold truncate">
+                              {part.groupName}
+                            </span>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-
           </div>
         </div>
+      </div>
 
       {/* Part Detail Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center font-sans select-none animate-fadeIn">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeModal} />
           <div className="relative z-10 bg-white dark:bg-[#111C14] rounded border border-slate-300 shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
-            
             {/* Modal header */}
             <div className="flex justify-between items-center px-5 py-3.5 bg-slate-50 border-b border-slate-200">
               <div className="flex items-center gap-2">
@@ -696,14 +869,21 @@ export default function PartsSearchPage() {
 
             {selectedPart ? (
               <div className="p-6">
-                
-                {/* Schematic SVG image to look exactly like PartsSouq blueprint diagrams */}
-                <div className="w-full h-44 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-4 mb-4 shadow-inner">
-                  <div className="w-36 h-36">
-                    <DiagramSVG code={getDiagramIndex(selectedPart.name)} />
-                  </div>
+                {/* Schematic SVG or image */}
+                <div className="w-full h-44 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-4 mb-4 shadow-inner overflow-hidden">
+                  {selectedPart.imageUrl ? (
+                    <img
+                      src={selectedPart.imageUrl}
+                      alt={selectedPart.name}
+                      className="max-h-36 max-w-full object-contain"
+                    />
+                  ) : (
+                    <div className="w-36 h-36">
+                      <DiagramSVG code={getDiagramIndex(selectedPart.name)} />
+                    </div>
+                  )}
                 </div>
-                
+
                 <h3 className="text-sm font-extrabold text-slate-900 mb-1 uppercase">
                   {selectedPart.name}
                 </h3>
@@ -722,13 +902,29 @@ export default function PartsSearchPage() {
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">BRAND</span>
-                    <span className="text-slate-700 font-bold uppercase">{vinSearchDetails?.make || 'UNKNOWN'}</span>
+                    <span className="text-slate-400">BRAND / MODEL</span>
+                    <span className="text-slate-700 font-bold uppercase">
+                      {selectedPart.model || (isPartNewMode ? partNewMeta?.source : vinSearchDetails?.make) || 'OEM'}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">SUPPLIER</span>
-                    <span className="text-slate-700">{vinSearchDetails?.manufacturer || 'Genuine OEM Supplier'}</span>
+                    <span className="text-slate-700">
+                      {selectedPart.source || vinSearchDetails?.manufacturer || 'Genuine OEM Supplier'}
+                    </span>
                   </div>
+                  {selectedPart.pnc && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400">PNC</span>
+                      <span className="font-mono text-slate-700">{selectedPart.pnc}</span>
+                    </div>
+                  )}
+                  {selectedPart.vin && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400">TARGET VIN</span>
+                      <span className="font-mono text-[10px] text-slate-700">{selectedPart.vin}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">STATUS</span>
                     <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold">
@@ -737,7 +933,9 @@ export default function PartsSearchPage() {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">DISPATCH ORIGIN</span>
-                    <span className="text-slate-700">{vinSearchDetails?.plantCountry || 'South Korea'}</span>
+                    <span className="text-slate-700">
+                      {vinSearchDetails?.plantCountry || 'Global Distribution'}
+                    </span>
                   </div>
                 </div>
 
@@ -748,7 +946,6 @@ export default function PartsSearchPage() {
                   <ShoppingCart className="w-4 h-4" />
                   ADD TO BASKET
                 </Button>
-
               </div>
             ) : (
               <div className="p-12 text-center text-sm text-red-500 font-semibold">Failed to load part details.</div>
@@ -756,7 +953,6 @@ export default function PartsSearchPage() {
           </div>
         </div>
       )}
-
     </div>
   )
 }
