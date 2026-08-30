@@ -12,8 +12,10 @@ import {
   Info,
   ListFilter,
   Search,
+  Loader2,
 } from 'lucide-react'
 import { vinApi } from '@/api/vinApi'
+import { partNewApi } from '@/api/partNewApi'
 import type { VinSearchResponse, VinSearchPart } from '@/types/vin'
 import type { PartNewItem, PartNewSearchResponse } from '@/types/partNew'
 import { useExternalCart } from '@/context/ExternalCartContext'
@@ -353,6 +355,23 @@ function getDiagramIndex(partName: string): number {
   return Math.abs(hash % 10) + 1
 }
 
+// Helper to generate pagination page numbers
+const getPageNumbers = (current: number, total: number) => {
+  const pages: (number | string)[] = []
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) pages.push(i)
+  } else {
+    if (current <= 4) {
+      pages.push(1, 2, 3, 4, 5, '...', total)
+    } else if (current >= total - 3) {
+      pages.push(1, '...', total - 4, total - 3, total - 2, total - 1, total)
+    } else {
+      pages.push(1, '...', current - 1, current, current + 1, '...', total)
+    }
+  }
+  return pages
+}
+
 const VIN_CATEGORIES = [
   'ENGINE',
   'TRANSMISSION',
@@ -382,7 +401,7 @@ export default function PartsSearchPage() {
   const { addItem } = useExternalCart()
 
   const vinSearchDetails = location.state?.vinSearchDetails as VinSearchResponse | undefined
-  const partNewSearch = location.state?.partNewSearch as { searchTerm: string; model?: string; data: PartNewSearchResponse } | undefined
+  const partNewSearch = location.state?.partNewSearch as { searchTerm?: string; model?: string; searchType?: 'searchTerm' | 'model'; data: PartNewSearchResponse } | undefined
 
   // State for VIN category search
   const [activeCategory, setActiveCategory] = useState<string>('ENGINE')
@@ -391,8 +410,12 @@ export default function PartsSearchPage() {
   const [errorLoadingParts, setErrorLoadingParts] = useState('')
   const [filterQuery, setFilterQuery] = useState<string>('')
 
-  // State for PartNew results
-  const [partNewData] = useState<PartNewItem[]>(partNewSearch?.data?.data || [])
+  // State for PartNew results & Pagination
+  const [partNewData, setPartNewData] = useState<PartNewItem[]>(partNewSearch?.data?.data || [])
+  const [page, setPage] = useState<number>(partNewSearch?.data?.pageNumber || 1)
+  const [totalPages, setTotalPages] = useState<number>(partNewSearch?.data?.totalPages || 1)
+  const [totalCount, setTotalCount] = useState<number>(partNewSearch?.data?.totalCount || (partNewSearch?.data?.data?.length || 0))
+  const [isFetchingPartNew, setIsFetchingPartNew] = useState<boolean>(false)
   const [activeGroup, setActiveGroup] = useState<string>('ALL')
 
   const isPartNewMode = Boolean(partNewSearch)
@@ -432,6 +455,37 @@ export default function PartsSearchPage() {
 
     fetchParts()
   }, [activeCategory, vinSearchDetails])
+
+  // Pagination handler for PartNew searches
+  async function handlePageChange(newPage: number) {
+    if (!partNewSearch || newPage < 1 || newPage > totalPages || isFetchingPartNew) return
+    setIsFetchingPartNew(true)
+    try {
+      const searchTermParam = partNewSearch.searchType === 'model' ? '' : (partNewSearch.searchTerm || '')
+      const modelParam = partNewSearch.searchType === 'model' ? (partNewSearch.model || '') : (partNewSearch.model || '')
+
+      const res = await partNewApi.search({
+        searchTerm: searchTermParam,
+        model: modelParam,
+        pageNumber: newPage,
+        pageSize: 48,
+      })
+
+      if (res.data && res.data.length > 0) {
+        setPartNewData(res.data)
+        setPage(res.pageNumber)
+        setTotalPages(res.totalPages)
+        setTotalCount(res.totalCount)
+        setActiveGroup('ALL')
+        setFilterQuery('')
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      console.error('Failed to change page:', err)
+    } finally {
+      setIsFetchingPartNew(false)
+    }
+  }
 
   // Groups extracted from PartNew results
   const availableGroups = useMemo(() => {
@@ -668,7 +722,7 @@ export default function PartsSearchPage() {
                   </TableCell>
                   <TableCell className="px-4 py-2 whitespace-normal">
                     {isPartNewMode ? (
-                      <span className="font-bold text-emerald-600">{partNewData.length} items</span>
+                      <span className="font-bold text-emerald-600">{totalCount} items</span>
                     ) : (
                       vinSearchDetails?.bodyClass || 'N/A'
                     )}
@@ -768,15 +822,22 @@ export default function PartsSearchPage() {
             {/* Right Sidebar Blueprint Diagrams Grid */}
             <div className="flex-grow min-w-0">
               <div>
-                <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
-                  {isPartNewMode
-                    ? `${activeGroup === 'ALL' ? 'All Matching' : activeGroup} Diagrams & Components`
-                    : `${activeCategory} Diagrams`}
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    {isPartNewMode
+                      ? `${activeGroup === 'ALL' ? 'All Matching' : activeGroup} Diagrams & Components`
+                      : `${activeCategory} Diagrams`}
+                  </h3>
+                  {isPartNewMode && totalCount > 0 && (
+                    <span className="text-xs font-mono text-slate-400">
+                      Page {page} of {totalPages} ({totalCount} total)
+                    </span>
+                  )}
+                </div>
 
-                {loadingParts ? (
-                  <div className="flex flex-col items-center justify-center py-16">
-                    <span className="w-8 h-8 border-4 border-slate-200 border-t-sky-500 rounded-full animate-spin mb-2" />
+                {loadingParts || isFetchingPartNew ? (
+                  <div className="flex flex-col items-center justify-center py-20">
+                    <Loader2 className="w-8 h-8 text-[#00C853] animate-spin mb-2" />
                     <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog...</p>
                   </div>
                 ) : errorLoadingParts ? (
@@ -788,44 +849,100 @@ export default function PartsSearchPage() {
                     {filterQuery ? 'No parts match your filter' : 'No parts found'}
                   </p>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filteredParts.map((part, index) => {
-                      const diagIndex = getDiagramIndex(part.name)
-                      return (
-                        <div
-                          key={`${part.partNumber}-${index}`}
-                          onClick={() => handlePartClick(part, index)}
-                          className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
-                        >
-                          {/* Schematic Diagram Outlines or Image */}
-                          <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner overflow-hidden">
-                            {part.imageUrl ? (
-                              <img
-                                src={part.imageUrl}
-                                alt={part.name}
-                                className="w-full h-full object-contain group-hover:scale-105 transition-transform"
-                                onError={(e) => {
-                                  // Fallback to SVG diagram
-                                  (e.target as HTMLElement).style.display = 'none'
-                                }}
-                              />
-                            ) : (
-                              <DiagramSVG code={diagIndex} />
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {filteredParts.map((part, index) => {
+                        const diagIndex = getDiagramIndex(part.name)
+                        return (
+                          <div
+                            key={`${part.partNumber}-${index}`}
+                            onClick={() => handlePartClick(part, index)}
+                            className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
+                          >
+                            {/* Schematic Diagram Outlines or Image */}
+                            <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner overflow-hidden">
+                              {part.imageUrl ? (
+                                <img
+                                  src={part.imageUrl}
+                                  alt={part.name}
+                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                                  onError={(e) => {
+                                    // Fallback to SVG diagram
+                                    (e.target as HTMLElement).style.display = 'none'
+                                  }}
+                                />
+                              ) : (
+                                <DiagramSVG code={diagIndex} />
+                              )}
+                            </div>
+                            {/* Label */}
+                            <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
+                              {part.partNumber}: {part.name.toUpperCase()}
+                            </span>
+                            {part.groupName && (
+                              <span className="text-[9px] text-slate-400 mt-1 font-semibold truncate">
+                                {part.groupName}
+                              </span>
                             )}
                           </div>
-                          {/* Label */}
-                          <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
-                            {part.partNumber}: {part.name.toUpperCase()}
-                          </span>
-                          {part.groupName && (
-                            <span className="text-[9px] text-slate-400 mt-1 font-semibold truncate">
-                              {part.groupName}
-                            </span>
-                          )}
+                        )
+                      })}
+                    </div>
+
+                    {/* Server-Side Pagination Controls for PartNew */}
+                    {isPartNewMode && totalPages > 1 && (
+                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 border-t border-slate-200 dark:border-slate-800 pt-6 select-none">
+                        <div className="text-xs text-slate-500 font-medium">
+                          Showing Page <span className="font-bold text-slate-800 dark:text-slate-200">{page}</span> of <span className="font-bold text-slate-800 dark:text-slate-200">{totalPages}</span> ({totalCount} total parts)
                         </div>
-                      )
-                    })}
-                  </div>
+
+                        <div className="flex items-center gap-1 flex-wrap justify-center">
+                          <button
+                            onClick={() => handlePageChange(page - 1)}
+                            disabled={page === 1 || isFetchingPartNew}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
+                          >
+                            <ChevronLeft className="w-3.5 h-3.5" />
+                            Previous
+                          </button>
+
+                          {getPageNumbers(page, totalPages).map((p, idx) => {
+                            if (p === '...') {
+                              return (
+                                <span key={idx} className="px-2 py-1 text-xs text-slate-400 font-mono">
+                                  ...
+                                </span>
+                              )
+                            }
+                            const pageNum = p as number
+                            return (
+                              <button
+                                key={idx}
+                                onClick={() => handlePageChange(pageNum)}
+                                disabled={isFetchingPartNew}
+                                className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-bold transition-all ${
+                                  page === pageNum
+                                    ? 'bg-[#00C853] text-[#07110A] shadow-sm'
+                                    : 'hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                                }`}
+                              >
+                                {pageNum}
+                              </button>
+                            )
+                          })}
+
+                          <button
+                            onClick={() => handlePageChange(page + 1)}
+                            disabled={page >= totalPages || isFetchingPartNew}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
+                          >
+                            Next
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>

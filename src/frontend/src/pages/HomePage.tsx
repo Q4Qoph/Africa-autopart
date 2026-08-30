@@ -277,21 +277,21 @@ export default function HomePage() {
     // Call /api/PartNew/search endpoint for model, part name, or part number
     try {
       // 1. Try as searchTerm (part number / part name)
-      const res = await partNewApi.search({ searchTerm: trimmed, model: '', pageNumber: 1, pageSize: 42 })
+      const res = await partNewApi.search({ searchTerm: trimmed, model: '', pageNumber: 1, pageSize: 48 })
       if (res.totalCount > 0) {
-        navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, data: res } } })
+        navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, model: '', searchType: 'searchTerm', data: res } } })
         return
       }
 
       // 2. If 0 results, try as model name
-      const modelRes = await partNewApi.search({ model: trimmed, searchTerm: '', pageNumber: 1, pageSize: 42 })
+      const modelRes = await partNewApi.search({ model: trimmed, searchTerm: '', pageNumber: 1, pageSize: 48 })
       if (modelRes.totalCount > 0) {
-        navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, model: trimmed, data: modelRes } } })
+        navigate('/parts-search', { state: { partNewSearch: { searchTerm: '', model: trimmed, searchType: 'model', data: modelRes } } })
         return
       }
 
       // 3. If no matches, still navigate to parts-search to show empty state
-      navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, data: res } } })
+      navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, model: '', searchType: 'searchTerm', data: res } } })
     } catch {
       setError(t('vin_error_invalid') ?? 'Could not find matching parts or vehicle. Check the input and try again.')
     } finally {
