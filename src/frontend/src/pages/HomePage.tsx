@@ -38,6 +38,7 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
 import { useTranslation } from 'react-i18next'
 import { vinApi } from '@/api/vinApi'
 import { partNewApi } from '@/api/partNewApi'
+import type { PartNewSearchResponse } from '@/types/partNew'
 import type { VehicleSummary } from '@/types/vin'
 import { cn } from '@/lib/utils'
 
@@ -266,7 +267,123 @@ export default function HomePage() {
       try {
         const { data } = await vinApi.searchVin(trimmed)
         if (data && (data.make || data.model || data.isValid)) {
-          navigate('/parts-search', { state: { vinSearchDetails: data } })
+          // When VIN is decoded, call /api/PartNew/search with intelligent fallback waterfall
+          let partNewRes: PartNewSearchResponse | null = null
+          let modelUsed = ''
+          let searchTypeUsed: 'model' | 'searchTerm' = 'model'
+
+          // Step 1: If model is returned, try searching by model
+          if (data.model) {
+            try {
+              const resByModel = await partNewApi.search({ model: data.model, searchTerm: '', pageNumber: 1, pageSize: 48 })
+              if (resByModel.totalCount > 0) {
+                partNewRes = resByModel
+                modelUsed = data.model
+                searchTypeUsed = 'model'
+              }
+            } catch (err) {
+              console.warn('Search by model failed:', err)
+            }
+          }
+
+          // Step 2: If model returned 0 results, try model as searchTerm
+          if (!partNewRes && data.model) {
+            try {
+              const resByModelTerm = await partNewApi.search({ model: '', searchTerm: data.model, pageNumber: 1, pageSize: 48 })
+              if (resByModelTerm.totalCount > 0) {
+                partNewRes = resByModelTerm
+                modelUsed = data.model
+                searchTypeUsed = 'searchTerm'
+              }
+            } catch (err) {
+              console.warn('Search by model as searchTerm failed:', err)
+            }
+          }
+
+          // Step 3: If make is returned, query using make in model payload (e.g. HYUNDAI, Haval)
+          if (!partNewRes && data.make) {
+            try {
+              const resByMake = await partNewApi.search({ model: data.make, searchTerm: '', pageNumber: 1, pageSize: 48 })
+              if (resByMake.totalCount > 0) {
+                partNewRes = resByMake
+                modelUsed = data.make
+                searchTypeUsed = 'model'
+              }
+            } catch (err) {
+              console.warn('Search by make in model payload failed:', err)
+            }
+          }
+
+          // Step 4: If make search in model had 0 results, try make in searchTerm
+          if (!partNewRes && data.make) {
+            try {
+              const resByMakeSearch = await partNewApi.search({ model: '', searchTerm: data.make, pageNumber: 1, pageSize: 48 })
+              if (resByMakeSearch.totalCount > 0) {
+                partNewRes = resByMakeSearch
+                modelUsed = data.make
+                searchTypeUsed = 'searchTerm'
+              }
+            } catch (err) {
+              console.warn('Search by make searchTerm failed:', err)
+            }
+          }
+
+          // Step 5: Try manufacturer primary word (e.g. "HYUNDAI MOTOR CO" -> "HYUNDAI")
+          if (!partNewRes && data.manufacturer) {
+            const primaryBrand = data.manufacturer.trim().split(' ')[0]
+            if (primaryBrand && primaryBrand.toLowerCase() !== data.make?.toLowerCase()) {
+              try {
+                const resByManufacturer = await partNewApi.search({ model: primaryBrand, searchTerm: '', pageNumber: 1, pageSize: 48 })
+                if (resByManufacturer.totalCount > 0) {
+                  partNewRes = resByManufacturer
+                  modelUsed = primaryBrand
+                  searchTypeUsed = 'model'
+                }
+              } catch (err) {
+                console.warn('Search by manufacturer failed:', err)
+              }
+            }
+          }
+
+          // Step 6: Try VIN in searchTerm (matching any parts tagged with this VIN)
+          if (!partNewRes && trimmed) {
+            try {
+              const resByVin = await partNewApi.search({ model: '', searchTerm: trimmed, pageNumber: 1, pageSize: 48 })
+              if (resByVin.totalCount > 0) {
+                partNewRes = resByVin
+                modelUsed = ''
+                searchTypeUsed = 'searchTerm'
+              }
+            } catch (err) {
+              console.warn('Search by VIN searchTerm failed:', err)
+            }
+          }
+
+          // Step 7: Universal catalog fallback to ensure parts are always available
+          if (!partNewRes) {
+            try {
+              const resFallback = await partNewApi.search({ model: '', searchTerm: '', pageNumber: 1, pageSize: 48 })
+              if (resFallback.totalCount > 0) {
+                partNewRes = resFallback
+                modelUsed = ''
+                searchTypeUsed = 'searchTerm'
+              }
+            } catch (err) {
+              console.warn('Universal catalog fallback failed:', err)
+            }
+          }
+
+          navigate('/parts-search', {
+            state: {
+              vinSearchDetails: data,
+              partNewSearch: partNewRes ? {
+                searchTerm: searchTypeUsed === 'searchTerm' ? modelUsed : '',
+                model: searchTypeUsed === 'model' ? modelUsed : '',
+                searchType: searchTypeUsed,
+                data: partNewRes,
+              } : undefined,
+            },
+          })
           return
         }
       } catch (vinErr) {

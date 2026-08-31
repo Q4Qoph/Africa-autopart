@@ -1,5 +1,5 @@
 // src/frontend/src/pages/parts/PartsSearchPage.tsx
-import { useEffect, useState, useRef, useMemo } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -14,9 +14,8 @@ import {
   Search,
   Loader2,
 } from 'lucide-react'
-import { vinApi } from '@/api/vinApi'
 import { partNewApi } from '@/api/partNewApi'
-import type { VinSearchResponse, VinSearchPart } from '@/types/vin'
+import type { VinSearchResponse } from '@/types/vin'
 import type { PartNewItem, PartNewSearchResponse } from '@/types/partNew'
 import { useExternalCart } from '@/context/ExternalCartContext'
 
@@ -372,15 +371,6 @@ const getPageNumbers = (current: number, total: number) => {
   return pages
 }
 
-const VIN_CATEGORIES = [
-  'ENGINE',
-  'TRANSMISSION',
-  'CHASSIS',
-  'BODY',
-  'TRIM',
-  'ELECTRICAL',
-]
-
 // Unified Part interface for display
 interface UnifiedPart {
   partNumber: string
@@ -401,72 +391,113 @@ export default function PartsSearchPage() {
   const { addItem } = useExternalCart()
 
   const vinSearchDetails = location.state?.vinSearchDetails as VinSearchResponse | undefined
-  const partNewSearch = location.state?.partNewSearch as { searchTerm?: string; model?: string; searchType?: 'searchTerm' | 'model'; data: PartNewSearchResponse } | undefined
-
-  // State for VIN category search
-  const [activeCategory, setActiveCategory] = useState<string>('ENGINE')
-  const [vinParts, setVinParts] = useState<VinSearchPart[]>([])
-  const [loadingParts, setLoadingParts] = useState(false)
-  const [errorLoadingParts, setErrorLoadingParts] = useState('')
-  const [filterQuery, setFilterQuery] = useState<string>('')
+  const partNewSearch = location.state?.partNewSearch as {
+    searchTerm?: string
+    model?: string
+    searchType?: 'searchTerm' | 'model'
+    data: PartNewSearchResponse
+  } | undefined
 
   // State for PartNew results & Pagination
   const [partNewData, setPartNewData] = useState<PartNewItem[]>(partNewSearch?.data?.data || [])
   const [page, setPage] = useState<number>(partNewSearch?.data?.pageNumber || 1)
   const [totalPages, setTotalPages] = useState<number>(partNewSearch?.data?.totalPages || 1)
   const [totalCount, setTotalCount] = useState<number>(partNewSearch?.data?.totalCount || (partNewSearch?.data?.data?.length || 0))
-  const [isFetchingPartNew, setIsFetchingPartNew] = useState<boolean>(false)
+  const [loadingParts, setLoadingParts] = useState<boolean>(false)
   const [activeGroup, setActiveGroup] = useState<string>('ALL')
+  const [filterQuery, setFilterQuery] = useState<string>('')
 
-  const isPartNewMode = Boolean(partNewSearch)
+  // Search parameters currently active
+  const [activeQueryParams, setActiveQueryParams] = useState({
+    searchTerm: partNewSearch?.searchType === 'searchTerm' ? (partNewSearch.searchTerm || '') : '',
+    model: partNewSearch?.searchType === 'model' ? (partNewSearch.model || '') : (partNewSearch?.model || ''),
+  })
 
   // Modal state
   const [selectedPart, setSelectedPart] = useState<UnifiedPart | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
 
-  // Cache for VIN parts
-  const partsCacheRef = useRef<Record<string, VinSearchPart[]>>({})
-
-  // Fetch VIN parts when active category changes
+  // Auto-fetch parts from /api/PartNew/search if arriving with vinSearchDetails but no pre-loaded parts
   useEffect(() => {
+    if (partNewData.length > 0) return
     if (!vinSearchDetails) return
 
-    const cached = partsCacheRef.current[activeCategory]
-    if (cached) {
-      setVinParts(cached)
-      return
-    }
-
-    async function fetchParts() {
+    async function loadPartsForVin() {
       setLoadingParts(true)
-      setErrorLoadingParts('')
       try {
-        const { data } = await vinApi.searchPartsByCategory(activeCategory, vinSearchDetails!)
-        setVinParts(data)
-        partsCacheRef.current[activeCategory] = data
+        let res: PartNewSearchResponse | null = null
+        let modelUsed = ''
+        let termUsed = ''
+
+        // 1. Try model in model payload
+        if (vinSearchDetails?.model) {
+          try {
+            const mRes = await partNewApi.search({ model: vinSearchDetails.model, searchTerm: '', pageNumber: 1, pageSize: 48 })
+            if (mRes.totalCount > 0) {
+              res = mRes
+              modelUsed = vinSearchDetails.model
+            }
+          } catch {}
+        }
+
+        // 2. Try make in model payload
+        if (!res && vinSearchDetails?.make) {
+          try {
+            const mkRes = await partNewApi.search({ model: vinSearchDetails.make, searchTerm: '', pageNumber: 1, pageSize: 48 })
+            if (mkRes.totalCount > 0) {
+              res = mkRes
+              modelUsed = vinSearchDetails.make
+            }
+          } catch {}
+        }
+
+        // 3. Try make in searchTerm
+        if (!res && vinSearchDetails?.make) {
+          try {
+            const mktRes = await partNewApi.search({ model: '', searchTerm: vinSearchDetails.make, pageNumber: 1, pageSize: 48 })
+            if (mktRes.totalCount > 0) {
+              res = mktRes
+              termUsed = vinSearchDetails.make
+            }
+          } catch {}
+        }
+
+        // 4. Try general catalog fallback
+        if (!res) {
+          try {
+            const fbRes = await partNewApi.search({ model: '', searchTerm: '', pageNumber: 1, pageSize: 48 })
+            if (fbRes.totalCount > 0) {
+              res = fbRes
+            }
+          } catch {}
+        }
+
+        if (res && res.data) {
+          setPartNewData(res.data)
+          setPage(res.pageNumber)
+          setTotalPages(res.totalPages)
+          setTotalCount(res.totalCount)
+          setActiveQueryParams({ model: modelUsed, searchTerm: termUsed })
+        }
       } catch (err) {
-        console.error(err)
-        setErrorLoadingParts('Failed to load parts for this category.')
+        console.error('Failed to load parts for decoded vehicle:', err)
       } finally {
         setLoadingParts(false)
       }
     }
 
-    fetchParts()
-  }, [activeCategory, vinSearchDetails])
+    loadPartsForVin()
+  }, [vinSearchDetails, partNewData.length])
 
   // Pagination handler for PartNew searches
   async function handlePageChange(newPage: number) {
-    if (!partNewSearch || newPage < 1 || newPage > totalPages || isFetchingPartNew) return
-    setIsFetchingPartNew(true)
+    if (newPage < 1 || newPage > totalPages || loadingParts) return
+    setLoadingParts(true)
     try {
-      const searchTermParam = partNewSearch.searchType === 'model' ? '' : (partNewSearch.searchTerm || '')
-      const modelParam = partNewSearch.searchType === 'model' ? (partNewSearch.model || '') : (partNewSearch.model || '')
-
       const res = await partNewApi.search({
-        searchTerm: searchTermParam,
-        model: modelParam,
+        searchTerm: activeQueryParams.searchTerm,
+        model: activeQueryParams.model,
         pageNumber: newPage,
         pageSize: 48,
       })
@@ -483,7 +514,7 @@ export default function PartsSearchPage() {
     } catch (err) {
       console.error('Failed to change page:', err)
     } finally {
-      setIsFetchingPartNew(false)
+      setLoadingParts(false)
     }
   }
 
@@ -495,7 +526,7 @@ export default function PartsSearchPage() {
   }, [partNewData])
 
   // Normalization for PartNew items -> UnifiedPart
-  const partNewUnified: UnifiedPart[] = useMemo(() => {
+  const partsList: UnifiedPart[] = useMemo(() => {
     return partNewData.map(p => ({
       partNumber: p.partNumber,
       name: p.partName,
@@ -510,28 +541,14 @@ export default function PartsSearchPage() {
     }))
   }, [partNewData])
 
-  // Normalization for VinSearchPart items -> UnifiedPart
-  const vinUnified: UnifiedPart[] = useMemo(() => {
-    return vinParts.map(p => ({
-      partNumber: p.partNumber,
-      name: p.name,
-      description: p.description,
-      price: p.price,
-      groupName: activeCategory,
-    }))
-  }, [vinParts, activeCategory])
-
-  // Active parts list depending on mode
-  const currentPartsList = isPartNewMode ? partNewUnified : vinUnified
-
   // Filter parts locally based on search input and active group
-  const filteredParts = currentPartsList.filter(p => {
+  const filteredParts = partsList.filter(p => {
     const matchesQuery = !filterQuery ||
       p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
       p.partNumber.toLowerCase().includes(filterQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(filterQuery.toLowerCase())
 
-    const matchesGroup = !isPartNewMode || activeGroup === 'ALL' || p.groupName === activeGroup
+    const matchesGroup = activeGroup === 'ALL' || p.groupName === activeGroup
 
     return matchesQuery && matchesGroup
   })
@@ -588,7 +605,7 @@ export default function PartsSearchPage() {
     return logoFn ? logoFn(color) : null
   }
 
-  if (!vinSearchDetails && !partNewSearch) {
+  if (!vinSearchDetails && !partNewSearch && partNewData.length === 0) {
     return (
       <div className="px-6 md:px-8 py-16 text-center font-sans">
         <h1 className="text-2xl font-black text-slate-800 mb-4">{t('no_vehicle') ?? 'No search results'}</h1>
@@ -597,8 +614,8 @@ export default function PartsSearchPage() {
     )
   }
 
-  // Model & vehicle details for PartNew mode
-  const partNewMeta = isPartNewMode && partNewData.length > 0 ? partNewData[0] : null
+  // Model & vehicle details for Part metadata
+  const partNewMeta = partNewData.length > 0 ? partNewData[0] : null
 
   return (
     <div className="flex-grow flex flex-col font-sans">
@@ -612,69 +629,57 @@ export default function PartsSearchPage() {
           <span>•</span>
           <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
           <span>•</span>
-          {isPartNewMode ? (
+          <span className="text-slate-800 font-bold uppercase">
+            {vinSearchDetails?.make || partNewMeta?.source || partNewMeta?.oem || 'OEM'}
+          </span>
+          <span>•</span>
+          <span className="text-slate-500 font-mono text-[10px]">
+            {vinSearchDetails?.vin || partNewSearch?.searchTerm || activeQueryParams.searchTerm || activeQueryParams.model || 'CATALOG'}
+          </span>
+          {(vinSearchDetails?.model || partNewMeta?.model) && (
             <>
+              <span>•</span>
               <span className="text-slate-800 font-bold uppercase">
-                {partNewMeta?.source || partNewMeta?.oem || 'OEM'}
+                {vinSearchDetails?.model || partNewMeta?.model}
               </span>
-              <span>•</span>
-              <span className="text-slate-500 font-mono text-[10px]">
-                {partNewSearch?.searchTerm || 'SEARCH'}
-              </span>
-              {partNewMeta?.model && (
-                <>
-                  <span>•</span>
-                  <span className="text-slate-800 font-bold uppercase">{partNewMeta.model}</span>
-                </>
-              )}
-              <span>•</span>
-              <span className="text-[#33b5e5] font-extrabold uppercase">
-                {activeGroup === 'ALL' ? 'ALL GROUPS' : activeGroup}
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="text-slate-800 font-bold uppercase">{vinSearchDetails?.make || 'UNKNOWN'}</span>
-              <span>•</span>
-              <span className="text-slate-500 font-mono text-[10px]">{vinSearchDetails?.vin}</span>
-              <span>•</span>
-              <span className="text-slate-800 font-bold uppercase">{vinSearchDetails?.model || 'UNKNOWN'}</span>
-              <span>•</span>
-              <span className="text-[#33b5e5] font-extrabold uppercase">{activeCategory}</span>
             </>
           )}
+          <span>•</span>
+          <span className="text-[#33b5e5] font-extrabold uppercase">
+            {activeGroup === 'ALL' ? 'ALL GROUPS' : activeGroup}
+          </span>
         </div>
 
         {/* Center Content Padding Area */}
         <div className="px-6 py-6">
           {/* Vehicle Info Table Card */}
           <h2 className="text-sm font-black text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
-            {isPartNewMode
-              ? `${partNewMeta?.source || partNewMeta?.oem || 'GENUINE'} Parts Catalog ${partNewMeta?.model ? `— ${partNewMeta.model}` : ''}`
-              : `${vinSearchDetails?.make || 'UNKNOWN'} Parts Catalogs ${vinSearchDetails?.model || 'UNKNOWN'}`}
+            {vinSearchDetails
+              ? `${vinSearchDetails.make || 'UNKNOWN'} Parts Catalogs ${vinSearchDetails.model || ''}`
+              : `${partNewMeta?.source || partNewMeta?.oem || 'GENUINE'} Parts Catalog ${partNewMeta?.model ? `— ${partNewMeta.model}` : ''}`}
           </h2>
 
           <div className="overflow-x-auto border border-border/80 rounded mb-6 select-none shadow-sm bg-white dark:bg-[#0A110C]">
             <Table>
               <TableHeader className="bg-slate-100 dark:bg-[#0D1810] text-slate-650 dark:text-[#7A9A80] font-bold uppercase">
                 <TableRow className="hover:bg-transparent border-b border-border/80 border-none">
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Brand / Source</TableHead>
+                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Brand / Make</TableHead>
                   <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Model</TableHead>
                   <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Year</TableHead>
                   <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">
-                    {isPartNewMode ? 'Target VIN' : 'Engine'}
+                    {vinSearchDetails ? 'Engine / VIN' : 'Target VIN'}
                   </TableHead>
                   <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
-                    {isPartNewMode ? 'Group' : 'Trim'}
+                    {vinSearchDetails ? 'Trim' : 'Group'}
                   </TableHead>
                   <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">
-                    {isPartNewMode ? 'Subgroup' : 'Manufacturer'}
+                    {vinSearchDetails ? 'Manufacturer' : 'Subgroup'}
                   </TableHead>
                   <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
-                    {isPartNewMode ? 'PNC' : 'Plant'}
+                    {vinSearchDetails ? 'Plant' : 'PNC'}
                   </TableHead>
                   <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
-                    {isPartNewMode ? 'Found Records' : 'Body Class'}
+                    {vinSearchDetails ? 'Body Class' : 'Found Records'}
                   </TableHead>
                   <TableHead className="px-4 py-2 text-[11px] text-center whitespace-normal">i</TableHead>
                 </TableRow>
@@ -684,47 +689,47 @@ export default function PartsSearchPage() {
                   <TableCell className="px-4 py-2 whitespace-normal">
                     <div className="flex items-center gap-1.5">
                       <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
-                        {getBrandLogo(isPartNewMode ? partNewMeta?.source || partNewMeta?.oem : vinSearchDetails?.make)}
+                        {getBrandLogo(vinSearchDetails ? vinSearchDetails.make : partNewMeta?.source || partNewMeta?.oem)}
                       </div>
                       <span className="font-extrabold text-slate-900 dark:text-white">
-                        {(isPartNewMode
-                          ? partNewMeta?.source || partNewMeta?.oem || 'GENUINE'
-                          : vinSearchDetails?.make || 'UNKNOWN'
+                        {(vinSearchDetails
+                          ? vinSearchDetails.make || 'UNKNOWN'
+                          : partNewMeta?.source || partNewMeta?.oem || 'GENUINE'
                         ).toUpperCase()}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-2 font-bold uppercase text-slate-800 dark:text-white whitespace-normal">
-                    {(isPartNewMode ? partNewMeta?.model : vinSearchDetails?.model) || 'N/A'}
+                    {(vinSearchDetails ? vinSearchDetails.model : partNewMeta?.model) || 'N/A'}
                   </TableCell>
                   <TableCell className="px-4 py-2 whitespace-normal">
-                    {(isPartNewMode ? partNewMeta?.modelYear : vinSearchDetails?.modelYear) || 'N/A'}
+                    {(vinSearchDetails ? vinSearchDetails.modelYear : partNewMeta?.modelYear) || 'N/A'}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-slate-500 dark:text-[#7A9A80] font-mono text-[10px] whitespace-normal">
-                    {isPartNewMode ? (
-                      partNewMeta?.vin || 'N/A'
+                    {vinSearchDetails ? (
+                      `${vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L ` : ''}${vinSearchDetails.vin || ''}`
                     ) : (
-                      `${vinSearchDetails?.displacementL ? `${vinSearchDetails.displacementL}L` : ''} ${vinSearchDetails?.fuelTypePrimary || ''}`
+                      partNewMeta?.vin || 'N/A'
                     )}
                   </TableCell>
                   <TableCell className="px-4 py-2 whitespace-normal">
-                    {(isPartNewMode ? partNewMeta?.groupName : vinSearchDetails?.trim) || 'N/A'}
+                    {(vinSearchDetails ? vinSearchDetails.trim : partNewMeta?.groupName) || 'N/A'}
                   </TableCell>
                   <TableCell className="px-4 py-2 font-mono text-[10px] whitespace-normal">
-                    {(isPartNewMode ? partNewMeta?.subgroupName : vinSearchDetails?.manufacturer) || 'N/A'}
+                    {(vinSearchDetails ? vinSearchDetails.manufacturer : partNewMeta?.subgroupName) || 'N/A'}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-[10px] whitespace-normal">
-                    {isPartNewMode ? (
-                      partNewMeta?.pnc || 'N/A'
+                    {vinSearchDetails ? (
+                      `${vinSearchDetails.plantCity || ''}${vinSearchDetails.plantCity && vinSearchDetails.plantCountry ? ', ' : ''}${vinSearchDetails.plantCountry || ''}`
                     ) : (
-                      `${vinSearchDetails?.plantCity || ''}${vinSearchDetails?.plantCity && vinSearchDetails?.plantCountry ? ', ' : ''}${vinSearchDetails?.plantCountry || ''}`
+                      partNewMeta?.pnc || 'N/A'
                     )}
                   </TableCell>
                   <TableCell className="px-4 py-2 whitespace-normal">
-                    {isPartNewMode ? (
-                      <span className="font-bold text-emerald-600">{totalCount} items</span>
+                    {vinSearchDetails ? (
+                      vinSearchDetails.bodyClass || `${totalCount} items`
                     ) : (
-                      vinSearchDetails?.bodyClass || 'N/A'
+                      <span className="font-bold text-emerald-600">{totalCount} items</span>
                     )}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-center whitespace-normal">
@@ -739,7 +744,7 @@ export default function PartsSearchPage() {
           <div className="flex items-center gap-1 border-b-2 border-[#00C853] mb-5">
             <button className="bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
               <ListFilter className="w-3.5 h-3.5" />
-              {isPartNewMode ? 'Assembly Groups' : 'Categories'}
+              Assembly Groups
             </button>
             <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
               <Search className="w-3.5 h-3.5" />
@@ -768,53 +773,28 @@ export default function PartsSearchPage() {
 
               <div className="sticky top-[100px]">
                 <nav className="space-y-1 max-h-[50vh] overflow-y-auto pr-1">
-                  {isPartNewMode ? (
-                    availableGroups.map((group) => (
-                      <button
-                        key={group}
-                        onClick={() => {
-                          setActiveGroup(group)
-                          setFilterQuery('')
-                        }}
-                        className={cn(
-                          'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between uppercase font-bold tracking-wide border border-transparent',
-                          activeGroup === group
-                            ? 'bg-sky-50 text-sky-600 border-sky-200'
-                            : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
-                        )}
-                      >
-                        <span className="truncate mr-1">{group === 'ALL' ? 'ALL GROUPS' : group}</span>
-                        {activeGroup === group && (
-                          <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
-                            {filteredParts.length}
-                          </span>
-                        )}
-                      </button>
-                    ))
-                  ) : (
-                    VIN_CATEGORIES.map((cat) => (
-                      <button
-                        key={cat}
-                        onClick={() => {
-                          setActiveCategory(cat)
-                          setFilterQuery('')
-                        }}
-                        className={cn(
-                          'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between uppercase font-bold tracking-wide border border-transparent',
-                          activeCategory === cat
-                            ? 'bg-sky-50 text-sky-600 border-sky-200'
-                            : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
-                        )}
-                      >
-                        <span className="truncate mr-1">{cat}</span>
-                        {activeCategory === cat && !loadingParts && (
-                          <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
-                            {filteredParts.length}
-                          </span>
-                        )}
-                      </button>
-                    ))
-                  )}
+                  {availableGroups.map((group) => (
+                    <button
+                      key={group}
+                      onClick={() => {
+                        setActiveGroup(group)
+                        setFilterQuery('')
+                      }}
+                      className={cn(
+                        'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between uppercase font-bold tracking-wide border border-transparent',
+                        activeGroup === group
+                          ? 'bg-sky-50 text-sky-600 border-sky-200'
+                          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
+                      )}
+                    >
+                      <span className="truncate mr-1">{group === 'ALL' ? 'ALL GROUPS' : group}</span>
+                      {activeGroup === group && (
+                        <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
+                          {filteredParts.length}
+                        </span>
+                      )}
+                    </button>
+                  ))}
                 </nav>
               </div>
             </aside>
@@ -824,30 +804,37 @@ export default function PartsSearchPage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    {isPartNewMode
-                      ? `${activeGroup === 'ALL' ? 'All Matching' : activeGroup} Diagrams & Components`
-                      : `${activeCategory} Diagrams`}
+                    {activeGroup === 'ALL' ? 'All Matching' : activeGroup} Diagrams & Components
                   </h3>
-                  {isPartNewMode && totalCount > 0 && (
+                  {totalCount > 0 && (
                     <span className="text-xs font-mono text-slate-400">
                       Page {page} of {totalPages} ({totalCount} total)
                     </span>
                   )}
                 </div>
 
-                {loadingParts || isFetchingPartNew ? (
+                {loadingParts ? (
                   <div className="flex flex-col items-center justify-center py-20">
                     <Loader2 className="w-8 h-8 text-[#00C853] animate-spin mb-2" />
                     <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog...</p>
                   </div>
-                ) : errorLoadingParts ? (
-                  <p className="text-red-500 text-sm py-16 text-center font-medium font-sans">
-                    {errorLoadingParts}
-                  </p>
                 ) : filteredParts.length === 0 ? (
-                  <p className="text-slate-400 text-sm py-16 text-center font-medium font-sans">
-                    {filterQuery ? 'No parts match your filter' : 'No parts found'}
-                  </p>
+                  <div className="text-center py-16">
+                    <p className="text-slate-500 text-sm font-semibold mb-3">
+                      {filterQuery ? 'No parts match your filter' : 'No parts found'}
+                    </p>
+                    {(filterQuery || activeGroup !== 'ALL') && (
+                      <button
+                        onClick={() => {
+                          setActiveGroup('ALL')
+                          setFilterQuery('')
+                        }}
+                        className="px-4 py-1.5 bg-[#00C853] text-[#07110A] font-bold text-xs rounded-lg"
+                      >
+                        Reset Group Filter
+                      </button>
+                    )}
+                  </div>
                 ) : (
                   <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -867,7 +854,6 @@ export default function PartsSearchPage() {
                                   alt={part.name}
                                   className="w-full h-full object-contain group-hover:scale-105 transition-transform"
                                   onError={(e) => {
-                                    // Fallback to SVG diagram
                                     (e.target as HTMLElement).style.display = 'none'
                                   }}
                                 />
@@ -889,8 +875,8 @@ export default function PartsSearchPage() {
                       })}
                     </div>
 
-                    {/* Server-Side Pagination Controls for PartNew */}
-                    {isPartNewMode && totalPages > 1 && (
+                    {/* Server-Side Pagination Controls */}
+                    {totalPages > 1 && (
                       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 border-t border-slate-200 dark:border-slate-800 pt-6 select-none">
                         <div className="text-xs text-slate-500 font-medium">
                           Showing Page <span className="font-bold text-slate-800 dark:text-slate-200">{page}</span> of <span className="font-bold text-slate-800 dark:text-slate-200">{totalPages}</span> ({totalCount} total parts)
@@ -899,7 +885,7 @@ export default function PartsSearchPage() {
                         <div className="flex items-center gap-1 flex-wrap justify-center">
                           <button
                             onClick={() => handlePageChange(page - 1)}
-                            disabled={page === 1 || isFetchingPartNew}
+                            disabled={page === 1 || loadingParts}
                             className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
                           >
                             <ChevronLeft className="w-3.5 h-3.5" />
@@ -919,7 +905,7 @@ export default function PartsSearchPage() {
                               <button
                                 key={idx}
                                 onClick={() => handlePageChange(pageNum)}
-                                disabled={isFetchingPartNew}
+                                disabled={loadingParts}
                                 className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-bold transition-all ${
                                   page === pageNum
                                     ? 'bg-[#00C853] text-[#07110A] shadow-sm'
@@ -933,7 +919,7 @@ export default function PartsSearchPage() {
 
                           <button
                             onClick={() => handlePageChange(page + 1)}
-                            disabled={page >= totalPages || isFetchingPartNew}
+                            disabled={page >= totalPages || loadingParts}
                             className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
                           >
                             Next
@@ -1021,7 +1007,7 @@ export default function PartsSearchPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">BRAND / MODEL</span>
                     <span className="text-slate-700 font-bold uppercase">
-                      {selectedPart.model || (isPartNewMode ? partNewMeta?.source : vinSearchDetails?.make) || 'OEM'}
+                      {selectedPart.model || vinSearchDetails?.make || partNewMeta?.source || 'OEM'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">

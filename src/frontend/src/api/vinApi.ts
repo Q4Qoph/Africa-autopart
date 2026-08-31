@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { VehicleSummary, VinPartsResponse, PartDetailResponse, VinSearchResponse, VinSearchPart } from '@/types/vin'
+import type { VehicleSummary, VinPartsResponse, PartDetailResponse, VinSearchResponse } from '@/types/vin'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -22,8 +22,4 @@ export const vinApi = {
   /** POST /api/Vin/search/{vin} — public */
   searchVin: (vin: string) =>
     api.post<VinSearchResponse>(`/api/Vin/search/${encodeURIComponent(vin)}`),
-
-  /** POST /api/Vin/search/parts/{category} — public */
-  searchPartsByCategory: (category: string, vinDetails: VinSearchResponse) =>
-    api.post<VinSearchPart[]>(`/api/Vin/search/parts/${encodeURIComponent(category)}`, vinDetails),
 }
