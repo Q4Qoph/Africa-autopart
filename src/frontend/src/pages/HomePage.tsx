@@ -286,20 +286,87 @@ export default function HomePage() {
       // Step 2: Fallback to NHTSA third-party decode if not found in catalog table
       try {
         const decodeData: NhtsaVinDecodeResponse = await catalogApi.decodeVinFallback(trimmed)
-        const fallbackTerm = decodeData.model || decodeData.make || trimmed
+        const modelTerm = decodeData.model?.trim() || ''
+        const makeTerm = decodeData.make?.trim() || ''
+        const fallbackTerm = modelTerm || makeTerm || trimmed
 
-        // Search parts catalog using decoded model/make
-        const searchRes: PaginatedPartsResponse = await catalogApi.searchParts({
-          searchTerm: fallbackTerm,
+        // Match decoded model with known catalog models (e.g., "LAND CRUISER (200701-) 1HZ MTM 5F LHD GEN CUB DSL")
+        const modelsList = availableModels.length > 0 ? availableModels : await catalogApi.getVehicleModels().catch(() => [])
+        const matchedCatalogModel = modelsList.find(
+          (m) =>
+            m.toLowerCase() === modelTerm.toLowerCase() ||
+            m.toLowerCase().includes(modelTerm.toLowerCase()) ||
+            modelTerm.toLowerCase().includes(m.toLowerCase())
+        )
+
+        let searchRes: PaginatedPartsResponse = {
+          items: [],
           pageNumber: 1,
           pageSize: 48,
-        })
+          totalCount: 0,
+          totalPages: 1,
+        }
+
+        // 1. Query parts directly by model if catalog model matched
+        if (matchedCatalogModel) {
+          try {
+            const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
+            if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
+              const matchedGroup = modelPartsRes.items[0]
+              const total = matchedGroup.partCount || matchedGroup.parts.length
+              searchRes = {
+                items: matchedGroup.parts,
+                pageNumber: modelPartsRes.pageNumber || 1,
+                pageSize: modelPartsRes.pageSize || 48,
+                totalCount: total,
+                totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
+              }
+            }
+          } catch (modelErr) {
+            console.warn('getPartsByModel lookup failed, falling back to search:', modelErr)
+          }
+        }
+
+        // 2. If getPartsByModel didn't yield items, try candidate search terms
+        if (searchRes.items.length === 0) {
+          const candidateTerms = Array.from(
+            new Set(
+              [
+                matchedCatalogModel,
+                modelTerm.toUpperCase(),
+                modelTerm,
+                makeTerm.toUpperCase(),
+                makeTerm,
+                fallbackTerm,
+              ].filter(Boolean) as string[]
+            )
+          )
+
+          for (const term of candidateTerms) {
+            try {
+              const res = await catalogApi.searchParts({
+                searchTerm: term,
+                vin: null,
+                pageNumber: 1,
+                pageSize: 48,
+              })
+              if (res && res.items && res.items.length > 0) {
+                searchRes = res
+                break
+              }
+            } catch (e) {
+              console.warn(`Search attempt for '${term}' failed:`, e)
+            }
+          }
+        }
 
         navigate('/parts-search', {
           state: {
             nhtsaDecode: decodeData,
             searchResults: searchRes,
-            searchTerm: fallbackTerm,
+            searchTerm: matchedCatalogModel || modelTerm || fallbackTerm,
+            model: matchedCatalogModel || modelTerm,
+            make: makeTerm.toUpperCase() || makeTerm,
             vin: trimmed,
           },
         })
