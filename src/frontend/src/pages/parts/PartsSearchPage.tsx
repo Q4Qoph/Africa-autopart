@@ -421,23 +421,121 @@ export default function PartsSearchPage() {
             return catalogApi.decodeVinFallback(targetVin).then(async (decoded) => {
               const modelTerm = decoded.model?.trim() || ''
               const makeTerm = decoded.make?.trim() || ''
-              const modelsList = apiGroups.length > 0 ? await catalogApi.getVehicleModels().catch(() => []) : []
-              const matchedCatalogModel = modelsList.find(
-                (m) =>
-                  m.toLowerCase() === modelTerm.toLowerCase() ||
-                  m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                  modelTerm.toLowerCase().includes(m.toLowerCase())
-              )
 
               let searchRes: PaginatedPartsResponse = {
                 items: [],
                 pageNumber: 1,
                 pageSize: 48,
                 totalCount: 0,
-                totalPages: 1,
+                totalPages: 0,
               }
 
-              // 1. Try getPartsByModel if catalog model matched
+              let matchedCatalogModel: string | undefined
+
+              if (modelTerm || makeTerm) {
+                const modelsList = await catalogApi.getVehicleModels().catch(() => [])
+                matchedCatalogModel = modelTerm ? modelsList.find(
+                  (m) =>
+                    Boolean(modelTerm) &&
+                    (m.toLowerCase() === modelTerm.toLowerCase() ||
+                      m.toLowerCase().includes(modelTerm.toLowerCase()) ||
+                      modelTerm.toLowerCase().includes(m.toLowerCase()))
+                ) : undefined
+
+                // 1. Try getPartsByModel if catalog model matched
+                if (matchedCatalogModel) {
+                  try {
+                    const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
+                    if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
+                      const matchedGroup = modelPartsRes.items[0]
+                      const total = matchedGroup.partCount || matchedGroup.parts.length
+                      searchRes = {
+                        items: matchedGroup.parts,
+                        pageNumber: modelPartsRes.pageNumber || 1,
+                        pageSize: modelPartsRes.pageSize || 48,
+                        totalCount: total,
+                        totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
+                      }
+                    }
+                  } catch (e) {
+                    console.warn('getPartsByModel lookup failed:', e)
+                  }
+                }
+
+                // 2. Fallback to candidate search terms
+                if (searchRes.items.length === 0) {
+                  const candidateTerms = Array.from(
+                    new Set([
+                      matchedCatalogModel,
+                      modelTerm ? modelTerm.toUpperCase() : null,
+                      modelTerm || null,
+                      makeTerm ? makeTerm.toUpperCase() : null,
+                      makeTerm || null,
+                    ].filter(Boolean) as string[])
+                  )
+
+                  for (const term of candidateTerms) {
+                    try {
+                      const res = await catalogApi.searchParts({
+                        searchTerm: term,
+                        vin: null,
+                        pageNumber: 1,
+                        pageSize: 48,
+                      })
+                      if (res && res.items && res.items.length > 0) {
+                        searchRes = res
+                        break
+                      }
+                    } catch (e) {
+                      console.warn(`Search attempt for '${term}' failed:`, e)
+                    }
+                  }
+                }
+              }
+
+              setParts(searchRes.items || [])
+              setPage(searchRes.pageNumber || 1)
+              setTotalPages(searchRes.totalPages || 0)
+              setTotalCount(searchRes.totalCount || 0)
+              setVehicleMeta({
+                vin: targetVin,
+                model: matchedCatalogModel || decoded.model || searchRes.items[0]?.model || null,
+                make: decoded.make || searchRes.items[0]?.oem || null,
+                oem: decoded.make || searchRes.items[0]?.oem || null,
+                modelYear: decoded.modelYear,
+                series: decoded.series || decoded.trim,
+                manufacturer: decoded.manufacturer,
+              })
+            })
+          }
+        })
+        .catch(async (err) => {
+          console.warn('Direct VIN lookup failed, running fallback decode:', err)
+          try {
+            const decoded = await catalogApi.decodeVinFallback(targetVin)
+            const modelTerm = decoded.model?.trim() || ''
+            const makeTerm = decoded.make?.trim() || ''
+
+            let searchRes: PaginatedPartsResponse = {
+              items: [],
+              pageNumber: 1,
+              pageSize: 48,
+              totalCount: 0,
+              totalPages: 0,
+            }
+
+            let matchedCatalogModel: string | undefined
+
+            if (modelTerm || makeTerm) {
+              const modelsList = await catalogApi.getVehicleModels().catch(() => [])
+              matchedCatalogModel = modelTerm ? modelsList.find(
+                (m) =>
+                  Boolean(modelTerm) &&
+                  (m.toLowerCase() === modelTerm.toLowerCase() ||
+                    m.toLowerCase().includes(modelTerm.toLowerCase()) ||
+                    modelTerm.toLowerCase().includes(m.toLowerCase()))
+              ) : undefined
+
               if (matchedCatalogModel) {
                 try {
                   const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
@@ -457,16 +555,14 @@ export default function PartsSearchPage() {
                 }
               }
 
-              // 2. Fallback to candidate search terms
               if (searchRes.items.length === 0) {
                 const candidateTerms = Array.from(
                   new Set([
                     matchedCatalogModel,
-                    modelTerm.toUpperCase(),
-                    modelTerm,
-                    makeTerm.toUpperCase(),
-                    makeTerm,
-                    targetVin,
+                    modelTerm ? modelTerm.toUpperCase() : null,
+                    modelTerm || null,
+                    makeTerm ? makeTerm.toUpperCase() : null,
+                    makeTerm || null,
                   ].filter(Boolean) as string[])
                 )
 
@@ -487,98 +583,12 @@ export default function PartsSearchPage() {
                   }
                 }
               }
-
-              setParts(searchRes.items || [])
-              setPage(searchRes.pageNumber)
-              setTotalPages(searchRes.totalPages)
-              setTotalCount(searchRes.totalCount)
-              setVehicleMeta({
-                vin: targetVin,
-                model: matchedCatalogModel || decoded.model || searchRes.items[0]?.model || null,
-                make: decoded.make || searchRes.items[0]?.oem || null,
-                oem: decoded.make || searchRes.items[0]?.oem || null,
-                modelYear: decoded.modelYear,
-                series: decoded.series || decoded.trim,
-                manufacturer: decoded.manufacturer,
-              })
-            })
-          }
-        })
-        .catch(async (err) => {
-          console.warn('Direct VIN lookup failed, running fallback decode:', err)
-          try {
-            const decoded = await catalogApi.decodeVinFallback(targetVin)
-            const modelTerm = decoded.model?.trim() || ''
-            const makeTerm = decoded.make?.trim() || ''
-            const modelsList = await catalogApi.getVehicleModels().catch(() => [])
-            const matchedCatalogModel = modelsList.find(
-              (m) =>
-                m.toLowerCase() === modelTerm.toLowerCase() ||
-                m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                modelTerm.toLowerCase().includes(m.toLowerCase())
-            )
-
-            let searchRes: PaginatedPartsResponse = {
-              items: [],
-              pageNumber: 1,
-              pageSize: 48,
-              totalCount: 0,
-              totalPages: 1,
-            }
-
-            if (matchedCatalogModel) {
-              try {
-                const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
-                if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
-                  const matchedGroup = modelPartsRes.items[0]
-                  const total = matchedGroup.partCount || matchedGroup.parts.length
-                  searchRes = {
-                    items: matchedGroup.parts,
-                    pageNumber: modelPartsRes.pageNumber || 1,
-                    pageSize: modelPartsRes.pageSize || 48,
-                    totalCount: total,
-                    totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
-                  }
-                }
-              } catch (e) {
-                console.warn('getPartsByModel lookup failed:', e)
-              }
-            }
-
-            if (searchRes.items.length === 0) {
-              const candidateTerms = Array.from(
-                new Set([
-                  matchedCatalogModel,
-                  modelTerm.toUpperCase(),
-                  modelTerm,
-                  makeTerm.toUpperCase(),
-                  makeTerm,
-                  targetVin,
-                ].filter(Boolean) as string[])
-              )
-
-              for (const term of candidateTerms) {
-                try {
-                  const res = await catalogApi.searchParts({
-                    searchTerm: term,
-                    vin: null,
-                    pageNumber: 1,
-                    pageSize: 48,
-                  })
-                  if (res && res.items && res.items.length > 0) {
-                    searchRes = res
-                    break
-                  }
-                } catch (e) {
-                  console.warn(`Search attempt for '${term}' failed:`, e)
-                }
-              }
             }
 
             setParts(searchRes.items || [])
-            setPage(searchRes.pageNumber)
-            setTotalPages(searchRes.totalPages)
-            setTotalCount(searchRes.totalCount)
+            setPage(searchRes.pageNumber || 1)
+            setTotalPages(searchRes.totalPages || 0)
+            setTotalCount(searchRes.totalCount || 0)
             setVehicleMeta({
               vin: targetVin,
               model: matchedCatalogModel || decoded.model || searchRes.items[0]?.model || null,
@@ -816,16 +826,35 @@ export default function PartsSearchPage() {
       <div className="px-6 py-6 flex-grow">
         {/* Decoded VIN Notification Banner */}
         {locationState?.nhtsaDecode && (
-          <div className="mb-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-lg p-3.5 flex items-center justify-between gap-3 text-xs text-emerald-900 dark:text-emerald-200">
+          <div
+            className={cn(
+              'mb-4 border rounded-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs',
+              vehicleMeta.make || vehicleMeta.model
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-200'
+                : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200'
+            )}
+          >
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              {vehicleMeta.make || vehicleMeta.model ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              ) : (
+                <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+              )}
               <span>
-                VIN <strong className="font-mono font-bold">{vehicleMeta.vin}</strong> decoded as{' '}
-                <strong className="uppercase font-bold">{vehicleMeta.make} {vehicleMeta.model}</strong>. Displaying matching catalog components.
+                {vehicleMeta.make || vehicleMeta.model ? (
+                  <>
+                    VIN <strong className="font-mono font-bold">{vehicleMeta.vin}</strong> decoded as{' '}
+                    <strong className="uppercase font-bold">{vehicleMeta.make} {vehicleMeta.model}</strong>. Displaying matching catalog components.
+                  </>
+                ) : (
+                  <>
+                    VIN <strong className="font-mono font-bold">{vehicleMeta.vin}</strong> was not found in our catalog and could not be verified by NHTSA.
+                  </>
+                )}
               </span>
             </div>
             {vehicleMeta.manufacturer && (
-              <span className="hidden sm:inline-block text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+              <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
                 {vehicleMeta.manufacturer}
               </span>
             )}
@@ -965,21 +994,38 @@ export default function PartsSearchPage() {
                 <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog from database...</p>
               </div>
             ) : filteredParts.length === 0 ? (
-              <div className="text-center py-20 bg-white dark:bg-brand-card rounded border border-slate-200 dark:border-slate-800 p-8">
-                <p className="text-slate-500 text-sm font-semibold mb-3">
-                  {filterQuery ? 'No parts match your keyword filter.' : 'No parts found for the selected group.'}
+              <div className="text-center py-16 bg-white dark:bg-brand-card rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+                <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center mx-auto mb-4 text-amber-600 dark:text-amber-400">
+                  <Info className="w-6 h-6" />
+                </div>
+                <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">
+                  No Catalog Parts Found
+                </h4>
+                <p className="text-slate-500 text-xs max-w-md mx-auto mb-6">
+                  {vehicleMeta.vin
+                    ? `We could not find ingested catalog components for VIN ${vehicleMeta.vin}. Our procurement team can source genuine components directly for you.`
+                    : 'No parts match your current filter selection.'}
                 </p>
-                {(filterQuery || activeGroup !== 'ALL') && (
-                  <button
-                    onClick={() => {
-                      setActiveGroup('ALL')
-                      setFilterQuery('')
-                    }}
-                    className="px-4 py-2 bg-[#00C853] text-[#07110A] font-bold text-xs rounded-lg hover:bg-[#39FF88] transition-colors"
+                <div className="flex items-center justify-center gap-3 flex-wrap">
+                  {(filterQuery || activeGroup !== 'ALL') && (
+                    <button
+                      onClick={() => {
+                        setActiveGroup('ALL')
+                        setFilterQuery('')
+                      }}
+                      className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    >
+                      Reset Filter
+                    </button>
+                  )}
+                  <Link
+                    to={`/requests/new${vehicleMeta.vin ? `?vin=${encodeURIComponent(vehicleMeta.vin)}` : ''}`}
+                    className="px-5 py-2.5 bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] font-extrabold text-xs rounded-lg shadow-sm transition-colors inline-flex items-center gap-2"
                   >
-                    Reset Filter to All Groups
-                  </button>
-                )}
+                    <Package className="w-4 h-4" />
+                    Request Custom Parts Sourcing
+                  </Link>
+                </div>
               </div>
             ) : (
               <>
