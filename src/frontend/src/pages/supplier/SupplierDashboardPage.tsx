@@ -319,7 +319,7 @@ export default function SupplierDashboardPage() {
             <img
               src="/images/logo.png"
               alt="Africa Autopart"
-              className="w-36 h-auto"
+              className="w-36 h-auto object-contain"
             />
             {supplier && (
               <span className="text-[#4A6B50] dark:text-[#7A9A80] text-xs border-l border-[rgba(0,0,0,0.1)] dark:border-[rgba(255,255,255,0.1)] pl-3">

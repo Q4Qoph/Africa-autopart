@@ -7,8 +7,12 @@ import {
   Mail,
   Phone,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { catalogApi } from '@/api/catalogApi'
+import type { VehicleVinResponse, PaginatedPartsResponse, NhtsaVinDecodeResponse } from '@/types/catalog'
+import { cn } from '@/lib/utils'
 
-// Custom SVG Brand Icons since older lucide-react doesn't export them
+// Custom SVG Brand Icons
 const FacebookIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor">
     <path d="M9 8H7v3h2v9h4v-9h3.6l.4-3H13V6c0-.5.5-1 1-1h3V1h-4c-2.8 0-5 2.2-5 5v2z" />
@@ -35,14 +39,8 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
     <polygon points="9.8,8 9.8,16 16.6,12" fill="white" />
   </svg>
 )
-import { useTranslation } from 'react-i18next'
-import { vinApi } from '@/api/vinApi'
-import { partNewApi } from '@/api/partNewApi'
-import type { PartNewSearchResponse } from '@/types/partNew'
-import type { VehicleSummary } from '@/types/vin'
-import { cn } from '@/lib/utils'
 
-// ─── SVG Brand Logos (Exact replicas of the 27 PartSouq brands) ──────────────────────
+// ─── SVG Brand Logos (PartSouq brands) ──────────────────────
 
 const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
   Toyota: (color = 'currentColor') => (
@@ -240,15 +238,19 @@ export default function HomePage() {
   const [vin, setVin] = useState('')
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
-  const [demoVins, setDemoVins] = useState<VehicleSummary[]>([])
+  const [availableModels, setAvailableModels] = useState<string[]>([])
 
   // UI States
   const [activeTab, setActiveTab] = useState<'easy' | 'catalog' | 'prices' | 'range' | 'shipping'>('easy')
 
   useEffect(() => {
-    vinApi.getAllVehicles()
-      .then(({ data }) => setDemoVins(data.slice(0, 3)))
-      .catch(() => {})
+    catalogApi.getVehicleModels()
+      .then((models) => {
+        if (models && models.length > 0) {
+          setAvailableModels(models)
+        }
+      })
+      .catch(() => { })
   }, [])
 
   async function handleSearch(termToSearch: string) {
@@ -265,150 +267,79 @@ export default function HomePage() {
 
     if (isVinPattern) {
       try {
-        const { data } = await vinApi.searchVin(trimmed)
-        if (data && (data.make || data.model || data.isValid)) {
-          // When VIN is decoded, call /api/PartNew/search with intelligent fallback waterfall
-          let partNewRes: PartNewSearchResponse | null = null
-          let modelUsed = ''
-          let searchTypeUsed: 'model' | 'searchTerm' = 'model'
-
-          // Step 1: If model is returned, try searching by model
-          if (data.model) {
-            try {
-              const resByModel = await partNewApi.search({ model: data.model, searchTerm: '', pageNumber: 1, pageSize: 48 })
-              if (resByModel.totalCount > 0) {
-                partNewRes = resByModel
-                modelUsed = data.model
-                searchTypeUsed = 'model'
-              }
-            } catch (err) {
-              console.warn('Search by model failed:', err)
-            }
-          }
-
-          // Step 2: If model returned 0 results, try model as searchTerm
-          if (!partNewRes && data.model) {
-            try {
-              const resByModelTerm = await partNewApi.search({ model: '', searchTerm: data.model, pageNumber: 1, pageSize: 48 })
-              if (resByModelTerm.totalCount > 0) {
-                partNewRes = resByModelTerm
-                modelUsed = data.model
-                searchTypeUsed = 'searchTerm'
-              }
-            } catch (err) {
-              console.warn('Search by model as searchTerm failed:', err)
-            }
-          }
-
-          // Step 3: If make is returned, query using make in model payload (e.g. HYUNDAI, Haval)
-          if (!partNewRes && data.make) {
-            try {
-              const resByMake = await partNewApi.search({ model: data.make, searchTerm: '', pageNumber: 1, pageSize: 48 })
-              if (resByMake.totalCount > 0) {
-                partNewRes = resByMake
-                modelUsed = data.make
-                searchTypeUsed = 'model'
-              }
-            } catch (err) {
-              console.warn('Search by make in model payload failed:', err)
-            }
-          }
-
-          // Step 4: If make search in model had 0 results, try make in searchTerm
-          if (!partNewRes && data.make) {
-            try {
-              const resByMakeSearch = await partNewApi.search({ model: '', searchTerm: data.make, pageNumber: 1, pageSize: 48 })
-              if (resByMakeSearch.totalCount > 0) {
-                partNewRes = resByMakeSearch
-                modelUsed = data.make
-                searchTypeUsed = 'searchTerm'
-              }
-            } catch (err) {
-              console.warn('Search by make searchTerm failed:', err)
-            }
-          }
-
-          // Step 5: Try manufacturer primary word (e.g. "HYUNDAI MOTOR CO" -> "HYUNDAI")
-          if (!partNewRes && data.manufacturer) {
-            const primaryBrand = data.manufacturer.trim().split(' ')[0]
-            if (primaryBrand && primaryBrand.toLowerCase() !== data.make?.toLowerCase()) {
-              try {
-                const resByManufacturer = await partNewApi.search({ model: primaryBrand, searchTerm: '', pageNumber: 1, pageSize: 48 })
-                if (resByManufacturer.totalCount > 0) {
-                  partNewRes = resByManufacturer
-                  modelUsed = primaryBrand
-                  searchTypeUsed = 'model'
-                }
-              } catch (err) {
-                console.warn('Search by manufacturer failed:', err)
-              }
-            }
-          }
-
-          // Step 6: Try VIN in searchTerm (matching any parts tagged with this VIN)
-          if (!partNewRes && trimmed) {
-            try {
-              const resByVin = await partNewApi.search({ model: '', searchTerm: trimmed, pageNumber: 1, pageSize: 48 })
-              if (resByVin.totalCount > 0) {
-                partNewRes = resByVin
-                modelUsed = ''
-                searchTypeUsed = 'searchTerm'
-              }
-            } catch (err) {
-              console.warn('Search by VIN searchTerm failed:', err)
-            }
-          }
-
-          // Step 7: Universal catalog fallback to ensure parts are always available
-          if (!partNewRes) {
-            try {
-              const resFallback = await partNewApi.search({ model: '', searchTerm: '', pageNumber: 1, pageSize: 48 })
-              if (resFallback.totalCount > 0) {
-                partNewRes = resFallback
-                modelUsed = ''
-                searchTypeUsed = 'searchTerm'
-              }
-            } catch (err) {
-              console.warn('Universal catalog fallback failed:', err)
-            }
-          }
-
+        // Step 1: Query internal catalog database for this VIN
+        const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, 48)
+        if (vehicleRes && vehicleRes.parts && vehicleRes.parts.length > 0) {
           navigate('/parts-search', {
             state: {
-              vinSearchDetails: data,
-              partNewSearch: partNewRes ? {
-                searchTerm: searchTypeUsed === 'searchTerm' ? modelUsed : '',
-                model: searchTypeUsed === 'model' ? modelUsed : '',
-                searchType: searchTypeUsed,
-                data: partNewRes,
-              } : undefined,
+              vehicleVinResponse: vehicleRes,
+              vin: trimmed,
+              model: vehicleRes.model,
             },
           })
           return
         }
       } catch (vinErr) {
-        console.warn('VIN search failed, attempting part search:', vinErr)
+        console.warn('Direct catalog VIN lookup returned no match, trying fallback decode:', vinErr)
+      }
+
+      // Step 2: Fallback to NHTSA third-party decode if not found in catalog table
+      try {
+        const decodeData: NhtsaVinDecodeResponse = await catalogApi.decodeVinFallback(trimmed)
+        const fallbackTerm = decodeData.model || decodeData.make || trimmed
+
+        // Search parts catalog using decoded model/make
+        const searchRes: PaginatedPartsResponse = await catalogApi.searchParts({
+          searchTerm: fallbackTerm,
+          pageNumber: 1,
+          pageSize: 48,
+        })
+
+        navigate('/parts-search', {
+          state: {
+            nhtsaDecode: decodeData,
+            searchResults: searchRes,
+            searchTerm: fallbackTerm,
+            vin: trimmed,
+          },
+        })
+        return
+      } catch (decodeErr) {
+        console.warn('Fallback VIN decode failed:', decodeErr)
       }
     }
 
-    // Call /api/PartNew/search endpoint for model, part name, or part number
+    // Step 3: Regular part number or keyword search
     try {
-      // 1. Try as searchTerm (part number / part name)
-      const res = await partNewApi.search({ searchTerm: trimmed, model: '', pageNumber: 1, pageSize: 48 })
-      if (res.totalCount > 0) {
-        navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, model: '', searchType: 'searchTerm', data: res } } })
+      const searchRes = await catalogApi.searchParts({
+        searchTerm: trimmed,
+        pageNumber: 1,
+        pageSize: 48,
+      })
+
+      if (searchRes.totalCount > 0) {
+        navigate('/parts-search', {
+          state: {
+            searchResults: searchRes,
+            searchTerm: trimmed,
+          },
+        })
         return
       }
 
-      // 2. If 0 results, try as model name
-      const modelRes = await partNewApi.search({ model: trimmed, searchTerm: '', pageNumber: 1, pageSize: 48 })
-      if (modelRes.totalCount > 0) {
-        navigate('/parts-search', { state: { partNewSearch: { searchTerm: '', model: trimmed, searchType: 'model', data: modelRes } } })
-        return
-      }
+      // If searchTerm returned 0 results, try exact partNumber
+      const partNumRes = await catalogApi.searchParts({
+        partNumber: trimmed,
+        pageNumber: 1,
+        pageSize: 48,
+      })
 
-      // 3. If no matches, still navigate to parts-search to show empty state
-      navigate('/parts-search', { state: { partNewSearch: { searchTerm: trimmed, model: '', searchType: 'searchTerm', data: res } } })
+      navigate('/parts-search', {
+        state: {
+          searchResults: partNumRes.totalCount > 0 ? partNumRes : searchRes,
+          searchTerm: trimmed,
+        },
+      })
     } catch {
       setError(t('vin_error_invalid') ?? 'Could not find matching parts or vehicle. Check the input and try again.')
     } finally {
@@ -448,10 +379,7 @@ export default function HomePage() {
               Why is it so easy to buy with Africa Autopart? Easy-to-use online catalogue will help you quickly
               find needed parts. Sourcing components on our website is simple and intuitive. For your information
               we have prepared a detailed help section. If necessary, our online support team will personally
-              assist you. We are not limited by local warehouse stocks as we have an extensive network of verified
-              sub-suppliers who instantly dispatch ordered items available at their facilities. Flexible logistics
-              allows us to deliver goods within the shortest time. Sourcing automotive components has never been this
-              transparent and accessible.
+              help with the selection and ordering of parts.
             </p>
           </div>
         )
@@ -515,211 +443,218 @@ export default function HomePage() {
 
   return (
     <div className="px-6 md:px-8 py-8">
-        
-        {/* Headline Subbar */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-300 dark:border-slate-800 pb-3 mb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 font-sans">
-            Auto Parts Around the World
-          </h1>
-          <div className="flex items-center gap-1.5 mt-3 sm:mt-0">
-            <a href="mailto:info@africa-autopart.com" className="w-7 h-7 rounded bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-colors" title="Email">
-              <Mail className="w-4 h-4" />
-            </a>
-            <a href="https://wa.me/25377577016" className="w-7 h-7 rounded bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-colors" title="WhatsApp">
-              <Phone className="w-4 h-4" />
-            </a>
-            <a href="https://facebook.com" className="w-7 h-7 rounded bg-[#1877f2] hover:bg-[#166fe5] text-white flex items-center justify-center transition-colors" title="Facebook">
-              <FacebookIcon className="w-4 h-4" />
-            </a>
-            <a href="https://instagram.com" className="w-7 h-7 rounded bg-[#c13584] hover:bg-[#b13079] text-white flex items-center justify-center transition-colors" title="Instagram">
-              <InstagramIcon className="w-4 h-4" />
-            </a>
-            <a href="https://twitter.com" className="w-7 h-7 rounded bg-black hover:bg-neutral-800 text-white flex items-center justify-center transition-colors" title="Twitter/X">
-              <TwitterIcon className="w-4 h-4" />
-            </a>
-          </div>
+
+      {/* Headline Subbar */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-300 dark:border-slate-800 pb-3 mb-6">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 font-sans">
+          Auto Parts Around the World
+        </h1>
+        <div className="flex items-center gap-1.5 mt-3 sm:mt-0">
+          <a href="mailto:info@africa-autopart.com" className="w-7 h-7 rounded bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-colors" title="Email">
+            <Mail className="w-4 h-4" />
+          </a>
+          <a href="https://wa.me/25377577016" className="w-7 h-7 rounded bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-colors" title="WhatsApp">
+            <Phone className="w-4 h-4" />
+          </a>
+          <a href="https://facebook.com" className="w-7 h-7 rounded bg-[#1877f2] hover:bg-[#166fe5] text-white flex items-center justify-center transition-colors" title="Facebook">
+            <FacebookIcon className="w-4 h-4" />
+          </a>
+          <a href="https://instagram.com" className="w-7 h-7 rounded bg-[#c13584] hover:bg-[#b13079] text-white flex items-center justify-center transition-colors" title="Instagram">
+            <InstagramIcon className="w-4 h-4" />
+          </a>
+          <a href="https://twitter.com" className="w-7 h-7 rounded bg-black hover:bg-neutral-800 text-white flex items-center justify-center transition-colors" title="Twitter/X">
+            <TwitterIcon className="w-4 h-4" />
+          </a>
         </div>
+      </div>
 
-        {/* ── SEARCH BAR CONTAINER ───────────────────────────────────────────────── */}
-        <section className="bg-white dark:bg-brand-card/50 border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="w-full">
-            <div className="flex items-center bg-white dark:bg-brand-ink border border-slate-300 dark:border-slate-800 rounded overflow-hidden shadow-inner focus-within:border-slate-500 dark:focus-within:border-[#00C853] transition-colors">
-              <input
-                type="text"
-                value={vin}
-                onChange={(e) => {
-                  setVin(e.target.value.toUpperCase())
-                  setError('')
-                }}
-                placeholder={t('vin_placeholder') ?? 'Part Number or VIN/Frame'}
-                className="flex-grow h-12 px-4 outline-none bg-transparent text-slate-800 dark:text-slate-100 text-base font-bold tracking-wide"
-              />
-              <button
-                type="button"
-                className="h-12 px-3.5 border-l border-slate-200 dark:border-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-                title="Catalog Index"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-              <button
-                type="submit"
-                disabled={searching || !vin.trim()}
-                className="h-12 px-6 bg-[#5cb85c] hover:bg-[#4cae4c] text-white flex items-center justify-center font-extrabold transition-colors disabled:opacity-65"
-              >
-                {searching ? (
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <Search className="w-5 h-5" />
-                )}
-              </button>
-            </div>
+      {/* ── SEARCH BAR CONTAINER ───────────────────────────────────────────────── */}
+      <section className="bg-white dark:bg-brand-card/50 border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans max-w-4xl mx-auto">
+        <form onSubmit={handleSubmit} className="w-full">
+          <div className="flex items-center bg-white dark:bg-brand-ink border border-slate-300 dark:border-slate-800 rounded overflow-hidden shadow-inner focus-within:border-slate-500 dark:focus-within:border-[#00C853] transition-colors">
+            <input
+              type="text"
+              value={vin}
+              onChange={(e) => {
+                setVin(e.target.value.toUpperCase())
+                setError('')
+              }}
+              placeholder={t('vin_placeholder') ?? 'Part Number, Model, or 17-digit VIN'}
+              className="flex-grow h-12 px-4 outline-none bg-transparent text-slate-800 dark:text-slate-100 text-base font-bold tracking-wide"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (availableModels.length > 0) {
+                  handleSearch(availableModels[0])
+                }
+              }}
+              className="h-12 px-3.5 border-l border-slate-200 dark:border-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+              title="Catalog Index"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <button
+              type="submit"
+              disabled={searching || !vin.trim()}
+              className="h-12 px-6 bg-[#5cb85c] hover:bg-[#4cae4c] text-white flex items-center justify-center font-extrabold transition-colors disabled:opacity-65"
+            >
+              {searching ? (
+                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <Search className="w-5 h-5" />
+              )}
+            </button>
+          </div>
 
-            {error && <p className="text-red-600 text-xs mt-2 text-center font-semibold">{error}</p>}
+          {error && <p className="text-red-600 text-xs mt-2 text-center font-semibold">{error}</p>}
 
-            {/* Clickable Examples */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-slate-500 mt-3 font-medium">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span>Example:</span>
-                {['8403300XST23A', '09110A0000', 'KMHCU51DAFU223139'].map((exVin) => (
-                  <button
-                    key={exVin}
-                    type="button"
-                    onClick={() => {
-                      setVin(exVin)
-                      handleSearch(exVin)
-                    }}
-                    className="text-blue-600 hover:underline cursor-pointer"
-                  >
-                    {exVin}
-                  </button>
-                ))}
-                {demoVins.map((v) => (
-                  <button
-                    key={v.vin}
-                    type="button"
-                    onClick={() => {
-                      setVin(v.vin)
-                      handleSearch(v.vin)
-                    }}
-                    className="text-blue-600 hover:underline cursor-pointer"
-                  >
-                    {v.vin}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-4 mt-2 sm:mt-0">
-                <a
-                  href="#how-to-order-video"
-                  onClick={scrollToVideo}
-                  className="text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <YoutubeIcon className="w-3.5 h-3.5 text-red-500 fill-current" />
-                  How to make order ?
-                </a>
+          {/* Clickable Examples */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-slate-500 mt-3 font-medium">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span>Example:</span>
+              {[
+                { label: 'MALC281CBLM567587', val: 'MALC281CBLM567587' },
+                { label: 'JTEEB71J10F013008', val: 'JTEEB71J10F013008' },
+                { label: '4405060490', val: '4405060490' },
+                { label: 'CRETA', val: 'CRETA' },
+              ].map((ex) => (
                 <button
+                  key={ex.val}
                   type="button"
-                  onClick={() => alert('VIN (Vehicle Identification Number) is a 17-digit code found on your vehicle registration document, door pillar, or windshield edge.')}
+                  onClick={() => {
+                    setVin(ex.val)
+                    handleSearch(ex.val)
+                  }}
                   className="text-blue-600 hover:underline cursor-pointer"
                 >
-                  Where is VIN/Frame ?
+                  {ex.label}
                 </button>
-              </div>
+              ))}
             </div>
-          </form>
-        </section>
 
-        {/* ── STATS COUNTER GRID ─────────────────────────────────────────────────── */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8 font-sans">
-          {[
-            { value: '199,985', label: 'SATISFIED CLIENTS' },
-            { value: '190', label: 'COUNTRIES WE SHIP' },
-            { value: '17,000,000', label: 'PARTS IN DATABASE' },
-            { value: '2 DAYS', label: 'AVERAGE DISPATCH' },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-white/80 dark:bg-brand-card/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded p-4 text-center shadow-sm">
-              <p className="text-2xl font-black text-slate-800 dark:text-slate-200">{stat.value}</p>
-              <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mt-1">{stat.label}</p>
+            <div className="flex items-center gap-4 mt-2 sm:mt-0">
+              <a
+                href="#how-to-order-video"
+                onClick={scrollToVideo}
+                className="text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <YoutubeIcon className="w-3.5 h-3.5 text-red-500 fill-current" />
+                How to make order ?
+              </a>
+              <button
+                type="button"
+                onClick={() => alert('VIN (Vehicle Identification Number) is a 17-digit code found on your vehicle registration document, door pillar, or windshield edge.')}
+                className="text-blue-600 hover:underline cursor-pointer"
+              >
+                Where is VIN/Frame ?
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      {/* ── STATS COUNTER GRID ─────────────────────────────────────────────────── */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8 font-sans">
+        {[
+          { value: '199,985', label: 'SATISFIED CLIENTS' },
+          { value: '190', label: 'COUNTRIES WE SHIP' },
+          { value: '17,000,000', label: 'PARTS IN DATABASE' },
+          { value: '2 DAYS', label: 'AVERAGE DISPATCH' },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-white/80 dark:bg-brand-card/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded p-4 text-center shadow-sm">
+            <p className="text-2xl font-black text-slate-800 dark:text-slate-200">{stat.value}</p>
+            <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mt-1">{stat.label}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* ── BRAND CATALOG GRID (Online Catalogs) ───────────────────────────────── */}
+      <section className="mb-12">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center sm:text-left font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
+          Genuine Parts Online Catalogs
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {BRANDS.map((brand) => (
+            <div
+              key={brand}
+              onClick={() => {
+                setVin(brand)
+                handleSearch(brand)
+              }}
+              className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 dark:hover:border-brand-green transition-all duration-200 group"
+            >
+              {/* SVG Logo Container */}
+              <div className="h-16 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:scale-105 transition-transform duration-300">
+                <img
+                  src={`/images/brands/${brand.toLowerCase().replace(/\s+/g, '-')}${['lexus', 'volkswagen'].includes(brand.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`}
+                  alt={brand}
+                  className="h-full w-full object-contain dark:brightness-90 dark:contrast-125"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none'
+                  }}
+                />
+              </div>
+              {/* Name */}
+              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-3 group-hover:text-slate-900 dark:group-hover:text-white font-sans">
+                {brand}
+              </span>
             </div>
           ))}
-        </section>
+        </div>
+      </section>
 
-        {/* ── BRAND CATALOG GRID (Online Catalogs) ───────────────────────────────── */}
-        <section className="mb-12">
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center sm:text-left font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
-            Genuine Parts Online Catalogs
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {BRANDS.map((brand) => (
-              <div
-                key={brand}
-                onClick={() => navigate('/requests/new', { state: { make: brand } })}
-                className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 dark:hover:border-brand-green transition-all duration-200 group"
-              >
-                {/* SVG Logo Container */}
-              <div className="h-16 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:scale-105 transition-transform duration-300">
-                <img src={`/images/brands/${brand.toLowerCase().replace(/\s+/g, '-')}${['lexus','volkswagen'].includes(brand.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`} alt={brand} className="h-full w-full object-contain dark:brightness-90 dark:contrast-125" />
-              </div>
-                {/* Name */}
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 mt-3 group-hover:text-slate-900 dark:group-hover:text-white font-sans">
-                  {brand}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+      {/* ── HOW TO ORDER VIDEO ─────────────────────────────────────────────────── */}
+      <section id="how-to-order-video" className="mb-12 scroll-mt-20">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
+          How to make order
+        </h2>
+        <div className="w-full max-w-4xl mx-auto bg-slate-950 aspect-video rounded overflow-hidden shadow-lg relative border-4 border-white dark:border-slate-800">
+          <iframe
+            className="w-full h-full border-0"
+            src="https://www.youtube.com/embed/H8lCcr4T_D8"
+            title="Auto parts ordering guide"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+      </section>
 
-        {/* ── HOW TO ORDER VIDEO ─────────────────────────────────────────────────── */}
-        <section id="how-to-order-video" className="mb-12 scroll-mt-20">
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
-            How to make order
-          </h2>
-          <div className="w-full max-w-4xl mx-auto bg-slate-950 aspect-video rounded overflow-hidden shadow-lg relative border-4 border-white dark:border-slate-800">
-            <iframe
-              className="w-full h-full border-0"
-              src="https://www.youtube.com/embed/H8lCcr4T_D8"
-              title="Auto parts ordering guide"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </section>
+      {/* ── ABOUT AFRICA AUTOPART TABS SECTION ───────────────────────────────────────── */}
+      <section className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-5 font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
+          About Africa Autopart
+        </h2>
 
-        {/* ── ABOUT AFRICA AUTOPART TABS SECTION ───────────────────────────────────────── */}
-        <section className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans">
-          <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-5 font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
-            About Africa Autopart
-          </h2>
-          
-          {/* Tab buttons */}
-          <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-brand-ink p-1.5 rounded mb-5">
-            {[
-              { id: 'easy', label: 'Easy to Use' },
-              { id: 'catalog', label: 'Online catalogue' },
-              { id: 'prices', label: 'Best prices' },
-              { id: 'range', label: 'Extensive Range' },
-              { id: 'shipping', label: 'World Wide Shipping' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={cn(
-                  'flex-1 min-w-[120px] py-2 px-3 text-xs font-bold rounded transition-colors text-center',
-                  activeTab === tab.id
-                    ? 'bg-[#374151] dark:bg-brand-green text-white dark:text-brand-ink shadow-sm'
-                    : 'text-slate-600 dark:text-brand-muted hover:bg-slate-200 dark:hover:bg-brand-card-2 hover:text-slate-800 dark:hover:text-white'
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+        {/* Tab buttons */}
+        <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-brand-ink p-1.5 rounded mb-5">
+          {[
+            { id: 'easy', label: 'Easy to Use' },
+            { id: 'catalog', label: 'Online catalogue' },
+            { id: 'prices', label: 'Best prices' },
+            { id: 'range', label: 'Extensive Range' },
+            { id: 'shipping', label: 'World Wide Shipping' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={cn(
+                'flex-1 min-w-[120px] py-2 px-3 text-xs font-bold rounded transition-colors text-center',
+                activeTab === tab.id
+                  ? 'bg-[#374151] dark:bg-brand-green text-white dark:text-brand-ink shadow-sm'
+                  : 'text-slate-600 dark:text-brand-muted hover:bg-slate-200 dark:hover:bg-brand-card-2 hover:text-slate-800 dark:hover:text-white'
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-          {/* Dynamic text block */}
-          <div className="border border-slate-100 dark:border-slate-800 p-4 rounded bg-slate-50/50 dark:bg-[#07110A]/50 min-h-[160px]">
-            {renderTabContent()}
-          </div>
-        </section>
+        {/* Dynamic text block */}
+        <div className="border border-slate-100 dark:border-slate-800 p-4 rounded bg-slate-50/50 dark:bg-[#07110A]/50 min-h-[160px]">
+          {renderTabContent()}
+        </div>
+      </section>
 
     </div>
   )

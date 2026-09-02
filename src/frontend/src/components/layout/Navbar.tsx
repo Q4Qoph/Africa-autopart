@@ -112,22 +112,19 @@ export default function Navbar() {
       <div className="fixed top-0 inset-x-0 z-50 flex flex-col shadow-md">
         
         {/* ── Main nav bar (PartSouq UI & Africa Autopart Brand) ── */}
-        <header className="h-[90px] bg-[#003020] border-b border-slate-800 text-white flex items-center select-none">
+        <header className="h-[74px] bg-[#003020] border-b border-slate-800 text-white flex items-center select-none">
           <div className="w-full px-4 flex items-center justify-between">
             
             {/* Left: Brand Logo (Africa Autopart Branding) */}
             <Link to="/" className="flex items-center group font-sans shrink-0 mr-4">
-              {/* AA Badge in Green branding colors */}
-              <svg viewBox="0 0 100 100" className="w-9 h-9 mr-2.5 transition-transform duration-500 group-hover:rotate-180" fill="none">
-                <circle cx="50" cy="50" r="45" fill="#00933C" />
-                <circle cx="50" cy="50" r="35" stroke="#00C853" strokeWidth="6" strokeDasharray="12 6" />
-                <circle cx="50" cy="50" r="20" fill="#00C853" />
-                <text x="50" y="58" fontFamily="sans-serif" fontWeight="900" fontSize="22" fill="#07110A" textAnchor="middle">AA</text>
-              </svg>
-              {/* Text logo */}
-              <span className="font-extrabold text-xl tracking-tight italic">
-                <span className="text-white">Africa</span>
-                <span className="text-[#00C853] ml-1">Autopart</span>
+              <img
+                src="/images/logo.png"
+                alt="Africa AutoParts"
+                className="h-16 md:h-[68px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              />
+              <span className="-ml-3 flex flex-col justify-center select-none font-extrabold italic tracking-tight">
+                <span className="text-white text-xl md:text-2xl leading-[0.85]">Africa</span>
+                <span className="text-[#00C853] text-lg md:text-xl leading-[0.85] -mt-1">AutoParts</span>
               </span>
             </Link>
 
@@ -234,8 +231,6 @@ export default function Navbar() {
                   </Link>
                 </div>
               )}
-
-              
 
               {/* Shopping Cart Pill */}
               <Link

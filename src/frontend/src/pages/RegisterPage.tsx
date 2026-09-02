@@ -63,7 +63,7 @@ export default function RegisterPage() {
         />
 
         <Link to="/" className="relative">
-          <img src="/images/logo.png" alt="Africa Autopart" className="w-44 h-auto" />
+          <img src="/images/logo.png" alt="Africa Autopart" className="w-48 h-auto object-contain" />
         </Link>
 
         <div className="relative">

@@ -36,7 +36,7 @@ export default function RootLayout() {
     >
       <Navbar />
 
-      <main className="pt-[90px] w-full max-w-[1240px] mx-auto bg-card text-card-foreground border-x border-border shadow-sm relative z-10 min-h-[90vh] flex flex-col justify-between font-sans transition-colors duration-200">
+      <main className="pt-[74px] w-full max-w-[1240px] mx-auto bg-card text-card-foreground border-x border-border shadow-sm relative z-10 min-h-[90vh] flex flex-col justify-between font-sans transition-colors duration-200">
         <div className="flex-grow flex flex-col">
           <Outlet />
         </div>

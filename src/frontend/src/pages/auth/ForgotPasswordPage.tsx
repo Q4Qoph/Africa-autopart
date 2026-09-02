@@ -39,7 +39,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-[#F7FDF8] dark:bg-[#07110A] flex flex-col items-center justify-center px-6 py-12">
       <Link to="/" className="mb-10">
-        <img src="/images/logo.png" alt="Africa Autopart" className="w-40 h-auto" />
+        <img src="/images/logo.png" alt="Africa Autopart" className="w-44 h-auto object-contain" />
       </Link>
 
       <div className="w-full max-w-[400px]">

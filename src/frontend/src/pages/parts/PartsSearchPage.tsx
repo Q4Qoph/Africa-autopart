@@ -1,7 +1,6 @@
-// src/frontend/src/pages/parts/PartsSearchPage.tsx
 import { useEffect, useState, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { useLocation, Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import {
   Package,
   ShoppingCart,
@@ -11,14 +10,20 @@ import {
   Home,
   Info,
   ListFilter,
-  Search,
   Loader2,
+  CheckCircle2,
+  RefreshCw,
+  Copy,
+  Check,
 } from 'lucide-react'
-import { partNewApi } from '@/api/partNewApi'
-import type { VinSearchResponse } from '@/types/vin'
-import type { PartNewItem, PartNewSearchResponse } from '@/types/partNew'
+import { catalogApi } from '@/api/catalogApi'
+import type {
+  CatalogPartItem,
+  VehicleVinResponse,
+  PaginatedPartsResponse,
+  NhtsaVinDecodeResponse,
+} from '@/types/catalog'
 import { useExternalCart } from '@/context/ExternalCartContext'
-
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import {
@@ -216,14 +221,9 @@ const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
       <path d="M35,25 C30,15 45,15 50,30 C55,15 70,15 65,25 C60,35 50,38 50,45 Z" fill={color} stroke="none" />
     </svg>
   ),
-  Haval: (color = 'currentColor') => (
-    <svg viewBox="0 0 100 60" className="w-full h-full" fill="none">
-      <text x="50" y="38" fontFamily="sans-serif" fontWeight="900" fontSize="20" fill={color} textAnchor="middle" letterSpacing="1">HAVAL</text>
-    </svg>
-  ),
 }
 
-// ─── TECHNICAL DIAGRAM VECTORS ────────────────────────────────────────────────
+// ─── TECHNICAL SCHEMATIC SVG FALLBACKS ────────────────────────────────────────
 
 function DiagramSVG({ code }: { code: number }) {
   switch (code) {
@@ -285,57 +285,6 @@ function DiagramSVG({ code }: { code: number }) {
           <line x1="15" y1="70" x2="85" y2="70" strokeWidth="3" />
         </svg>
       )
-    case 6:
-      return (
-        <svg viewBox="0 0 100 80" className="w-full h-full max-h-32 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <circle cx="35" cy="40" r="16" />
-          <circle cx="35" cy="40" r="8" strokeDasharray="2 2" />
-          <circle cx="70" cy="30" r="10" />
-          <circle cx="70" cy="30" r="4" strokeDasharray="2 2" />
-          <path d="M35,24 C50,22 60,20 70,20 C75,20 80,24 80,30 C80,35 75,40 70,40 C55,42 45,46 35,56 C30,56 19,48 19,40 C19,30 25,24 35,24 Z" strokeDasharray="3 3" />
-        </svg>
-      )
-    case 7:
-      return (
-        <svg viewBox="0 0 100 80" className="w-full h-full max-h-32 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <circle cx="50" cy="40" r="18" />
-          <circle cx="50" cy="40" r="2" fill="currentColor" stroke="none" />
-          <rect x="30" y="25" width="5" height="30" />
-          <rect x="65" y="25" width="5" height="30" />
-          <path d="M40,15 L60,15 M32,15 L32,25 M68,15 L68,25" />
-          <circle cx="50" cy="40" r="12" strokeDasharray="4 2" />
-        </svg>
-      )
-    case 8:
-      return (
-        <svg viewBox="0 0 100 80" className="w-full h-full max-h-32 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <path d="M20,15 C20,15 35,15 50,35 C65,55 80,55 80,55" strokeWidth="3" />
-          <path d="M20,35 C20,35 35,35 50,45 C65,55 80,55" strokeWidth="3" />
-          <path d="M20,55 C20,55 35,55 50,55 C65,55 80,55" strokeWidth="3" />
-          <rect x="15" y="10" width="8" height="50" rx="1" />
-          <rect x="75" y="50" width="10" height="15" rx="1" />
-        </svg>
-      )
-    case 9:
-      return (
-        <svg viewBox="0 0 100 80" className="w-full h-full max-h-32 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <rect x="35" y="15" width="30" height="50" rx="4" />
-          <line x1="35" y1="25" x2="65" y2="25" />
-          <line x1="35" y1="35" x2="65" y2="35" strokeDasharray="3 3" />
-          <line x1="35" y1="45" x2="65" y2="45" strokeDasharray="3 3" />
-          <line x1="35" y1="55" x2="65" y2="55" />
-          <circle cx="50" cy="20" r="2" fill="currentColor" stroke="none" />
-        </svg>
-      )
-    case 10:
-      return (
-        <svg viewBox="0 0 100 80" className="w-full h-full max-h-32 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="1.2">
-          <rect x="15" y="20" width="70" height="40" rx="2" />
-          <path d="M25,20 L25,60 M35,20 L35,60 M45,20 L45,60 M55,20 L55,60 M65,20 L65,60 M75,20 L75,60" />
-          <line x1="15" y1="30" x2="85" y2="30" strokeDasharray="4 2" />
-          <line x1="15" y1="50" x2="85" y2="50" strokeDasharray="4 2" />
-        </svg>
-      )
     default:
       return (
         <svg viewBox="0 0 100 80" className="w-full h-full max-h-32 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="1.2">
@@ -351,10 +300,9 @@ function getDiagramIndex(partName: string): number {
   for (let i = 0; i < partName.length; i++) {
     hash = partName.charCodeAt(i) + ((hash << 5) - hash)
   }
-  return Math.abs(hash % 10) + 1
+  return Math.abs(hash % 5) + 1
 }
 
-// Helper to generate pagination page numbers
 const getPageNumbers = (current: number, total: number) => {
   const pages: (number | string)[] = []
   if (total <= 7) {
@@ -371,189 +319,194 @@ const getPageNumbers = (current: number, total: number) => {
   return pages
 }
 
-// Unified Part interface for display
-interface UnifiedPart {
-  partNumber: string
-  name: string
-  description: string
-  price: number
-  imageUrl?: string | null
-  groupName?: string | null
-  pnc?: string | null
-  model?: string | null
-  source?: string | null
-  vin?: string | null
-}
-
 export default function PartsSearchPage() {
   const location = useLocation()
-  const { t } = useTranslation('home')
   const { addItem } = useExternalCart()
 
-  const vinSearchDetails = location.state?.vinSearchDetails as VinSearchResponse | undefined
-  const partNewSearch = location.state?.partNewSearch as {
+  // Location state payload from HomePage
+  const locationState = location.state as {
+    vehicleVinResponse?: VehicleVinResponse
+    searchResults?: PaginatedPartsResponse
+    nhtsaDecode?: NhtsaVinDecodeResponse
+    vin?: string
     searchTerm?: string
     model?: string
-    searchType?: 'searchTerm' | 'model'
-    data: PartNewSearchResponse
   } | undefined
 
-  // State for PartNew results & Pagination
-  const [partNewData, setPartNewData] = useState<PartNewItem[]>(partNewSearch?.data?.data || [])
-  const [page, setPage] = useState<number>(partNewSearch?.data?.pageNumber || 1)
-  const [totalPages, setTotalPages] = useState<number>(partNewSearch?.data?.totalPages || 1)
-  const [totalCount, setTotalCount] = useState<number>(partNewSearch?.data?.totalCount || (partNewSearch?.data?.data?.length || 0))
-  const [loadingParts, setLoadingParts] = useState<boolean>(false)
-  const [activeGroup, setActiveGroup] = useState<string>('ALL')
-  const [filterQuery, setFilterQuery] = useState<string>('')
-
-  // Search parameters currently active
-  const [activeQueryParams, setActiveQueryParams] = useState({
-    searchTerm: partNewSearch?.searchType === 'searchTerm' ? (partNewSearch.searchTerm || '') : '',
-    model: partNewSearch?.searchType === 'model' ? (partNewSearch.model || '') : (partNewSearch?.model || ''),
+  // Main state variables
+  const [parts, setParts] = useState<CatalogPartItem[]>(
+    locationState?.vehicleVinResponse?.parts || locationState?.searchResults?.items || []
+  )
+  const [vehicleMeta, setVehicleMeta] = useState<{
+    vin?: string | null
+    make?: string | null
+    model?: string | null
+    modelYear?: string | null
+    series?: string | null
+    vehicle?: string | null
+    oem?: string | null
+  }>({
+    vin: locationState?.vehicleVinResponse?.vin || locationState?.nhtsaDecode?.vin || locationState?.vin,
+    make: locationState?.nhtsaDecode?.make || locationState?.vehicleVinResponse?.parts?.[0]?.oem,
+    model: locationState?.vehicleVinResponse?.model || locationState?.nhtsaDecode?.model || locationState?.model,
+    modelYear: locationState?.vehicleVinResponse?.modelYear || locationState?.nhtsaDecode?.modelYear,
+    series: locationState?.vehicleVinResponse?.series || locationState?.nhtsaDecode?.series,
+    vehicle: locationState?.vehicleVinResponse?.vehicle,
+    oem: locationState?.vehicleVinResponse?.parts?.[0]?.oem,
   })
 
-  // Modal state
-  const [selectedPart, setSelectedPart] = useState<UnifiedPart | null>(null)
+  // Pagination & Filtering state
+  const [page, setPage] = useState<number>(
+    locationState?.vehicleVinResponse?.pageNumber || locationState?.searchResults?.pageNumber || 1
+  )
+  const [totalPages, setTotalPages] = useState<number>(
+    locationState?.vehicleVinResponse?.totalPages || locationState?.searchResults?.totalPages || 1
+  )
+  const [totalCount, setTotalCount] = useState<number>(
+    locationState?.vehicleVinResponse?.partCount ||
+    locationState?.searchResults?.totalCount ||
+    (locationState?.vehicleVinResponse?.parts?.length || locationState?.searchResults?.items?.length || 0)
+  )
+  const [loading, setLoading] = useState<boolean>(false)
+  const [activeGroup, setActiveGroup] = useState<string>('ALL')
+  const [filterQuery, setFilterQuery] = useState<string>('')
+  const [apiGroups, setApiGroups] = useState<string[]>([])
+
+  // Modal State
+  const [selectedPart, setSelectedPart] = useState<CatalogPartItem | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
+  const [copiedPartNumber, setCopiedPartNumber] = useState(false)
 
-  // Auto-fetch parts from /api/PartNew/search if arriving with vinSearchDetails but no pre-loaded parts
+  // Fetch available groups from API
   useEffect(() => {
-    if (partNewData.length > 0) return
-    if (!vinSearchDetails) return
-
-    async function loadPartsForVin() {
-      setLoadingParts(true)
-      try {
-        let res: PartNewSearchResponse | null = null
-        let modelUsed = ''
-        let termUsed = ''
-
-        // 1. Try model in model payload
-        if (vinSearchDetails?.model) {
-          try {
-            const mRes = await partNewApi.search({ model: vinSearchDetails.model, searchTerm: '', pageNumber: 1, pageSize: 48 })
-            if (mRes.totalCount > 0) {
-              res = mRes
-              modelUsed = vinSearchDetails.model
-            }
-          } catch {}
+    catalogApi.getPartGroups()
+      .then((groups) => {
+        if (groups && groups.length > 0) {
+          setApiGroups(groups)
         }
+      })
+      .catch(() => {})
+  }, [])
 
-        // 2. Try make in model payload
-        if (!res && vinSearchDetails?.make) {
-          try {
-            const mkRes = await partNewApi.search({ model: vinSearchDetails.make, searchTerm: '', pageNumber: 1, pageSize: 48 })
-            if (mkRes.totalCount > 0) {
-              res = mkRes
-              modelUsed = vinSearchDetails.make
+  // Auto-fetch if direct URL navigation or missing parts
+  useEffect(() => {
+    if (parts.length > 0) return
+
+    const targetVin = locationState?.vin
+    const targetSearch = locationState?.searchTerm
+
+    if (targetVin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(targetVin)) {
+      setLoading(true)
+      catalogApi.getVehicleByVin(targetVin, 1, 48)
+        .then((res) => {
+          if (res.parts && res.parts.length > 0) {
+            setParts(res.parts)
+            setPage(res.pageNumber)
+            setTotalPages(res.totalPages)
+            setTotalCount(res.partCount || res.parts.length)
+            setVehicleMeta({
+              vin: res.vin,
+              model: res.model,
+              modelYear: res.modelYear,
+              series: res.series,
+              vehicle: res.vehicle,
+              oem: res.parts[0]?.oem,
+            })
+          }
+        })
+        .catch((err) => console.warn('Failed to load VIN parts:', err))
+        .finally(() => setLoading(false))
+    } else if (targetSearch) {
+      setLoading(true)
+      catalogApi.searchParts({ searchTerm: targetSearch, pageNumber: 1, pageSize: 48 })
+        .then((res) => {
+          if (res.items && res.items.length > 0) {
+            setParts(res.items)
+            setPage(res.pageNumber)
+            setTotalPages(res.totalPages)
+            setTotalCount(res.totalCount)
+            if (res.items[0]) {
+              setVehicleMeta({
+                model: res.items[0].model,
+                modelYear: res.items[0].modelYear,
+                oem: res.items[0].oem,
+                vin: res.items[0].vin,
+              })
             }
-          } catch {}
-        }
+          }
+        })
+        .catch((err) => console.warn('Failed to search parts:', err))
+        .finally(() => setLoading(false))
+    }
+  }, [parts.length, locationState])
 
-        // 3. Try make in searchTerm
-        if (!res && vinSearchDetails?.make) {
-          try {
-            const mktRes = await partNewApi.search({ model: '', searchTerm: vinSearchDetails.make, pageNumber: 1, pageSize: 48 })
-            if (mktRes.totalCount > 0) {
-              res = mktRes
-              termUsed = vinSearchDetails.make
-            }
-          } catch {}
-        }
+  // Extract unique groups from both API and current parts
+  const availableGroups = useMemo(() => {
+    const fromParts = parts.map((p) => p.groupName?.trim()).filter(Boolean) as string[]
+    const combined = Array.from(new Set([...apiGroups, ...fromParts])).filter(Boolean)
+    return ['ALL', ...combined]
+  }, [parts, apiGroups])
 
-        // 4. Try general catalog fallback
-        if (!res) {
-          try {
-            const fbRes = await partNewApi.search({ model: '', searchTerm: '', pageNumber: 1, pageSize: 48 })
-            if (fbRes.totalCount > 0) {
-              res = fbRes
-            }
-          } catch {}
-        }
+  // Local filter against search query and group
+  const filteredParts = useMemo(() => {
+    return parts.filter((p) => {
+      const q = filterQuery.toLowerCase().trim()
+      const matchesQuery = !q ||
+        p.partName?.toLowerCase().includes(q) ||
+        p.partNumber?.toLowerCase().includes(q) ||
+        p.pnc?.toLowerCase().includes(q) ||
+        p.groupName?.toLowerCase().includes(q) ||
+        p.subgroupName?.toLowerCase().includes(q)
 
-        if (res && res.data) {
-          setPartNewData(res.data)
+      const matchesGroup = activeGroup === 'ALL' || p.groupName === activeGroup
+
+      return matchesQuery && matchesGroup
+    })
+  }, [parts, filterQuery, activeGroup])
+
+  // Handle Server-Side Page / Group Change
+  async function handlePageChange(newPage: number) {
+    if (newPage < 1 || newPage > totalPages || loading) return
+    setLoading(true)
+    try {
+      if (vehicleMeta.vin) {
+        const res = await catalogApi.getVehicleByVin(vehicleMeta.vin, newPage, 48)
+        if (res.parts && res.parts.length > 0) {
+          setParts(res.parts)
+          setPage(res.pageNumber)
+          setTotalPages(res.totalPages)
+          setTotalCount(res.partCount || res.parts.length)
+        }
+      } else {
+        const res = await catalogApi.searchParts({
+          searchTerm: locationState?.searchTerm || vehicleMeta.model || null,
+          groupName: activeGroup !== 'ALL' ? activeGroup : null,
+          pageNumber: newPage,
+          pageSize: 48,
+        })
+        if (res.items && res.items.length > 0) {
+          setParts(res.items)
           setPage(res.pageNumber)
           setTotalPages(res.totalPages)
           setTotalCount(res.totalCount)
-          setActiveQueryParams({ model: modelUsed, searchTerm: termUsed })
         }
-      } catch (err) {
-        console.error('Failed to load parts for decoded vehicle:', err)
-      } finally {
-        setLoadingParts(false)
-      }
-    }
-
-    loadPartsForVin()
-  }, [vinSearchDetails, partNewData.length])
-
-  // Pagination handler for PartNew searches
-  async function handlePageChange(newPage: number) {
-    if (newPage < 1 || newPage > totalPages || loadingParts) return
-    setLoadingParts(true)
-    try {
-      const res = await partNewApi.search({
-        searchTerm: activeQueryParams.searchTerm,
-        model: activeQueryParams.model,
-        pageNumber: newPage,
-        pageSize: 48,
-      })
-
-      if (res.data && res.data.length > 0) {
-        setPartNewData(res.data)
-        setPage(res.pageNumber)
-        setTotalPages(res.totalPages)
-        setTotalCount(res.totalCount)
-        setActiveGroup('ALL')
-        setFilterQuery('')
       }
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
-      console.error('Failed to change page:', err)
+      console.error('Page change error:', err)
     } finally {
-      setLoadingParts(false)
+      setLoading(false)
     }
   }
 
-  // Groups extracted from PartNew results
-  const availableGroups = useMemo(() => {
-    if (!partNewData.length) return []
-    const groups = partNewData.map(p => p.groupName?.trim()).filter(Boolean) as string[]
-    return ['ALL', ...new Set(groups)]
-  }, [partNewData])
+  // Handle Group Selection
+  async function handleGroupSelect(group: string) {
+    setActiveGroup(group)
+    setFilterQuery('')
+  }
 
-  // Normalization for PartNew items -> UnifiedPart
-  const partsList: UnifiedPart[] = useMemo(() => {
-    return partNewData.map(p => ({
-      partNumber: p.partNumber,
-      name: p.partName,
-      description: `${p.groupName ? p.groupName + ' ' : ''}${p.subgroupName ? '› ' + p.subgroupName : ''}`.trim() || 'OEM Genuine Auto Part',
-      price: 45.00,
-      imageUrl: p.imageUrl,
-      groupName: p.groupName,
-      pnc: p.pnc,
-      model: p.model,
-      source: p.source || p.oem,
-      vin: p.vin,
-    }))
-  }, [partNewData])
-
-  // Filter parts locally based on search input and active group
-  const filteredParts = partsList.filter(p => {
-    const matchesQuery = !filterQuery ||
-      p.name.toLowerCase().includes(filterQuery.toLowerCase()) ||
-      p.partNumber.toLowerCase().includes(filterQuery.toLowerCase()) ||
-      p.description.toLowerCase().includes(filterQuery.toLowerCase())
-
-    const matchesGroup = activeGroup === 'ALL' || p.groupName === activeGroup
-
-    return matchesQuery && matchesGroup
-  })
-
-  function handlePartClick(part: UnifiedPart, idx: number) {
+  function handlePartClick(part: CatalogPartItem, idx: number) {
     setSelectedPart(part)
     setCurrentPartIndex(idx)
     setModalOpen(true)
@@ -577,13 +530,13 @@ export default function PartsSearchPage() {
     if (!selectedPart) return
     const part = selectedPart
     const cartItem = {
-      name: part.name,
+      name: part.partName,
       partNumber: part.partNumber,
-      price: `$${part.price.toFixed(2)}`,
+      price: '$45.00',
       originalPrice: '',
-      supplier: part.source || vinSearchDetails?.manufacturer || 'Genuine OEM Supplier',
+      supplier: part.source || part.oem || 'Genuine OEM Supplier',
       availability: true,
-      location: part.model || vinSearchDetails?.plantCountry || 'Genuine Parts',
+      location: part.model || 'Genuine Parts Warehouse',
       imageURL: part.imageUrl || '',
     }
     addItem(cartItem)
@@ -598,6 +551,25 @@ export default function PartsSearchPage() {
   const canGoPrev = currentPartIndex > 0
   const canGoNext = currentPartIndex < filteredParts.length - 1
 
+  // Lock body scroll and listen for Escape / Arrow navigation keys when modal is open
+  useEffect(() => {
+    if (!modalOpen) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeModal()
+      if (e.key === 'ArrowLeft' && canGoPrev) goToPrev()
+      if (e.key === 'ArrowRight' && canGoNext) goToNext()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = originalOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [modalOpen, canGoPrev, canGoNext, currentPartIndex])
+
   const getBrandLogo = (makeName: string | null | undefined, color = 'currentColor') => {
     if (!makeName) return null
     const normalized = makeName.charAt(0).toUpperCase() + makeName.slice(1).toLowerCase()
@@ -605,456 +577,489 @@ export default function PartsSearchPage() {
     return logoFn ? logoFn(color) : null
   }
 
-  if (!vinSearchDetails && !partNewSearch && partNewData.length === 0) {
-    return (
-      <div className="px-6 md:px-8 py-16 text-center font-sans">
-        <h1 className="text-2xl font-black text-slate-800 mb-4">{t('no_vehicle') ?? 'No search results'}</h1>
-        <Link to="/" className="text-sky-600 hover:underline font-bold">{t('back_home') ?? 'Go back and enter a VIN or Part Number'}</Link>
-      </div>
-    )
-  }
-
-  // Model & vehicle details for Part metadata
-  const partNewMeta = partNewData.length > 0 ? partNewData[0] : null
+  const activeOem = vehicleMeta.oem || vehicleMeta.make || parts[0]?.oem || 'OEM'
+  const activeModel = vehicleMeta.model || parts[0]?.model || 'CATALOG'
 
   return (
     <div className="flex-grow flex flex-col font-sans">
-      {/* Top Centered Content Area */}
-      <div className="flex-grow">
-        {/* Breadcrumbs Subbar */}
-        <div className="bg-slate-50 border-b border-slate-200 px-6 py-2.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 font-medium select-none">
-          <Link to="/" className="hover:text-amber-600 flex items-center">
-            <Home className="w-3.5 h-3.5 text-slate-400 hover:text-amber-600" />
-          </Link>
-          <span>•</span>
-          <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
-          <span>•</span>
-          <span className="text-slate-800 font-bold uppercase">
-            {vinSearchDetails?.make || partNewMeta?.source || partNewMeta?.oem || 'OEM'}
-          </span>
-          <span>•</span>
-          <span className="text-slate-500 font-mono text-[10px]">
-            {vinSearchDetails?.vin || partNewSearch?.searchTerm || activeQueryParams.searchTerm || activeQueryParams.model || 'CATALOG'}
-          </span>
-          {(vinSearchDetails?.model || partNewMeta?.model) && (
-            <>
-              <span>•</span>
-              <span className="text-slate-800 font-bold uppercase">
-                {vinSearchDetails?.model || partNewMeta?.model}
-              </span>
-            </>
-          )}
-          <span>•</span>
-          <span className="text-[#33b5e5] font-extrabold uppercase">
-            {activeGroup === 'ALL' ? 'ALL GROUPS' : activeGroup}
-          </span>
+      {/* Top Breadcrumbs */}
+      <div className="bg-slate-50 dark:bg-brand-card border-b border-slate-200 dark:border-slate-800 px-6 py-2.5 flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 font-medium select-none">
+        <Link to="/" className="hover:text-amber-600 flex items-center">
+          <Home className="w-3.5 h-3.5 text-slate-400 hover:text-amber-600" />
+        </Link>
+        <span>•</span>
+        <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
+        <span>•</span>
+        <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
+          {activeOem}
+        </span>
+        <span>•</span>
+        <span className="text-slate-500 font-mono text-[10px]">
+          {vehicleMeta.vin || locationState?.searchTerm || 'PARTS CATALOG'}
+        </span>
+        {activeModel && (
+          <>
+            <span>•</span>
+            <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
+              {activeModel}
+            </span>
+          </>
+        )}
+        <span>•</span>
+        <span className="text-[#00C853] font-extrabold uppercase">
+          {activeGroup === 'ALL' ? 'ALL GROUPS' : activeGroup}
+        </span>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="px-6 py-6 flex-grow">
+        {/* Vehicle Metadata Header */}
+        <h2 className="text-sm font-black text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
+          {activeOem} Parts Catalog {activeModel ? `— ${activeModel}` : ''}
+        </h2>
+
+        {/* Vehicle Info Table Card */}
+        <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded mb-6 select-none shadow-sm bg-white dark:bg-brand-card">
+          <Table>
+            <TableHeader className="bg-slate-100 dark:bg-[#0D1810] text-slate-600 dark:text-[#7A9A80] font-bold uppercase">
+              <TableRow className="hover:bg-transparent border-none">
+                <TableHead className="px-4 py-2 text-[11px]">Brand / OEM</TableHead>
+                <TableHead className="px-4 py-2 text-[11px]">Model</TableHead>
+                <TableHead className="px-4 py-2 text-[11px]">Year</TableHead>
+                <TableHead className="px-4 py-2 text-[11px] font-mono">VIN / Vehicle ID</TableHead>
+                <TableHead className="px-4 py-2 text-[11px]">Series</TableHead>
+                <TableHead className="px-4 py-2 text-[11px]">Assembly Groups</TableHead>
+                <TableHead className="px-4 py-2 text-[11px]">Total Parts</TableHead>
+                <TableHead className="px-4 py-2 text-[11px] text-center">Info</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
+              <TableRow className="hover:bg-transparent">
+                <TableCell className="px-4 py-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
+                      {getBrandLogo(activeOem)}
+                    </div>
+                    <span className="font-extrabold text-slate-900 dark:text-white uppercase">
+                      {activeOem}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="px-4 py-2 font-bold uppercase text-slate-800 dark:text-white">
+                  {activeModel}
+                </TableCell>
+                <TableCell className="px-4 py-2">
+                  {vehicleMeta.modelYear || parts[0]?.modelYear || 'N/A'}
+                </TableCell>
+                <TableCell className="px-4 py-2 font-mono text-[10px] text-slate-500 dark:text-slate-400">
+                  {vehicleMeta.vin || vehicleMeta.vehicle || 'CATALOG SEARCH'}
+                </TableCell>
+                <TableCell className="px-4 py-2 text-[11px]">
+                  {vehicleMeta.series || parts[0]?.series || 'Standard Series'}
+                </TableCell>
+                <TableCell className="px-4 py-2 text-[11px]">
+                  {availableGroups.length - 1} Categories
+                </TableCell>
+                <TableCell className="px-4 py-2">
+                  <span className="font-bold text-emerald-600 dark:text-[#00C853]">
+                    {totalCount} catalog parts
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-2 text-center">
+                  <Info className="w-4 h-4 text-slate-400 mx-auto cursor-pointer hover:text-slate-600" />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
-        {/* Center Content Padding Area */}
-        <div className="px-6 py-6">
-          {/* Vehicle Info Table Card */}
-          <h2 className="text-sm font-black text-slate-800 dark:text-white mb-2 uppercase tracking-wide">
-            {vinSearchDetails
-              ? `${vinSearchDetails.make || 'UNKNOWN'} Parts Catalogs ${vinSearchDetails.model || ''}`
-              : `${partNewMeta?.source || partNewMeta?.oem || 'GENUINE'} Parts Catalog ${partNewMeta?.model ? `— ${partNewMeta.model}` : ''}`}
-          </h2>
+        {/* Catalog Navigation Tabs */}
+        <div className="flex items-center gap-1 border-b-2 border-[#00C853] mb-5">
+          <button className="bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+            <ListFilter className="w-3.5 h-3.5" />
+            Assembly Groups ({availableGroups.length - 1})
+          </button>
+          <button className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
+            <Package className="w-3.5 h-3.5" />
+            Loaded Parts ({filteredParts.length})
+          </button>
+        </div>
 
-          <div className="overflow-x-auto border border-border/80 rounded mb-6 select-none shadow-sm bg-white dark:bg-[#0A110C]">
-            <Table>
-              <TableHeader className="bg-slate-100 dark:bg-[#0D1810] text-slate-650 dark:text-[#7A9A80] font-bold uppercase">
-                <TableRow className="hover:bg-transparent border-b border-border/80 border-none">
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Brand / Make</TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Model</TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">Year</TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">
-                    {vinSearchDetails ? 'Engine / VIN' : 'Target VIN'}
-                  </TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
-                    {vinSearchDetails ? 'Trim' : 'Group'}
-                  </TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] font-mono whitespace-normal">
-                    {vinSearchDetails ? 'Manufacturer' : 'Subgroup'}
-                  </TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
-                    {vinSearchDetails ? 'Plant' : 'PNC'}
-                  </TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] whitespace-normal">
-                    {vinSearchDetails ? 'Body Class' : 'Found Records'}
-                  </TableHead>
-                  <TableHead className="px-4 py-2 text-[11px] text-center whitespace-normal">i</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
-                <TableRow className="hover:bg-transparent">
-                  <TableCell className="px-4 py-2 whitespace-normal">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
-                        {getBrandLogo(vinSearchDetails ? vinSearchDetails.make : partNewMeta?.source || partNewMeta?.oem)}
-                      </div>
-                      <span className="font-extrabold text-slate-900 dark:text-white">
-                        {(vinSearchDetails
-                          ? vinSearchDetails.make || 'UNKNOWN'
-                          : partNewMeta?.source || partNewMeta?.oem || 'GENUINE'
-                        ).toUpperCase()}
+        {/* Main Grid + Sidebar */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Category Sidebar */}
+          <aside className="w-full lg:w-64 shrink-0">
+            <div className="mb-4">
+              <input
+                type="text"
+                value={filterQuery}
+                onChange={(e) => setFilterQuery(e.target.value)}
+                placeholder="Filter by part number, PNC, or name..."
+                className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-brand-card rounded px-3 py-2 text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-[#00C853] transition-colors shadow-inner"
+              />
+            </div>
+
+            <div className="sticky top-[100px]">
+              <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+                Catalog Categories
+              </h3>
+              <nav className="space-y-1 max-h-[60vh] overflow-y-auto pr-1">
+                {availableGroups.map((group) => (
+                  <button
+                    key={group}
+                    onClick={() => handleGroupSelect(group)}
+                    className={cn(
+                      'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between font-bold tracking-wide border border-transparent',
+                      activeGroup === group
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-[#00C853] border-emerald-300 dark:border-emerald-700'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                    )}
+                  >
+                    <span className="truncate mr-1">{group === 'ALL' ? 'ALL GROUPS' : group}</span>
+                    {activeGroup === group && (
+                      <span className="bg-emerald-200/80 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
+                        {filteredParts.length}
                       </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-4 py-2 font-bold uppercase text-slate-800 dark:text-white whitespace-normal">
-                    {(vinSearchDetails ? vinSearchDetails.model : partNewMeta?.model) || 'N/A'}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 whitespace-normal">
-                    {(vinSearchDetails ? vinSearchDetails.modelYear : partNewMeta?.modelYear) || 'N/A'}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 text-slate-500 dark:text-[#7A9A80] font-mono text-[10px] whitespace-normal">
-                    {vinSearchDetails ? (
-                      `${vinSearchDetails.displacementL ? `${vinSearchDetails.displacementL}L ` : ''}${vinSearchDetails.vin || ''}`
-                    ) : (
-                      partNewMeta?.vin || 'N/A'
                     )}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 whitespace-normal">
-                    {(vinSearchDetails ? vinSearchDetails.trim : partNewMeta?.groupName) || 'N/A'}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 font-mono text-[10px] whitespace-normal">
-                    {(vinSearchDetails ? vinSearchDetails.manufacturer : partNewMeta?.subgroupName) || 'N/A'}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 text-[10px] whitespace-normal">
-                    {vinSearchDetails ? (
-                      `${vinSearchDetails.plantCity || ''}${vinSearchDetails.plantCity && vinSearchDetails.plantCountry ? ', ' : ''}${vinSearchDetails.plantCountry || ''}`
-                    ) : (
-                      partNewMeta?.pnc || 'N/A'
-                    )}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 whitespace-normal">
-                    {vinSearchDetails ? (
-                      vinSearchDetails.bodyClass || `${totalCount} items`
-                    ) : (
-                      <span className="font-bold text-emerald-600">{totalCount} items</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 text-center whitespace-normal">
-                    <Info className="w-4 h-4 text-slate-400 dark:text-[#4A6B50] mx-auto cursor-pointer hover:text-slate-600 dark:hover:text-white" />
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </aside>
 
-          {/* Part Category Navigation Tabs */}
-          <div className="flex items-center gap-1 border-b-2 border-[#00C853] mb-5">
-            <button className="bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
-              <ListFilter className="w-3.5 h-3.5" />
-              Assembly Groups
-            </button>
-            <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
-              <Search className="w-3.5 h-3.5" />
-              Search
-            </button>
-            <button className="bg-white dark:bg-[#111C14] border border-border/80 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 dark:text-[#7A9A80] text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
-              <Package className="w-3.5 h-3.5" />
-              Parts ({filteredParts.length})
-            </button>
-          </div>
+          {/* Right Parts Grid */}
+          <div className="flex-grow min-w-0">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                {activeGroup === 'ALL' ? 'All Catalog Components' : activeGroup}
+              </h3>
+              {totalCount > 0 && (
+                <span className="text-xs font-mono text-slate-500">
+                  Page {page} of {totalPages} ({totalCount} parts total)
+                </span>
+              )}
+            </div>
 
-          {/* Split layout: Sidebar & Diagrams */}
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left Sidebar Category / Group Sorter */}
-            <aside className="w-full lg:w-60 shrink-0">
-              {/* Search query input */}
-              <div className="mb-4">
-                <input
-                  type="text"
-                  value={filterQuery}
-                  onChange={(e) => setFilterQuery(e.target.value)}
-                  placeholder="Filter part name or code..."
-                  className="w-full border border-slate-300 rounded px-3 py-1.5 text-xs text-slate-800 outline-none focus:border-sky-500 transition-colors shadow-inner"
-                />
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-24">
+                <Loader2 className="w-8 h-8 text-[#00C853] animate-spin mb-2" />
+                <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog from database...</p>
               </div>
-
-              <div className="sticky top-[100px]">
-                <nav className="space-y-1 max-h-[50vh] overflow-y-auto pr-1">
-                  {availableGroups.map((group) => (
-                    <button
-                      key={group}
-                      onClick={() => {
-                        setActiveGroup(group)
-                        setFilterQuery('')
-                      }}
-                      className={cn(
-                        'w-full text-left px-3 py-2 rounded text-xs transition-colors flex items-center justify-between uppercase font-bold tracking-wide border border-transparent',
-                        activeGroup === group
-                          ? 'bg-sky-50 text-sky-600 border-sky-200'
-                          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
-                      )}
-                    >
-                      <span className="truncate mr-1">{group === 'ALL' ? 'ALL GROUPS' : group}</span>
-                      {activeGroup === group && (
-                        <span className="bg-slate-200/80 text-slate-700 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
-                          {filteredParts.length}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-            </aside>
-
-            {/* Right Sidebar Blueprint Diagrams Grid */}
-            <div className="flex-grow min-w-0">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                    {activeGroup === 'ALL' ? 'All Matching' : activeGroup} Diagrams & Components
-                  </h3>
-                  {totalCount > 0 && (
-                    <span className="text-xs font-mono text-slate-400">
-                      Page {page} of {totalPages} ({totalCount} total)
-                    </span>
-                  )}
-                </div>
-
-                {loadingParts ? (
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <Loader2 className="w-8 h-8 text-[#00C853] animate-spin mb-2" />
-                    <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog...</p>
-                  </div>
-                ) : filteredParts.length === 0 ? (
-                  <div className="text-center py-16">
-                    <p className="text-slate-500 text-sm font-semibold mb-3">
-                      {filterQuery ? 'No parts match your filter' : 'No parts found'}
-                    </p>
-                    {(filterQuery || activeGroup !== 'ALL') && (
-                      <button
-                        onClick={() => {
-                          setActiveGroup('ALL')
-                          setFilterQuery('')
-                        }}
-                        className="px-4 py-1.5 bg-[#00C853] text-[#07110A] font-bold text-xs rounded-lg"
-                      >
-                        Reset Group Filter
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {filteredParts.map((part, index) => {
-                        const diagIndex = getDiagramIndex(part.name)
-                        return (
-                          <div
-                            key={`${part.partNumber}-${index}`}
-                            onClick={() => handlePartClick(part, index)}
-                            className="bg-white border border-slate-200 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 shadow-sm transition-all duration-200 group"
-                          >
-                            {/* Schematic Diagram Outlines or Image */}
-                            <div className="aspect-[4/3] bg-slate-50/80 border border-slate-100 rounded flex items-center justify-center p-2 mb-3 shadow-inner overflow-hidden">
-                              {part.imageUrl ? (
-                                <img
-                                  src={part.imageUrl}
-                                  alt={part.name}
-                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform"
-                                  onError={(e) => {
-                                    (e.target as HTMLElement).style.display = 'none'
-                                  }}
-                                />
-                              ) : (
-                                <DiagramSVG code={diagIndex} />
-                              )}
-                            </div>
-                            {/* Label */}
-                            <span className="text-[11px] font-bold text-sky-600 group-hover:text-sky-700 group-hover:underline leading-snug break-words">
-                              {part.partNumber}: {part.name.toUpperCase()}
-                            </span>
-                            {part.groupName && (
-                              <span className="text-[9px] text-slate-400 mt-1 font-semibold truncate">
-                                {part.groupName}
-                              </span>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-
-                    {/* Server-Side Pagination Controls */}
-                    {totalPages > 1 && (
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 border-t border-slate-200 dark:border-slate-800 pt-6 select-none">
-                        <div className="text-xs text-slate-500 font-medium">
-                          Showing Page <span className="font-bold text-slate-800 dark:text-slate-200">{page}</span> of <span className="font-bold text-slate-800 dark:text-slate-200">{totalPages}</span> ({totalCount} total parts)
-                        </div>
-
-                        <div className="flex items-center gap-1 flex-wrap justify-center">
-                          <button
-                            onClick={() => handlePageChange(page - 1)}
-                            disabled={page === 1 || loadingParts}
-                            className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
-                          >
-                            <ChevronLeft className="w-3.5 h-3.5" />
-                            Previous
-                          </button>
-
-                          {getPageNumbers(page, totalPages).map((p, idx) => {
-                            if (p === '...') {
-                              return (
-                                <span key={idx} className="px-2 py-1 text-xs text-slate-400 font-mono">
-                                  ...
-                                </span>
-                              )
-                            }
-                            const pageNum = p as number
-                            return (
-                              <button
-                                key={idx}
-                                onClick={() => handlePageChange(pageNum)}
-                                disabled={loadingParts}
-                                className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-bold transition-all ${
-                                  page === pageNum
-                                    ? 'bg-[#00C853] text-[#07110A] shadow-sm'
-                                    : 'hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
-                                }`}
-                              >
-                                {pageNum}
-                              </button>
-                            )
-                          })}
-
-                          <button
-                            onClick={() => handlePageChange(page + 1)}
-                            disabled={page >= totalPages || loadingParts}
-                            className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 disabled:hover:bg-transparent rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
-                          >
-                            Next
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </>
+            ) : filteredParts.length === 0 ? (
+              <div className="text-center py-20 bg-white dark:bg-brand-card rounded border border-slate-200 dark:border-slate-800 p-8">
+                <p className="text-slate-500 text-sm font-semibold mb-3">
+                  {filterQuery ? 'No parts match your keyword filter.' : 'No parts found for the selected group.'}
+                </p>
+                {(filterQuery || activeGroup !== 'ALL') && (
+                  <button
+                    onClick={() => {
+                      setActiveGroup('ALL')
+                      setFilterQuery('')
+                    }}
+                    className="px-4 py-2 bg-[#00C853] text-[#07110A] font-bold text-xs rounded-lg hover:bg-[#39FF88] transition-colors"
+                  >
+                    Reset Filter to All Groups
+                  </button>
                 )}
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {filteredParts.map((part, index) => {
+                    const diagIndex = getDiagramIndex(part.partName)
+                    return (
+                      <div
+                        key={`${part.id}-${part.partNumber}-${index}`}
+                        onClick={() => handlePartClick(part, index)}
+                        className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 dark:hover:border-[#00C853] shadow-sm transition-all duration-200 group"
+                      >
+                        {/* Diagram / Component Image */}
+                        <div className="aspect-[4/3] bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded flex items-center justify-center p-2 mb-3 shadow-inner overflow-hidden relative">
+                          {part.imageUrl ? (
+                            <img
+                              src={part.imageUrl}
+                              alt={part.partName}
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = 'none'
+                              }}
+                            />
+                          ) : (
+                            <DiagramSVG code={diagIndex} />
+                          )}
+                          {part.pnc && (
+                            <span className="absolute top-1 right-1 bg-slate-900/80 text-white font-mono text-[9px] px-1.5 py-0.5 rounded font-bold">
+                              PNC {part.pnc}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Part Details */}
+                        <div>
+                          <span className="text-[11px] font-bold text-sky-600 dark:text-sky-400 group-hover:underline leading-snug break-words block">
+                            {part.partNumber}: {part.partName.toUpperCase()}
+                          </span>
+                          {part.groupName && (
+                            <span className="text-[10px] text-slate-400 mt-1 font-semibold truncate block">
+                              {part.groupName} {part.subgroupName ? `› ${part.subgroupName}` : ''}
+                            </span>
+                          )}
+                          {part.replacePart && part.replacePart !== '[ ]' && (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded mt-1">
+                              <RefreshCw className="w-2.5 h-2.5" />
+                              Replaces: {part.replacePart}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 border-t border-slate-200 dark:border-slate-800 pt-6 select-none">
+                    <div className="text-xs text-slate-500 font-medium">
+                      Showing Page <span className="font-bold text-slate-800 dark:text-slate-200">{page}</span> of <span className="font-bold text-slate-800 dark:text-slate-200">{totalPages}</span> ({totalCount} total parts)
+                    </div>
+
+                    <div className="flex items-center gap-1 flex-wrap justify-center">
+                      <button
+                        onClick={() => handlePageChange(page - 1)}
+                        disabled={page === 1 || loading}
+                        className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                        Previous
+                      </button>
+
+                      {getPageNumbers(page, totalPages).map((p, idx) => {
+                        if (p === '...') {
+                          return (
+                            <span key={idx} className="px-2 py-1 text-xs text-slate-400 font-mono">
+                              ...
+                            </span>
+                          )
+                        }
+                        const pageNum = p as number
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => handlePageChange(pageNum)}
+                            disabled={loading}
+                            className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs font-bold transition-all ${
+                              page === pageNum
+                                ? 'bg-[#00C853] text-[#07110A] shadow-sm'
+                                : 'hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                            }`}
+                          >
+                            {pageNum}
+                          </button>
+                        )
+                      })}
+
+                      <button
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page >= totalPages || loading}
+                        className="flex items-center gap-1 px-3 py-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-40 rounded-lg text-slate-600 dark:text-slate-400 font-semibold text-xs transition-colors disabled:cursor-not-allowed"
+                      >
+                        Next
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Part Detail Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center font-sans select-none animate-fadeIn">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeModal} />
-          <div className="relative z-10 bg-white dark:bg-[#111C14] rounded border border-slate-300 shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
-            {/* Modal header */}
-            <div className="flex justify-between items-center px-5 py-3.5 bg-slate-50 border-b border-slate-200">
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={goToPrev}
-                  disabled={!canGoPrev}
-                  className="w-7 h-7 rounded border border-slate-300 bg-white text-slate-600 flex items-center justify-center hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <span className="text-xs text-slate-500 font-bold">
-                  {currentPartIndex + 1} / {filteredParts.length}
+      {/* Part Detail Modal using Portal to render directly on body above all navbars */}
+      {modalOpen && selectedPart && createPortal(
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center font-sans select-none animate-fadeIn p-4 sm:p-6 md:p-8">
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-md" onClick={closeModal} />
+          <div className="relative z-10 bg-white dark:bg-brand-card rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col overflow-hidden my-auto">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center px-6 py-3.5 bg-slate-50 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={goToPrev}
+                    disabled={!canGoPrev}
+                    className="w-8 h-8 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-brand-card text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
+                    title="Previous component"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={goToNext}
+                    disabled={!canGoNext}
+                    className="w-8 h-8 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-brand-card text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
+                    title="Next component"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+                <span className="text-xs text-slate-500 font-semibold">
+                  Part <strong className="text-slate-800 dark:text-slate-200 font-bold">{currentPartIndex + 1}</strong> of <strong className="text-slate-800 dark:text-slate-200 font-bold">{filteredParts.length}</strong>
                 </span>
-                <button
-                  onClick={goToNext}
-                  disabled={!canGoNext}
-                  className="w-7 h-7 rounded border border-slate-300 bg-white text-slate-600 flex items-center justify-center hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
               </div>
               <button
                 onClick={closeModal}
-                className="text-slate-400 hover:text-slate-600 transition-colors"
+                className="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {selectedPart ? (
-              <div className="p-6">
-                {/* Schematic SVG or image */}
-                <div className="w-full h-44 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-4 mb-4 shadow-inner overflow-hidden">
+            {/* Modal Two-Column Body */}
+            <div className="grid grid-cols-1 md:grid-cols-2 flex-grow overflow-y-auto divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+              {/* Left Column: Clear Full Image / Schematic */}
+              <div className="p-6 flex flex-col items-center justify-center bg-slate-50/70 dark:bg-slate-950/40 relative min-h-[300px] md:min-h-[420px]">
+                {selectedPart.pnc && (
+                  <div className="absolute top-4 left-4 z-10 bg-slate-900/90 text-white font-mono text-[10px] font-bold px-2.5 py-1 rounded shadow-sm">
+                    PNC {selectedPart.pnc}
+                  </div>
+                )}
+                {selectedPart.picId && (
+                  <div className="absolute top-4 right-4 z-10 bg-blue-600/90 text-white font-mono text-[10px] font-bold px-2.5 py-1 rounded shadow-sm">
+                    PIC {selectedPart.picId}
+                  </div>
+                )}
+                
+                <div className="w-full h-full flex items-center justify-center p-2">
                   {selectedPart.imageUrl ? (
                     <img
                       src={selectedPart.imageUrl}
-                      alt={selectedPart.name}
-                      className="max-h-36 max-w-full object-contain"
+                      alt={selectedPart.partName}
+                      className="max-h-[340px] max-w-full object-contain rounded-lg drop-shadow-md hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-36 h-36">
-                      <DiagramSVG code={getDiagramIndex(selectedPart.name)} />
+                    <div className="w-full max-w-[260px] aspect-square flex items-center justify-center">
+                      <DiagramSVG code={getDiagramIndex(selectedPart.partName)} />
                     </div>
                   )}
                 </div>
 
-                <h3 className="text-sm font-extrabold text-slate-900 mb-1 uppercase">
-                  {selectedPart.name}
-                </h3>
-                <p className="text-xs font-mono font-bold text-sky-600 mb-2">
-                  PART NUMBER: {selectedPart.partNumber}
+                <p className="text-[10px] text-slate-400 font-medium text-center mt-3">
+                  {selectedPart.imageUrl ? 'Genuine OEM Component Diagram & Spec Image' : 'Schematic Technical Layout'}
                 </p>
-                <p className="text-xs text-slate-500 mb-4 italic leading-relaxed">
-                  {selectedPart.description}
-                </p>
-
-                <div className="space-y-2 text-xs font-semibold border-t border-b border-slate-100 py-4 mb-6">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400">PRICE</span>
-                    <span className="text-sm font-black text-amber-600">
-                      ${selectedPart.price.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400">BRAND / MODEL</span>
-                    <span className="text-slate-700 font-bold uppercase">
-                      {selectedPart.model || vinSearchDetails?.make || partNewMeta?.source || 'OEM'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400">SUPPLIER</span>
-                    <span className="text-slate-700">
-                      {selectedPart.source || vinSearchDetails?.manufacturer || 'Genuine OEM Supplier'}
-                    </span>
-                  </div>
-                  {selectedPart.pnc && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400">PNC</span>
-                      <span className="font-mono text-slate-700">{selectedPart.pnc}</span>
-                    </div>
-                  )}
-                  {selectedPart.vin && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-400">TARGET VIN</span>
-                      <span className="font-mono text-[10px] text-slate-700">{selectedPart.vin}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400">STATUS</span>
-                    <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold">
-                      IN STOCK
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400">DISPATCH ORIGIN</span>
-                    <span className="text-slate-700">
-                      {vinSearchDetails?.plantCountry || 'Global Distribution'}
-                    </span>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={handleAddToCart}
-                  className="w-full bg-[#5cb85c] hover:bg-[#4cae4c] text-white font-extrabold h-11 flex items-center justify-center gap-2 rounded border-0 transition-colors shadow-sm"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  ADD TO BASKET
-                </Button>
               </div>
-            ) : (
-              <div className="p-12 text-center text-sm text-red-500 font-semibold">Failed to load part details.</div>
-            )}
+
+              {/* Right Column: Part Specs & Actions */}
+              <div className="p-6 flex flex-col justify-between bg-white dark:bg-brand-card">
+                <div>
+                  {/* Category breadcrumb */}
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase mb-2">
+                    <span>{selectedPart.groupName || 'GENERAL GROUP'}</span>
+                    {selectedPart.subgroupName && (
+                      <>
+                        <span>›</span>
+                        <span className="text-sky-600 dark:text-sky-400">{selectedPart.subgroupName}</span>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Part Title */}
+                  <h3 className="text-xl font-extrabold text-slate-900 dark:text-white leading-tight mb-2 uppercase">
+                    {selectedPart.partName}
+                  </h3>
+
+                  {/* Part Number with Copy Action */}
+                  <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 mb-4">
+                    <span className="text-xs font-mono font-black text-sky-600 dark:text-sky-400">
+                      {selectedPart.partNumber}
+                    </span>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(selectedPart.partNumber)
+                        setCopiedPartNumber(true)
+                        setTimeout(() => setCopiedPartNumber(false), 2000)
+                      }}
+                      className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                      title="Copy Part Number"
+                    >
+                      {copiedPartNumber ? (
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Specs Table */}
+                  <div className="space-y-2 text-xs font-semibold border-t border-b border-slate-100 dark:border-slate-800 py-3.5 mb-5">
+                    <div className="flex justify-between items-center py-0.5">
+                      <span className="text-slate-400 font-medium">OEM / Brand</span>
+                      <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
+                        {selectedPart.oem || activeOem}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-0.5">
+                      <span className="text-slate-400 font-medium">Applicable Model</span>
+                      <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
+                        {selectedPart.model || activeModel}
+                      </span>
+                    </div>
+                    {selectedPart.pnc && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">PNC Code</span>
+                        <span className="font-mono text-slate-800 dark:text-slate-200">{selectedPart.pnc}</span>
+                      </div>
+                    )}
+                    {selectedPart.picId && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Diagram PIC ID</span>
+                        <span className="font-mono text-slate-800 dark:text-slate-200">{selectedPart.picId}</span>
+                      </div>
+                    )}
+                    {selectedPart.vin && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Catalog Vehicle VIN</span>
+                        <span className="font-mono text-[11px] text-slate-800 dark:text-slate-200">{selectedPart.vin}</span>
+                      </div>
+                    )}
+                    {selectedPart.replacePart && selectedPart.replacePart !== '[ ]' && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Supersedes / Replaces</span>
+                        <span className="font-mono text-amber-600 dark:text-amber-400 font-bold">
+                          {selectedPart.replacePart}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center py-0.5">
+                      <span className="text-slate-400 font-medium">Availability</span>
+                      <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold text-[11px]">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        In Stock ({selectedPart.quantity || 1} required)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Pricing & Action */}
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs font-bold text-slate-400">UNIT PRICE</span>
+                    <span className="text-2xl font-black text-amber-600 dark:text-amber-500">
+                      $45.00
+                    </span>
+                  </div>
+
+                  <Button
+                    onClick={handleAddToCart}
+                    className="w-full bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] font-extrabold text-sm h-12 flex items-center justify-center gap-2 rounded-lg border-0 transition-colors shadow-md"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    ADD TO BASKET
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
