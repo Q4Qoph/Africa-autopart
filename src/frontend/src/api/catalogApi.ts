@@ -2,6 +2,7 @@
 import axios from 'axios'
 import type {
   PartSearchRequestDto,
+  PartNewSearchResponse,
   PaginatedPartsResponse,
   VehicleVinResponse,
   GroupedByModelResponse,
@@ -44,6 +45,32 @@ export const catalogApi = {
     }
     const response = await api.post<PaginatedPartsResponse>('/api/parts/search', payload)
     return response.data
+  },
+
+  /**
+   * POST /api/PartNew/search
+   * Fast model & keyword search for decoded VINs and general catalog lookup.
+   */
+  searchPartNew: async (dto: {
+    model?: string
+    searchTerm?: string
+    pageNumber?: number
+    pageSize?: number
+  }): Promise<PaginatedPartsResponse> => {
+    const payload = {
+      model: dto.model || '',
+      searchTerm: dto.searchTerm || '',
+      pageNumber: dto.pageNumber || 1,
+      pageSize: dto.pageSize || 48,
+    }
+    const response = await api.post<PartNewSearchResponse>('/api/PartNew/search', payload)
+    return {
+      items: response.data.data || [],
+      pageNumber: response.data.pageNumber || payload.pageNumber,
+      pageSize: response.data.pageSize || payload.pageSize,
+      totalCount: response.data.totalCount || 0,
+      totalPages: response.data.totalPages || 0,
+    }
   },
 
   /**

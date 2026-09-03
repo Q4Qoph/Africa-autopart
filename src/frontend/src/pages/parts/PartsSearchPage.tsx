@@ -430,64 +430,49 @@ export default function PartsSearchPage() {
                 totalPages: 0,
               }
 
-              let matchedCatalogModel: string | undefined
-
               if (modelTerm || makeTerm) {
-                const modelsList = await catalogApi.getVehicleModels().catch(() => [])
-                matchedCatalogModel = modelTerm ? modelsList.find(
-                  (m) =>
-                    Boolean(modelTerm) &&
-                    (m.toLowerCase() === modelTerm.toLowerCase() ||
-                      m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                      modelTerm.toLowerCase().includes(m.toLowerCase()))
-                ) : undefined
-
-                // 1. Try getPartsByModel if catalog model matched
-                if (matchedCatalogModel) {
-                  try {
-                    const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
-                    if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
-                      const matchedGroup = modelPartsRes.items[0]
-                      const total = matchedGroup.partCount || matchedGroup.parts.length
-                      searchRes = {
-                        items: matchedGroup.parts,
-                        pageNumber: modelPartsRes.pageNumber || 1,
-                        pageSize: modelPartsRes.pageSize || 48,
-                        totalCount: total,
-                        totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
-                      }
-                    }
-                  } catch (e) {
-                    console.warn('getPartsByModel lookup failed:', e)
+                // 1. Fast PartNew model search
+                try {
+                  const newSearchRes = await catalogApi.searchPartNew({
+                    model: modelTerm || makeTerm || '',
+                    searchTerm: '',
+                    pageNumber: 1,
+                    pageSize: 48,
+                  })
+                  if (newSearchRes.items && newSearchRes.items.length > 0) {
+                    searchRes = newSearchRes
                   }
+                } catch (e) {
+                  console.warn('/api/PartNew/search failed, trying fallback:', e)
                 }
 
-                // 2. Fallback to candidate search terms
+                // 2. Fallback to getPartsByModel
                 if (searchRes.items.length === 0) {
-                  const candidateTerms = Array.from(
-                    new Set([
-                      matchedCatalogModel,
-                      modelTerm ? modelTerm.toUpperCase() : null,
-                      modelTerm || null,
-                      makeTerm ? makeTerm.toUpperCase() : null,
-                      makeTerm || null,
-                    ].filter(Boolean) as string[])
-                  )
+                  const modelsList = await catalogApi.getVehicleModels().catch(() => [])
+                  const matchedCatalogModel = modelTerm ? modelsList.find(
+                    (m) =>
+                      Boolean(modelTerm) &&
+                      (m.toLowerCase() === modelTerm.toLowerCase() ||
+                        m.toLowerCase().includes(modelTerm.toLowerCase()) ||
+                        modelTerm.toLowerCase().includes(m.toLowerCase()))
+                  ) : undefined
 
-                  for (const term of candidateTerms) {
+                  if (matchedCatalogModel) {
                     try {
-                      const res = await catalogApi.searchParts({
-                        searchTerm: term,
-                        vin: null,
-                        pageNumber: 1,
-                        pageSize: 48,
-                      })
-                      if (res && res.items && res.items.length > 0) {
-                        searchRes = res
-                        break
+                      const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
+                      if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
+                        const matchedGroup = modelPartsRes.items[0]
+                        const total = matchedGroup.partCount || matchedGroup.parts.length
+                        searchRes = {
+                          items: matchedGroup.parts,
+                          pageNumber: modelPartsRes.pageNumber || 1,
+                          pageSize: modelPartsRes.pageSize || 48,
+                          totalCount: total,
+                          totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
+                        }
                       }
                     } catch (e) {
-                      console.warn(`Search attempt for '${term}' failed:`, e)
+                      console.warn('getPartsByModel lookup failed:', e)
                     }
                   }
                 }
@@ -499,7 +484,7 @@ export default function PartsSearchPage() {
               setTotalCount(searchRes.totalCount || 0)
               setVehicleMeta({
                 vin: targetVin,
-                model: matchedCatalogModel || decoded.model || searchRes.items[0]?.model || null,
+                model: decoded.model || searchRes.items[0]?.model || null,
                 make: decoded.make || searchRes.items[0]?.oem || null,
                 oem: decoded.make || searchRes.items[0]?.oem || null,
                 modelYear: decoded.modelYear,
@@ -524,64 +509,19 @@ export default function PartsSearchPage() {
               totalPages: 0,
             }
 
-            let matchedCatalogModel: string | undefined
-
             if (modelTerm || makeTerm) {
-              const modelsList = await catalogApi.getVehicleModels().catch(() => [])
-              matchedCatalogModel = modelTerm ? modelsList.find(
-                (m) =>
-                  Boolean(modelTerm) &&
-                  (m.toLowerCase() === modelTerm.toLowerCase() ||
-                    m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                    modelTerm.toLowerCase().includes(m.toLowerCase()))
-              ) : undefined
-
-              if (matchedCatalogModel) {
-                try {
-                  const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
-                  if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
-                    const matchedGroup = modelPartsRes.items[0]
-                    const total = matchedGroup.partCount || matchedGroup.parts.length
-                    searchRes = {
-                      items: matchedGroup.parts,
-                      pageNumber: modelPartsRes.pageNumber || 1,
-                      pageSize: modelPartsRes.pageSize || 48,
-                      totalCount: total,
-                      totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
-                    }
-                  }
-                } catch (e) {
-                  console.warn('getPartsByModel lookup failed:', e)
+              try {
+                const newSearchRes = await catalogApi.searchPartNew({
+                  model: modelTerm || makeTerm || '',
+                  searchTerm: '',
+                  pageNumber: 1,
+                  pageSize: 48,
+                })
+                if (newSearchRes.items && newSearchRes.items.length > 0) {
+                  searchRes = newSearchRes
                 }
-              }
-
-              if (searchRes.items.length === 0) {
-                const candidateTerms = Array.from(
-                  new Set([
-                    matchedCatalogModel,
-                    modelTerm ? modelTerm.toUpperCase() : null,
-                    modelTerm || null,
-                    makeTerm ? makeTerm.toUpperCase() : null,
-                    makeTerm || null,
-                  ].filter(Boolean) as string[])
-                )
-
-                for (const term of candidateTerms) {
-                  try {
-                    const res = await catalogApi.searchParts({
-                      searchTerm: term,
-                      vin: null,
-                      pageNumber: 1,
-                      pageSize: 48,
-                    })
-                    if (res && res.items && res.items.length > 0) {
-                      searchRes = res
-                      break
-                    }
-                  } catch (e) {
-                    console.warn(`Search attempt for '${term}' failed:`, e)
-                  }
-                }
+              } catch (e) {
+                console.warn('/api/PartNew/search fallback failed:', e)
               }
             }
 
@@ -591,7 +531,7 @@ export default function PartsSearchPage() {
             setTotalCount(searchRes.totalCount || 0)
             setVehicleMeta({
               vin: targetVin,
-              model: matchedCatalogModel || decoded.model || searchRes.items[0]?.model || null,
+              model: decoded.model || searchRes.items[0]?.model || null,
               make: decoded.make || searchRes.items[0]?.oem || null,
               oem: decoded.make || searchRes.items[0]?.oem || null,
               modelYear: decoded.modelYear,
@@ -605,7 +545,7 @@ export default function PartsSearchPage() {
         .finally(() => setLoading(false))
     } else if (targetSearch) {
       setLoading(true)
-      catalogApi.searchParts({ searchTerm: targetSearch, pageNumber: 1, pageSize: 48 })
+      catalogApi.searchPartNew({ searchTerm: targetSearch, pageNumber: 1, pageSize: 48 })
         .then((res) => {
           if (res.items && res.items.length > 0) {
             setParts(res.items)
@@ -664,35 +604,10 @@ export default function PartsSearchPage() {
           setTotalPages(res.totalPages)
           setTotalCount(res.partCount || res.parts.length)
         }
-      } else if (vehicleMeta.model) {
-        try {
-          const modelRes = await catalogApi.getPartsByModel(vehicleMeta.model, newPage, 48)
-          if (modelRes.items && modelRes.items.length > 0 && modelRes.items[0].parts?.length > 0) {
-            setParts(modelRes.items[0].parts)
-            setPage(modelRes.pageNumber)
-            setTotalPages(modelRes.totalPages)
-            setTotalCount(modelRes.items[0].partCount || modelRes.items[0].parts.length)
-          } else {
-            throw new Error('No items in model page')
-          }
-        } catch {
-          const res = await catalogApi.searchParts({
-            searchTerm: locationState?.searchTerm || vehicleMeta.model || vehicleMeta.make || null,
-            groupName: activeGroup !== 'ALL' ? activeGroup : null,
-            pageNumber: newPage,
-            pageSize: 48,
-          })
-          if (res.items && res.items.length > 0) {
-            setParts(res.items)
-            setPage(res.pageNumber)
-            setTotalPages(res.totalPages)
-            setTotalCount(res.totalCount)
-          }
-        }
       } else {
-        const res = await catalogApi.searchParts({
-          searchTerm: locationState?.searchTerm || vehicleMeta.model || vehicleMeta.make || null,
-          groupName: activeGroup !== 'ALL' ? activeGroup : null,
+        const res = await catalogApi.searchPartNew({
+          model: vehicleMeta.model || '',
+          searchTerm: locationState?.searchTerm || '',
           pageNumber: newPage,
           pageSize: 48,
         })

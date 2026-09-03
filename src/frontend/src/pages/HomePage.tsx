@@ -297,65 +297,50 @@ export default function HomePage() {
           totalPages: 1,
         }
 
-        // Only search catalog models if we actually have a decoded model or make
+        // Only search catalog if we actually have a decoded model or make
         if (modelTerm || makeTerm) {
-          const modelsList = availableModels.length > 0 ? availableModels : await catalogApi.getVehicleModels().catch(() => [])
-          const matchedCatalogModel = modelTerm ? modelsList.find(
-            (m) =>
-              Boolean(modelTerm) &&
-              (m.toLowerCase() === modelTerm.toLowerCase() ||
-                m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                modelTerm.toLowerCase().includes(m.toLowerCase()))
-          ) : undefined
-
-          // 1. Query parts directly by model if catalog model matched
-          if (matchedCatalogModel) {
-            try {
-              const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
-              if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
-                const matchedGroup = modelPartsRes.items[0]
-                const total = matchedGroup.partCount || matchedGroup.parts.length
-                searchRes = {
-                  items: matchedGroup.parts,
-                  pageNumber: modelPartsRes.pageNumber || 1,
-                  pageSize: modelPartsRes.pageSize || 48,
-                  totalCount: total,
-                  totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
-                }
-              }
-            } catch (modelErr) {
-              console.warn('getPartsByModel lookup failed, falling back to search:', modelErr)
+          // 1. Primary fast query using /api/PartNew/search by decoded model name
+          try {
+            const newSearchRes = await catalogApi.searchPartNew({
+              model: modelTerm || makeTerm || '',
+              searchTerm: '',
+              pageNumber: 1,
+              pageSize: 48,
+            })
+            if (newSearchRes.items && newSearchRes.items.length > 0) {
+              searchRes = newSearchRes
             }
+          } catch (newSearchErr) {
+            console.warn('/api/PartNew/search failed, falling back:', newSearchErr)
           }
 
-          // 2. If getPartsByModel didn't yield items, try candidate search terms
+          // 2. Fallback: match against availableModels and query getPartsByModel
           if (searchRes.items.length === 0) {
-            const candidateTerms = Array.from(
-              new Set(
-                [
-                  matchedCatalogModel,
-                  modelTerm ? modelTerm.toUpperCase() : null,
-                  modelTerm || null,
-                  makeTerm ? makeTerm.toUpperCase() : null,
-                  makeTerm || null,
-                ].filter(Boolean) as string[]
-              )
-            )
+            const modelsList = availableModels.length > 0 ? availableModels : await catalogApi.getVehicleModels().catch(() => [])
+            const matchedCatalogModel = modelTerm ? modelsList.find(
+              (m) =>
+                Boolean(modelTerm) &&
+                (m.toLowerCase() === modelTerm.toLowerCase() ||
+                  m.toLowerCase().includes(modelTerm.toLowerCase()) ||
+                  modelTerm.toLowerCase().includes(m.toLowerCase()))
+            ) : undefined
 
-            for (const term of candidateTerms) {
+            if (matchedCatalogModel) {
               try {
-                const res = await catalogApi.searchParts({
-                  searchTerm: term,
-                  vin: null,
-                  pageNumber: 1,
-                  pageSize: 48,
-                })
-                if (res && res.items && res.items.length > 0) {
-                  searchRes = res
-                  break
+                const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
+                if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
+                  const matchedGroup = modelPartsRes.items[0]
+                  const total = matchedGroup.partCount || matchedGroup.parts.length
+                  searchRes = {
+                    items: matchedGroup.parts,
+                    pageNumber: modelPartsRes.pageNumber || 1,
+                    pageSize: modelPartsRes.pageSize || 48,
+                    totalCount: total,
+                    totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
+                  }
                 }
-              } catch (e) {
-                console.warn(`Search attempt for '${term}' failed:`, e)
+              } catch (modelErr) {
+                console.warn('getPartsByModel lookup failed:', modelErr)
               }
             }
           }
@@ -364,8 +349,8 @@ export default function HomePage() {
             state: {
               nhtsaDecode: decodeData,
               searchResults: searchRes,
-              searchTerm: matchedCatalogModel || modelTerm || makeTerm || trimmed,
-              model: matchedCatalogModel || modelTerm || null,
+              searchTerm: modelTerm || makeTerm || trimmed,
+              model: modelTerm || null,
               make: makeTerm ? makeTerm.toUpperCase() : null,
               vin: trimmed,
             },

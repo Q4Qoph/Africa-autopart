@@ -34,6 +34,22 @@ export interface PartSearchRequestDto {
   sortDirection?: 'asc' | 'desc' | string
 }
 
+export interface PartNewSearchRequestDto {
+  model?: string
+  searchTerm?: string
+  pageNumber: number
+  pageSize: number
+}
+
+export interface PartNewSearchResponse {
+  data: CatalogPartItem[]
+  totalCount: number
+  pageNumber: number
+  pageSize: number
+  totalPages: number
+  hasNextPage: boolean
+}
+
 export interface PaginatedPartsResponse {
   items: CatalogPartItem[]
   pageNumber: number
