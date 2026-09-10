@@ -9,8 +9,9 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { catalogApi } from '@/api/catalogApi'
-import type { VehicleVinResponse, PaginatedPartsResponse, NhtsaVinDecodeResponse } from '@/types/catalog'
+import type { VehicleVinResponse, NhtsaVinDecodeResponse } from '@/types/catalog'
 import { cn } from '@/lib/utils'
+import { getBrandLogoPath } from '@/lib/brandUtils'
 
 // Custom SVG Brand Icons
 const FacebookIcon = ({ className }: { className?: string }) => (
@@ -239,18 +240,27 @@ export default function HomePage() {
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
   const [availableModels, setAvailableModels] = useState<string[]>([])
+  const [availableMakes, setAvailableMakes] = useState<string[]>([])
 
   // UI States
   const [activeTab, setActiveTab] = useState<'easy' | 'catalog' | 'prices' | 'range' | 'shipping'>('easy')
 
   useEffect(() => {
+    catalogApi.getMakes(1, 50)
+      .then((res) => {
+        if (res.items && res.items.length > 0) {
+          setAvailableMakes(res.items)
+        }
+      })
+      .catch(() => {})
+
     catalogApi.getVehicleModels()
       .then((models) => {
         if (models && models.length > 0) {
           setAvailableModels(models)
         }
       })
-      .catch(() => { })
+      .catch(() => {})
   }, [])
 
   async function handleSearch(termToSearch: string) {
@@ -267,146 +277,150 @@ export default function HomePage() {
 
     if (isVinPattern) {
       try {
-        // Step 1: Query internal catalog database for this VIN
-        const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, 48)
-        if (vehicleRes && vehicleRes.parts && vehicleRes.parts.length > 0) {
+        // Step 1: Query internal catalog database for this VIN (returns decoded specs + catalog parts)
+        const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, 20)
+        const partsList = Array.isArray(vehicleRes.parts)
+          ? vehicleRes.parts
+          : (vehicleRes.parts?.items || [])
+        const totalParts = Array.isArray(vehicleRes.parts)
+          ? vehicleRes.parts.length
+          : (vehicleRes.parts?.totalCount || partsList.length)
+        const totalPages = Array.isArray(vehicleRes.parts)
+          ? Math.ceil(partsList.length / 20) || 1
+          : (vehicleRes.parts?.totalPages || 1)
+
+        const decodedModel = vehicleRes.model || vehicleRes.decoded?.model || vehicleRes.decoded?.nhtsa?.model
+        const decodedMake = vehicleRes.decoded?.make || vehicleRes.decoded?.nhtsa?.make || partsList[0]?.oem || partsList[0]?.make
+        const decodedYear = vehicleRes.modelYear || (vehicleRes.decoded?.modelYear ? String(vehicleRes.decoded.modelYear) : null)
+
+        if (vehicleRes.matchedInCatalog || partsList.length > 0) {
           navigate('/parts-search', {
             state: {
               vehicleVinResponse: vehicleRes,
+              searchResults: {
+                items: partsList,
+                pageNumber: 1,
+                pageSize: 20,
+                totalCount: totalParts,
+                totalPages: totalPages,
+              },
               vin: trimmed,
-              model: vehicleRes.model,
+              model: decodedModel,
+              make: decodedMake,
+              modelYear: decodedYear,
+            },
+          })
+          return
+        }
+
+        // If not matched in catalog, but we have decoded model/make, attempt search by model/make
+        if (decodedModel || decodedMake) {
+          const modelSearchRes = await catalogApi.searchVehicles({
+            model: decodedModel || undefined,
+            make: decodedMake || undefined,
+            page: 1,
+            pageSize: 20,
+          })
+
+          navigate('/parts-search', {
+            state: {
+              vehicleVinResponse: vehicleRes,
+              searchResults: {
+                items: modelSearchRes.items || [],
+                pageNumber: modelSearchRes.page || 1,
+                pageSize: modelSearchRes.pageSize || 20,
+                totalCount: modelSearchRes.totalCount || 0,
+                totalPages: modelResTotalPages(modelSearchRes),
+              },
+              searchTerm: decodedModel || decodedMake || trimmed,
+              model: decodedModel,
+              make: decodedMake,
+              modelYear: decodedYear,
+              vin: trimmed,
             },
           })
           return
         }
       } catch (vinErr) {
-        console.warn('Direct catalog VIN lookup returned no match, trying fallback decode:', vinErr)
+        console.warn('Direct catalog VIN lookup returned error, trying fallback decode:', vinErr)
       }
 
-      // Step 2: Fallback to NHTSA third-party decode if not found in catalog table
+      // Step 2: Fallback to NHTSA third-party decode if not found
       try {
         const decodeData: NhtsaVinDecodeResponse = await catalogApi.decodeVinFallback(trimmed)
         const modelTerm = decodeData.model?.trim() || ''
         const makeTerm = decodeData.make?.trim() || ''
 
-        let searchRes: PaginatedPartsResponse = {
-          items: [],
-          pageNumber: 1,
-          pageSize: 48,
-          totalCount: 0,
-          totalPages: 1,
-        }
+        const searchRes = await catalogApi.searchVehicles({
+          model: modelTerm || undefined,
+          make: makeTerm || undefined,
+          page: 1,
+          pageSize: 20,
+        })
 
-        // Only search catalog if we actually have a decoded model or make
-        if (modelTerm || makeTerm) {
-          // 1. Primary fast query using /api/PartNew/search by decoded model name
-          try {
-            const newSearchRes = await catalogApi.searchPartNew({
-              model: modelTerm || makeTerm || '',
-              searchTerm: '',
-              pageNumber: 1,
-              pageSize: 48,
-            })
-            if (newSearchRes.items && newSearchRes.items.length > 0) {
-              searchRes = newSearchRes
-            }
-          } catch (newSearchErr) {
-            console.warn('/api/PartNew/search failed, falling back:', newSearchErr)
-          }
-
-          // 2. Fallback: match against availableModels and query getPartsByModel
-          if (searchRes.items.length === 0) {
-            const modelsList = availableModels.length > 0 ? availableModels : await catalogApi.getVehicleModels().catch(() => [])
-            const matchedCatalogModel = modelTerm ? modelsList.find(
-              (m) =>
-                Boolean(modelTerm) &&
-                (m.toLowerCase() === modelTerm.toLowerCase() ||
-                  m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                  modelTerm.toLowerCase().includes(m.toLowerCase()))
-            ) : undefined
-
-            if (matchedCatalogModel) {
-              try {
-                const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
-                if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
-                  const matchedGroup = modelPartsRes.items[0]
-                  const total = matchedGroup.partCount || matchedGroup.parts.length
-                  searchRes = {
-                    items: matchedGroup.parts,
-                    pageNumber: modelPartsRes.pageNumber || 1,
-                    pageSize: modelPartsRes.pageSize || 48,
-                    totalCount: total,
-                    totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
-                  }
-                }
-              } catch (modelErr) {
-                console.warn('getPartsByModel lookup failed:', modelErr)
-              }
-            }
-          }
-
-          navigate('/parts-search', {
-            state: {
-              nhtsaDecode: decodeData,
-              searchResults: searchRes,
-              searchTerm: modelTerm || makeTerm || trimmed,
-              model: modelTerm || null,
-              make: makeTerm ? makeTerm.toUpperCase() : null,
-              vin: trimmed,
+        navigate('/parts-search', {
+          state: {
+            nhtsaDecode: decodeData,
+            searchResults: {
+              items: searchRes.items || [],
+              pageNumber: searchRes.page || 1,
+              pageSize: searchRes.pageSize || 20,
+              totalCount: searchRes.totalCount || 0,
+              totalPages: searchRes.totalPages || 1,
             },
-          })
-          return
-        } else {
-          // Both model and make are null (unrecognized / un-decodable VIN)
-          navigate('/parts-search', {
-            state: {
-              nhtsaDecode: decodeData,
-              searchResults: {
-                items: [],
-                pageNumber: 1,
-                pageSize: 48,
-                totalCount: 0,
-                totalPages: 0,
-              },
-              searchTerm: trimmed,
-              vin: trimmed,
-            },
-          })
-          return
-        }
+            searchTerm: modelTerm || makeTerm || trimmed,
+            model: modelTerm || null,
+            make: makeTerm ? makeTerm.toUpperCase() : null,
+            vin: trimmed,
+          },
+        })
+        return
       } catch (decodeErr) {
         console.warn('Fallback VIN decode failed:', decodeErr)
       }
     }
 
-    // Step 3: Regular part number or keyword search
+    // Step 3: Regular keyword, make, model, or part number search using GET /api/vehicles/search
     try {
-      const searchRes = await catalogApi.searchParts({
-        searchTerm: trimmed,
-        pageNumber: 1,
-        pageSize: 48,
+      const searchRes = await catalogApi.searchVehicles({
+        keyword: trimmed,
+        page: 1,
+        pageSize: 20,
       })
 
       if (searchRes.totalCount > 0) {
         navigate('/parts-search', {
           state: {
-            searchResults: searchRes,
+            searchResults: {
+              items: searchRes.items || [],
+              pageNumber: searchRes.page || 1,
+              pageSize: searchRes.pageSize || 20,
+              totalCount: searchRes.totalCount || 0,
+              totalPages: searchRes.totalPages || 1,
+            },
             searchTerm: trimmed,
           },
         })
         return
       }
 
-      // If searchTerm returned 0 results, try exact partNumber
-      const partNumRes = await catalogApi.searchParts({
+      // Fallback exact partNumber search
+      const partNumRes = await catalogApi.searchVehicles({
         partNumber: trimmed,
-        pageNumber: 1,
-        pageSize: 48,
+        page: 1,
+        pageSize: 20,
       })
 
+      const finalRes = partNumRes.totalCount > 0 ? partNumRes : searchRes
       navigate('/parts-search', {
         state: {
-          searchResults: partNumRes.totalCount > 0 ? partNumRes : searchRes,
+          searchResults: {
+            items: finalRes.items || [],
+            pageNumber: finalRes.page || 1,
+            pageSize: finalRes.pageSize || 20,
+            totalCount: finalRes.totalCount || 0,
+            totalPages: finalRes.totalPages || 1,
+          },
           searchTerm: trimmed,
         },
       })
@@ -415,6 +429,10 @@ export default function HomePage() {
     } finally {
       setSearching(false)
     }
+  }
+
+  function modelResTotalPages(res: any): number {
+    return res.totalPages || Math.ceil((res.totalCount || 0) / (res.pageSize || 20)) || 1
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -645,7 +663,7 @@ export default function HomePage() {
           Genuine Parts Online Catalogs
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {BRANDS.map((brand) => (
+          {(availableMakes.length > 0 ? Array.from(new Set([...availableMakes, ...BRANDS])) : BRANDS).map((brand) => (
             <div
               key={brand}
               onClick={() => {
@@ -657,7 +675,7 @@ export default function HomePage() {
               {/* SVG Logo Container */}
               <div className="h-16 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:scale-105 transition-transform duration-300">
                 <img
-                  src={`/images/brands/${brand.toLowerCase().replace(/\s+/g, '-')}${['lexus', 'volkswagen'].includes(brand.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`}
+                  src={getBrandLogoPath(brand)}
                   alt={brand}
                   className="h-full w-full object-contain dark:brightness-90 dark:contrast-125"
                   onError={(e) => {

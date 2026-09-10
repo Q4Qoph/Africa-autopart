@@ -1,5 +1,6 @@
 import { Outlet, Link } from 'react-router-dom'
 import Navbar from '@/components/layout/Navbar'
+import { getBrandLogoPath } from '@/lib/brandUtils'
 
 const BRANDS = [
   'Infiniti',
@@ -52,7 +53,7 @@ export default function RootLayout() {
             {[...BRANDS, ...BRANDS].map((b, i) => (
               <img
                 key={i}
-                src={`/images/brands/${b.toLowerCase().replace(/\s+/g, '-')}${['lexus','volkswagen'].includes(b.toLowerCase().replace(/\s+/g, '-')) ? '.png' : '.webp'}`}
+                src={getBrandLogoPath(b)}
                 alt={b}
                 className="h-10 object-contain mx-3"
               />

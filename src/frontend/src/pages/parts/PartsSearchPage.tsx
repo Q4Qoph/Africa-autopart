@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocation, Link } from 'react-router-dom'
+import { useLocation, useSearchParams, Link } from 'react-router-dom'
 import {
   Package,
   ShoppingCart,
@@ -26,6 +26,7 @@ import type {
 import { useExternalCart } from '@/context/ExternalCartContext'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { getBrandLogoPath } from '@/lib/brandUtils'
 import {
   Table,
   TableHeader,
@@ -321,9 +322,10 @@ const getPageNumbers = (current: number, total: number) => {
 
 export default function PartsSearchPage() {
   const location = useLocation()
+  const [searchParams] = useSearchParams()
   const { addItem } = useExternalCart()
 
-  // Location state payload from HomePage
+  // Location state payload from HomePage or previous navigation
   const locationState = location.state as {
     vehicleVinResponse?: VehicleVinResponse
     searchResults?: PaginatedPartsResponse
@@ -332,12 +334,29 @@ export default function PartsSearchPage() {
     searchTerm?: string
     model?: string
     make?: string
+    modelYear?: string
   } | undefined
 
+  // URL Query Parameters fallback
+  const urlVin = searchParams.get('vin') || undefined
+  const urlMake = searchParams.get('make') || undefined
+  const urlModel = searchParams.get('model') || undefined
+  const urlSearch = searchParams.get('q') || searchParams.get('searchTerm') || searchParams.get('keyword') || undefined
+  const urlGroup = searchParams.get('groupName') || undefined
+
+  // Initial Part List extraction
+  const initialParts: CatalogPartItem[] = useMemo(() => {
+    if (locationState?.searchResults?.items) return locationState.searchResults.items
+    if (locationState?.vehicleVinResponse?.parts) {
+      return Array.isArray(locationState.vehicleVinResponse.parts)
+        ? locationState.vehicleVinResponse.parts
+        : locationState.vehicleVinResponse.parts.items || []
+    }
+    return []
+  }, [locationState])
+
   // Main state variables
-  const [parts, setParts] = useState<CatalogPartItem[]>(
-    locationState?.vehicleVinResponse?.parts || locationState?.searchResults?.items || []
-  )
+  const [parts, setParts] = useState<CatalogPartItem[]>(initialParts)
   const [vehicleMeta, setVehicleMeta] = useState<{
     vin?: string | null
     make?: string | null
@@ -347,31 +366,45 @@ export default function PartsSearchPage() {
     vehicle?: string | null
     oem?: string | null
     manufacturer?: string | null
+    fuel?: string | null
+    transmission?: string | null
+    displacementCC?: string | null
+    engineFamily?: string | null
+    engineType?: string | null
+    steering?: string | null
+    body?: string | null
+    marketSpec?: string | null
   }>({
-    vin: locationState?.vehicleVinResponse?.vin || locationState?.nhtsaDecode?.vin || locationState?.vin,
-    make: locationState?.nhtsaDecode?.make || locationState?.vehicleVinResponse?.parts?.[0]?.oem || locationState?.make,
-    model: locationState?.vehicleVinResponse?.model || locationState?.nhtsaDecode?.model || locationState?.model,
-    modelYear: locationState?.vehicleVinResponse?.modelYear || locationState?.nhtsaDecode?.modelYear,
-    series: locationState?.vehicleVinResponse?.series || locationState?.nhtsaDecode?.series || locationState?.nhtsaDecode?.trim,
+    vin: locationState?.vehicleVinResponse?.vin || locationState?.nhtsaDecode?.vin || locationState?.vin || urlVin,
+    make: locationState?.make || locationState?.nhtsaDecode?.make || locationState?.vehicleVinResponse?.decoded?.make || urlMake,
+    model: locationState?.model || locationState?.vehicleVinResponse?.model || locationState?.nhtsaDecode?.model || urlModel,
+    modelYear: locationState?.modelYear || locationState?.vehicleVinResponse?.modelYear || locationState?.nhtsaDecode?.modelYear,
+    series: locationState?.vehicleVinResponse?.series || locationState?.nhtsaDecode?.series,
     vehicle: locationState?.vehicleVinResponse?.vehicle,
-    oem: locationState?.vehicleVinResponse?.parts?.[0]?.oem || locationState?.nhtsaDecode?.make || locationState?.make,
+    oem: locationState?.make || locationState?.vehicleVinResponse?.decoded?.make || urlMake,
     manufacturer: locationState?.nhtsaDecode?.manufacturer,
+    fuel: initialParts[0]?.fuel,
+    transmission: initialParts[0]?.transmission,
+    displacementCC: initialParts[0]?.displacementCC,
+    engineFamily: initialParts[0]?.engineFamily,
+    engineType: initialParts[0]?.engineType,
+    steering: initialParts[0]?.steering,
+    body: initialParts[0]?.body,
+    marketSpec: initialParts[0]?.marketSpec,
   })
 
   // Pagination & Filtering state
   const [page, setPage] = useState<number>(
-    locationState?.vehicleVinResponse?.pageNumber || locationState?.searchResults?.pageNumber || 1
+    locationState?.searchResults?.pageNumber || locationState?.searchResults?.page || 1
   )
   const [totalPages, setTotalPages] = useState<number>(
-    locationState?.vehicleVinResponse?.totalPages || locationState?.searchResults?.totalPages || 1
+    locationState?.searchResults?.totalPages || 1
   )
   const [totalCount, setTotalCount] = useState<number>(
-    locationState?.vehicleVinResponse?.partCount ||
-    locationState?.searchResults?.totalCount ||
-    (locationState?.vehicleVinResponse?.parts?.length || locationState?.searchResults?.items?.length || 0)
+    locationState?.searchResults?.totalCount || initialParts.length
   )
   const [loading, setLoading] = useState<boolean>(false)
-  const [activeGroup, setActiveGroup] = useState<string>('ALL')
+  const [activeGroup, setActiveGroup] = useState<string>(urlGroup || 'ALL')
   const [filterQuery, setFilterQuery] = useState<string>('')
   const [apiGroups, setApiGroups] = useState<string[]>([])
 
@@ -381,7 +414,7 @@ export default function PartsSearchPage() {
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [copiedPartNumber, setCopiedPartNumber] = useState(false)
 
-  // Fetch available groups from API
+  // Fetch available category groups from API
   useEffect(() => {
     catalogApi.getPartGroups()
       .then((groups) => {
@@ -394,178 +427,228 @@ export default function PartsSearchPage() {
 
   // Auto-fetch if direct URL navigation or missing parts
   useEffect(() => {
-    if (parts.length > 0) return
+    if (parts.length > 0) {
+      // populate technical specs from first part if available
+      if (parts[0]) {
+        setVehicleMeta((prev) => ({
+          ...prev,
+          make: prev.make || parts[0].make || parts[0].oem,
+          model: prev.model || parts[0].model,
+          modelYear: prev.modelYear || parts[0].modelYear,
+          series: prev.series || parts[0].vehicleSeries || parts[0].series,
+          oem: prev.oem || parts[0].oem || parts[0].make,
+          fuel: prev.fuel || parts[0].fuel,
+          transmission: prev.transmission || parts[0].transmission,
+          displacementCC: prev.displacementCC || parts[0].displacementCC,
+          engineFamily: prev.engineFamily || parts[0].engineFamily,
+          engineType: prev.engineType || parts[0].engineType,
+          steering: prev.steering || parts[0].steering,
+          body: prev.body || parts[0].body,
+          marketSpec: prev.marketSpec || parts[0].marketSpec,
+        }))
+      }
+      return
+    }
 
-    const targetVin = locationState?.vin
-    const targetSearch = locationState?.searchTerm
+    const targetVin = locationState?.vin || urlVin
+    const targetSearch = locationState?.searchTerm || urlSearch
+    const targetMake = locationState?.make || urlMake
+    const targetModel = locationState?.model || urlModel
 
     if (targetVin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(targetVin)) {
       setLoading(true)
-      catalogApi.getVehicleByVin(targetVin, 1, 48)
-        .then((res) => {
-          if (res.parts && res.parts.length > 0) {
-            setParts(res.parts)
-            setPage(res.pageNumber)
-            setTotalPages(res.totalPages)
-            setTotalCount(res.partCount || res.parts.length)
+      catalogApi.getVehicleByVin(targetVin, 1, 20)
+        .then(async (res) => {
+          const partsList = Array.isArray(res.parts) ? res.parts : (res.parts?.items || [])
+          const totalParts = Array.isArray(res.parts) ? res.parts.length : (res.parts?.totalCount || partsList.length)
+          const pages = Array.isArray(res.parts) ? Math.ceil(partsList.length / 20) || 1 : (res.parts?.totalPages || 1)
+
+          if (res.matchedInCatalog || partsList.length > 0) {
+            setParts(partsList)
+            setPage(1)
+            setTotalPages(pages)
+            setTotalCount(totalParts)
+            const first = partsList[0]
             setVehicleMeta({
-              vin: res.vin,
-              model: res.model,
-              modelYear: res.modelYear,
-              series: res.series,
+              vin: targetVin,
+              model: res.model || res.decoded?.model || first?.model,
+              make: res.decoded?.make || first?.oem || first?.make,
+              modelYear: res.modelYear || (res.decoded?.modelYear ? String(res.decoded.modelYear) : first?.modelYear),
+              series: res.series || first?.vehicleSeries,
               vehicle: res.vehicle,
-              oem: res.parts[0]?.oem,
+              oem: first?.oem || res.decoded?.make,
+              fuel: first?.fuel,
+              transmission: first?.transmission,
+              displacementCC: first?.displacementCC,
+              engineFamily: first?.engineFamily,
+              engineType: first?.engineType,
+              steering: first?.steering,
+              body: first?.body,
+              marketSpec: first?.marketSpec,
             })
           } else {
-            // Not in internal catalog, trigger fallback decode
-            return catalogApi.decodeVinFallback(targetVin).then(async (decoded) => {
-              const modelTerm = decoded.model?.trim() || ''
-              const makeTerm = decoded.make?.trim() || ''
-
-              let searchRes: PaginatedPartsResponse = {
-                items: [],
-                pageNumber: 1,
-                pageSize: 48,
-                totalCount: 0,
-                totalPages: 0,
-              }
-
-              if (modelTerm || makeTerm) {
-                // 1. Fast PartNew model search
-                try {
-                  const newSearchRes = await catalogApi.searchPartNew({
-                    model: modelTerm || makeTerm || '',
-                    searchTerm: '',
-                    pageNumber: 1,
-                    pageSize: 48,
-                  })
-                  if (newSearchRes.items && newSearchRes.items.length > 0) {
-                    searchRes = newSearchRes
-                  }
-                } catch (e) {
-                  console.warn('/api/PartNew/search failed, trying fallback:', e)
-                }
-
-                // 2. Fallback to getPartsByModel
-                if (searchRes.items.length === 0) {
-                  const modelsList = await catalogApi.getVehicleModels().catch(() => [])
-                  const matchedCatalogModel = modelTerm ? modelsList.find(
-                    (m) =>
-                      Boolean(modelTerm) &&
-                      (m.toLowerCase() === modelTerm.toLowerCase() ||
-                        m.toLowerCase().includes(modelTerm.toLowerCase()) ||
-                        modelTerm.toLowerCase().includes(m.toLowerCase()))
-                  ) : undefined
-
-                  if (matchedCatalogModel) {
-                    try {
-                      const modelPartsRes = await catalogApi.getPartsByModel(matchedCatalogModel, 1, 48)
-                      if (modelPartsRes.items && modelPartsRes.items.length > 0 && modelPartsRes.items[0].parts?.length > 0) {
-                        const matchedGroup = modelPartsRes.items[0]
-                        const total = matchedGroup.partCount || matchedGroup.parts.length
-                        searchRes = {
-                          items: matchedGroup.parts,
-                          pageNumber: modelPartsRes.pageNumber || 1,
-                          pageSize: modelPartsRes.pageSize || 48,
-                          totalCount: total,
-                          totalPages: Math.ceil(total / (modelPartsRes.pageSize || 48)) || 1,
-                        }
-                      }
-                    } catch (e) {
-                      console.warn('getPartsByModel lookup failed:', e)
-                    }
-                  }
-                }
-              }
-
-              setParts(searchRes.items || [])
-              setPage(searchRes.pageNumber || 1)
-              setTotalPages(searchRes.totalPages || 0)
-              setTotalCount(searchRes.totalCount || 0)
-              setVehicleMeta({
-                vin: targetVin,
-                model: decoded.model || searchRes.items[0]?.model || null,
-                make: decoded.make || searchRes.items[0]?.oem || null,
-                oem: decoded.make || searchRes.items[0]?.oem || null,
-                modelYear: decoded.modelYear,
-                series: decoded.series || decoded.trim,
-                manufacturer: decoded.manufacturer,
-              })
-            })
-          }
-        })
-        .catch(async (err) => {
-          console.warn('Direct VIN lookup failed, running fallback decode:', err)
-          try {
+            // Not in internal catalog, fallback decode
             const decoded = await catalogApi.decodeVinFallback(targetVin)
             const modelTerm = decoded.model?.trim() || ''
             const makeTerm = decoded.make?.trim() || ''
 
-            let searchRes: PaginatedPartsResponse = {
-              items: [],
-              pageNumber: 1,
-              pageSize: 48,
-              totalCount: 0,
-              totalPages: 0,
-            }
-
-            if (modelTerm || makeTerm) {
-              try {
-                const newSearchRes = await catalogApi.searchPartNew({
-                  model: modelTerm || makeTerm || '',
-                  searchTerm: '',
-                  pageNumber: 1,
-                  pageSize: 48,
-                })
-                if (newSearchRes.items && newSearchRes.items.length > 0) {
-                  searchRes = newSearchRes
-                }
-              } catch (e) {
-                console.warn('/api/PartNew/search fallback failed:', e)
-              }
-            }
+            const searchRes = await catalogApi.searchVehicles({
+              model: modelTerm || undefined,
+              make: makeTerm || undefined,
+              page: 1,
+              pageSize: 20,
+            })
 
             setParts(searchRes.items || [])
-            setPage(searchRes.pageNumber || 1)
-            setTotalPages(searchRes.totalPages || 0)
+            setPage(searchRes.page || 1)
+            setTotalPages(searchRes.totalPages || 1)
             setTotalCount(searchRes.totalCount || 0)
+            const first = searchRes.items?.[0]
             setVehicleMeta({
               vin: targetVin,
-              model: decoded.model || searchRes.items[0]?.model || null,
-              make: decoded.make || searchRes.items[0]?.oem || null,
-              oem: decoded.make || searchRes.items[0]?.oem || null,
+              model: decoded.model || first?.model || null,
+              make: decoded.make || first?.oem || null,
+              oem: decoded.make || first?.oem || null,
               modelYear: decoded.modelYear,
-              series: decoded.series || decoded.trim,
+              series: decoded.series || decoded.trim || first?.vehicleSeries,
+              manufacturer: decoded.manufacturer,
+              fuel: first?.fuel,
+              transmission: first?.transmission,
+              displacementCC: first?.displacementCC,
+              engineFamily: first?.engineFamily,
+              engineType: first?.engineType,
+              steering: first?.steering,
+              body: first?.body,
+              marketSpec: first?.marketSpec,
+            })
+          }
+        })
+        .catch(async () => {
+          try {
+            const decoded = await catalogApi.decodeVinFallback(targetVin)
+            setVehicleMeta({
+              vin: targetVin,
+              model: decoded.model,
+              make: decoded.make,
+              modelYear: decoded.modelYear,
               manufacturer: decoded.manufacturer,
             })
-          } catch (decodeErr) {
-            console.warn('Fallback VIN decode also failed:', decodeErr)
+          } catch (e) {
+            console.warn('Fallback decode failed:', e)
           }
         })
         .finally(() => setLoading(false))
-    } else if (targetSearch) {
+    } else if (targetMake && targetModel) {
       setLoading(true)
-      catalogApi.searchPartNew({ searchTerm: targetSearch, pageNumber: 1, pageSize: 48 })
+      catalogApi.getPartsByMakeModel(targetMake, targetModel, 1, 20)
         .then((res) => {
-          if (res.items && res.items.length > 0) {
-            setParts(res.items)
-            setPage(res.pageNumber)
-            setTotalPages(res.totalPages)
-            setTotalCount(res.totalCount)
-            if (res.items[0]) {
-              setVehicleMeta({
-                model: res.items[0].model,
-                modelYear: res.items[0].modelYear,
-                oem: res.items[0].oem,
-                vin: res.items[0].vin,
-              })
-            }
+          setParts(res.items || [])
+          setPage(res.page || 1)
+          setTotalPages(res.totalPages || 1)
+          setTotalCount(res.totalCount || 0)
+          const first = res.items?.[0]
+          if (first) {
+            setVehicleMeta({
+              make: targetMake,
+              model: targetModel,
+              modelYear: first.modelYear,
+              oem: first.oem || targetMake,
+              series: first.vehicleSeries || first.series,
+              fuel: first.fuel,
+              transmission: first.transmission,
+              displacementCC: first.displacementCC,
+              engineFamily: first.engineFamily,
+              engineType: first.engineType,
+              steering: first.steering,
+              body: first.body,
+              marketSpec: first.marketSpec,
+            })
           }
         })
-        .catch((err) => console.warn('Failed to search parts:', err))
+        .catch((err) => console.warn('Failed to get parts by make/model:', err))
+        .finally(() => setLoading(false))
+    } else if (targetSearch || targetMake || targetModel) {
+      setLoading(true)
+      catalogApi.searchVehicles({
+        keyword: targetSearch,
+        make: targetMake,
+        model: targetModel,
+        page: 1,
+        pageSize: 20,
+      })
+        .then((res) => {
+          setParts(res.items || [])
+          setPage(res.page || 1)
+          setTotalPages(res.totalPages || 1)
+          setTotalCount(res.totalCount || 0)
+          const first = res.items?.[0]
+          if (first) {
+            setVehicleMeta({
+              model: first.model,
+              modelYear: first.modelYear,
+              oem: first.oem,
+              vin: first.vin,
+              make: first.make || first.oem,
+              series: first.vehicleSeries || first.series,
+              fuel: first.fuel,
+              transmission: first.transmission,
+              displacementCC: first.displacementCC,
+              engineFamily: first.engineFamily,
+              engineType: first.engineType,
+              steering: first.steering,
+              body: first.body,
+              marketSpec: first.marketSpec,
+            })
+          }
+        })
+        .catch((err) => console.warn('Failed to search vehicles:', err))
         .finally(() => setLoading(false))
     }
-  }, [parts.length, locationState])
+  }, [parts.length, locationState, urlVin, urlMake, urlModel, urlSearch, urlGroup])
+
+  // Debounced backend search when filterQuery changes
+  useEffect(() => {
+    const trimmed = filterQuery.trim()
+    const timer = setTimeout(() => {
+      if (trimmed) {
+        setLoading(true)
+        catalogApi.searchVehicles({
+          keyword: trimmed,
+          vin: vehicleMeta.vin || undefined,
+          make: vehicleMeta.make || undefined,
+          model: vehicleMeta.model || undefined,
+          groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
+          page: 1,
+          pageSize: 20,
+        })
+          .then((res) => {
+            setParts(res.items || [])
+            setPage(res.page || 1)
+            setTotalPages(res.totalPages || 1)
+            setTotalCount(res.totalCount || 0)
+          })
+          .catch((err) => console.warn('Global part search failed:', err))
+          .finally(() => setLoading(false))
+      } else if (parts.length > 0 && vehicleMeta.vin) {
+        // If filter is cleared, restore page 1 of full vehicle catalog
+        setLoading(true)
+        catalogApi.getVehicleByVin(vehicleMeta.vin, 1, 20)
+          .then((res) => {
+            const partsList = Array.isArray(res.parts) ? res.parts : (res.parts?.items || [])
+            const totalParts = Array.isArray(res.parts) ? res.parts.length : (res.parts?.totalCount || partsList.length)
+            const pages = Array.isArray(res.parts) ? Math.ceil(partsList.length / 20) || 1 : (res.parts?.totalPages || 1)
+            setParts(partsList)
+            setPage(1)
+            setTotalPages(pages)
+            setTotalCount(totalParts)
+          })
+          .catch(() => {})
+          .finally(() => setLoading(false))
+      }
+    }, 350)
+
+    return () => clearTimeout(timer)
+  }, [filterQuery, activeGroup])
 
   // Extract unique groups from both API and current parts
   const availableGroups = useMemo(() => {
@@ -574,49 +657,52 @@ export default function PartsSearchPage() {
     return ['ALL', ...combined]
   }, [parts, apiGroups])
 
-  // Local filter against search query and group
-  const filteredParts = useMemo(() => {
-    return parts.filter((p) => {
-      const q = filterQuery.toLowerCase().trim()
-      const matchesQuery = !q ||
-        p.partName?.toLowerCase().includes(q) ||
-        p.partNumber?.toLowerCase().includes(q) ||
-        p.pnc?.toLowerCase().includes(q) ||
-        p.groupName?.toLowerCase().includes(q) ||
-        p.subgroupName?.toLowerCase().includes(q)
+  // Current parts list for active view
+  const displayParts = parts
 
-      const matchesGroup = activeGroup === 'ALL' || p.groupName === activeGroup
-
-      return matchesQuery && matchesGroup
-    })
-  }, [parts, filterQuery, activeGroup])
-
-  // Handle Server-Side Page / Group Change
+  // Handle Server-Side Page Change
   async function handlePageChange(newPage: number) {
     if (newPage < 1 || newPage > totalPages || loading) return
     setLoading(true)
     try {
-      if (locationState?.vehicleVinResponse && vehicleMeta.vin) {
-        const res = await catalogApi.getVehicleByVin(vehicleMeta.vin, newPage, 48)
-        if (res.parts && res.parts.length > 0) {
-          setParts(res.parts)
-          setPage(res.pageNumber)
-          setTotalPages(res.totalPages)
-          setTotalCount(res.partCount || res.parts.length)
-        }
-      } else {
-        const res = await catalogApi.searchPartNew({
-          model: vehicleMeta.model || '',
-          searchTerm: locationState?.searchTerm || '',
-          pageNumber: newPage,
-          pageSize: 48,
+      const trimmed = filterQuery.trim()
+      if (trimmed) {
+        const res = await catalogApi.searchVehicles({
+          keyword: trimmed,
+          vin: vehicleMeta.vin || undefined,
+          make: vehicleMeta.make || undefined,
+          model: vehicleMeta.model || undefined,
+          groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
+          page: newPage,
+          pageSize: 20,
         })
-        if (res.items && res.items.length > 0) {
-          setParts(res.items)
-          setPage(res.pageNumber)
-          setTotalPages(res.totalPages)
-          setTotalCount(res.totalCount)
-        }
+        setParts(res.items || [])
+        setPage(res.page || newPage)
+        setTotalPages(res.totalPages || 1)
+        setTotalCount(res.totalCount || 0)
+      } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
+        const res = await catalogApi.getVehicleByVin(vehicleMeta.vin, newPage, 20)
+        const partsList = Array.isArray(res.parts) ? res.parts : (res.parts?.items || [])
+        const totalParts = Array.isArray(res.parts) ? res.parts.length : (res.parts?.totalCount || partsList.length)
+        const pages = Array.isArray(res.parts) ? Math.ceil(partsList.length / 20) || 1 : (res.parts?.totalPages || 1)
+
+        setParts(partsList)
+        setPage(newPage)
+        setTotalPages(pages)
+        setTotalCount(totalParts)
+      } else {
+        const res = await catalogApi.searchVehicles({
+          make: vehicleMeta.make || undefined,
+          model: vehicleMeta.model || undefined,
+          keyword: locationState?.searchTerm || urlSearch || undefined,
+          groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
+          page: newPage,
+          pageSize: 20,
+        })
+        setParts(res.items || [])
+        setPage(res.page || newPage)
+        setTotalPages(res.totalPages || 1)
+        setTotalCount(res.totalCount || 0)
       }
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
@@ -629,7 +715,27 @@ export default function PartsSearchPage() {
   // Handle Group Selection
   async function handleGroupSelect(group: string) {
     setActiveGroup(group)
-    setFilterQuery('')
+    setPage(1)
+    setLoading(true)
+    try {
+      const res = await catalogApi.searchVehicles({
+        vin: vehicleMeta.vin || undefined,
+        make: vehicleMeta.make || undefined,
+        model: vehicleMeta.model || undefined,
+        keyword: filterQuery.trim() || undefined,
+        groupName: group !== 'ALL' ? group : undefined,
+        page: 1,
+        pageSize: 20,
+      })
+      setParts(res.items || [])
+      setPage(1)
+      setTotalPages(res.totalPages || 1)
+      setTotalCount(res.totalCount || 0)
+    } catch (err) {
+      console.warn('Group filter change failed:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   function handlePartClick(part: CatalogPartItem, idx: number) {
@@ -642,14 +748,14 @@ export default function PartsSearchPage() {
     if (currentPartIndex <= 0) return
     const newIdx = currentPartIndex - 1
     setCurrentPartIndex(newIdx)
-    setSelectedPart(filteredParts[newIdx])
+    setSelectedPart(displayParts[newIdx])
   }
 
   function goToNext() {
-    if (currentPartIndex >= filteredParts.length - 1) return
+    if (currentPartIndex >= displayParts.length - 1) return
     const newIdx = currentPartIndex + 1
     setCurrentPartIndex(newIdx)
-    setSelectedPart(filteredParts[newIdx])
+    setSelectedPart(displayParts[newIdx])
   }
 
   function handleAddToCart() {
@@ -675,7 +781,7 @@ export default function PartsSearchPage() {
   }
 
   const canGoPrev = currentPartIndex > 0
-  const canGoNext = currentPartIndex < filteredParts.length - 1
+  const canGoNext = currentPartIndex < displayParts.length - 1
 
   // Lock body scroll and listen for Escape / Arrow navigation keys when modal is open
   useEffect(() => {
@@ -739,38 +845,60 @@ export default function PartsSearchPage() {
 
       {/* Main Content Area */}
       <div className="px-6 py-6 flex-grow">
-        {/* Decoded VIN Notification Banner */}
-        {locationState?.nhtsaDecode && (
+        {/* Decoded VIN Notification Banner with Make Image */}
+        {(locationState?.nhtsaDecode || locationState?.vehicleVinResponse || locationState?.vin || vehicleMeta.vin) && (
           <div
             className={cn(
-              'mb-4 border rounded-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs',
-              vehicleMeta.make || vehicleMeta.model
+              'mb-4 border rounded-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xs',
+              vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM'
                 ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-200'
                 : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200'
             )}
           >
-            <div className="flex items-center gap-2">
-              {vehicleMeta.make || vehicleMeta.model ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              ) : (
-                <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+            <div className="flex items-center gap-3">
+              {/* Make Image Badge */}
+              {(vehicleMeta.make || activeOem) && (
+                <div className="h-10 w-10 min-w-[40px] rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 flex items-center justify-center shadow-xs shrink-0">
+                  <img
+                    src={getBrandLogoPath(vehicleMeta.make || activeOem)}
+                    alt={vehicleMeta.make || activeOem}
+                    className="h-full w-full object-contain"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none'
+                    }}
+                  />
+                </div>
               )}
-              <span>
-                {vehicleMeta.make || vehicleMeta.model ? (
-                  <>
-                    VIN <strong className="font-mono font-bold">{vehicleMeta.vin}</strong> decoded as{' '}
-                    <strong className="uppercase font-bold">{vehicleMeta.make} {vehicleMeta.model}</strong>. Displaying matching catalog components.
-                  </>
-                ) : (
-                  <>
-                    VIN <strong className="font-mono font-bold">{vehicleMeta.vin}</strong> was not found in our catalog and could not be verified by NHTSA.
-                  </>
+              <div>
+                <div className="flex items-center gap-1.5 font-bold">
+                  {vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM' ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  ) : (
+                    <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  )}
+                  <span>
+                    {vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM' ? (
+                      <>
+                        VIN <strong className="font-mono">{vehicleMeta.vin || locationState?.vin}</strong> decoded as{' '}
+                        <strong className="uppercase">{vehicleMeta.make || activeOem} {vehicleMeta.model || activeModel}</strong> {vehicleMeta.modelYear ? `(${vehicleMeta.modelYear})` : ''}. Displaying matching catalog components.
+                      </>
+                    ) : (
+                      <>
+                        VIN <strong className="font-mono">{vehicleMeta.vin || locationState?.vin}</strong> was not found in our catalog and could not be verified by NHTSA.
+                      </>
+                    )}
+                  </span>
+                </div>
+                {vehicleMeta.manufacturer && (
+                  <p className="text-[11px] font-medium text-emerald-700/80 dark:text-emerald-300/80 mt-0.5 ml-5.5">
+                    Manufacturer: {vehicleMeta.manufacturer}
+                  </p>
                 )}
-              </span>
+              </div>
             </div>
-            {vehicleMeta.manufacturer && (
-              <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
-                {vehicleMeta.manufacturer}
+            {totalCount > 0 && (
+              <span className="text-[11px] font-bold px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 shrink-0">
+                {totalCount} parts found
               </span>
             )}
           </div>
@@ -799,9 +927,23 @@ export default function PartsSearchPage() {
             <TableBody className="text-slate-700 dark:text-[#C5DEC8] font-medium">
               <TableRow className="hover:bg-transparent">
                 <TableCell className="px-4 py-2">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 text-slate-800 dark:text-white flex items-center justify-center">
-                      {getBrandLogo(activeOem)}
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 min-w-[28px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-0.5 flex items-center justify-center shrink-0">
+                      <img
+                        src={getBrandLogoPath(activeOem)}
+                        alt={activeOem}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          const target = e.currentTarget
+                          target.style.display = 'none'
+                          if (target.nextElementSibling) {
+                            (target.nextElementSibling as HTMLElement).style.display = 'block'
+                          }
+                        }}
+                      />
+                      <div className="w-full h-full hidden">
+                        {getBrandLogo(activeOem)}
+                      </div>
                     </div>
                     <span className="font-extrabold text-slate-900 dark:text-white uppercase">
                       {activeOem}
@@ -844,7 +986,7 @@ export default function PartsSearchPage() {
           </button>
           <button className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 border-b-0 hover:bg-slate-50 dark:hover:bg-slate-900/40 text-slate-500 text-[11px] font-bold px-5 py-2.5 uppercase flex items-center gap-1.5 transition-colors">
             <Package className="w-3.5 h-3.5" />
-            Loaded Parts ({filteredParts.length})
+            Loaded Parts ({displayParts.length})
           </button>
         </div>
 
@@ -857,7 +999,7 @@ export default function PartsSearchPage() {
                 type="text"
                 value={filterQuery}
                 onChange={(e) => setFilterQuery(e.target.value)}
-                placeholder="Filter by part number, PNC, or name..."
+                placeholder="Search part number, PNC, or name across catalog..."
                 className="w-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-brand-card rounded px-3 py-2 text-xs text-slate-800 dark:text-slate-100 outline-none focus:border-[#00C853] transition-colors shadow-inner"
               />
             </div>
@@ -881,7 +1023,7 @@ export default function PartsSearchPage() {
                     <span className="truncate mr-1">{group === 'ALL' ? 'ALL GROUPS' : group}</span>
                     {activeGroup === group && (
                       <span className="bg-emerald-200/80 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
-                        {filteredParts.length}
+                        {totalCount}
                       </span>
                     )}
                   </button>
@@ -895,6 +1037,11 @@ export default function PartsSearchPage() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                 {activeGroup === 'ALL' ? 'All Catalog Components' : activeGroup}
+                {filterQuery.trim() && (
+                  <span className="text-emerald-600 dark:text-[#00C853] font-normal ml-2 lowercase">
+                    (matching &ldquo;{filterQuery.trim()}&rdquo;)
+                  </span>
+                )}
               </h3>
               {totalCount > 0 && (
                 <span className="text-xs font-mono text-slate-500">
@@ -906,20 +1053,22 @@ export default function PartsSearchPage() {
             {loading ? (
               <div className="flex flex-col items-center justify-center py-24">
                 <Loader2 className="w-8 h-8 text-[#00C853] animate-spin mb-2" />
-                <p className="text-slate-400 text-xs font-semibold font-sans">Loading parts catalog from database...</p>
+                <p className="text-slate-400 text-xs font-semibold font-sans">Searching catalog in database...</p>
               </div>
-            ) : filteredParts.length === 0 ? (
+            ) : displayParts.length === 0 ? (
               <div className="text-center py-16 bg-white dark:bg-brand-card rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
                 <div className="w-12 h-12 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 flex items-center justify-center mx-auto mb-4 text-amber-600 dark:text-amber-400">
                   <Info className="w-6 h-6" />
                 </div>
                 <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">
-                  No Catalog Parts Found
+                  {filterQuery.trim() ? `No Parts Matching "${filterQuery.trim()}"` : 'No Catalog Parts Found'}
                 </h4>
                 <p className="text-slate-500 text-xs max-w-md mx-auto mb-6">
-                  {vehicleMeta.vin
-                    ? `We could not find ingested catalog components for VIN ${vehicleMeta.vin}. Our procurement team can source genuine components directly for you.`
-                    : 'No parts match your current filter selection.'}
+                  {filterQuery.trim()
+                    ? `No components match "${filterQuery.trim()}" in the ${activeGroup === 'ALL' ? 'entire catalog' : activeGroup + ' group'}. Try a different part number or PNC code.`
+                    : vehicleMeta.vin
+                      ? `We could not find ingested catalog components for VIN ${vehicleMeta.vin}. Our procurement team can source genuine components directly for you.`
+                      : 'No parts match your current selection.'}
                 </p>
                 <div className="flex items-center justify-center gap-3 flex-wrap">
                   {(filterQuery || activeGroup !== 'ALL') && (
@@ -930,7 +1079,7 @@ export default function PartsSearchPage() {
                       }}
                       className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                     >
-                      Reset Filter
+                      Clear Search & Filters
                     </button>
                   )}
                   <Link
@@ -945,7 +1094,7 @@ export default function PartsSearchPage() {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {filteredParts.map((part, index) => {
+                  {displayParts.map((part, index) => {
                     const diagIndex = getDiagramIndex(part.partName)
                     return (
                       <div
@@ -1082,7 +1231,7 @@ export default function PartsSearchPage() {
                   </button>
                 </div>
                 <span className="text-xs text-slate-500 font-semibold">
-                  Part <strong className="text-slate-800 dark:text-slate-200 font-bold">{currentPartIndex + 1}</strong> of <strong className="text-slate-800 dark:text-slate-200 font-bold">{filteredParts.length}</strong>
+                  Part <strong className="text-slate-800 dark:text-slate-200 font-bold">{currentPartIndex + 1}</strong> of <strong className="text-slate-800 dark:text-slate-200 font-bold">{displayParts.length}</strong>
                 </span>
               </div>
               <button
@@ -1172,9 +1321,19 @@ export default function PartsSearchPage() {
                   <div className="space-y-2 text-xs font-semibold border-t border-b border-slate-100 dark:border-slate-800 py-3.5 mb-5">
                     <div className="flex justify-between items-center py-0.5">
                       <span className="text-slate-400 font-medium">OEM / Brand</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
-                        {selectedPart.oem || activeOem}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <img
+                          src={getBrandLogoPath(selectedPart.oem || activeOem)}
+                          alt={selectedPart.oem || activeOem}
+                          className="w-4 h-4 object-contain"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLElement).style.display = 'none'
+                          }}
+                        />
+                        <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
+                          {selectedPart.oem || activeOem}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex justify-between items-center py-0.5">
                       <span className="text-slate-400 font-medium">Applicable Model</span>
@@ -1205,6 +1364,52 @@ export default function PartsSearchPage() {
                         <span className="text-slate-400 font-medium">Supersedes / Replaces</span>
                         <span className="font-mono text-amber-600 dark:text-amber-400 font-bold">
                           {selectedPart.replacePart}
+                        </span>
+                      </div>
+                    )}
+                    {selectedPart.engineFamily && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Engine</span>
+                        <span className="font-mono text-slate-800 dark:text-slate-200">
+                          {selectedPart.engineFamily} {selectedPart.displacementCC ? `(${selectedPart.displacementCC})` : ''} {selectedPart.engineType || ''}
+                        </span>
+                      </div>
+                    )}
+                    {selectedPart.transmission && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Transmission</span>
+                        <span className="text-slate-800 dark:text-slate-200 font-semibold">{selectedPart.transmission}</span>
+                      </div>
+                    )}
+                    {selectedPart.fuel && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Fuel Type</span>
+                        <span className="text-slate-800 dark:text-slate-200 font-semibold">{selectedPart.fuel}</span>
+                      </div>
+                    )}
+                    {selectedPart.steering && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Steering</span>
+                        <span className="text-slate-800 dark:text-slate-200 font-bold">{selectedPart.steering}</span>
+                      </div>
+                    )}
+                    {selectedPart.body && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Body Type</span>
+                        <span className="text-slate-800 dark:text-slate-200">{selectedPart.body}</span>
+                      </div>
+                    )}
+                    {selectedPart.marketSpec && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Market Spec</span>
+                        <span className="text-slate-800 dark:text-slate-200 text-[10px]">{selectedPart.marketSpec}</span>
+                      </div>
+                    )}
+                    {(selectedPart.compatibilityStartYear || selectedPart.compatibilityEndYear) && (
+                      <div className="flex justify-between items-center py-0.5">
+                        <span className="text-slate-400 font-medium">Compatibility Years</span>
+                        <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                          {selectedPart.compatibilityStartYear || ''} – {selectedPart.compatibilityEndYear || 'Present'}
                         </span>
                       </div>
                     )}
