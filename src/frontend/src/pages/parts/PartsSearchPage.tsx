@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useLocation, useSearchParams, Link } from 'react-router-dom'
 import {
@@ -15,12 +15,18 @@ import {
   RefreshCw,
   Copy,
   Check,
+  ZoomIn,
+  ZoomOut,
+  Maximize2,
+  RotateCcw,
+  SunMoon,
 } from 'lucide-react'
 import { catalogApi } from '@/api/catalogApi'
 import type {
   CatalogPartItem,
   VehicleVinResponse,
   PaginatedPartsResponse,
+  PaginatedResponse,
   NhtsaVinDecodeResponse,
 } from '@/types/catalog'
 import { useExternalCart } from '@/context/ExternalCartContext'
@@ -320,6 +326,44 @@ const getPageNumbers = (current: number, total: number) => {
   return pages
 }
 
+const PAGE_SIZE = 48
+
+function extractVinPagination(res: VehicleVinResponse, fallbackPage = 1, pageSize = PAGE_SIZE) {
+  const partsList: CatalogPartItem[] = Array.isArray(res.parts)
+    ? res.parts
+    : (res.parts?.items || [])
+
+  const totalCount: number = typeof res.partCount === 'number'
+    ? res.partCount
+    : (typeof res.parts === 'object' && !Array.isArray(res.parts) && typeof res.parts?.totalCount === 'number'
+        ? res.parts.totalCount
+        : partsList.length)
+
+  const totalPages: number = typeof res.totalPages === 'number' && res.totalPages > 0
+    ? res.totalPages
+    : (typeof res.parts === 'object' && !Array.isArray(res.parts) && typeof res.parts?.totalPages === 'number' && res.parts.totalPages > 0
+        ? res.parts.totalPages
+        : Math.max(1, Math.ceil(totalCount / pageSize)))
+
+  const pageNumber: number = typeof res.pageNumber === 'number' && res.pageNumber > 0
+    ? res.pageNumber
+    : (typeof res.parts === 'object' && !Array.isArray(res.parts) && typeof res.parts?.pageNumber === 'number' && res.parts.pageNumber > 0
+        ? res.parts.pageNumber
+        : fallbackPage)
+
+  return { partsList, totalCount, totalPages, pageNumber }
+}
+
+function extractSearchPagination(res: PaginatedResponse<CatalogPartItem>, fallbackPage = 1, pageSize = PAGE_SIZE) {
+  const partsList: CatalogPartItem[] = res.items || []
+  const totalCount: number = typeof res.totalCount === 'number' ? res.totalCount : partsList.length
+  const totalPages: number = typeof res.totalPages === 'number' && res.totalPages > 0
+    ? res.totalPages
+    : Math.max(1, Math.ceil(totalCount / pageSize))
+  const pageNumber: number = res.page || res.pageNumber || fallbackPage
+  return { partsList, totalCount, totalPages, pageNumber }
+}
+
 export default function PartsSearchPage() {
   const location = useLocation()
   const [searchParams] = useSearchParams()
@@ -397,22 +441,47 @@ export default function PartsSearchPage() {
   const [page, setPage] = useState<number>(
     locationState?.searchResults?.pageNumber || locationState?.searchResults?.page || 1
   )
-  const [totalPages, setTotalPages] = useState<number>(
-    locationState?.searchResults?.totalPages || 1
-  )
+  const [totalPages, setTotalPages] = useState<number>(() => {
+    if (typeof locationState?.vehicleVinResponse?.totalPages === 'number' && locationState.vehicleVinResponse.totalPages > 0) {
+      return locationState.vehicleVinResponse.totalPages
+    }
+    if (typeof locationState?.searchResults?.totalPages === 'number' && locationState.searchResults.totalPages > 0) {
+      return locationState.searchResults.totalPages
+    }
+    const count = locationState?.vehicleVinResponse?.partCount || locationState?.searchResults?.totalCount || initialParts.length
+    return Math.max(1, Math.ceil(count / PAGE_SIZE))
+  })
   const [totalCount, setTotalCount] = useState<number>(
-    locationState?.searchResults?.totalCount || initialParts.length
+    locationState?.vehicleVinResponse?.partCount ?? (locationState?.searchResults?.totalCount ?? initialParts.length)
   )
   const [loading, setLoading] = useState<boolean>(false)
   const [activeGroup, setActiveGroup] = useState<string>(urlGroup || 'ALL')
   const [filterQuery, setFilterQuery] = useState<string>('')
   const [apiGroups, setApiGroups] = useState<string[]>([])
 
-  // Modal State
+  const [isVinMatched, setIsVinMatched] = useState<boolean>(() => {
+    if (typeof locationState?.vehicleVinResponse?.matchedInCatalog === 'boolean') {
+      return locationState.vehicleVinResponse.matchedInCatalog
+    }
+    if (locationState?.vehicleVinResponse?.parts) {
+      if (Array.isArray(locationState.vehicleVinResponse.parts)) {
+        return locationState.vehicleVinResponse.parts.length > 0
+      }
+      return (locationState.vehicleVinResponse.parts.items?.length ?? 0) > 0
+    }
+    return false
+  })
+  const hasInitialFetchedRef = useRef<boolean>(initialParts.length > 0)
+  const prevFilterQueryRef = useRef<string>(filterQuery)
+
+  // Modal & Diagram Viewer State
   const [selectedPart, setSelectedPart] = useState<CatalogPartItem | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [copiedPartNumber, setCopiedPartNumber] = useState(false)
+  const [zoomLevel, setZoomLevel] = useState<number>(1)
+  const [invertDiagram, setInvertDiagram] = useState<boolean>(false)
+  const [lightboxOpen, setLightboxOpen] = useState<boolean>(false)
 
   // Fetch available category groups from API
   useEffect(() => {
@@ -425,30 +494,10 @@ export default function PartsSearchPage() {
       .catch(() => {})
   }, [])
 
-  // Auto-fetch if direct URL navigation or missing parts
+  // Auto-fetch if direct URL navigation (mount only)
   useEffect(() => {
-    if (parts.length > 0) {
-      // populate technical specs from first part if available
-      if (parts[0]) {
-        setVehicleMeta((prev) => ({
-          ...prev,
-          make: prev.make || parts[0].make || parts[0].oem,
-          model: prev.model || parts[0].model,
-          modelYear: prev.modelYear || parts[0].modelYear,
-          series: prev.series || parts[0].vehicleSeries || parts[0].series,
-          oem: prev.oem || parts[0].oem || parts[0].make,
-          fuel: prev.fuel || parts[0].fuel,
-          transmission: prev.transmission || parts[0].transmission,
-          displacementCC: prev.displacementCC || parts[0].displacementCC,
-          engineFamily: prev.engineFamily || parts[0].engineFamily,
-          engineType: prev.engineType || parts[0].engineType,
-          steering: prev.steering || parts[0].steering,
-          body: prev.body || parts[0].body,
-          marketSpec: prev.marketSpec || parts[0].marketSpec,
-        }))
-      }
-      return
-    }
+    if (hasInitialFetchedRef.current) return
+    hasInitialFetchedRef.current = true
 
     const targetVin = locationState?.vin || urlVin
     const targetSearch = locationState?.searchTerm || urlSearch
@@ -457,26 +506,24 @@ export default function PartsSearchPage() {
 
     if (targetVin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(targetVin)) {
       setLoading(true)
-      catalogApi.getVehicleByVin(targetVin, 1, 20)
-        .then(async (res) => {
-          const partsList = Array.isArray(res.parts) ? res.parts : (res.parts?.items || [])
-          const totalParts = Array.isArray(res.parts) ? res.parts.length : (res.parts?.totalCount || partsList.length)
-          const pages = Array.isArray(res.parts) ? Math.ceil(partsList.length / 20) || 1 : (res.parts?.totalPages || 1)
+      catalogApi.searchVehicles({ vin: targetVin, page: 1, pageSize: PAGE_SIZE })
+        .then(async (searchRes) => {
+          if (searchRes.totalCount > 0) {
+            const { partsList: searchParts, totalCount: searchCount, totalPages: searchPages, pageNumber: searchPNum } = extractSearchPagination(searchRes, 1, PAGE_SIZE)
+            setIsVinMatched(true)
+            setParts(searchParts)
+            setPage(searchPNum)
+            setTotalPages(searchPages)
+            setTotalCount(searchCount)
+            const first = searchParts[0]
 
-          if (res.matchedInCatalog || partsList.length > 0) {
-            setParts(partsList)
-            setPage(1)
-            setTotalPages(pages)
-            setTotalCount(totalParts)
-            const first = partsList[0]
             setVehicleMeta({
               vin: targetVin,
-              model: res.model || res.decoded?.model || first?.model,
-              make: res.decoded?.make || first?.oem || first?.make,
-              modelYear: res.modelYear || (res.decoded?.modelYear ? String(res.decoded.modelYear) : first?.modelYear),
-              series: res.series || first?.vehicleSeries,
-              vehicle: res.vehicle,
-              oem: first?.oem || res.decoded?.make,
+              model: first?.model || null,
+              make: first?.make || first?.oem || null,
+              oem: first?.oem || first?.make || null,
+              modelYear: first?.modelYear || null,
+              series: first?.vehicleSeries || first?.series,
               fuel: first?.fuel,
               transmission: first?.transmission,
               displacementCC: first?.displacementCC,
@@ -486,24 +533,40 @@ export default function PartsSearchPage() {
               body: first?.body,
               marketSpec: first?.marketSpec,
             })
+
+            // Enrich vehicle specs from decoder endpoint if available
+            catalogApi.getVehicleByVin(targetVin, 1, 1).then((vinRes) => {
+              if (vinRes.decoded) {
+                setVehicleMeta((prev) => ({
+                  ...prev,
+                  model: prev.model || vinRes.model || vinRes.decoded?.model || null,
+                  make: prev.make || vinRes.decoded?.make || null,
+                  modelYear: prev.modelYear || (vinRes.decoded?.modelYear ? String(vinRes.decoded.modelYear) : null),
+                  series: prev.series || vinRes.series,
+                }))
+              }
+            }).catch(() => {})
           } else {
             // Not in internal catalog, fallback decode
+            setIsVinMatched(false)
             const decoded = await catalogApi.decodeVinFallback(targetVin)
             const modelTerm = decoded.model?.trim() || ''
             const makeTerm = decoded.make?.trim() || ''
 
-            const searchRes = await catalogApi.searchVehicles({
+            const fallbackSearchRes = await catalogApi.searchVehicles({
               model: modelTerm || undefined,
               make: makeTerm || undefined,
               page: 1,
-              pageSize: 20,
+              pageSize: PAGE_SIZE,
             })
 
-            setParts(searchRes.items || [])
-            setPage(searchRes.page || 1)
-            setTotalPages(searchRes.totalPages || 1)
-            setTotalCount(searchRes.totalCount || 0)
-            const first = searchRes.items?.[0]
+            const { partsList: searchParts, totalCount: searchCount, totalPages: searchPages, pageNumber: searchPNum } = extractSearchPagination(fallbackSearchRes, 1, PAGE_SIZE)
+
+            setParts(searchParts)
+            setPage(searchPNum)
+            setTotalPages(searchPages)
+            setTotalCount(searchCount)
+            const first = searchParts[0]
             setVehicleMeta({
               vin: targetVin,
               model: decoded.model || first?.model || null,
@@ -540,13 +603,14 @@ export default function PartsSearchPage() {
         .finally(() => setLoading(false))
     } else if (targetMake && targetModel) {
       setLoading(true)
-      catalogApi.getPartsByMakeModel(targetMake, targetModel, 1, 20)
+      catalogApi.getPartsByMakeModel(targetMake, targetModel, 1, PAGE_SIZE)
         .then((res) => {
-          setParts(res.items || [])
-          setPage(res.page || 1)
-          setTotalPages(res.totalPages || 1)
-          setTotalCount(res.totalCount || 0)
-          const first = res.items?.[0]
+          const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+          setParts(partsList)
+          setPage(pNum)
+          setTotalPages(pages)
+          setTotalCount(totalParts)
+          const first = partsList[0]
           if (first) {
             setVehicleMeta({
               make: targetMake,
@@ -574,14 +638,15 @@ export default function PartsSearchPage() {
         make: targetMake,
         model: targetModel,
         page: 1,
-        pageSize: 20,
+        pageSize: PAGE_SIZE,
       })
         .then((res) => {
-          setParts(res.items || [])
-          setPage(res.page || 1)
-          setTotalPages(res.totalPages || 1)
-          setTotalCount(res.totalCount || 0)
-          const first = res.items?.[0]
+          const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+          setParts(partsList)
+          setPage(pNum)
+          setTotalPages(pages)
+          setTotalCount(totalParts)
+          const first = partsList[0]
           if (first) {
             setVehicleMeta({
               model: first.model,
@@ -604,10 +669,13 @@ export default function PartsSearchPage() {
         .catch((err) => console.warn('Failed to search vehicles:', err))
         .finally(() => setLoading(false))
     }
-  }, [parts.length, locationState, urlVin, urlMake, urlModel, urlSearch, urlGroup])
+  }, [locationState, urlVin, urlMake, urlModel, urlSearch, urlGroup])
 
   // Debounced backend search when filterQuery changes
   useEffect(() => {
+    if (filterQuery === prevFilterQueryRef.current) return
+    prevFilterQueryRef.current = filterQuery
+
     const trimmed = filterQuery.trim()
     const timer = setTimeout(() => {
       if (trimmed) {
@@ -619,36 +687,83 @@ export default function PartsSearchPage() {
           model: vehicleMeta.model || undefined,
           groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
           page: 1,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
         })
           .then((res) => {
-            setParts(res.items || [])
-            setPage(res.page || 1)
-            setTotalPages(res.totalPages || 1)
-            setTotalCount(res.totalCount || 0)
-          })
-          .catch((err) => console.warn('Global part search failed:', err))
-          .finally(() => setLoading(false))
-      } else if (parts.length > 0 && vehicleMeta.vin) {
-        // If filter is cleared, restore page 1 of full vehicle catalog
-        setLoading(true)
-        catalogApi.getVehicleByVin(vehicleMeta.vin, 1, 20)
-          .then((res) => {
-            const partsList = Array.isArray(res.parts) ? res.parts : (res.parts?.items || [])
-            const totalParts = Array.isArray(res.parts) ? res.parts.length : (res.parts?.totalCount || partsList.length)
-            const pages = Array.isArray(res.parts) ? Math.ceil(partsList.length / 20) || 1 : (res.parts?.totalPages || 1)
+            const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
             setParts(partsList)
-            setPage(1)
+            setPage(pNum)
             setTotalPages(pages)
             setTotalCount(totalParts)
           })
-          .catch(() => {})
+          .catch((err) => console.warn('Global part search failed:', err))
           .finally(() => setLoading(false))
+      } else {
+        // If filter is cleared, restore page 1
+        setLoading(true)
+        if (activeGroup !== 'ALL') {
+          catalogApi.searchVehicles({
+            vin: vehicleMeta.vin || undefined,
+            make: vehicleMeta.make || undefined,
+            model: vehicleMeta.model || undefined,
+            groupName: activeGroup,
+            page: 1,
+            pageSize: PAGE_SIZE,
+          })
+            .then((res) => {
+              const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+              setParts(partsList)
+              setPage(pNum)
+              setTotalPages(pages)
+              setTotalCount(totalParts)
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false))
+        } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
+          catalogApi.searchVehicles({ vin: vehicleMeta.vin, page: 1, pageSize: PAGE_SIZE })
+            .then((res) => {
+              const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+              setParts(partsList)
+              setPage(pNum)
+              setTotalPages(pages)
+              setTotalCount(totalParts)
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false))
+        } else if (vehicleMeta.make && vehicleMeta.model) {
+          catalogApi.getPartsByMakeModel(vehicleMeta.make, vehicleMeta.model, 1, PAGE_SIZE)
+            .then((res) => {
+              const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+              setParts(partsList)
+              setPage(pNum)
+              setTotalPages(pages)
+              setTotalCount(totalParts)
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false))
+        } else {
+          catalogApi.searchVehicles({
+            make: vehicleMeta.make || undefined,
+            model: vehicleMeta.model || undefined,
+            keyword: locationState?.searchTerm || urlSearch || undefined,
+            page: 1,
+            pageSize: PAGE_SIZE,
+          })
+            .then((res) => {
+              const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+              setParts(partsList)
+              setPage(pNum)
+              setTotalPages(pages)
+              setTotalCount(totalParts)
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false))
+        }
       }
     }, 350)
 
     return () => clearTimeout(timer)
-  }, [filterQuery, activeGroup])
+  }, [filterQuery, isVinMatched, activeGroup, vehicleMeta.vin, vehicleMeta.make, vehicleMeta.model, locationState, urlSearch])
 
   // Extract unique groups from both API and current parts
   const availableGroups = useMemo(() => {
@@ -674,20 +789,39 @@ export default function PartsSearchPage() {
           model: vehicleMeta.model || undefined,
           groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
           page: newPage,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
         })
-        setParts(res.items || [])
-        setPage(res.page || newPage)
-        setTotalPages(res.totalPages || 1)
-        setTotalCount(res.totalCount || 0)
-      } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
-        const res = await catalogApi.getVehicleByVin(vehicleMeta.vin, newPage, 20)
-        const partsList = Array.isArray(res.parts) ? res.parts : (res.parts?.items || [])
-        const totalParts = Array.isArray(res.parts) ? res.parts.length : (res.parts?.totalCount || partsList.length)
-        const pages = Array.isArray(res.parts) ? Math.ceil(partsList.length / 20) || 1 : (res.parts?.totalPages || 1)
-
+        const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, newPage, PAGE_SIZE)
         setParts(partsList)
-        setPage(newPage)
+        setPage(pNum)
+        setTotalPages(pages)
+        setTotalCount(totalParts)
+      } else if (activeGroup !== 'ALL') {
+        const res = await catalogApi.searchVehicles({
+          vin: vehicleMeta.vin || undefined,
+          make: vehicleMeta.make || undefined,
+          model: vehicleMeta.model || undefined,
+          groupName: activeGroup,
+          page: newPage,
+          pageSize: PAGE_SIZE,
+        })
+        const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, newPage, PAGE_SIZE)
+        setParts(partsList)
+        setPage(pNum)
+        setTotalPages(pages)
+        setTotalCount(totalParts)
+      } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
+        const res = await catalogApi.searchVehicles({ vin: vehicleMeta.vin, page: newPage, pageSize: PAGE_SIZE })
+        const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, newPage, PAGE_SIZE)
+        setParts(partsList)
+        setPage(pNum)
+        setTotalPages(pages)
+        setTotalCount(totalParts)
+      } else if (vehicleMeta.make && vehicleMeta.model) {
+        const res = await catalogApi.getPartsByMakeModel(vehicleMeta.make, vehicleMeta.model, newPage, PAGE_SIZE)
+        const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, newPage, PAGE_SIZE)
+        setParts(partsList)
+        setPage(pNum)
         setTotalPages(pages)
         setTotalCount(totalParts)
       } else {
@@ -695,14 +829,14 @@ export default function PartsSearchPage() {
           make: vehicleMeta.make || undefined,
           model: vehicleMeta.model || undefined,
           keyword: locationState?.searchTerm || urlSearch || undefined,
-          groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
           page: newPage,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
         })
-        setParts(res.items || [])
-        setPage(res.page || newPage)
-        setTotalPages(res.totalPages || 1)
-        setTotalCount(res.totalCount || 0)
+        const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, newPage, PAGE_SIZE)
+        setParts(partsList)
+        setPage(pNum)
+        setTotalPages(pages)
+        setTotalCount(totalParts)
       }
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
@@ -718,19 +852,66 @@ export default function PartsSearchPage() {
     setPage(1)
     setLoading(true)
     try {
-      const res = await catalogApi.searchVehicles({
-        vin: vehicleMeta.vin || undefined,
-        make: vehicleMeta.make || undefined,
-        model: vehicleMeta.model || undefined,
-        keyword: filterQuery.trim() || undefined,
-        groupName: group !== 'ALL' ? group : undefined,
-        page: 1,
-        pageSize: 20,
-      })
-      setParts(res.items || [])
-      setPage(1)
-      setTotalPages(res.totalPages || 1)
-      setTotalCount(res.totalCount || 0)
+      if (group === 'ALL') {
+        const trimmed = filterQuery.trim()
+        if (trimmed) {
+          const res = await catalogApi.searchVehicles({
+            vin: vehicleMeta.vin || undefined,
+            make: vehicleMeta.make || undefined,
+            model: vehicleMeta.model || undefined,
+            keyword: trimmed,
+            page: 1,
+            pageSize: PAGE_SIZE,
+          })
+          const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+          setParts(partsList)
+          setPage(pNum)
+          setTotalPages(pages)
+          setTotalCount(totalParts)
+        } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
+          const res = await catalogApi.searchVehicles({ vin: vehicleMeta.vin, page: 1, pageSize: PAGE_SIZE })
+          const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractVinPagination(res, 1, PAGE_SIZE)
+          setParts(partsList)
+          setPage(pNum)
+          setTotalPages(pages)
+          setTotalCount(totalParts)
+        } else if (vehicleMeta.make && vehicleMeta.model) {
+          const res = await catalogApi.getPartsByMakeModel(vehicleMeta.make, vehicleMeta.model, 1, PAGE_SIZE)
+          const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+          setParts(partsList)
+          setPage(pNum)
+          setTotalPages(pages)
+          setTotalCount(totalParts)
+        } else {
+          const res = await catalogApi.searchVehicles({
+            make: vehicleMeta.make || undefined,
+            model: vehicleMeta.model || undefined,
+            keyword: locationState?.searchTerm || urlSearch || undefined,
+            page: 1,
+            pageSize: PAGE_SIZE,
+          })
+          const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+          setParts(partsList)
+          setPage(pNum)
+          setTotalPages(pages)
+          setTotalCount(totalParts)
+        }
+      } else {
+        const res = await catalogApi.searchVehicles({
+          vin: vehicleMeta.vin || undefined,
+          make: vehicleMeta.make || undefined,
+          model: vehicleMeta.model || undefined,
+          keyword: filterQuery.trim() || undefined,
+          groupName: group,
+          page: 1,
+          pageSize: PAGE_SIZE,
+        })
+        const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
+        setParts(partsList)
+        setPage(pNum)
+        setTotalPages(pages)
+        setTotalCount(totalParts)
+      }
     } catch (err) {
       console.warn('Group filter change failed:', err)
     } finally {
@@ -741,6 +922,7 @@ export default function PartsSearchPage() {
   function handlePartClick(part: CatalogPartItem, idx: number) {
     setSelectedPart(part)
     setCurrentPartIndex(idx)
+    setZoomLevel(1)
     setModalOpen(true)
   }
 
@@ -749,6 +931,7 @@ export default function PartsSearchPage() {
     const newIdx = currentPartIndex - 1
     setCurrentPartIndex(newIdx)
     setSelectedPart(displayParts[newIdx])
+    setZoomLevel(1)
   }
 
   function goToNext() {
@@ -756,6 +939,7 @@ export default function PartsSearchPage() {
     const newIdx = currentPartIndex + 1
     setCurrentPartIndex(newIdx)
     setSelectedPart(displayParts[newIdx])
+    setZoomLevel(1)
   }
 
   function handleAddToCart() {
@@ -773,11 +957,14 @@ export default function PartsSearchPage() {
     }
     addItem(cartItem)
     setModalOpen(false)
+    setLightboxOpen(false)
   }
 
   function closeModal() {
     setModalOpen(false)
+    setLightboxOpen(false)
     setSelectedPart(null)
+    setZoomLevel(1)
   }
 
   const canGoPrev = currentPartIndex > 0
@@ -785,14 +972,22 @@ export default function PartsSearchPage() {
 
   // Lock body scroll and listen for Escape / Arrow navigation keys when modal is open
   useEffect(() => {
-    if (!modalOpen) return
+    if (!modalOpen && !lightboxOpen) return
     const originalOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeModal()
-      if (e.key === 'ArrowLeft' && canGoPrev) goToPrev()
-      if (e.key === 'ArrowRight' && canGoNext) goToNext()
+      if (e.key === 'Escape') {
+        if (lightboxOpen) {
+          setLightboxOpen(false)
+        } else {
+          closeModal()
+        }
+      }
+      if (!lightboxOpen) {
+        if (e.key === 'ArrowLeft' && canGoPrev) goToPrev()
+        if (e.key === 'ArrowRight' && canGoNext) goToNext()
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -800,7 +995,7 @@ export default function PartsSearchPage() {
       document.body.style.overflow = originalOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [modalOpen, canGoPrev, canGoNext, currentPartIndex])
+  }, [modalOpen, lightboxOpen, canGoPrev, canGoNext, currentPartIndex])
 
   const getBrandLogo = (makeName: string | null | undefined, color = 'currentColor') => {
     if (!makeName) return null
@@ -1103,12 +1298,12 @@ export default function PartsSearchPage() {
                         className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 rounded p-4 flex flex-col justify-between cursor-pointer hover:border-slate-400 dark:hover:border-[#00C853] shadow-sm transition-all duration-200 group"
                       >
                         {/* Diagram / Component Image */}
-                        <div className="aspect-[4/3] bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded flex items-center justify-center p-2 mb-3 shadow-inner overflow-hidden relative">
+                        <div className="aspect-[4/3] bg-white dark:bg-[#F8FAFC] border border-slate-200 dark:border-slate-700/80 rounded-lg flex items-center justify-center p-2 mb-3 shadow-xs overflow-hidden relative group/img">
                           {part.imageUrl ? (
                             <img
                               src={part.imageUrl}
                               alt={part.partName}
-                              className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 select-none"
                               onError={(e) => {
                                 (e.target as HTMLElement).style.display = 'none'
                               }}
@@ -1117,7 +1312,7 @@ export default function PartsSearchPage() {
                             <DiagramSVG code={diagIndex} />
                           )}
                           {part.pnc && (
-                            <span className="absolute top-1 right-1 bg-slate-900/80 text-white font-mono text-[9px] px-1.5 py-0.5 rounded font-bold">
+                            <span className="absolute top-1.5 left-1.5 bg-slate-900/90 text-white font-mono text-[9px] px-1.5 py-0.5 rounded font-bold tracking-tight shadow-xs">
                               PNC {part.pnc}
                             </span>
                           )}
@@ -1208,7 +1403,7 @@ export default function PartsSearchPage() {
       {modalOpen && selectedPart && createPortal(
         <div className="fixed inset-0 z-[99999] flex items-center justify-center font-sans select-none animate-fadeIn p-4 sm:p-6 md:p-8">
           <div className="absolute inset-0 bg-black/75 backdrop-blur-md" onClick={closeModal} />
-          <div className="relative z-10 bg-white dark:bg-brand-card rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-4xl max-h-[88vh] flex flex-col overflow-hidden my-auto">
+          <div className="relative z-10 bg-white dark:bg-brand-card rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-5xl lg:max-w-6xl max-h-[90vh] flex flex-col overflow-hidden my-auto">
             {/* Modal Header */}
             <div className="flex justify-between items-center px-6 py-3.5 bg-slate-50 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 shrink-0">
               <div className="flex items-center gap-3">
@@ -1244,26 +1439,102 @@ export default function PartsSearchPage() {
 
             {/* Modal Two-Column Body */}
             <div className="grid grid-cols-1 md:grid-cols-2 flex-grow overflow-y-auto divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
-              {/* Left Column: Clear Full Image / Schematic */}
-              <div className="p-6 flex flex-col items-center justify-center bg-slate-50/70 dark:bg-slate-950/40 relative min-h-[300px] md:min-h-[420px]">
-                {selectedPart.pnc && (
-                  <div className="absolute top-4 left-4 z-10 bg-slate-900/90 text-white font-mono text-[10px] font-bold px-2.5 py-1 rounded shadow-sm">
-                    PNC {selectedPart.pnc}
+              {/* Left Column: Interactive Technical Diagram Viewer */}
+              <div className="p-6 flex flex-col items-center justify-between bg-slate-100/90 dark:bg-[#07110A]/90 relative min-h-[360px] md:min-h-[440px] select-none border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800">
+                {/* Top Badge & Controls Bar */}
+                <div className="w-full flex items-center justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {selectedPart.pnc && (
+                      <span className="bg-slate-900 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                        PNC {selectedPart.pnc}
+                      </span>
+                    )}
+                    {selectedPart.picId && (
+                      <span className="bg-blue-600 text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                        PIC {selectedPart.picId}
+                      </span>
+                    )}
                   </div>
-                )}
-                {selectedPart.picId && (
-                  <div className="absolute top-4 right-4 z-10 bg-blue-600/90 text-white font-mono text-[10px] font-bold px-2.5 py-1 rounded shadow-sm">
-                    PIC {selectedPart.picId}
-                  </div>
-                )}
-                
-                <div className="w-full h-full flex items-center justify-center p-2">
+
+                  {/* Interactive Zoom & Mode Controls */}
+                  {selectedPart.imageUrl && (
+                    <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-0.5 shadow-xs">
+                      <button
+                        onClick={() => setZoomLevel((z) => Math.max(0.75, Number((z - 0.25).toFixed(2))))}
+                        disabled={zoomLevel <= 0.75}
+                        className="w-6 h-6 flex items-center justify-center rounded text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors"
+                        title="Zoom Out"
+                      >
+                        <ZoomOut className="w-3.5 h-3.5" />
+                      </button>
+                      <span className="text-[10px] font-mono font-bold text-slate-600 dark:text-slate-300 px-1 min-w-[32px] text-center">
+                        {Math.round(zoomLevel * 100)}%
+                      </span>
+                      <button
+                        onClick={() => setZoomLevel((z) => Math.min(3, Number((z + 0.25).toFixed(2))))}
+                        disabled={zoomLevel >= 3}
+                        className="w-6 h-6 flex items-center justify-center rounded text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 transition-colors"
+                        title="Zoom In"
+                      >
+                        <ZoomIn className="w-3.5 h-3.5" />
+                      </button>
+                      {zoomLevel !== 1 && (
+                        <button
+                          onClick={() => setZoomLevel(1)}
+                          className="w-6 h-6 flex items-center justify-center rounded text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                          title="Reset Zoom"
+                        >
+                          <RotateCcw className="w-3 h-3" />
+                        </button>
+                      )}
+                      <div className="w-[1px] h-4 bg-slate-200 dark:bg-slate-800 mx-0.5" />
+                      <button
+                        onClick={() => setInvertDiagram((v) => !v)}
+                        className={cn(
+                          'w-6 h-6 flex items-center justify-center rounded transition-colors',
+                          invertDiagram
+                            ? 'bg-amber-500 text-white'
+                            : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        )}
+                        title={invertDiagram ? 'Switch to Standard Diagram' : 'Switch to Blueprint Mode'}
+                      >
+                        <SunMoon className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setLightboxOpen(true)}
+                        className="w-6 h-6 flex items-center justify-center rounded text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        title="Fullscreen Diagram"
+                      >
+                        <Maximize2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Canvas Viewport */}
+                <div
+                  className={cn(
+                    'w-full flex-grow min-h-[360px] md:min-h-[460px] max-h-[520px] rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-xs flex items-center justify-center p-3 relative overflow-hidden transition-colors',
+                    invertDiagram ? 'bg-slate-950' : 'bg-white dark:bg-[#F8FAFC]'
+                  )}
+                >
                   {selectedPart.imageUrl ? (
-                    <img
-                      src={selectedPart.imageUrl}
-                      alt={selectedPart.partName}
-                      className="max-h-[340px] max-w-full object-contain rounded-lg drop-shadow-md hover:scale-105 transition-transform duration-300"
-                    />
+                    <div
+                      className="w-full h-full flex items-center justify-center overflow-auto cursor-zoom-in group/canvas"
+                      onClick={() => setLightboxOpen(true)}
+                      title="Click to view fullscreen diagram"
+                    >
+                      <img
+                        src={selectedPart.imageUrl}
+                        alt={selectedPart.partName}
+                        style={{
+                          transform: `scale(${zoomLevel})`,
+                          transition: 'transform 0.2s ease-out',
+                          filter: invertDiagram ? 'invert(1) hue-rotate(180deg) brightness(1.2)' : 'none',
+                        }}
+                        className="max-h-[440px] max-w-full object-contain select-none"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full max-w-[260px] aspect-square flex items-center justify-center">
                       <DiagramSVG code={getDiagramIndex(selectedPart.partName)} />
@@ -1271,9 +1542,13 @@ export default function PartsSearchPage() {
                   )}
                 </div>
 
-                <p className="text-[10px] text-slate-400 font-medium text-center mt-3">
-                  {selectedPart.imageUrl ? 'Genuine OEM Component Diagram & Spec Image' : 'Schematic Technical Layout'}
-                </p>
+                {/* Footer Hint */}
+                <div className="w-full flex items-center justify-between text-[10px] text-slate-400 font-medium mt-3">
+                  <span>Click diagram to expand fullscreen</span>
+                  <span className="font-mono uppercase font-bold text-slate-500 dark:text-slate-400">
+                    {selectedPart.oem || activeOem} EPC SCHEMATIC
+                  </span>
+                </div>
               </div>
 
               {/* Right Column: Part Specs & Actions */}
@@ -1442,6 +1717,116 @@ export default function PartsSearchPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Fullscreen High-Res Diagram Lightbox Portal */}
+      {lightboxOpen && selectedPart?.imageUrl && createPortal(
+        <div
+          className="fixed inset-0 z-[999999] bg-black/95 backdrop-blur-md flex flex-col p-4 sm:p-6 select-none animate-in fade-in duration-200"
+          onClick={() => setLightboxOpen(false)}
+        >
+          {/* Lightbox Header Bar */}
+          <div
+            className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0 text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded bg-white p-1 flex items-center justify-center shrink-0">
+                <img
+                  src={getBrandLogoPath(selectedPart.oem || activeOem)}
+                  alt={selectedPart.oem || activeOem}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm tracking-wide uppercase text-white">
+                  {selectedPart.partName} ({selectedPart.partNumber})
+                </h4>
+                <p className="text-[10px] font-mono text-slate-400">
+                  {selectedPart.groupName} {selectedPart.subgroupName ? `› ${selectedPart.subgroupName}` : ''} {selectedPart.pnc ? `• PNC ${selectedPart.pnc}` : ''}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1">
+                <button
+                  onClick={() => setZoomLevel((z) => Math.max(0.5, Number((z - 0.25).toFixed(2))))}
+                  className="p-1.5 rounded hover:bg-white/20 text-white transition-colors"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-4 h-4" />
+                </button>
+                <span className="text-xs font-mono font-bold px-2 text-white min-w-[40px] text-center">
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <button
+                  onClick={() => setZoomLevel((z) => Math.min(4, Number((z + 0.25).toFixed(2))))}
+                  className="p-1.5 rounded hover:bg-white/20 text-white transition-colors"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setZoomLevel(1)}
+                  className="p-1.5 rounded hover:bg-white/20 text-white transition-colors"
+                  title="Reset Zoom"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+                <div className="w-[1px] h-4 bg-white/20 mx-1" />
+                <button
+                  onClick={() => setInvertDiagram((v) => !v)}
+                  className={cn(
+                    'p-1.5 rounded transition-colors',
+                    invertDiagram ? 'bg-amber-500 text-white' : 'hover:bg-white/20 text-white'
+                  )}
+                  title={invertDiagram ? 'Switch to Standard Light Diagram' : 'Switch to Dark Blueprint'}
+                >
+                  <SunMoon className="w-4 h-4" />
+                </button>
+              </div>
+
+              <button
+                onClick={() => setLightboxOpen(false)}
+                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+                title="Close Lightbox (Esc)"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Lightbox Canvas Area */}
+          <div
+            className="flex-grow flex items-center justify-center overflow-auto p-4 cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className={cn(
+                'rounded-2xl p-6 shadow-2xl transition-all max-w-[95vw] max-h-[82vh] flex items-center justify-center overflow-auto',
+                invertDiagram ? 'bg-slate-950 border border-slate-800' : 'bg-white'
+              )}
+            >
+              <img
+                src={selectedPart.imageUrl}
+                alt={selectedPart.partName}
+                style={{
+                  transform: `scale(${zoomLevel})`,
+                  transition: 'transform 0.2s ease-out',
+                  filter: invertDiagram ? 'invert(1) hue-rotate(180deg) brightness(1.2)' : 'none',
+                }}
+                className="max-h-[78vh] max-w-[90vw] object-contain select-none"
+              />
+            </div>
+          </div>
+
+          {/* Lightbox Footer */}
+          <div className="text-center text-xs text-slate-400 py-1 font-sans">
+            Use zoom controls or press <kbd className="bg-white/20 px-1.5 py-0.5 rounded text-[11px] font-mono text-white">Esc</kbd> to exit fullscreen
           </div>
         </div>,
         document.body

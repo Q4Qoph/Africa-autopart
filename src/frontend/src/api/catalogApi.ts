@@ -22,7 +22,7 @@ export const catalogApi = {
    * 1. GET /api/vehicles/vin/{vin}
    * Unified VIN lookup returning decoded vehicle attributes + matching catalog parts.
    */
-  getVehicleByVin: async (vin: string, page = 1, pageSize = 20): Promise<VehicleVinResponse> => {
+  getVehicleByVin: async (vin: string, page = 1, pageSize = 48): Promise<VehicleVinResponse> => {
     const response = await api.get<VehicleVinResponse>(`/api/vehicles/vin/${encodeURIComponent(vin)}`, {
       params: { page, pageSize },
     })
@@ -60,7 +60,7 @@ export const catalogApi = {
     make: string,
     model: string,
     page = 1,
-    pageSize = 20
+    pageSize = 48
   ): Promise<PaginatedResponse<CatalogPartItem>> => {
     const response = await api.get<PaginatedResponse<CatalogPartItem>>(
       `/api/vehicles/${encodeURIComponent(make)}/models/${encodeURIComponent(model)}/parts`,

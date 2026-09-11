@@ -101,7 +101,7 @@ export default function PartDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 bg-white dark:bg-[#111C14] border border-slate-200/60 dark:border-slate-800/60 rounded-3xl p-6 lg:p-10 shadow-sm">
           
           {/* Left Column: Picture frame */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-6 border border-slate-100 dark:border-slate-900/60 aspect-square max-h-[500px]">
+          <div className="lg:col-span-5 flex flex-col items-center justify-center bg-white dark:bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200 dark:border-slate-800 aspect-square max-h-[500px] shadow-xs">
             {part.imageUrl ? (
               <img
                 src={part.imageUrl}

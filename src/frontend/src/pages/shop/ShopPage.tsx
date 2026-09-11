@@ -366,7 +366,7 @@ export default function ShopPage() {
                       className="group border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-3 bg-white dark:bg-[#111C14] hover:border-[#00C853]/40 dark:hover:border-[#00C853]/40 hover:shadow-xl hover:shadow-emerald-500/[0.03] transition-all duration-300 flex flex-col relative overflow-hidden"
                     >
                       {/* Image viewport */}
-                      <div className="aspect-square w-full overflow-hidden rounded-xl bg-slate-50 dark:bg-slate-900/60 flex items-center justify-center p-2 relative">
+                      <div className="aspect-square w-full overflow-hidden rounded-xl bg-white dark:bg-[#F8FAFC] border border-slate-100 dark:border-slate-800/80 flex items-center justify-center p-2 relative shadow-xs">
                         {part.imageUrl ? (
                           <img
                             src={part.imageUrl}

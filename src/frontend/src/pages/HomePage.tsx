@@ -275,19 +275,21 @@ export default function HomePage() {
     // Standard VINs are 17 characters alphanumeric without spaces
     const isVinPattern = /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(trimmed)
 
+    const PAGE_SIZE = 48
+
     if (isVinPattern) {
       try {
         // Step 1: Query internal catalog database for this VIN (returns decoded specs + catalog parts)
-        const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, 20)
+        const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, PAGE_SIZE)
         const partsList = Array.isArray(vehicleRes.parts)
           ? vehicleRes.parts
           : (vehicleRes.parts?.items || [])
-        const totalParts = Array.isArray(vehicleRes.parts)
-          ? vehicleRes.parts.length
-          : (vehicleRes.parts?.totalCount || partsList.length)
-        const totalPages = Array.isArray(vehicleRes.parts)
-          ? Math.ceil(partsList.length / 20) || 1
-          : (vehicleRes.parts?.totalPages || 1)
+        const totalParts = typeof vehicleRes.partCount === 'number'
+          ? vehicleRes.partCount
+          : (Array.isArray(vehicleRes.parts) ? vehicleRes.parts.length : (vehicleRes.parts?.totalCount || partsList.length))
+        const totalPages = typeof vehicleRes.totalPages === 'number' && vehicleRes.totalPages > 0
+          ? vehicleRes.totalPages
+          : Math.max(1, Math.ceil(totalParts / PAGE_SIZE))
 
         const decodedModel = vehicleRes.model || vehicleRes.decoded?.model || vehicleRes.decoded?.nhtsa?.model
         const decodedMake = vehicleRes.decoded?.make || vehicleRes.decoded?.nhtsa?.make || partsList[0]?.oem || partsList[0]?.make
@@ -300,7 +302,7 @@ export default function HomePage() {
               searchResults: {
                 items: partsList,
                 pageNumber: 1,
-                pageSize: 20,
+                pageSize: PAGE_SIZE,
                 totalCount: totalParts,
                 totalPages: totalPages,
               },
@@ -313,13 +315,50 @@ export default function HomePage() {
           return
         }
 
+        // Step 1b: Check /api/vehicles/search directly for this VIN
+        const vinSearchRes = await catalogApi.searchVehicles({
+          vin: trimmed,
+          page: 1,
+          pageSize: PAGE_SIZE,
+        })
+
+        if (vinSearchRes.totalCount > 0) {
+          const firstPart = vinSearchRes.items[0]
+          navigate('/parts-search', {
+            state: {
+              vehicleVinResponse: {
+                ...vehicleRes,
+                matchedInCatalog: true,
+                partCount: vinSearchRes.totalCount,
+                model: firstPart?.model || decodedModel,
+                modelYear: firstPart?.modelYear || decodedYear,
+                series: firstPart?.vehicleSeries || vehicleRes.series,
+                parts: vinSearchRes.items,
+              },
+              searchResults: {
+                items: vinSearchRes.items || [],
+                pageNumber: vinSearchRes.page || 1,
+                pageSize: vinSearchRes.pageSize || PAGE_SIZE,
+                totalCount: vinSearchRes.totalCount || 0,
+                totalPages: vinSearchRes.totalPages || Math.max(1, Math.ceil(vinSearchRes.totalCount / PAGE_SIZE)),
+              },
+              searchTerm: firstPart?.model || decodedModel || trimmed,
+              model: firstPart?.model || decodedModel,
+              make: firstPart?.make || firstPart?.oem || decodedMake,
+              modelYear: firstPart?.modelYear || decodedYear,
+              vin: trimmed,
+            },
+          })
+          return
+        }
+
         // If not matched in catalog, but we have decoded model/make, attempt search by model/make
         if (decodedModel || decodedMake) {
           const modelSearchRes = await catalogApi.searchVehicles({
             model: decodedModel || undefined,
             make: decodedMake || undefined,
             page: 1,
-            pageSize: 20,
+            pageSize: PAGE_SIZE,
           })
 
           navigate('/parts-search', {
@@ -328,7 +367,7 @@ export default function HomePage() {
               searchResults: {
                 items: modelSearchRes.items || [],
                 pageNumber: modelSearchRes.page || 1,
-                pageSize: modelSearchRes.pageSize || 20,
+                pageSize: modelSearchRes.pageSize || PAGE_SIZE,
                 totalCount: modelSearchRes.totalCount || 0,
                 totalPages: modelResTotalPages(modelSearchRes),
               },
@@ -355,7 +394,7 @@ export default function HomePage() {
           model: modelTerm || undefined,
           make: makeTerm || undefined,
           page: 1,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
         })
 
         navigate('/parts-search', {
@@ -364,7 +403,7 @@ export default function HomePage() {
             searchResults: {
               items: searchRes.items || [],
               pageNumber: searchRes.page || 1,
-              pageSize: searchRes.pageSize || 20,
+              pageSize: searchRes.pageSize || PAGE_SIZE,
               totalCount: searchRes.totalCount || 0,
               totalPages: searchRes.totalPages || 1,
             },
@@ -385,7 +424,7 @@ export default function HomePage() {
       const searchRes = await catalogApi.searchVehicles({
         keyword: trimmed,
         page: 1,
-        pageSize: 20,
+        pageSize: PAGE_SIZE,
       })
 
       if (searchRes.totalCount > 0) {
@@ -394,7 +433,7 @@ export default function HomePage() {
             searchResults: {
               items: searchRes.items || [],
               pageNumber: searchRes.page || 1,
-              pageSize: searchRes.pageSize || 20,
+              pageSize: searchRes.pageSize || PAGE_SIZE,
               totalCount: searchRes.totalCount || 0,
               totalPages: searchRes.totalPages || 1,
             },
@@ -408,7 +447,7 @@ export default function HomePage() {
       const partNumRes = await catalogApi.searchVehicles({
         partNumber: trimmed,
         page: 1,
-        pageSize: 20,
+        pageSize: PAGE_SIZE,
       })
 
       const finalRes = partNumRes.totalCount > 0 ? partNumRes : searchRes
@@ -417,7 +456,7 @@ export default function HomePage() {
           searchResults: {
             items: finalRes.items || [],
             pageNumber: finalRes.page || 1,
-            pageSize: finalRes.pageSize || 20,
+            pageSize: finalRes.pageSize || PAGE_SIZE,
             totalCount: finalRes.totalCount || 0,
             totalPages: finalRes.totalPages || 1,
           },
@@ -432,7 +471,7 @@ export default function HomePage() {
   }
 
   function modelResTotalPages(res: any): number {
-    return res.totalPages || Math.ceil((res.totalCount || 0) / (res.pageSize || 20)) || 1
+    return res.totalPages || Math.ceil((res.totalCount || 0) / (res.pageSize || 48)) || 1
   }
 
   function handleSubmit(e: React.FormEvent) {
