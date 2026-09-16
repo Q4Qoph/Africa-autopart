@@ -298,41 +298,13 @@ export default function HomePage() {
       try {
         // Step 1: Query internal catalog database for this VIN (returns decoded specs + catalog parts)
         const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, PAGE_SIZE)
-        const partsList = Array.isArray(vehicleRes.parts)
-          ? vehicleRes.parts
-          : (vehicleRes.parts?.items || [])
-        const totalParts = typeof vehicleRes.partCount === 'number'
-          ? vehicleRes.partCount
-          : (Array.isArray(vehicleRes.parts) ? vehicleRes.parts.length : (vehicleRes.parts?.totalCount || partsList.length))
-        const totalPages = typeof vehicleRes.totalPages === 'number' && vehicleRes.totalPages > 0
-          ? vehicleRes.totalPages
-          : Math.max(1, Math.ceil(totalParts / PAGE_SIZE))
-
         const decodedModel = vehicleRes.model || vehicleRes.decoded?.model || vehicleRes.decoded?.nhtsa?.model
-        const decodedMake = vehicleRes.decoded?.make || vehicleRes.decoded?.nhtsa?.make || partsList[0]?.oem || partsList[0]?.make
+        const decodedMake = vehicleRes.decoded?.make || vehicleRes.decoded?.nhtsa?.make
         const decodedYear = vehicleRes.modelYear || (vehicleRes.decoded?.modelYear ? String(vehicleRes.decoded.modelYear) : null)
 
-        if (vehicleRes.matchedInCatalog || partsList.length > 0) {
-          navigate('/parts-search', {
-            state: {
-              vehicleVinResponse: vehicleRes,
-              searchResults: {
-                items: partsList,
-                pageNumber: 1,
-                pageSize: PAGE_SIZE,
-                totalCount: totalParts,
-                totalPages: totalPages,
-              },
-              vin: trimmed,
-              model: decodedModel,
-              make: decodedMake,
-              modelYear: decodedYear,
-            },
-          })
-          return
-        }
-
-        // Step 1b: Check /api/vehicles/search directly for this VIN
+        // The vehicle lookup provides decoding and fitment metadata. Its parts
+        // payload is not authoritative for catalog display, so always use the
+        // dedicated VIN search below for catalog rows and vehicle series.
         const vinSearchRes = await catalogApi.searchVehicles({
           vin: trimmed,
           page: 1,
@@ -349,7 +321,7 @@ export default function HomePage() {
                 partCount: vinSearchRes.totalCount,
                 model: firstPart?.model || decodedModel,
                 modelYear: firstPart?.modelYear || decodedYear,
-                series: firstPart?.vehicleSeries || vehicleRes.series,
+                series: firstPart?.vehicleSeries || firstPart?.series || vehicleRes.series,
                 parts: vinSearchRes.items,
               },
               searchResults: {
