@@ -35,6 +35,7 @@ import PartDetailPage from '@/pages/shop/PartDetailPage'
 import PartsUploadPage from '@/pages/shop/PartsUploadPage'
 import PartsSearchPage from '@/pages/parts/PartsSearchPage'
 import CartExternalPage from '@/pages/parts/CartExternalPage';
+import BrandPage from '@/pages/BrandPage'
 import RootLayout from '@/components/layout/RootLayout'
 
 function ProtectedRoute() {
@@ -70,6 +71,8 @@ export const router = createBrowserRouter([
       { path: '/suppliers', element: <SuppliersPage /> },
       { path: '/contact', element: <ContactPage /> },
       { path: '/about', element: <AboutPage /> },
+      { path: '/brands/:make/models/:model/parts', element: <PartsSearchPage /> },
+      { path: '/brands/:make', element: <BrandPage /> },
       { path: '/shop', element: <ShopPage /> },
       { path: '/part-detail/:id', element: <PartDetailPage /> },
       { path: '/upload', element: <PartsUploadPage /> },

@@ -7,7 +7,7 @@ const BRAND_SLUG_MAP: Record<string, string> = {
   'land-rover': 'land-rover',
 }
 
-const PNG_BRANDS = new Set(['bmw', 'lexus', 'volkswagen'])
+const PNG_BRANDS = new Set(['bmw', 'haval', 'lexus', 'volkswagen'])
 
 /**
  * Returns the public image URL for a given brand name, handling naming aliases

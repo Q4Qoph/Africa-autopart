@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocation, useSearchParams, Link } from 'react-router-dom'
+import { useLocation, useParams, useSearchParams, Link } from 'react-router-dom'
 import {
   Package,
   ShoppingCart,
@@ -366,6 +366,7 @@ function extractSearchPagination(res: PaginatedResponse<CatalogPartItem>, fallba
 
 export default function PartsSearchPage() {
   const location = useLocation()
+  const { make: routeMake, model: routeModel } = useParams<{ make?: string; model?: string }>()
   const [searchParams] = useSearchParams()
   const { addItem } = useExternalCart()
 
@@ -383,8 +384,8 @@ export default function PartsSearchPage() {
 
   // URL Query Parameters fallback
   const urlVin = searchParams.get('vin') || undefined
-  const urlMake = searchParams.get('make') || undefined
-  const urlModel = searchParams.get('model') || undefined
+  const urlMake = searchParams.get('make') || routeMake || undefined
+  const urlModel = searchParams.get('model') || routeModel || undefined
   const urlSearch = searchParams.get('q') || searchParams.get('searchTerm') || searchParams.get('keyword') || undefined
   const urlGroup = searchParams.get('groupName') || undefined
 
@@ -1017,9 +1018,18 @@ export default function PartsSearchPage() {
         <span>•</span>
         <Link to="/" className="hover:text-amber-500">Genuine Parts Catalogs</Link>
         <span>•</span>
-        <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
-          {activeOem}
-        </span>
+        {vehicleMeta.make || urlMake ? (
+          <Link
+            to={`/brands/${encodeURIComponent(vehicleMeta.make || urlMake || activeOem)}`}
+            className="text-slate-800 dark:text-slate-200 font-bold uppercase hover:text-[#00C853] hover:underline"
+          >
+            {activeOem}
+          </Link>
+        ) : (
+          <span className="text-slate-800 dark:text-slate-200 font-bold uppercase">
+            {activeOem}
+          </span>
+        )}
         <span>•</span>
         <span className="text-slate-500 font-mono text-[10px]">
           {vehicleMeta.vin || locationState?.searchTerm || 'PARTS CATALOG'}
@@ -1074,8 +1084,17 @@ export default function PartsSearchPage() {
                   <span>
                     {vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM' ? (
                       <>
-                        VIN <strong className="font-mono">{vehicleMeta.vin || locationState?.vin}</strong> decoded as{' '}
-                        <strong className="uppercase">{vehicleMeta.make || activeOem} {vehicleMeta.model || activeModel}</strong> {vehicleMeta.modelYear ? `(${vehicleMeta.modelYear})` : ''}. Displaying matching catalog components.
+                        {vehicleMeta.vin ? (
+                          <>
+                            VIN <strong className="font-mono">{vehicleMeta.vin}</strong> decoded as{' '}
+                            <strong className="uppercase">{vehicleMeta.make || activeOem} {vehicleMeta.model || activeModel}</strong> {vehicleMeta.modelYear ? `(${vehicleMeta.modelYear})` : ''}.
+                          </>
+                        ) : (
+                          <>
+                            Showing the <strong className="uppercase">{vehicleMeta.make || activeOem} {vehicleMeta.model || activeModel}</strong> parts catalog.
+                          </>
+                        )}{' '}
+                        Displaying matching catalog components.
                       </>
                     ) : (
                       <>

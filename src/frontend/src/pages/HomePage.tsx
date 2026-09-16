@@ -44,6 +44,7 @@ const YoutubeIcon = ({ className }: { className?: string }) => (
 // ─── SVG Brand Logos (PartSouq brands) ──────────────────────
 
 const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
+  Haval: () => null,
   Toyota: (color = 'currentColor') => (
     <svg viewBox="0 0 100 60" className="w-16 h-12" fill="none" stroke={color} strokeWidth="4">
       <ellipse cx="50" cy="30" rx="42" ry="24" />
@@ -230,6 +231,22 @@ const BRAND_LOGOS: Record<string, (color?: string) => React.ReactNode> = {
 }
 
 const BRANDS = Object.keys(BRAND_LOGOS)
+
+function getDisplayBrands(availableMakes: string[]): string[] {
+  const displayBrands = [...BRANDS]
+  const knownBrands = new Set(BRANDS.map((brand) => brand.trim().toLowerCase()))
+
+  for (const make of availableMakes) {
+    const displayName = make.trim()
+    const normalizedName = displayName.toLowerCase()
+    if (displayName && !knownBrands.has(normalizedName)) {
+      displayBrands.push(displayName)
+      knownBrands.add(normalizedName)
+    }
+  }
+
+  return displayBrands
+}
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -702,12 +719,19 @@ export default function HomePage() {
           Genuine Parts Online Catalogs
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {(availableMakes.length > 0 ? Array.from(new Set([...availableMakes, ...BRANDS])) : BRANDS).map((brand) => (
+          {getDisplayBrands(availableMakes).map((brand) => (
             <div
               key={brand}
               onClick={() => {
-                setVin(brand)
-                handleSearch(brand)
+                navigate(`/brands/${encodeURIComponent(brand)}`)
+              }}
+              role="link"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  navigate(`/brands/${encodeURIComponent(brand)}`)
+                }
               }}
               className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 rounded p-5 flex flex-col items-center justify-center cursor-pointer shadow-sm hover:shadow-md hover:border-slate-400 dark:hover:border-brand-green transition-all duration-200 group"
             >
