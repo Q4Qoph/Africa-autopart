@@ -41,7 +41,7 @@ jobs:
         working-directory: src/frontend
         run: npm run build
         env:
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_API_BASE_URL: https://africaautopart-api.frankotieno254.workers.dev
 
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
