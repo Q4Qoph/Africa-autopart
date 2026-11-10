@@ -1,4 +1,21 @@
 export default {
+  // Verified vehicle coverage
+  coverage_heading: 'በአሁኑ ጊዜ የሚሸፈኑ ተሽከርካሪዎች',
+  coverage_description: 'ለእነዚህ የተሽከርካሪ ምድቦች መለዋወጫዎችን በአሁኑ ጊዜ መፈለግ ይቻላል።',
+  coverage_model_count_one: '{{count}} ሞዴል',
+  coverage_model_count_other: '{{count}} ሞዴሎች',
+  coverage_browse_make: 'የ{{make}} ካታሎግ ይመልከቱ',
+  coverage_year_label: 'የካታሎግ ዓመታት',
+  coverage_years_unknown: 'ዓመታት አልተገለጹም',
+  coverage_steering_unknown: 'የመሪው አቅጣጫ አልተገለጸም',
+  coverage_lhd: 'የግራ መሪ',
+  coverage_rhd: 'የቀኝ መሪ',
+  coverage_years_note: 'የሚታዩት ዓመታት የካታሎግ ሽፋን ክልሎች ናቸው። ተሽከርካሪዎን ለማረጋገጥ በVIN ይፈልጉ።',
+  coverage_checked: 'ሽፋኑ የተረጋገጠበት ቀን፦',
+  coverage_empty: 'የሽፋን መረጃ ገና አልተገኘም።',
+  coverage_models_stat: 'የሚሸፈኑ ሞዴሎች',
+  coverage_catalogs_heading: 'የሚሸፈኑ ተሽከርካሪዎችን ካታሎጎች ይመልከቱ',
+
   // Hero
   hero_eyebrow: 'አፍሪካ + ሳዑዲ አረቢያ · OEM · አፍተርማርኬት · ሁለተኛ እጅ',
   hero_headline: 'ማንኛውንም መለዋወጫ ፈልግ,',

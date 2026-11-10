@@ -1,5 +1,22 @@
 // src/frontend/src/i18n/locales/en/home.ts   
 export default {
+  // Verified vehicle coverage
+  coverage_heading: 'Currently covered vehicles',
+  coverage_description: 'These vehicle categories currently have searchable parts.',
+  coverage_model_count_one: '{{count}} model',
+  coverage_model_count_other: '{{count}} models',
+  coverage_browse_make: 'Browse {{make}} catalog',
+  coverage_year_label: 'Catalog years',
+  coverage_years_unknown: 'Years not specified',
+  coverage_steering_unknown: 'Steering not specified',
+  coverage_lhd: 'left-hand drive',
+  coverage_rhd: 'right-hand drive',
+  coverage_years_note: 'Years shown are catalog coverage ranges. Search by VIN to check your vehicle.',
+  coverage_checked: 'Coverage checked:',
+  coverage_empty: 'Coverage information is not available yet.',
+  coverage_models_stat: 'MODELS COVERED',
+  coverage_catalogs_heading: 'Browse covered vehicle catalogs',
+
   // Hero
   hero_eyebrow: 'Africa + Saudi Arabia · OEM · Aftermarket · Second-Hand',
   hero_headline: 'Find any spare part,',

@@ -1,4 +1,25 @@
 export default {
+  // Verified vehicle coverage
+  coverage_heading: 'المركبات المشمولة حاليًا',
+  coverage_description: 'تتوفر حاليًا قطع قابلة للبحث لهذه الفئات من المركبات.',
+  coverage_model_count_zero: 'لا توجد طرازات',
+  coverage_model_count_one: 'طراز واحد',
+  coverage_model_count_two: 'طرازان',
+  coverage_model_count_few: '{{count}} طرازات',
+  coverage_model_count_many: '{{count}} طرازًا',
+  coverage_model_count_other: '{{count}} طراز',
+  coverage_browse_make: 'تصفح كتالوج {{make}}',
+  coverage_year_label: 'سنوات الكتالوج',
+  coverage_years_unknown: 'السنوات غير محددة',
+  coverage_steering_unknown: 'موضع المقود غير محدد',
+  coverage_lhd: 'المقود على اليسار',
+  coverage_rhd: 'المقود على اليمين',
+  coverage_years_note: 'السنوات المعروضة هي نطاقات تغطية الكتالوج. ابحث برقم الهيكل VIN للتحقق من مركبتك.',
+  coverage_checked: 'تم التحقق من التغطية في:',
+  coverage_empty: 'معلومات التغطية غير متاحة بعد.',
+  coverage_models_stat: 'الطرازات المشمولة',
+  coverage_catalogs_heading: 'تصفح كتالوجات المركبات المشمولة',
+
   // Hero
   hero_eyebrow: 'أفريقيا + المملكة العربية السعودية · OEM · قطع غيار بديلة · مستعمل',
   hero_headline: 'اعثر على أي قطعة غيار،',

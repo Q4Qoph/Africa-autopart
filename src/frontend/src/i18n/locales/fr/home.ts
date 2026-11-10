@@ -1,4 +1,21 @@
 export default {
+  // Verified vehicle coverage
+  coverage_heading: 'Véhicules actuellement couverts',
+  coverage_description: 'Des pièces sont actuellement consultables pour ces catégories de véhicules.',
+  coverage_model_count_one: '{{count}} modèle',
+  coverage_model_count_other: '{{count}} modèles',
+  coverage_browse_make: 'Parcourir le catalogue {{make}}',
+  coverage_year_label: 'Années du catalogue',
+  coverage_years_unknown: 'Années non précisées',
+  coverage_steering_unknown: 'Position du volant non précisée',
+  coverage_lhd: 'volant à gauche',
+  coverage_rhd: 'volant à droite',
+  coverage_years_note: 'Les années indiquées correspondent aux plages du catalogue. Recherchez par VIN pour vérifier votre véhicule.',
+  coverage_checked: 'Couverture vérifiée le :',
+  coverage_empty: 'Les informations de couverture ne sont pas encore disponibles.',
+  coverage_models_stat: 'MODÈLES COUVERTS',
+  coverage_catalogs_heading: 'Parcourir les catalogues des véhicules couverts',
+
   // Hero
   hero_eyebrow: 'Afrique + Arabie Saoudite · OEM · Aftermarket · Occasion',
   hero_headline: 'Trouvez n\'importe quelle pièce,',
