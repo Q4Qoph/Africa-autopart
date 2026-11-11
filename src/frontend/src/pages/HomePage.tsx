@@ -9,7 +9,6 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { catalogApi } from '@/api/catalogApi'
-import type { VehicleVinResponse, NhtsaVinDecodeResponse, PaginatedResponse } from '@/types/catalog'
 import { cn } from '@/lib/utils'
 import { getBrandLogoPath } from '@/lib/brandUtils'
 import { VehicleCoveragePanel } from '@/components/catalog/VehicleCoveragePanel'
@@ -83,117 +82,9 @@ export default function HomePage() {
     const PAGE_SIZE = 48
 
     if (isVinPattern) {
-      try {
-        // Step 1: Query internal catalog database for this VIN (returns decoded specs + catalog parts)
-        const vehicleRes: VehicleVinResponse = await catalogApi.getVehicleByVin(trimmed, 1, PAGE_SIZE)
-        const decodedModel = vehicleRes.model || vehicleRes.decoded?.model || vehicleRes.decoded?.nhtsa?.model
-        const decodedMake = vehicleRes.decoded?.make || vehicleRes.decoded?.nhtsa?.make
-        const decodedYear = vehicleRes.modelYear || (vehicleRes.decoded?.modelYear ? String(vehicleRes.decoded.modelYear) : null)
-
-        // The vehicle lookup provides decoding and fitment metadata. Its parts
-        // payload is not authoritative for catalog display, so always use the
-        // dedicated VIN search below for catalog rows and vehicle series.
-        const vinSearchRes = await catalogApi.searchVehicles({
-          vin: trimmed,
-          page: 1,
-          pageSize: PAGE_SIZE,
-        })
-
-        if (vinSearchRes.totalCount > 0) {
-          const firstPart = vinSearchRes.items[0]
-          navigate('/parts-search', {
-            state: {
-              vehicleVinResponse: {
-                ...vehicleRes,
-                matchedInCatalog: true,
-                partCount: vinSearchRes.totalCount,
-                model: firstPart?.model || decodedModel,
-                modelYear: firstPart?.modelYear || decodedYear,
-                series: firstPart?.vehicleSeries || firstPart?.series || vehicleRes.series,
-                parts: vinSearchRes.items,
-              },
-              searchResults: {
-                items: vinSearchRes.items || [],
-                pageNumber: vinSearchRes.page || 1,
-                pageSize: vinSearchRes.pageSize || PAGE_SIZE,
-                totalCount: vinSearchRes.totalCount || 0,
-                totalPages: vinSearchRes.totalPages || Math.max(1, Math.ceil(vinSearchRes.totalCount / PAGE_SIZE)),
-              },
-              searchTerm: firstPart?.model || decodedModel || trimmed,
-              model: firstPart?.model || decodedModel,
-              make: firstPart?.make || firstPart?.oem || decodedMake,
-              modelYear: firstPart?.modelYear || decodedYear,
-              vin: trimmed,
-            },
-          })
-          return
-        }
-
-        // If not matched in catalog, but we have decoded model/make, attempt search by model/make
-        if (decodedModel || decodedMake) {
-          const modelSearchRes = await catalogApi.searchVehicles({
-            model: decodedModel || undefined,
-            make: decodedMake || undefined,
-            page: 1,
-            pageSize: PAGE_SIZE,
-          })
-
-          navigate('/parts-search', {
-            state: {
-              vehicleVinResponse: vehicleRes,
-              searchResults: {
-                items: modelSearchRes.items || [],
-                pageNumber: modelSearchRes.page || 1,
-                pageSize: modelSearchRes.pageSize || PAGE_SIZE,
-                totalCount: modelSearchRes.totalCount || 0,
-                totalPages: modelResTotalPages(modelSearchRes),
-              },
-              searchTerm: decodedModel || decodedMake || trimmed,
-              model: decodedModel,
-              make: decodedMake,
-              modelYear: decodedYear,
-              vin: trimmed,
-            },
-          })
-          return
-        }
-      } catch (vinErr) {
-        console.warn('Direct catalog VIN lookup returned error, trying fallback decode:', vinErr)
-      }
-
-      // Step 2: Fallback to NHTSA third-party decode if not found
-      try {
-        const decodeData: NhtsaVinDecodeResponse = await catalogApi.decodeVinFallback(trimmed)
-        const modelTerm = decodeData.model?.trim() || ''
-        const makeTerm = decodeData.make?.trim() || ''
-
-        const searchRes = await catalogApi.searchVehicles({
-          model: modelTerm || undefined,
-          make: makeTerm || undefined,
-          page: 1,
-          pageSize: PAGE_SIZE,
-        })
-
-        navigate('/parts-search', {
-          state: {
-            nhtsaDecode: decodeData,
-            searchResults: {
-              items: searchRes.items || [],
-              pageNumber: searchRes.page || 1,
-              pageSize: searchRes.pageSize || PAGE_SIZE,
-              totalCount: searchRes.totalCount || 0,
-              totalPages: searchRes.totalPages || 1,
-            },
-            searchTerm: modelTerm || makeTerm || trimmed,
-            model: modelTerm || null,
-            make: makeTerm ? makeTerm.toUpperCase() : null,
-            vin: trimmed,
-          },
-        })
-        return
-      } catch (decodeErr) {
-        console.warn('Fallback VIN decode failed:', decodeErr)
-      }
+      navigate(`/parts-search?vin=${encodeURIComponent(trimmed.toUpperCase())}`)
+      setSearching(false)
+      return
     }
 
     // Step 3: Regular keyword, make, model, or part number search using GET /api/vehicles/search
@@ -245,10 +136,6 @@ export default function HomePage() {
     } finally {
       setSearching(false)
     }
-  }
-
-  function modelResTotalPages(res: Pick<PaginatedResponse<unknown>, 'totalPages' | 'totalCount' | 'pageSize'>): number {
-    return res.totalPages || Math.ceil((res.totalCount || 0) / (res.pageSize || 48)) || 1
   }
 
   function handleSubmit(e: React.FormEvent) {

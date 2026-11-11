@@ -9,7 +9,6 @@ import type {
   PartSearchRequestDto,
   GroupedByModelResponse,
   GroupedByGroupResponse,
-  NhtsaVinDecodeResponse,
 } from '@/types/catalog'
 
 const api = axios.create({
@@ -74,7 +73,7 @@ export const catalogApi = {
    * High-power unified REST query endpoint across all automotive dimensions.
    */
   searchVehicles: async (params: VehicleSearchParams): Promise<PaginatedResponse<CatalogPartItem>> => {
-    const cleanParams: Record<string, any> = {}
+    const cleanParams: Record<string, string | number | boolean> = {}
     for (const [key, value] of Object.entries(params)) {
       if (value !== undefined && value !== null && value !== '') {
         cleanParams[key] = value
@@ -213,40 +212,4 @@ export const catalogApi = {
     }
   },
 
-  /**
-   * Fallback VIN decode
-   */
-  decodeVinFallback: async (vin: string): Promise<NhtsaVinDecodeResponse> => {
-    try {
-      const response = await api.post<NhtsaVinDecodeResponse>(`/api/vehicles/vin/${encodeURIComponent(vin)}/decode`, '')
-      return response.data
-    } catch {
-      return {
-        vin,
-        isValid: false,
-        errorCode: '404',
-        errorText: 'VIN decode service unreachable',
-        make: null,
-        model: null,
-        modelYear: null,
-        manufacturer: null,
-        vehicleType: null,
-        bodyClass: null,
-        series: null,
-        trim: null,
-        driveType: null,
-        transmissionStyle: null,
-        engineCylinders: null,
-        engineHP: null,
-        displacementL: null,
-        fuelTypePrimary: null,
-        plantCity: null,
-        plantState: null,
-        plantCountry: null,
-        gvwr: null,
-        doors: null,
-        rawAttributes: {},
-      }
-    }
-  },
 }

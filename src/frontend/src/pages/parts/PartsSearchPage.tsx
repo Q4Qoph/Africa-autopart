@@ -22,6 +22,7 @@ import {
   SunMoon,
 } from 'lucide-react'
 import { catalogApi } from '@/api/catalogApi'
+import { isVin, resolveVin } from '@/lib/resolveVin'
 import type {
   CatalogPartItem,
   VehicleVinResponse,
@@ -389,6 +390,11 @@ export default function PartsSearchPage() {
   const urlSearch = searchParams.get('q') || searchParams.get('searchTerm') || searchParams.get('keyword') || undefined
   const urlGroup = searchParams.get('groupName') || undefined
 
+  const requestedVin = (urlVin || locationState?.vin || '').trim().toUpperCase()
+  const [vinWarnings, setVinWarnings] = useState<string[]>([])
+  const [vinError, setVinError] = useState('')
+  const [vinRetry, setVinRetry] = useState(0)
+
   // Initial Part List extraction
   const initialParts: CatalogPartItem[] = useMemo(() => {
     if (locationState?.searchResults?.items) return locationState.searchResults.items
@@ -455,7 +461,7 @@ export default function PartsSearchPage() {
   const [totalCount, setTotalCount] = useState<number>(
     locationState?.vehicleVinResponse?.partCount ?? (locationState?.searchResults?.totalCount ?? initialParts.length)
   )
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(!!requestedVin)
   const [activeGroup, setActiveGroup] = useState<string>(urlGroup || 'ALL')
   const [filterQuery, setFilterQuery] = useState<string>('')
   const [apiGroups, setApiGroups] = useState<string[]>([])
@@ -497,112 +503,45 @@ export default function PartsSearchPage() {
 
   // Auto-fetch if direct URL navigation (mount only)
   useEffect(() => {
+    if (requestedVin) {
+      let cancelled = false
+      setParts([])
+      setTotalCount(0)
+      setTotalPages(1)
+      setIsVinMatched(false)
+      setVinWarnings([])
+      setVinError('')
+      setVehicleMeta({ vin: requestedVin })
+      if (!isVin(requestedVin)) {
+        setVinError('Enter a 17-character VIN without I, O or Q.')
+        setLoading(false)
+        return
+      }
+      setLoading(true)
+      resolveVin(requestedVin, catalogApi, PAGE_SIZE)
+        .then(({ catalog, matched, warnings, meta }) => {
+          if (cancelled) return
+          setVehicleMeta(meta)
+          setVinWarnings(warnings)
+          setIsVinMatched(matched)
+          setParts(catalog.items)
+          setPage(catalog.page)
+          setTotalCount(catalog.totalCount)
+          setTotalPages(Math.max(1, catalog.totalPages))
+        })
+        .catch((error: unknown) => {
+          if (!cancelled) setVinError(error instanceof Error ? error.message : 'VIN lookup failed. Please retry.')
+        })
+        .finally(() => { if (!cancelled) setLoading(false) })
+      return () => { cancelled = true }
+    }
     if (hasInitialFetchedRef.current) return
     hasInitialFetchedRef.current = true
-
-    const targetVin = locationState?.vin || urlVin
     const targetSearch = locationState?.searchTerm || urlSearch
     const targetMake = locationState?.make || urlMake
     const targetModel = locationState?.model || urlModel
 
-    if (targetVin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(targetVin)) {
-      setLoading(true)
-      catalogApi.searchVehicles({ vin: targetVin, page: 1, pageSize: PAGE_SIZE })
-        .then(async (searchRes) => {
-          if (searchRes.totalCount > 0) {
-            const { partsList: searchParts, totalCount: searchCount, totalPages: searchPages, pageNumber: searchPNum } = extractSearchPagination(searchRes, 1, PAGE_SIZE)
-            setIsVinMatched(true)
-            setParts(searchParts)
-            setPage(searchPNum)
-            setTotalPages(searchPages)
-            setTotalCount(searchCount)
-            const first = searchParts[0]
-
-            setVehicleMeta({
-              vin: targetVin,
-              model: first?.model || null,
-              make: first?.make || first?.oem || null,
-              oem: first?.oem || first?.make || null,
-              modelYear: first?.modelYear || null,
-              series: first?.vehicleSeries || first?.series,
-              fuel: first?.fuel,
-              transmission: first?.transmission,
-              displacementCC: first?.displacementCC,
-              engineFamily: first?.engineFamily,
-              engineType: first?.engineType,
-              steering: first?.steering,
-              body: first?.body,
-              marketSpec: first?.marketSpec,
-            })
-
-            // Enrich vehicle specs from decoder endpoint if available
-            catalogApi.getVehicleByVin(targetVin, 1, 1).then((vinRes) => {
-              if (vinRes.decoded) {
-                setVehicleMeta((prev) => ({
-                  ...prev,
-                  model: prev.model || vinRes.model || vinRes.decoded?.model || null,
-                  make: prev.make || vinRes.decoded?.make || null,
-                  modelYear: prev.modelYear || (vinRes.decoded?.modelYear ? String(vinRes.decoded.modelYear) : null),
-                  series: prev.series || vinRes.series,
-                }))
-              }
-            }).catch(() => {})
-          } else {
-            // Not in internal catalog, fallback decode
-            setIsVinMatched(false)
-            const decoded = await catalogApi.decodeVinFallback(targetVin)
-            const modelTerm = decoded.model?.trim() || ''
-            const makeTerm = decoded.make?.trim() || ''
-
-            const fallbackSearchRes = await catalogApi.searchVehicles({
-              model: modelTerm || undefined,
-              make: makeTerm || undefined,
-              page: 1,
-              pageSize: PAGE_SIZE,
-            })
-
-            const { partsList: searchParts, totalCount: searchCount, totalPages: searchPages, pageNumber: searchPNum } = extractSearchPagination(fallbackSearchRes, 1, PAGE_SIZE)
-
-            setParts(searchParts)
-            setPage(searchPNum)
-            setTotalPages(searchPages)
-            setTotalCount(searchCount)
-            const first = searchParts[0]
-            setVehicleMeta({
-              vin: targetVin,
-              model: decoded.model || first?.model || null,
-              make: decoded.make || first?.oem || null,
-              oem: decoded.make || first?.oem || null,
-              modelYear: decoded.modelYear,
-              series: decoded.series || decoded.trim || first?.vehicleSeries,
-              manufacturer: decoded.manufacturer,
-              fuel: first?.fuel,
-              transmission: first?.transmission,
-              displacementCC: first?.displacementCC,
-              engineFamily: first?.engineFamily,
-              engineType: first?.engineType,
-              steering: first?.steering,
-              body: first?.body,
-              marketSpec: first?.marketSpec,
-            })
-          }
-        })
-        .catch(async () => {
-          try {
-            const decoded = await catalogApi.decodeVinFallback(targetVin)
-            setVehicleMeta({
-              vin: targetVin,
-              model: decoded.model,
-              make: decoded.make,
-              modelYear: decoded.modelYear,
-              manufacturer: decoded.manufacturer,
-            })
-          } catch (e) {
-            console.warn('Fallback decode failed:', e)
-          }
-        })
-        .finally(() => setLoading(false))
-    } else if (targetMake && targetModel) {
+    if (targetMake && targetModel) {
       setLoading(true)
       catalogApi.getPartsByMakeModel(targetMake, targetModel, 1, PAGE_SIZE)
         .then((res) => {
@@ -670,10 +609,11 @@ export default function PartsSearchPage() {
         .catch((err) => console.warn('Failed to search vehicles:', err))
         .finally(() => setLoading(false))
     }
-  }, [locationState, urlVin, urlMake, urlModel, urlSearch, urlGroup])
+  }, [locationState, requestedVin, vinRetry, urlMake, urlModel, urlSearch, urlGroup])
 
   // Debounced backend search when filterQuery changes
   useEffect(() => {
+    if (requestedVin && (loading || vinError || !isVinMatched)) return
     if (filterQuery === prevFilterQueryRef.current) return
     prevFilterQueryRef.current = filterQuery
 
@@ -683,7 +623,7 @@ export default function PartsSearchPage() {
         setLoading(true)
         catalogApi.searchVehicles({
           keyword: trimmed,
-          vin: vehicleMeta.vin || undefined,
+          vin: requestedVin || undefined,
           make: vehicleMeta.make || undefined,
           model: vehicleMeta.model || undefined,
           groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
@@ -704,7 +644,7 @@ export default function PartsSearchPage() {
         setLoading(true)
         if (activeGroup !== 'ALL') {
           catalogApi.searchVehicles({
-            vin: vehicleMeta.vin || undefined,
+            vin: requestedVin || undefined,
             make: vehicleMeta.make || undefined,
             model: vehicleMeta.model || undefined,
             groupName: activeGroup,
@@ -720,8 +660,8 @@ export default function PartsSearchPage() {
             })
             .catch(() => {})
             .finally(() => setLoading(false))
-        } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
-          catalogApi.searchVehicles({ vin: vehicleMeta.vin, page: 1, pageSize: PAGE_SIZE })
+        } else if (requestedVin && isVin(requestedVin)) {
+          catalogApi.searchVehicles({ vin: requestedVin, page: 1, pageSize: PAGE_SIZE })
             .then((res) => {
               const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, 1, PAGE_SIZE)
               setParts(partsList)
@@ -764,28 +704,29 @@ export default function PartsSearchPage() {
     }, 350)
 
     return () => clearTimeout(timer)
-  }, [filterQuery, isVinMatched, activeGroup, vehicleMeta.vin, vehicleMeta.make, vehicleMeta.model, locationState, urlSearch])
+  }, [filterQuery, requestedVin, loading, vinError, isVinMatched, activeGroup, vehicleMeta.vin, vehicleMeta.make, vehicleMeta.model, locationState, urlSearch])
 
   // Extract unique groups from both API and current parts
   const availableGroups = useMemo(() => {
+    if (requestedVin && !isVinMatched) return ['ALL']
     const fromParts = parts.map((p) => p.groupName?.trim()).filter(Boolean) as string[]
     const combined = Array.from(new Set([...apiGroups, ...fromParts])).filter(Boolean)
     return ['ALL', ...combined]
-  }, [parts, apiGroups])
+  }, [parts, apiGroups, requestedVin, isVinMatched])
 
   // Current parts list for active view
   const displayParts = parts
 
   // Handle Server-Side Page Change
   async function handlePageChange(newPage: number) {
-    if (newPage < 1 || newPage > totalPages || loading) return
+    if (newPage < 1 || newPage > totalPages || loading || (requestedVin && (!isVinMatched || !!vinError))) return
     setLoading(true)
     try {
       const trimmed = filterQuery.trim()
       if (trimmed) {
         const res = await catalogApi.searchVehicles({
           keyword: trimmed,
-          vin: vehicleMeta.vin || undefined,
+          vin: requestedVin || undefined,
           make: vehicleMeta.make || undefined,
           model: vehicleMeta.model || undefined,
           groupName: activeGroup !== 'ALL' ? activeGroup : undefined,
@@ -799,7 +740,7 @@ export default function PartsSearchPage() {
         setTotalCount(totalParts)
       } else if (activeGroup !== 'ALL') {
         const res = await catalogApi.searchVehicles({
-          vin: vehicleMeta.vin || undefined,
+          vin: requestedVin || undefined,
           make: vehicleMeta.make || undefined,
           model: vehicleMeta.model || undefined,
           groupName: activeGroup,
@@ -811,8 +752,8 @@ export default function PartsSearchPage() {
         setPage(pNum)
         setTotalPages(pages)
         setTotalCount(totalParts)
-      } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
-        const res = await catalogApi.searchVehicles({ vin: vehicleMeta.vin, page: newPage, pageSize: PAGE_SIZE })
+      } else if (requestedVin && isVin(requestedVin)) {
+        const res = await catalogApi.searchVehicles({ vin: requestedVin, page: newPage, pageSize: PAGE_SIZE })
         const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractSearchPagination(res, newPage, PAGE_SIZE)
         setParts(partsList)
         setPage(pNum)
@@ -849,6 +790,7 @@ export default function PartsSearchPage() {
 
   // Handle Group Selection
   async function handleGroupSelect(group: string) {
+    if (loading || (requestedVin && (!isVinMatched || !!vinError))) return
     setActiveGroup(group)
     setPage(1)
     setLoading(true)
@@ -857,7 +799,7 @@ export default function PartsSearchPage() {
         const trimmed = filterQuery.trim()
         if (trimmed) {
           const res = await catalogApi.searchVehicles({
-            vin: vehicleMeta.vin || undefined,
+            vin: requestedVin || undefined,
             make: vehicleMeta.make || undefined,
             model: vehicleMeta.model || undefined,
             keyword: trimmed,
@@ -869,8 +811,8 @@ export default function PartsSearchPage() {
           setPage(pNum)
           setTotalPages(pages)
           setTotalCount(totalParts)
-        } else if (vehicleMeta.vin && /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(vehicleMeta.vin)) {
-          const res = await catalogApi.searchVehicles({ vin: vehicleMeta.vin, page: 1, pageSize: PAGE_SIZE })
+        } else if (requestedVin && isVin(requestedVin)) {
+          const res = await catalogApi.searchVehicles({ vin: requestedVin, page: 1, pageSize: PAGE_SIZE })
           const { partsList, totalCount: totalParts, totalPages: pages, pageNumber: pNum } = extractVinPagination(res, 1, PAGE_SIZE)
           setParts(partsList)
           setPage(pNum)
@@ -899,7 +841,7 @@ export default function PartsSearchPage() {
         }
       } else {
         const res = await catalogApi.searchVehicles({
-          vin: vehicleMeta.vin || undefined,
+          vin: requestedVin || undefined,
           make: vehicleMeta.make || undefined,
           model: vehicleMeta.model || undefined,
           keyword: filterQuery.trim() || undefined,
@@ -1050,70 +992,30 @@ export default function PartsSearchPage() {
 
       {/* Main Content Area */}
       <div className="px-6 py-6 flex-grow">
-        {/* Decoded VIN Notification Banner with Make Image */}
-        {(locationState?.nhtsaDecode || locationState?.vehicleVinResponse || locationState?.vin || vehicleMeta.vin) && (
-          <div
-            className={cn(
-              'mb-4 border rounded-lg p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xs',
-              vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM'
-                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-200'
-                : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200'
-            )}
-          >
-            <div className="flex items-center gap-3">
-              {/* Make Image Badge */}
-              {(vehicleMeta.make || activeOem) && (
-                <div className="h-10 w-10 min-w-[40px] rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 flex items-center justify-center shadow-xs shrink-0">
-                  <img
-                    src={getBrandLogoPath(vehicleMeta.make || activeOem)}
-                    alt={vehicleMeta.make || activeOem}
-                    className="h-full w-full object-contain"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none'
-                    }}
-                  />
-                </div>
-              )}
-              <div>
-                <div className="flex items-center gap-1.5 font-bold">
-                  {vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM' ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  ) : (
-                    <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                  )}
-                  <span>
-                    {vehicleMeta.make || vehicleMeta.model || activeOem !== 'OEM' ? (
-                      <>
-                        {vehicleMeta.vin ? (
-                          <>
-                            VIN <strong className="font-mono">{vehicleMeta.vin}</strong> decoded as{' '}
-                            <strong className="uppercase">{vehicleMeta.make || activeOem} {vehicleMeta.model || activeModel}</strong> {vehicleMeta.modelYear ? `(${vehicleMeta.modelYear})` : ''}.
-                          </>
-                        ) : (
-                          <>
-                            Showing the <strong className="uppercase">{vehicleMeta.make || activeOem} {vehicleMeta.model || activeModel}</strong> parts catalog.
-                          </>
-                        )}{' '}
-                        Displaying matching catalog components.
-                      </>
-                    ) : (
-                      <>
-                        VIN <strong className="font-mono">{vehicleMeta.vin || locationState?.vin}</strong> was not found in our catalog and could not be verified by NHTSA.
-                      </>
-                    )}
-                  </span>
-                </div>
-                {vehicleMeta.manufacturer && (
-                  <p className="text-[11px] font-medium text-emerald-700/80 dark:text-emerald-300/80 mt-0.5 ml-5.5">
-                    Manufacturer: {vehicleMeta.manufacturer}
-                  </p>
+        {requestedVin && (
+          <div role="status" className={cn(
+            'mb-4 rounded-lg border p-4 text-sm',
+            isVinMatched && !vinWarnings.length && !vinError
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200'
+              : 'border-amber-200 bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-200'
+          )}>
+            <p className="font-bold">VIN <span className="font-mono">{requestedVin}</span></p>
+            {loading ? <p>Looking up vehicle and catalog parts…</p> : vinError ? (
+              <>
+                <p>{vinError}</p>
+                {isVin(requestedVin) && <button type="button" className="mt-2 underline" onClick={() => setVinRetry(value => value + 1)}>Retry VIN lookup</button>}
+              </>
+            ) : (
+              <>
+                <p>{vehicleMeta.make || vehicleMeta.model
+                  ? `Decoded vehicle: ${[vehicleMeta.make, vehicleMeta.model, vehicleMeta.modelYear].filter(Boolean).join(' ')}.`
+                  : 'Vehicle identity could not be decoded.'}</p>
+                <p>{isVinMatched ? 'Catalog records found for this VIN.' : 'No matching catalog parts for this VIN.'}</p>
+                {vinWarnings.includes('Vehicle decoding is unavailable.') && (
+                  <p className="mt-1">Vehicle decoding is unavailable.</p>
                 )}
-              </div>
-            </div>
-            {totalCount > 0 && (
-              <span className="text-[11px] font-bold px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 shrink-0">
-                {totalCount} parts found
-              </span>
+                {!isVinMatched && <Link to="/requests/new" className="mt-2 inline-block font-bold underline">Request a Part</Link>}
+              </>
             )}
           </div>
         )}
@@ -1174,7 +1076,7 @@ export default function PartsSearchPage() {
                   {vehicleMeta.vin || vehicleMeta.vehicle || 'CATALOG SEARCH'}
                 </TableCell>
                 <TableCell className="px-4 py-2 text-[11px]">
-                  {vehicleMeta.series || parts[0]?.series || 'Standard Series'}
+                  {vehicleMeta.series || parts[0]?.series || (requestedVin ? 'Not available' : 'Standard Series')}
                 </TableCell>
                 <TableCell className="px-4 py-2 text-[11px]">
                   {availableGroups.length - 1} Categories

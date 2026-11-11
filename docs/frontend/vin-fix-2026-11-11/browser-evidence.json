@@ -1,0 +1,863 @@
+{
+  "checkedUTC": "2026-11-11T19:47:07.479Z",
+  "results": [
+    {
+      "name": "homepage-kia",
+      "vin": "KNAJE55136K135961",
+      "url": "http://127.0.0.1:5174/parts-search?vin=KNAJE55136K135961",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nKIA\n•\nKNAJE55136K135961\n•\nSPORTAGE\n•\nALL GROUPS\n\nVIN KNAJE55136K135961\n\nDecoded vehicle: Kia Sportage 2006.\n\nNo matching catalog parts for this VIN.\n\nCheck digit does not match — VIN may be mistyped or non-North-American format.\n\n1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.\n\nRequest a Part\nKIA PARTS CATALOG — SPORTAGE\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nKIA\n\tSPORTAGE\t2006\tKNAJE55136K135961\tNot available\t0 Categories\t0 catalog parts\t\nASSEMBLY GROUPS (0)\nLOADED PARTS (0)\nCATALOG CATEGORIES\nALL GROUPS\n0\nALL CATALOG COMPONENTS\nNo Catalog Parts Found\n\nWe could not find ingested catalog components for VIN KNAJE55136K135961. Our procurement team can source genuine components directly for you.\n\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/makes?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "HYUNDAI"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/makes?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "HYUNDAI"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/TOYOTA/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 5,
+            "first": "FORTUNER"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/HYUNDAI/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "CRETA"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/TOYOTA/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 5,
+            "first": "FORTUNER"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/HYUNDAI/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "CRETA"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "KNAJE55136K135961",
+              "isValidFormat": true,
+              "checkDigitValid": false,
+              "wmi": "KNA",
+              "vds": "JE551",
+              "checkDigitChar": "3",
+              "modelYearCode": "6",
+              "modelYear": 2006,
+              "plantCode": "K",
+              "serialNumber": "135961",
+              "make": "Kia",
+              "nhtsa": {
+                "success": false,
+                "make": "KIA",
+                "model": "Sportage",
+                "modelYear": "2006",
+                "manufacturer": "KIA CORPORATION",
+                "vehicleType": "PASSENGER CAR",
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": "4WD/4-Wheel Drive/4x4",
+                "trim": "KM",
+                "errorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission."
+              },
+              "errors": [
+                "Check digit does not match — VIN may be mistyped or non-North-American format."
+              ],
+              "alternateModelYear": 2036
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "KNAJE55136K135961",
+              "isValidFormat": true,
+              "checkDigitValid": false,
+              "wmi": "KNA",
+              "vds": "JE551",
+              "checkDigitChar": "3",
+              "modelYearCode": "6",
+              "modelYear": 2006,
+              "plantCode": "K",
+              "serialNumber": "135961",
+              "make": "Kia",
+              "nhtsa": {
+                "success": false,
+                "make": "KIA",
+                "model": "Sportage",
+                "modelYear": "2006",
+                "manufacturer": "KIA CORPORATION",
+                "vehicleType": "PASSENGER CAR",
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": "4WD/4-Wheel Drive/4x4",
+                "trim": "KM",
+                "errorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission."
+              },
+              "errors": [
+                "Check digit does not match — VIN may be mistyped or non-North-American format."
+              ],
+              "alternateModelYear": 2036
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        }
+      ],
+      "exceptions": [],
+      "reproduced": false
+    },
+    {
+      "name": "direct-kia",
+      "vin": "KNAJE55136K135961",
+      "url": "http://127.0.0.1:5174/parts-search?vin=KNAJE55136K135961",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nKIA\n•\nKNAJE55136K135961\n•\nSPORTAGE\n•\nALL GROUPS\n\nVIN KNAJE55136K135961\n\nDecoded vehicle: Kia Sportage 2006.\n\nNo matching catalog parts for this VIN.\n\nCheck digit does not match — VIN may be mistyped or non-North-American format.\n\n1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.\n\nRequest a Part\nKIA PARTS CATALOG — SPORTAGE\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nKIA\n\tSPORTAGE\t2006\tKNAJE55136K135961\tNot available\t0 Categories\t0 catalog parts\t\nASSEMBLY GROUPS (0)\nLOADED PARTS (0)\nCATALOG CATEGORIES\nALL GROUPS\n0\nALL CATALOG COMPONENTS\nNo Catalog Parts Found\n\nWe could not find ingested catalog components for VIN KNAJE55136K135961. Our procurement team can source genuine components directly for you.\n\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "KNAJE55136K135961",
+              "isValidFormat": true,
+              "checkDigitValid": false,
+              "wmi": "KNA",
+              "vds": "JE551",
+              "checkDigitChar": "3",
+              "modelYearCode": "6",
+              "modelYear": 2006,
+              "plantCode": "K",
+              "serialNumber": "135961",
+              "make": "Kia",
+              "nhtsa": {
+                "success": false,
+                "make": "KIA",
+                "model": "Sportage",
+                "modelYear": "2006",
+                "manufacturer": "KIA CORPORATION",
+                "vehicleType": "PASSENGER CAR",
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": "4WD/4-Wheel Drive/4x4",
+                "trim": "KM",
+                "errorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission."
+              },
+              "errors": [
+                "Check digit does not match — VIN may be mistyped or non-North-American format."
+              ],
+              "alternateModelYear": 2036
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "KNAJE55136K135961",
+              "isValidFormat": true,
+              "checkDigitValid": false,
+              "wmi": "KNA",
+              "vds": "JE551",
+              "checkDigitChar": "3",
+              "modelYearCode": "6",
+              "modelYear": 2006,
+              "plantCode": "K",
+              "serialNumber": "135961",
+              "make": "Kia",
+              "nhtsa": {
+                "success": false,
+                "make": "KIA",
+                "model": "Sportage",
+                "modelYear": "2006",
+                "manufacturer": "KIA CORPORATION",
+                "vehicleType": "PASSENGER CAR",
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": "4WD/4-Wheel Drive/4x4",
+                "trim": "KM",
+                "errorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission."
+              },
+              "errors": [
+                "Check digit does not match — VIN may be mistyped or non-North-American format."
+              ],
+              "alternateModelYear": 2036
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        }
+      ],
+      "exceptions": [],
+      "reproduced": false
+    },
+    {
+      "name": "supported-toyota-control",
+      "vin": "MHFKB8FS8L0087472",
+      "url": "http://127.0.0.1:5174/parts-search?vin=MHFKB8FS8L0087472",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nMHFKB8FS8L0087472\n•\nFORTUNER\n•\nALL GROUPS\n\nVIN MHFKB8FS8L0087472\n\nDecoded vehicle: TOYOTA FORTUNER 2020.\n\nCatalog records found for this VIN.\n\n7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information\n\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\t2020\tMHFKB8FS8L0087472\tGUN155L-SDTSHV - FORTUNER (2016-2020)\t5 Categories\t4489 catalog parts\t\nASSEMBLY GROUPS (5)\nLOADED PARTS (48)\nCATALOG CATEGORIES\nALL GROUPS\n4489\n发动机\n底盘\n电气\n车身\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 94 (4489 parts total)\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09120\n091200K240: BAG, TOOL\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09130\n9008999010: PLIERS\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09135\n9008999009: DRIVER, SCREW\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09141\n091410K030: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09141\n091410K040: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09150\n091500K010: WRENCH, HUB NUT BOX\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 11000\n190000E230: ENGINE ASSY, PARTIAL\nTool/Engine/Fuel Group › PARTIAL ENGINE ASSEMBLY\nPNC 11400\n114000E061: BLOCK ASSY, SHORT\nTool/Engine/Fuel Group › SHORT BLOCK ASSEMBLY\nPNC 04111\n041110E040: GASKET KIT, ENGINE OVERHAUL\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nPNC 04112\n041120E040: GASKET KIT, ENGINE VALVE GRIND\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nPNC 11101\n111010E010: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101\n1110111160: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n9091002192: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n9091002193: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n90910T2010: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n90910T2011: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101E\n9091905060: SENSOR, CAM POSITION\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101U\n9056015022: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101U\n90560T0026: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11114A\n9025005027: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11114A\n90250T0011: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11117E\n9034114015: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11117E\n90341T0005: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11122\n1112230020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11122\n1112330020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11126\n1112230020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11126\n1112330020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11155A\n9025311021: PIN, RING W/HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n9010906080: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n9155180840: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n90105T0130: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n90119T0551: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159H\n1115911010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159H\n111590E010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11201\n1120111082: COVER SUB-ASSY, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nShowing Page 1 of 94 (4489 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n94\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "MHFKB8FS8L0087472",
+              "isValidFormat": true,
+              "checkDigitValid": true,
+              "wmi": "MHF",
+              "vds": "KB8FS",
+              "checkDigitChar": "8",
+              "modelYearCode": "L",
+              "modelYear": 2020,
+              "plantCode": "0",
+              "serialNumber": "087472",
+              "make": null,
+              "nhtsa": {
+                "success": false,
+                "make": null,
+                "model": null,
+                "modelYear": null,
+                "manufacturer": null,
+                "vehicleType": null,
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": null,
+                "trim": null,
+                "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+              },
+              "errors": [],
+              "alternateModelYear": 1990
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "MHFKB8FS8L0087472",
+              "isValidFormat": true,
+              "checkDigitValid": true,
+              "wmi": "MHF",
+              "vds": "KB8FS",
+              "checkDigitChar": "8",
+              "modelYearCode": "L",
+              "modelYear": 2020,
+              "plantCode": "0",
+              "serialNumber": "087472",
+              "make": null,
+              "nhtsa": {
+                "success": false,
+                "make": null,
+                "model": null,
+                "modelYear": null,
+                "manufacturer": null,
+                "vehicleType": null,
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": null,
+                "trim": null,
+                "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+              },
+              "errors": [],
+              "alternateModelYear": 1990
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=2&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 49,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "CYLINDER HEAD",
+              "pnc": "11201",
+              "partNumber": "112010E011",
+              "partName": "COVER SUB-ASSY, CYLINDER HEAD",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?keyword=JACK&vin=MHFKB8FS8L0087472&make=TOYOTA&model=FORTUNER&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 7,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        }
+      ],
+      "exceptions": [],
+      "reproduced": false
+    },
+    {
+      "name": "homepage-toyota",
+      "vin": "MHFKB8FS8L0087472",
+      "url": "http://127.0.0.1:5174/parts-search?vin=MHFKB8FS8L0087472",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nMHFKB8FS8L0087472\n•\nFORTUNER\n•\nALL GROUPS\n\nVIN MHFKB8FS8L0087472\n\nDecoded vehicle: TOYOTA FORTUNER 2020.\n\nCatalog records found for this VIN.\n\n7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information\n\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\t2020\tMHFKB8FS8L0087472\tGUN155L-SDTSHV - FORTUNER (2016-2020)\t5 Categories\t4489 catalog parts\t\nASSEMBLY GROUPS (5)\nLOADED PARTS (48)\nCATALOG CATEGORIES\nALL GROUPS\n4489\n发动机\n底盘\n电气\n车身\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 94 (4489 parts total)\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09120\n091200K240: BAG, TOOL\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09130\n9008999010: PLIERS\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09135\n9008999009: DRIVER, SCREW\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09141\n091410K030: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09141\n091410K040: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09150\n091500K010: WRENCH, HUB NUT BOX\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 11000\n190000E230: ENGINE ASSY, PARTIAL\nTool/Engine/Fuel Group › PARTIAL ENGINE ASSEMBLY\nPNC 11400\n114000E061: BLOCK ASSY, SHORT\nTool/Engine/Fuel Group › SHORT BLOCK ASSEMBLY\nPNC 04111\n041110E040: GASKET KIT, ENGINE OVERHAUL\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nPNC 04112\n041120E040: GASKET KIT, ENGINE VALVE GRIND\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nPNC 11101\n111010E010: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101\n1110111160: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n9091002192: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n9091002193: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n90910T2010: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101A\n90910T2011: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101E\n9091905060: SENSOR, CAM POSITION\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101U\n9056015022: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11101U\n90560T0026: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11114A\n9025005027: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11114A\n90250T0011: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n111150E010E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11115\n1111511110E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11117E\n9034114015: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11117E\n90341T0005: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11122\n1112230020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11122\n1112330020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11126\n1112230020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11126\n1112330020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11155A\n9025311021: PIN, RING W/HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n9010906080: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n9155180840: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n90105T0130: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159A\n90119T0551: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159H\n1115911010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11159H\n111590E010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nPNC 11201\n1120111082: COVER SUB-ASSY, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nShowing Page 1 of 94 (4489 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n94\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/makes?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "HYUNDAI"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/parts/groups",
+          "status": 404
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/makes?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "HYUNDAI"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/HYUNDAI/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "CRETA"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "MHFKB8FS8L0087472",
+              "isValidFormat": true,
+              "checkDigitValid": true,
+              "wmi": "MHF",
+              "vds": "KB8FS",
+              "checkDigitChar": "8",
+              "modelYearCode": "L",
+              "modelYear": 2020,
+              "plantCode": "0",
+              "serialNumber": "087472",
+              "make": null,
+              "nhtsa": {
+                "success": false,
+                "make": null,
+                "model": null,
+                "modelYear": null,
+                "manufacturer": null,
+                "vehicleType": null,
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": null,
+                "trim": null,
+                "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+              },
+              "errors": [],
+              "alternateModelYear": 1990
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/TOYOTA/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 5,
+            "first": "FORTUNER"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/HYUNDAI/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 2,
+            "first": "CRETA"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/TOYOTA/models?page=1&pageSize=100",
+          "status": 200,
+          "data": {
+            "totalCount": 5,
+            "first": "FORTUNER"
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "decoded": {
+              "vin": "MHFKB8FS8L0087472",
+              "isValidFormat": true,
+              "checkDigitValid": true,
+              "wmi": "MHF",
+              "vds": "KB8FS",
+              "checkDigitChar": "8",
+              "modelYearCode": "L",
+              "modelYear": 2020,
+              "plantCode": "0",
+              "serialNumber": "087472",
+              "make": null,
+              "nhtsa": {
+                "success": false,
+                "make": null,
+                "model": null,
+                "modelYear": null,
+                "manufacturer": null,
+                "vehicleType": null,
+                "bodyClass": null,
+                "engineCylinders": null,
+                "displacementCC": null,
+                "fuelTypePrimary": null,
+                "driveType": null,
+                "trim": null,
+                "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+              },
+              "errors": [],
+              "alternateModelYear": 1990
+            },
+            "matchedInCatalog": false,
+            "partsTotal": 0
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=2&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 49,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "CYLINDER HEAD",
+              "pnc": "11201",
+              "partNumber": "112010E011",
+              "partName": "COVER SUB-ASSY, CYLINDER HEAD",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?keyword=JACK&vin=MHFKB8FS8L0087472&make=TOYOTA&model=FORTUNER&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 7,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200,
+          "data": {
+            "totalCount": 4489,
+            "first": {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5
+            }
+          }
+        }
+      ],
+      "exceptions": [],
+      "reproduced": false
+    }
+  ]
+}

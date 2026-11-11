@@ -1,0 +1,175 @@
+{
+  "checkedUTC": "2026-11-11T18:13:25.468915+00:00",
+  "cases": [
+    {
+      "name": "decode",
+      "method": "GET",
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+      "http": "200",
+      "error": "",
+      "response": {
+        "decoded": {
+          "vin": "KNAJE55136K135961",
+          "isValidFormat": true,
+          "checkDigitValid": false,
+          "wmi": "KNA",
+          "vds": "JE551",
+          "checkDigitChar": "3",
+          "modelYearCode": "6",
+          "modelYear": 2006,
+          "plantCode": "K",
+          "serialNumber": "135961",
+          "make": "Kia",
+          "nhtsa": {
+            "success": false,
+            "make": "KIA",
+            "model": "Sportage",
+            "modelYear": "2006",
+            "manufacturer": "KIA CORPORATION",
+            "vehicleType": "PASSENGER CAR",
+            "bodyClass": null,
+            "engineCylinders": null,
+            "displacementCC": null,
+            "fuelTypePrimary": null,
+            "driveType": "4WD/4-Wheel Drive/4x4",
+            "trim": "KM",
+            "errorText": "1 - Check Digit (9th position) does not calculate properly; 5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission."
+          },
+          "errors": [
+            "Check digit does not match \u2014 VIN may be mistyped or non-North-American format."
+          ],
+          "alternateModelYear": 2036
+        },
+        "matchedInCatalog": false,
+        "parts": {
+          "items": [],
+          "page": 1,
+          "pageSize": 48,
+          "totalCount": 0,
+          "totalPages": 0
+        }
+      }
+    },
+    {
+      "name": "exact-vin",
+      "method": "GET",
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+      "http": "200",
+      "error": "",
+      "response": {
+        "page": 1,
+        "pageSize": 48,
+        "totalCount": 0,
+        "totalPages": 0,
+        "firstItem": null,
+        "returnedItemCount": 0
+      }
+    },
+    {
+      "name": "kia-sportage",
+      "method": "GET",
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?model=Sportage&make=Kia&page=1&pageSize=48",
+      "http": "200",
+      "error": "",
+      "response": {
+        "page": 1,
+        "pageSize": 48,
+        "totalCount": 0,
+        "totalPages": 0,
+        "firstItem": null,
+        "returnedItemCount": 0
+      }
+    },
+    {
+      "name": "fallback-decode",
+      "method": "POST",
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961/decode",
+      "http": "404",
+      "error": ""
+    },
+    {
+      "name": "unfiltered",
+      "method": "GET",
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48",
+      "http": "200",
+      "error": "",
+      "response": {
+        "page": 1,
+        "pageSize": 48,
+        "totalCount": 38757,
+        "totalPages": 808,
+        "firstItem": {
+          "id": 1,
+          "vin": "MHFKB8FS8L0087472",
+          "oem": "TOYOTA",
+          "make": "TOYOTA",
+          "model": "FORTUNER",
+          "modelYear": "2019",
+          "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+          "groupName": "Tool/Engine/Fuel Group",
+          "subgroupName": "STANDARD TOOL",
+          "pnc": "09110",
+          "partNumber": "091110K190",
+          "partName": "JACK ASSY",
+          "quantity": 1,
+          "replacePart": null,
+          "steering": "LHD",
+          "compatibilityStartYear": 2016,
+          "compatibilityEndYear": 2020,
+          "fuel": "DIESEL",
+          "displacementCC": "2400 CC",
+          "engineFamily": "2GD-FTV",
+          "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+          "transmission": "AUTO - 6 SPEED 4WD",
+          "body": "WAGON - 5DR 7P",
+          "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+          "imageUrl": null,
+          "price": 5.0
+        },
+        "returnedItemCount": 48
+      }
+    },
+    {
+      "name": "supported-control",
+      "method": "GET",
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+      "http": "200",
+      "error": "",
+      "response": {
+        "page": 1,
+        "pageSize": 48,
+        "totalCount": 4489,
+        "totalPages": 94,
+        "firstItem": {
+          "id": 1,
+          "vin": "MHFKB8FS8L0087472",
+          "oem": "TOYOTA",
+          "make": "TOYOTA",
+          "model": "FORTUNER",
+          "modelYear": "2019",
+          "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+          "groupName": "Tool/Engine/Fuel Group",
+          "subgroupName": "STANDARD TOOL",
+          "pnc": "09110",
+          "partNumber": "091110K190",
+          "partName": "JACK ASSY",
+          "quantity": 1,
+          "replacePart": null,
+          "steering": "LHD",
+          "compatibilityStartYear": 2016,
+          "compatibilityEndYear": 2020,
+          "fuel": "DIESEL",
+          "displacementCC": "2400 CC",
+          "engineFamily": "2GD-FTV",
+          "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+          "transmission": "AUTO - 6 SPEED 4WD",
+          "body": "WAGON - 5DR 7P",
+          "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+          "imageUrl": null,
+          "price": 5.0
+        },
+        "returnedItemCount": 48
+      }
+    }
+  ]
+}
