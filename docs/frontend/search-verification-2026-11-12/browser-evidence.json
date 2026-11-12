@@ -1,0 +1,850 @@
+{
+  "checkedUTC": "2026-11-12T11:28:38.857Z",
+  "results": [
+    {
+      "name": "homepage part number without vehicle",
+      "url": "http://127.0.0.1:5175/parts-search?q=091110K190&scope=global",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\n091110K190\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\n091110K190 — Part numbers containing this identifier. Check the full number.\n\n2 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (2)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n2\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 1 (2 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "global part-name search",
+      "url": "http://127.0.0.1:5175/parts-search?q=JACK&mode=name",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\nJACK\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\nKeyword results are grouped by vehicle make; sorting applies within each make.\n\n63 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (4)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n63\nEngine\nTool/Engine/Fuel Group\nBody Group\nElectrical Group\nALL CATALOG COMPONENTS\nPage 1 of 2 (63 parts total)\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n091102W000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 58118E\n58118KK010: BRACKET, JACK SET\nBody Group › FRONT FLOOR PANEL & FRONT FLOOR MEMBER\nPNC 64766B\n64766KK010C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nPNC 58709A\n587090K090: CARRIER SUB-ASSY, JACK\nBody Group › TOOL BOX & LICENSE PLATE BRACKET\nDiagram unavailable\nPNC 86190C\n861900K030: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 58118E\n58118KK010: BRACKET, JACK SET\nBody Group › FRONT FLOOR PANEL & FRONT FLOOR MEMBER\nPNC 64766B\n64766KK010C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nPNC 58709A\n587090K090: CARRIER SUB-ASSY, JACK\nBody Group › TOOL BOX & LICENSE PLATE BRACKET\nDiagram unavailable\nPNC 86190C\n861900K030: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nDiagram unavailable\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09116\n0911660020: LEVER, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 58766A\n5876660030: COVER, JACK BOX HOLE\nBody Group › REAR BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 64766B\n6476660091C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nDiagram unavailable\nPNC 86190C\n8619012040: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nDiagram unavailable\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K081: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n091140K100: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n091150K080: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 86190C\n861900K010: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nDiagram unavailable\nPNC 09110\n091110K082: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 58766A\n5876660030: COVER, JACK BOX HOLE\nBody Group › REAR BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 64766B\n6476660091C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nDiagram unavailable\nPNC 86190C\n8619042031: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nDiagram unavailable\nPNC 86190C\n8619071020: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nDiagram unavailable\nPNC 09113\n091130D090: HANDLE, JACK\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110D230: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 11445\n114450Y020: SPACER, CYLINDER BLOCK WATER JACKET\nTool/Engine/Fuel Group › CYLINDER BLOCK\nDiagram unavailable\nPNC 58791B\n587910D140: CARRIER, JACK\nBody Group › FLOOR PAN & LOWER BACK PANEL\nPNC 58442F\n584420D170: COVER, JACK\nBody Group › MAT & CARPET\nDiagram unavailable\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nShowing Page 1 of 2 (63 total parts)\nPrevious\n1\n2\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "scoped number, explicit global broadening and browser history",
+      "url": "http://127.0.0.1:5175/parts-search?q=091110K190&mode=number&scope=global",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\n091110K190\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\n091110K190 — Part numbers containing this identifier. Check the full number.\n\n2 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (2)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n2\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 1 (2 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&partNumber=091110K190",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&partNumber=091110K190",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&partNumber=091110K190",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "partial Kia decode retained, no unrelated catalog, conflicting make blocked",
+      "url": "http://127.0.0.1:5175/parts-search?vin=KNAJE55136K135961",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nKIA\n•\nKNAJE55136K135961\n•\nSPORTAGE\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\nCovered catalog configuration\nAny\n2GD-FTV · AUTO - 6 SPEED 4WD · LHD · 2016–2020 · GCC - GULF COOPERATION COUNCIL · GUN155L-SDTSHV - FORTUNER (2016-2020)\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\n\nThe selected make conflicts with this VIN. Clear the VIN before choosing a different make.\n\nClear VIN\n\nEntered VIN: KNAJE55136K135961\n\nVehicle information: Kia Sportage 2006\n\n0 catalog records\n\nNo exact VIN catalog was found. Use the available vehicle information and confirm a covered catalog below.\n\nRequest a Part\nKIA PARTS CATALOG — SPORTAGE\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nKIA\n\tSPORTAGE\t2006\tKNAJE55136K135961\tNot available\t0 Categories\t0 catalog records\t\nGROUPS ON THIS PAGE (0)\nLOADED PARTS (0)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n0\nALL CATALOG COMPONENTS\nNo catalog records match this search and its filters.\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "conflicting customer VIN and catalog in a shared URL are blocked",
+      "url": "http://127.0.0.1:5175/parts-search?vin=KNAJE55136K135961&scope=catalog&make=TOYOTA&model=FORTUNER",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nKNAJE55136K135961\n•\nFORTUNER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\nCovered catalog configuration\nAny\n2GD-FTV · AUTO - 6 SPEED 4WD · LHD · 2016–2020 · GCC - GULF COOPERATION COUNCIL · GUN155L-SDTSHV - FORTUNER (2016-2020)\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\nClear VIN\n\nEntered VIN: KNAJE55136K135961\n\nThe selected make conflicts with this VIN. Clear the VIN before choosing a different make.\n\nRetry\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\tNot available\tCATALOG SEARCH\tNot available\t0 Categories\t0 catalog records\t\nGROUPS ON THIS PAGE (0)\nLOADED PARTS (0)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n0\nALL CATALOG COMPONENTS\nThe lookup could not be completed. Please retry.\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KNAJE55136K135961?page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KNAJE55136K135961&page=1&pageSize=48",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "guided reference catalog, retained customer VIN, filters, pagination and sorting",
+      "url": "http://127.0.0.1:5175/parts-search?vin=MHFKB8FS8L0087473&scope=catalog&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+%282016-2020%29&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL&sort=desc",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nMHFKB8FS8L0087473\n•\nFORTUNER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\nCovered catalog configuration\nAny\n2GD-FTV · AUTO - 6 SPEED 4WD · LHD · 2016–2020 · GCC - GULF COOPERATION COUNCIL · GUN155L-SDTSHV - FORTUNER (2016-2020)\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\nClear VIN\n\nEntered VIN: MHFKB8FS8L0087473\n\n8978 catalog records\n\nBrowsing the selected vehicle catalog. Reference VINs describe source catalogs; individual part fitment may require confirmation.\n\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\t2018\tCATALOG SEARCH\tGUN155L-SDTSHV - FORTUNER (2016-2020)\t3 Categories\t8978 catalog records\t\nGROUPS ON THIS PAGE (3)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n8978\nTool/Engine/Fuel Group\nElectrical Group\nPower Chain/Chassis Group\nALL CATALOG COMPONENTS\nPage 1 of 188 (8978 parts total)\nDiagram unavailable\nPNC 16571E\n9955510200: HOSE, WATER\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16571E\n9955510200: HOSE, WATER\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 81260C\n9913212050: BULB(FOR MAP LAMP)\nElectrical Group › INTERIOR LAMP\nDiagram unavailable\nPNC 81260C\n9913212050: BULB(FOR MAP LAMP)\nElectrical Group › INTERIOR LAMP\nDiagram unavailable\nPNC 9676224047\n9676224047: **STDPART\nTool/Engine/Fuel Group › TIMING GEAR COVER & REAR END PLATE\nDiagram unavailable\nPNC 9676224047\n9676224047: **STDPART\nTool/Engine/Fuel Group › TIMING GEAR COVER & REAR END PLATE\nDiagram unavailable\nPNC 9672335028\n9672335028: **STDPART\nTool/Engine/Fuel Group › TIMING GEAR COVER & REAR END PLATE\nDiagram unavailable\nPNC 9672335028\n9672335028: **STDPART\nTool/Engine/Fuel Group › TIMING GEAR COVER & REAR END PLATE\nDiagram unavailable\nPNC 15609H\n9672324030: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n9672324030: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9672324026\n9672324026: **STDPART\nTool/Engine/Fuel Group › TIMING GEAR COVER & REAR END PLATE\nDiagram unavailable\nPNC 9672324026\n9672324026: **STDPART\nTool/Engine/Fuel Group › TIMING GEAR COVER & REAR END PLATE\nDiagram unavailable\nPNC 23670A\n9672119017: RING, O(FOR INJECTOR ASSY)\nTool/Engine/Fuel Group › INJECTION NOZZLE\nDiagram unavailable\nPNC 23670A\n9672119017: RING, O(FOR INJECTOR ASSY)\nTool/Engine/Fuel Group › INJECTION NOZZLE\nDiagram unavailable\nPNC 36104J\n9672119009: RING, O (FOR TRANSFER OIL PUMP BODY)\nPower Chain/Chassis Group › TRANSFER OIL PUMP\nDiagram unavailable\nPNC 36104J\n9672119009: RING, O (FOR TRANSFER OIL PUMP BODY)\nPower Chain/Chassis Group › TRANSFER OIL PUMP\nDiagram unavailable\nPNC 9634141603\n9634141603: **STDPART\nPower Chain/Chassis Group › VANE PUMP & RESERVOIR (POWER STEERING)\nDiagram unavailable\nPNC 9634141603\n9634141603: **STDPART\nPower Chain/Chassis Group › VANE PUMP & RESERVOIR (POWER STEERING)\nDiagram unavailable\nPNC 9622110706\n9622110706: **STDPART\nElectrical Group › SWITCH & RELAY & COMPUTER\nDiagram unavailable\nPNC 9622110706\n9622110706: **STDPART\nElectrical Group › SWITCH & RELAY & COMPUTER\nDiagram unavailable\nPNC 15407F\n9613742501: CLAMP OR CLIP, OIL HOSE\nTool/Engine/Fuel Group › MANIFOLD\nDiagram unavailable\nPNC 15407F\n9613742501: CLAMP OR CLIP, OIL HOSE\nTool/Engine/Fuel Group › MANIFOLD\nDiagram unavailable\nPNC 16284A\n9613741501: CLIP(FOR TURBO WATER HOSE NO.1)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16285A\n9613741501: CLIP(FOR TURBO WATER HOSE NO.2)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16285A\n9613741501: CLIP(FOR TURBO WATER HOSE NO.2)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16284A\n9613741501: CLIP(FOR TURBO WATER HOSE NO.1)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 9613741301\n9613741301: **STDPART\nTool/Engine/Fuel Group › VACUUM PIPING\nDiagram unavailable\nPNC 9613741301\n9613741301: **STDPART\nTool/Engine/Fuel Group › VACUUM PIPING\nDiagram unavailable\nPNC 16261A\n9613651901: CLAMP OR CLIP, HOSE(FOR WATER BY-PASS HOSE)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16261A\n9613651901: CLAMP OR CLIP, HOSE(FOR WATER BY-PASS HOSE)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 23271W\n9613651801: CLIP(FOR FUEL HOSE NO.1)\nTool/Engine/Fuel Group › INJECTION PUMP ASSEMBLY\nDiagram unavailable\nPNC 23271W\n9613651801: CLIP(FOR FUEL HOSE NO.1)\nTool/Engine/Fuel Group › INJECTION PUMP ASSEMBLY\nDiagram unavailable\nPNC 16295A\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.7)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 1629CA\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.16)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 9613642501\n9613642501: **STDPART\nElectrical Group › HEATING & AIR CONDITIONING - WATER PIPING\nDiagram unavailable\nPNC 9613642501\n9613642501: **STDPART\nElectrical Group › HEATING & AIR CONDITIONING - WATER PIPING\nDiagram unavailable\nPNC 16283A\n9613642501: CLAMP OR CLIP(FOR WATER BY-PASS HOSE NO.6)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 1629BA\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.15)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16299B\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.13)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16299B\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.13)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 1629BA\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.15)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16295A\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.7)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 1629CA\n9613642501: CLIP(FOR WATER BY-PASS HOSE NO.16)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nDiagram unavailable\nPNC 16283A\n9613642501: CLAMP OR CLIP(FOR WATER BY-PASS HOSE NO.6)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nPNC 16293A\n9613642101: CLIP(FOR WATER BY-PASS HOSE NO.10)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nPNC 16264E\n9613642101: CLIP(FOR WATER BY-PASS HOSE NO.2)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nPNC 16293A\n9613642101: CLIP(FOR WATER BY-PASS HOSE NO.10)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nPNC 16267A\n9613642101: CLAMP OR CLIP(FOR WATER BY-PASS HOSE NO.3)\nTool/Engine/Fuel Group › RADIATOR & WATER OUTLET\nShowing Page 1 of 188 (8978 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n188\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087473?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087473&page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=2&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL&sortBy=partNumber&sortDescending=true"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087473?page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087473&page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL&keyword=JACK",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=FORTUNER&year=2018&steering=LHD&engineFamily=2GD-FTV&vehicleSeries=GUN155L-SDTSHV+-+FORTUNER+(2016-2020)&transmission=AUTO+-+6+SPEED+4WD&marketSpec=GCC+-+GULF+COOPERATION+COUNCIL&sortBy=partNumber&sortDescending=true",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "Land Cruiser 70 separated from Prado",
+      "url": "http://127.0.0.1:5175/brands/TOYOTA/models/LAND%20CRUISER/parts",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nPARTS CATALOG\n•\nLAND CRUISER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\nCovered catalog configuration\nAny\n1HZ · MANUAL - 5 SPEED 4WD · LHD · 2007–2026 · GEN - GENERAL COUNTRIES (CBU) · HZJ76L-RKMRS - LAND CRUISER 70 (2007-)\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\n\n3744 catalog records\n\nBrowsing the selected vehicle catalog. Reference VINs describe source catalogs; individual part fitment may require confirmation.\n\nTOYOTA PARTS CATALOG — LAND CRUISER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tLAND CRUISER\tNot available\tCATALOG SEARCH\tNot available\t1 Categories\t3744 catalog records\t\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n3744\nBody Group\nALL CATALOG COMPONENTS\nPage 1 of 78 (3744 parts total)\nDiagram unavailable\nPNC 9011912200\n9011912200: **STDPART\nBody Group › FRONT BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 9415080800\n9415080800: **STDPART\nBody Group › FRONT BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 9155381230\n9155381230: **STDPART\nBody Group › FRONT BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 9048018011\n9048018011: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 9018905027\n9018905027: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 91651B0822\n91651B0822: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 9018306016\n9018306016: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 9026904047\n9026904047: **STDPART\nBody Group › HOOD & FRONT FENDER\nPNC 9046710186\n9046710186: **STDPART\nBody Group › FRONT FENDER APRON & DASH PANEL\nPNC 9162140814\n9162140814: **STDPART\nBody Group › FRONT FENDER APRON & DASH PANEL\nDiagram unavailable\nPNC 44457F\n4445760150: BRACKET, TUBE SUPPORT\nBody Group › FRAME\nDiagram unavailable\nPNC 51100F\n5100160B23: FRAME SUB-ASSY\nBody Group › FRAME\nDiagram unavailable\nPNC 9011910951\n9011910951: **STDPART\nBody Group › FRAME\nDiagram unavailable\nPNC 51203\n5120260260: CROSSMEMBER SUB-ASSY, FRAME, NO.2\nBody Group › FRAME\nDiagram unavailable\nPNC 9015950322\n9015950322: **STDPART\nBody Group › INSTRUMENT PANEL & GLOVE COMPARTMENT\nPNC 9046710203\n9046710203: **STDPART\nBody Group › INSTRUMENT PANEL & GLOVE COMPARTMENT\nDiagram unavailable\nPNC 51204\n5120360230: CROSSMEMBER SUB-ASSY, FRAME, NO.3\nBody Group › FRAME\nDiagram unavailable\nPNC 51205\n5120460190: CROSSMEMBER SUB-ASSY, FRAME, NO.4\nBody Group › FRAME\nDiagram unavailable\nPNC 51206\n5125060120: CROSSMEMBER SUB-ASSY, FRAME, NO.5\nBody Group › FRAME\nDiagram unavailable\nPNC 51211A\n5121160090: CROSSMEMBER, FRAME, FRONT\nBody Group › FRAME\nDiagram unavailable\nPNC 51291\n5120960240: CROSSMEMBER, FRAME, REAR\nBody Group › FRAME\nDiagram unavailable\nPNC 51311\n5131160042: GUSSET, FRAME FRONT CROSSMEMBER\nBody Group › FRAME\nDiagram unavailable\nPNC 51313\n5131360030: GUSSET, FRONT FRAME, LOWER RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51314\n5131460030: GUSSET, FRONT FRAME, LOWER LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51321\n5132260090: GUSSET, CROSSMEMBER, NO.2 RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51322\n5132260090: GUSSET, CROSSMEMBER, NO.2 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 91611B0812\n91611B0812: **STDPART\nBody Group › COWL PANEL & WINDSHIELD GLASS\nDiagram unavailable\nPNC 51401\n5142160220: BRACKET SUB-ASSY, ENGINE FRONT MOUNTING, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51402\n5142260220: BRACKET SUB-ASSY, ENGINE FRONT MOUNTING, LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51505E\n5150560041: BRACKET SUB-ASSY, FRONT SPRING SUPPORT, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51506E\n5150660040: BRACKET SUB-ASSY, FRONT SPRING SUPPORT, LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51508A\n5151860060: BRACKET SUB-ASSY, LOWER ARM, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51509A\n5151960040: BRACKET SUB-ASSY, LOWER ARM, LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51537\n5154760020: BRACKET, LATERAL ROD SUPPORT\nBody Group › FRAME\nDiagram unavailable\nPNC 51538\n5153860050: STAY, LATERAL ROD SUPPORT\nBody Group › FRAME\nDiagram unavailable\nPNC 51701\n5170160070: BRACKET SUB-ASSY, CAB MOUNTING, NO.1 RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51702\n5170160070: BRACKET SUB-ASSY, CAB MOUNTING, NO.1 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51703\n5170360090: BRACKET SUB-ASSY, CAB MOUNTING, NO.2, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51704\n5170460080: BRACKET SUB-ASSY, CAB MOUNTING, NO.2 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51709A\n5170960031: BRACKET SUB-ASSY, BODY REAR END MOUNTING\nBody Group › FRAME\nDiagram unavailable\nPNC 51705B\n5170560080: BRACKET SUB-ASSY, CAB MOUNTING, NO.3 RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51706B\n5170560080: BRACKET SUB-ASSY, CAB MOUNTING, NO.3 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51368\n5136860020: MEMBER, FRAME FUEL TANK MOUNTING\nBody Group › FRAME\nDiagram unavailable\nPNC 9033320001\n9033320001: **STDPART\nBody Group › REAR FLOOR PANEL & REAR FLOOR MEMBER\nDiagram unavailable\nPNC 9018304046\n9018304046: **STDPART\nBody Group › INSIDE TRIM BOARD\nDiagram unavailable\nPNC 9338315012\n9338315012: **STDPART\nBody Group › SEAT & SEAT TRACK\nDiagram unavailable\nPNC 9015940269\n9015940269: **STDPART\nBody Group › SEAT & SEAT TRACK\nDiagram unavailable\nPNC 93540A6030\n93540A6030: **STDPART\nBody Group › ARMREST & VISOR\nShowing Page 1 of 78 (3744 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n78\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS+-+LAND+CRUISER+70+(2007-)",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS+-+LAND+CRUISER+70+(2007-)"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS+-+LAND+CRUISER+70+(2007-)",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "exact VIN retains source identity and quotation detail action",
+      "url": "http://127.0.0.1:5175/parts-search?vin=MHFKB8FS8L0087472",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nMHFKB8FS8L0087472\n•\nFORTUNER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nCRETA\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nSANTA FE\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\nClear VIN\n\nEntered VIN: MHFKB8FS8L0087472\n\nVehicle information: TOYOTA FORTUNER 2019\n\n4489 catalog records\n\nCatalog records found for this VIN.\n\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\t2019\tMHFKB8FS8L0087472\tGUN155L-SDTSHV - FORTUNER (2016-2020)\t1 Categories\t4489 catalog records\t\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n4489\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 94 (4489 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09120\n091200K240: BAG, TOOL\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09130\n9008999010: PLIERS\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09135\n9008999009: DRIVER, SCREW\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09141\n091410K030: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09141\n091410K040: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09150\n091500K010: WRENCH, HUB NUT BOX\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 11000\n190000E230: ENGINE ASSY, PARTIAL\nTool/Engine/Fuel Group › PARTIAL ENGINE ASSEMBLY\nDiagram unavailable\nPNC 11400\n114000E061: BLOCK ASSY, SHORT\nTool/Engine/Fuel Group › SHORT BLOCK ASSEMBLY\nDiagram unavailable\nPNC 04111\n041110E040: GASKET KIT, ENGINE OVERHAUL\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nDiagram unavailable\nPNC 04112\n041120E040: GASKET KIT, ENGINE VALVE GRIND\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nDiagram unavailable\nPNC 11101\n111010E010: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101\n1110111160: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n9091002192: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n9091002193: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n90910T2010: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n90910T2011: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101E\n9091905060: SENSOR, CAM POSITION\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101U\n9056015022: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101U\n90560T0026: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11114A\n9025005027: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11114A\n90250T0011: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11117E\n9034114015: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11117E\n90341T0005: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11122\n1112230020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11122\n1112330020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11126\n1112230020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11126\n1112330020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11155A\n9025311021: PIN, RING W/HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n9010906080: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n9155180840: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n90105T0130: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n90119T0551: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159H\n1115911010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159H\n111590E010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11201\n1120111082: COVER SUB-ASSY, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nShowing Page 1 of 94 (4489 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n94\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.\nPart 1 of 48\nPNC 09110\nDiagram unavailable\nClick diagram to expand fullscreen\nTOYOTA EPC SCHEMATIC\nTOOL/ENGINE/FUEL GROUP\n›\nSTANDARD TOOL\nJACK ASSY\n091110K190\nOEM / Brand\nTOYOTA\nApplicable Model\nFORTUNER\nPNC Code\n09110\nCatalog Vehicle VIN\nMHFKB8FS8L0087472\nEngine\n2GD-FTV (2400 CC) DOHC - D-4D COMMON RAIL VNT TURBO\nTransmission\nAUTO - 6 SPEED 4WD\nFuel Type\nDIESEL\nSteering\nLHD\nBody Type\nWAGON - 5DR 7P\nMarket Spec\nGCC - GULF COOPERATION COUNCIL\nCompatibility Years\n2016 – 2020\nAvailability\nPrice and stock require confirmation.\n\nPrice and stock require confirmation.\n\nRequest price and availability",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/1"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "part-number submission and refresh retain exact VIN scope",
+      "url": "http://127.0.0.1:5175/parts-search?q=091110K190&vin=MHFKB8FS8L0087472&scope=vin",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nMHFKB8FS8L0087472\n•\nFORTUNER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nCRETA\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nSANTA FE\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\nClear VIN\n\nEntered VIN: MHFKB8FS8L0087472\n\nVehicle information: TOYOTA FORTUNER 2019\n\n091110K190 — Part numbers containing this identifier. Check the full number.\n\n1 catalog records\n\nCatalog records found for this VIN.\n\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\t2019\tMHFKB8FS8L0087472\tGUN155L-SDTSHV - FORTUNER (2016-2020)\t1 Categories\t1 catalog records\t\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (1)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n1\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 1 (1 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&vin=MHFKB8FS8L0087472&partNumber=091110K190",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&vin=MHFKB8FS8L0087472&partNumber=091110K190"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&vin=MHFKB8FS8L0087472&partNumber=091110K190",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&vin=MHFKB8FS8L0087472&partNumber=091110K190",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "explicit number mode overrides VIN-shaped input",
+      "url": "http://127.0.0.1:5175/parts-search?q=MHFKB8FS8L0087472&mode=number",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\nMHFKB8FS8L0087472\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\nMHFKB8FS8L0087472 — Part numbers containing this identifier. Check the full number.\n\n0 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (0)\nLOADED PARTS (0)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n0\nALL CATALOG COMPONENTS\nNo catalog records match this search and its filters.\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=MHFKB8FS8L0087472",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=MHFKB8FS8L0087472"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=MHFKB8FS8L0087472",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "model-only direct link does not mix Prado",
+      "url": "http://127.0.0.1:5175/parts-search?model=LAND%20CRUISER",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\nPARTS CATALOG\n•\nLAND CRUISER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nCRETA\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nSANTA FE\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\n\n3744 catalog records\n\nBrowsing the selected vehicle catalog. Reference VINs describe source catalogs; individual part fitment may require confirmation.\n\nANY PARTS CATALOG — LAND CRUISER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nANY\n\tLAND CRUISER\tNot available\tCATALOG SEARCH\tNot available\t1 Categories\t3744 catalog records\t\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n3744\nBody Group\nALL CATALOG COMPONENTS\nPage 1 of 78 (3744 parts total)\nDiagram unavailable\nPNC 9011912200\n9011912200: **STDPART\nBody Group › FRONT BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 9415080800\n9415080800: **STDPART\nBody Group › FRONT BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 9155381230\n9155381230: **STDPART\nBody Group › FRONT BUMPER & BUMPER STAY\nDiagram unavailable\nPNC 9048018011\n9048018011: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 9018905027\n9018905027: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 91651B0822\n91651B0822: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 9018306016\n9018306016: **STDPART\nBody Group › HOOD & FRONT FENDER\nDiagram unavailable\nPNC 9026904047\n9026904047: **STDPART\nBody Group › HOOD & FRONT FENDER\nPNC 9046710186\n9046710186: **STDPART\nBody Group › FRONT FENDER APRON & DASH PANEL\nPNC 9162140814\n9162140814: **STDPART\nBody Group › FRONT FENDER APRON & DASH PANEL\nDiagram unavailable\nPNC 44457F\n4445760150: BRACKET, TUBE SUPPORT\nBody Group › FRAME\nDiagram unavailable\nPNC 51100F\n5100160B23: FRAME SUB-ASSY\nBody Group › FRAME\nDiagram unavailable\nPNC 9011910951\n9011910951: **STDPART\nBody Group › FRAME\nDiagram unavailable\nPNC 51203\n5120260260: CROSSMEMBER SUB-ASSY, FRAME, NO.2\nBody Group › FRAME\nDiagram unavailable\nPNC 9015950322\n9015950322: **STDPART\nBody Group › INSTRUMENT PANEL & GLOVE COMPARTMENT\nPNC 9046710203\n9046710203: **STDPART\nBody Group › INSTRUMENT PANEL & GLOVE COMPARTMENT\nDiagram unavailable\nPNC 51204\n5120360230: CROSSMEMBER SUB-ASSY, FRAME, NO.3\nBody Group › FRAME\nDiagram unavailable\nPNC 51205\n5120460190: CROSSMEMBER SUB-ASSY, FRAME, NO.4\nBody Group › FRAME\nDiagram unavailable\nPNC 51206\n5125060120: CROSSMEMBER SUB-ASSY, FRAME, NO.5\nBody Group › FRAME\nDiagram unavailable\nPNC 51211A\n5121160090: CROSSMEMBER, FRAME, FRONT\nBody Group › FRAME\nDiagram unavailable\nPNC 51291\n5120960240: CROSSMEMBER, FRAME, REAR\nBody Group › FRAME\nDiagram unavailable\nPNC 51311\n5131160042: GUSSET, FRAME FRONT CROSSMEMBER\nBody Group › FRAME\nDiagram unavailable\nPNC 51313\n5131360030: GUSSET, FRONT FRAME, LOWER RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51314\n5131460030: GUSSET, FRONT FRAME, LOWER LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51321\n5132260090: GUSSET, CROSSMEMBER, NO.2 RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51322\n5132260090: GUSSET, CROSSMEMBER, NO.2 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 91611B0812\n91611B0812: **STDPART\nBody Group › COWL PANEL & WINDSHIELD GLASS\nDiagram unavailable\nPNC 51401\n5142160220: BRACKET SUB-ASSY, ENGINE FRONT MOUNTING, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51402\n5142260220: BRACKET SUB-ASSY, ENGINE FRONT MOUNTING, LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51505E\n5150560041: BRACKET SUB-ASSY, FRONT SPRING SUPPORT, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51506E\n5150660040: BRACKET SUB-ASSY, FRONT SPRING SUPPORT, LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51508A\n5151860060: BRACKET SUB-ASSY, LOWER ARM, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51509A\n5151960040: BRACKET SUB-ASSY, LOWER ARM, LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51537\n5154760020: BRACKET, LATERAL ROD SUPPORT\nBody Group › FRAME\nDiagram unavailable\nPNC 51538\n5153860050: STAY, LATERAL ROD SUPPORT\nBody Group › FRAME\nDiagram unavailable\nPNC 51701\n5170160070: BRACKET SUB-ASSY, CAB MOUNTING, NO.1 RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51702\n5170160070: BRACKET SUB-ASSY, CAB MOUNTING, NO.1 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51703\n5170360090: BRACKET SUB-ASSY, CAB MOUNTING, NO.2, RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51704\n5170460080: BRACKET SUB-ASSY, CAB MOUNTING, NO.2 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51709A\n5170960031: BRACKET SUB-ASSY, BODY REAR END MOUNTING\nBody Group › FRAME\nDiagram unavailable\nPNC 51705B\n5170560080: BRACKET SUB-ASSY, CAB MOUNTING, NO.3 RH\nBody Group › FRAME\nDiagram unavailable\nPNC 51706B\n5170560080: BRACKET SUB-ASSY, CAB MOUNTING, NO.3 LH\nBody Group › FRAME\nDiagram unavailable\nPNC 51368\n5136860020: MEMBER, FRAME FUEL TANK MOUNTING\nBody Group › FRAME\nDiagram unavailable\nPNC 9033320001\n9033320001: **STDPART\nBody Group › REAR FLOOR PANEL & REAR FLOOR MEMBER\nDiagram unavailable\nPNC 9018304046\n9018304046: **STDPART\nBody Group › INSIDE TRIM BOARD\nDiagram unavailable\nPNC 9338315012\n9338315012: **STDPART\nBody Group › SEAT & SEAT TRACK\nDiagram unavailable\nPNC 9015940269\n9015940269: **STDPART\nBody Group › SEAT & SEAT TRACK\nDiagram unavailable\nPNC 93540A6030\n93540A6030: **STDPART\nBody Group › ARMREST & VISOR\nShowing Page 1 of 78 (3744 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n78\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS+-+LAND+CRUISER+70+(2007-)",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS+-+LAND+CRUISER+70+(2007-)"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS+-+LAND+CRUISER+70+(2007-)",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "explicit formatted-number alternative",
+      "url": "http://127.0.0.1:5175/parts-search?q=091110K190&mode=number&scope=global",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\n091110K190\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\n091110K190 — Part numbers containing this identifier. Check the full number.\n\n2 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (2)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n2\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 1 (2 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=09111-0K190",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=09111-0K190",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=09111-0K190",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&partNumber=091110K190",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "explicit diagram callout search",
+      "url": "http://127.0.0.1:5175/parts-search?q=09110&mode=pnc",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\n09110\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\n14 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (2)\nLOADED PARTS (14)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n14\nTool/Engine/Fuel Group\nEngine\nALL CATALOG COMPONENTS\nPage 1 of 1 (14 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K081: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110K082: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nDiagram unavailable\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n091110D230: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09110\n0911160180: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n091102W000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&pnc=09110",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&pnc=09110"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&pnc=09110",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "decoder unavailable with exact catalog still usable",
+      "url": "http://127.0.0.1:5175/parts-search?vin=MHFKB8FS8L0087472",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nTOYOTA\n•\nMHFKB8FS8L0087472\n•\nFORTUNER\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nCRETA\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nSANTA FE\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\nClear VIN\n\nEntered VIN: MHFKB8FS8L0087472\n\nVehicle information: TOYOTA FORTUNER 2019\n\n4489 catalog records\n\nCatalog records found for this VIN.\n\nTOYOTA PARTS CATALOG — FORTUNER\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nTOYOTA\n\tFORTUNER\t2019\tMHFKB8FS8L0087472\tGUN155L-SDTSHV - FORTUNER (2016-2020)\t1 Categories\t4489 catalog records\t\nGROUPS ON THIS PAGE (1)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n4489\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 94 (4489 parts total)\nDiagram unavailable\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09120\n091200K240: BAG, TOOL\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09130\n9008999010: PLIERS\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09135\n9008999009: DRIVER, SCREW\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09141\n091410K030: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09141\n091410K040: SPANNER\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 09150\n091500K010: WRENCH, HUB NUT BOX\nTool/Engine/Fuel Group › STANDARD TOOL\nDiagram unavailable\nPNC 11000\n190000E230: ENGINE ASSY, PARTIAL\nTool/Engine/Fuel Group › PARTIAL ENGINE ASSEMBLY\nDiagram unavailable\nPNC 11400\n114000E061: BLOCK ASSY, SHORT\nTool/Engine/Fuel Group › SHORT BLOCK ASSEMBLY\nDiagram unavailable\nPNC 04111\n041110E040: GASKET KIT, ENGINE OVERHAUL\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nDiagram unavailable\nPNC 04112\n041120E040: GASKET KIT, ENGINE VALVE GRIND\nTool/Engine/Fuel Group › ENGINE OVERHAUL GASKET KIT\nDiagram unavailable\nPNC 11101\n111010E010: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101\n1110111160: HEAD SUB-ASSY, CYLINDER\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n9091002192: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n9091002193: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n90910T2010: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101A\n90910T2011: BOLT(FOR CYLINDER HEAD SET)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101E\n9091905060: SENSOR, CAM POSITION\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101U\n9056015022: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11101U\n90560T0026: SPACER(FOR CYLINDER HEAD SET BOLT)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11114A\n9025005027: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11114A\n90250T0011: PIN, STRAIGHT\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n111150E010E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110A0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110B0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110C0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110D0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11115\n1111511110E0: GASKET, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11117E\n9034114015: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11117E\n90341T0005: PLUG, W/HEAD STRAIGHT SCREW, NO.1\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11122\n1112230020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11122\n1112330020: BUSH, INTAKE VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11126\n1112230020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11126\n1112330020: BUSH, EXHAUST VALVE GUIDE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11155A\n9025311021: PIN, RING W/HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n9010906080: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n9155180840: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n90105T0130: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159A\n90119T0551: BOLT(FOR HEAD TO CAMSHAFT BEARING CAP)\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159H\n1115911010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11159H\n111590E010: GASKET, CAMSHAFT BEARING CAP OIL HOLE\nTool/Engine/Fuel Group › CYLINDER HEAD\nDiagram unavailable\nPNC 11201\n1120111082: COVER SUB-ASSY, CYLINDER HEAD\nTool/Engine/Fuel Group › CYLINDER HEAD\nShowing Page 1 of 94 (4489 total parts)\nPrevious\n1\n2\n3\n4\n5\n...\n94\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS8L0087472?page=1&pageSize=48",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48"
+      ],
+      "responses": [
+        {
+          "failed": ""
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&page=1&pageSize=48",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "catalog failure shown as error, no unrelated fallback",
+      "url": "http://127.0.0.1:5175/parts-search?q=JACK&mode=name",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\nJACK\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\nThe lookup could not be completed. Please retry.\n\nRetry\nGROUPS ON THIS PAGE (0)\nLOADED PARTS (0)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n0\nALL CATALOG COMPONENTS\nThe lookup could not be completed. Please retry.\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK"
+      ],
+      "responses": [
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "lowercase multiword query searches both catalog casing conventions",
+      "url": "http://127.0.0.1:5175/parts-search?q=oil%20filter&mode=name",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\noil filter\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\nKeyword results are grouped by vehicle make; sorting applies within each make.\n\n91 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (3)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n91\nEngine\nTransmission\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 2 (91 parts total)\nPNC 26350\n211362B000: OIL FILTER CONNECTING UNIT\nEngine › 20-211A - Cylinder Block\nPNC 26300\n2630035505: ENGINE OIL FILTER ASSEMBLY\nEngine › 20-213A - FRONT CASE & OIL FILTER (1600 CC - GAMMA)\nPNC 26502\n2650222600: OIL FILTER COVER KIT\nEngine › 20-224A - Rocker Cover\nPNC 46321\n463212F000: VALVE BODY OIL FILTER UNIT ASSEMBLY\nTransmission › 43-452B - Automatic Transmission Housing\nPNC 26350\n211362B000: OIL FILTER CONNECTING UNIT\nEngine › 20-211A - Cylinder Block\nPNC 26300\n2630035505: ENGINE OIL FILTER ASSEMBLY\nEngine › 20-213A - FRONT CASE & OIL FILTER (1600 CC - GAMMA)\nPNC 26502\n2650222600: OIL FILTER COVER KIT\nEngine › 20-224A - Rocker Cover\nPNC 46321\n463212F000: VALVE BODY OIL FILTER UNIT ASSEMBLY\nTransmission › 43-452B - Automatic Transmission Housing\nPNC 21522C\n211212G000: OIL FILTER BRACKET ASSEMBLY\nEngine › 20-211B - Cylinder Block\nPNC 25124D\n211232G000: OIL FILTER UNIT BRACKET WASHER\nEngine › 20-211B - Cylinder Block\nPNC 26300\n2630035505: ENGINE OIL FILTER ASSEMBLY\nEngine › 20-213B - FRONT CASE & OIL FILTER (2400 CC - THETA 2, ENGINE TYPE (DOHC) - GDI)\nPNC 26502\n2650222600: OIL FILTER COVER KIT\nEngine › 20-224B - Rocker Cover\nPNC 31036B\n31036S1050: OIL FILTER UNIT HOSE\nEngine › 31-310 - Fuel System\nPNC 46321\n463212F000: VALVE BODY OIL FILTER UNIT ASSEMBLY\nTransmission › 43-452B - Automatic Transmission Housing\nDiagram unavailable\nPNC 15600A\n9040419015: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15600A\n90404T0002: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n9091520003: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n90915TB001: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n9672324030: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n90301T0046: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15677\n1567711020: BRACKET, OIL FILTER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15677\n156770E010: BRACKET, OIL FILTER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9012608053\n9012608053: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9415180800\n9415180800: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 90178T0019\n90178T0019: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n9091520005: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15600A\n9040419015: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15600A\n90404T0002: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n9091520003: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n90915TB001: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n9672324030: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n90301T0046: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15677\n1567711020: BRACKET, OIL FILTER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15677\n156770E010: BRACKET, OIL FILTER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9012608053\n9012608053: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9415180800\n9415180800: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 90178T0019\n90178T0019: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n9091520005: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 11425\n9011606171: BOLT, STUD(FOR OIL FILTER)\nTool/Engine/Fuel Group › CYLINDER BLOCK\nDiagram unavailable\nPNC 15600A\n9040419002: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n9091520003: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609D\n9034120002: PLUG, W/HEAD STRAIGHT SCREW(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609E\n1513467020: GASKET, W/HEAD STRAIGHT SCREW PLUG\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15690B\n1569064011: VALVE ASSY, OIL COOLER RELIEF\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15701C\n1570130081: COVER SUB-ASSY, OIL COOLER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15725A\n1572567010: GASKET, OIL COOLER COVER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9043022003\n9043022003: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 9091009087\n9091009087: **STDPART\nTool/Engine/Fuel Group › OIL FILTER\nShowing Page 1 of 2 (91 total parts)\nPrevious\n1\n2\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Oil+Filter",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=OIL+FILTER",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Oil+Filter",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=OIL+FILTER",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Oil+Filter",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=OIL+FILTER"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Oil+Filter",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=OIL+FILTER",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Oil+Filter",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=OIL+FILTER",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "multiword empty search offers explicit word search",
+      "url": "http://127.0.0.1:5175/parts-search?q=filter&mode=name&scope=global",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\nfilter\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\n\nKeyword results are grouped by vehicle make; sorting applies within each make.\n\n275 catalog records\n\nSearching parts across vehicles. Check the listed application before ordering.\n\nGROUPS ON THIS PAGE (5)\nLOADED PARTS (48)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n275\nEngine\nTransmission\nElectrical\nInterior Trim\nTool/Engine/Fuel Group\nALL CATALOG COMPONENTS\nPage 1 of 6 (275 parts total)\nPNC 26350\n211362B000: OIL FILTER CONNECTING UNIT\nEngine › 20-211A - Cylinder Block\nPNC 26300\n2630035505: ENGINE OIL FILTER ASSEMBLY\nEngine › 20-213A - FRONT CASE & OIL FILTER (1600 CC - GAMMA)\nPNC 26250\n262502B030: FILTER UNIT ASSEMBLY\nEngine › 20-215A - Belt Cover and Oil Pan\nPNC 26502\n2650222600: OIL FILTER COVER KIT\nEngine › 20-224A - Rocker Cover\nPNC 28113\n28113A0100: AIR CLEANER FILTER ELEMENT\nEngine › 28-281A - Air Cleaner\nPNC 31048B\n31048C9000: FUEL FILTER UNIT PIPE GASKET\nEngine › 31-310 - Fuel System\nPNC 31112\n31112C9100: FUEL PUMP FILTER UNIT\nEngine › 31-310 - Fuel System\nPNC 31185\n311512Z100: FUEL TANK FILTER UNIT\nEngine › 31-310 - Fuel System\nPNC 31453\n31184C9000: AIR CONDITIONING FILTER ELEMENT\nEngine › 31-310 - Fuel System\nPNC 46321\n463212F000: VALVE BODY OIL FILTER UNIT ASSEMBLY\nTransmission › 43-452B - Automatic Transmission Housing\nPNC 97139B\n97123A0000: AIR AIR FILTER UNIT UPPER HOUSING\nElectrical › 97-971 - Heater System Heater and Blower\nPNC 97140A\n97124A0000: AIR AIR FILTER UNIT LOWER HOUSING\nElectrical › 97-971 - Heater System Heater and Blower\nPNC 97620C\n971293X000: AIR AIR FILTER UNIT COVER ASSEMBLY\nElectrical › 97-971 - Heater System Heater and Blower\nPNC 26350\n211362B000: OIL FILTER CONNECTING UNIT\nEngine › 20-211A - Cylinder Block\nPNC 26300\n2630035505: ENGINE OIL FILTER ASSEMBLY\nEngine › 20-213A - FRONT CASE & OIL FILTER (1600 CC - GAMMA)\nPNC 26250\n262502B030: FILTER UNIT ASSEMBLY\nEngine › 20-215A - Belt Cover and Oil Pan\nPNC 26502\n2650222600: OIL FILTER COVER KIT\nEngine › 20-224A - Rocker Cover\nPNC 28113\n28113A0100: AIR CLEANER FILTER ELEMENT\nEngine › 28-281A - Air Cleaner\nPNC 31048B\n31048C9000: FUEL FILTER UNIT PIPE GASKET\nEngine › 31-310 - Fuel System\nPNC 31112\n31112C9100: FUEL PUMP FILTER UNIT\nEngine › 31-310 - Fuel System\nPNC 31185\n311512Z100: FUEL TANK FILTER UNIT\nEngine › 31-310 - Fuel System\nPNC 31453\n31184C9000: AIR CONDITIONING FILTER ELEMENT\nEngine › 31-310 - Fuel System\nPNC 46321\n463212F000: VALVE BODY OIL FILTER UNIT ASSEMBLY\nTransmission › 43-452B - Automatic Transmission Housing\nPNC 97139B\n97123A0000: AIR AIR FILTER UNIT UPPER HOUSING\nElectrical › 97-971 - Heater System Heater and Blower\nPNC 97140A\n97124A0000: AIR AIR FILTER UNIT LOWER HOUSING\nElectrical › 97-971 - Heater System Heater and Blower\nPNC 97620C\n971293X000: AIR AIR FILTER UNIT COVER ASSEMBLY\nElectrical › 97-971 - Heater System Heater and Blower\nPNC 21119B\n2111925000: PLUG INLET PART － FILTER UNIT\nEngine › 20-211B - Cylinder Block\nPNC 21522C\n211212G000: OIL FILTER BRACKET ASSEMBLY\nEngine › 20-211B - Cylinder Block\nPNC 25124D\n211232G000: OIL FILTER UNIT BRACKET WASHER\nEngine › 20-211B - Cylinder Block\nPNC 26300\n2630035505: ENGINE OIL FILTER ASSEMBLY\nEngine › 20-213B - FRONT CASE & OIL FILTER (2400 CC - THETA 2, ENGINE TYPE (DOHC) - GDI)\nPNC 26502\n2650222600: OIL FILTER COVER KIT\nEngine › 20-224B - Rocker Cover\nPNC 28113\n28113A9100: AIR CLEANER FILTER ELEMENT\nEngine › 28-281B - Air Cleaner\nPNC 31036B\n31036S1050: OIL FILTER UNIT HOSE\nEngine › 31-310 - Fuel System\nPNC 31112\n31112B1000: FUEL PUMP FILTER UNIT\nEngine › 31-310 - Fuel System\nPNC 31453\n31454S1000: AIR CONDITIONING FILTER ELEMENT\nEngine › 31-310 - Fuel System\nPNC 46321\n463212F000: VALVE BODY OIL FILTER UNIT ASSEMBLY\nTransmission › 43-452B - Automatic Transmission Housing\nPNC 85910V\n85940S1000NNB: CARGO VEHICLE FILTER SCREEN ASSEMBLY\nInterior Trim › 84-857 - Luggage Compartment\nPNC 98515A\n985151F000: WASH MOTOR FILTER ELEMENT\nElectrical › 91-986 - Front Window Glass Washer\nDiagram unavailable\nPNC 15600A\n9040419015: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15600A\n90404T0002: UNION(FOR OIL FILTER)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n9091520003: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15601\n90915TB001: FILTER SUB-ASSY, OIL\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n9672324030: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15609H\n90301T0046: RING, O(FOR OIL FILTER BRACKET)\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15677\n1567711020: BRACKET, OIL FILTER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 15677\n156770E010: BRACKET, OIL FILTER\nTool/Engine/Fuel Group › OIL FILTER\nDiagram unavailable\nPNC 17801\n178010L050: ELEMENT SUB-ASSY, AIR CLEANER FILTER\nTool/Engine/Fuel Group › AIR CLEANER\nDiagram unavailable\nPNC 17696\n1769611010: BRACKET, GAS FILTER\nTool/Engine/Fuel Group › VACUUM PIPING\nShowing Page 1 of 6 (275 total parts)\nPrevious\n1\n2\n3\n4\n5\n6\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Oil+Filter+Unknownword",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=OIL+FILTER+UNKNOWNWORD",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Oil+Filter+Unknownword",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=OIL+FILTER+UNKNOWNWORD",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Filter",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=FILTER",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Filter",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=FILTER"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Oil+Filter+Unknownword",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=OIL+FILTER+UNKNOWNWORD",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Filter",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=FILTER",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Filter",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=FILTER",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "invalid VIN does not request catalog",
+      "url": "http://127.0.0.1:5175/parts-search?vin=BAD",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nHow It Works\nRequest a Part\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nANY\n•\nBAD\n•\nALL GROUPS\nFind parts or browse a vehicle catalog\nSearch by\nAuto\nVIN\nPart number\nPart name\nDiagram code (PNC)\nVIN, part number or part name\nSearch\n\nAuto may recognize a VIN or part number. Change the search mode if needed.\n\nOptional vehicle details\nVehicle make / brand\nAny\nHYUNDAI\nTOYOTA\nModel\nAny\nCRETA\nFORTUNER\nHILUX\nLAND CRUISER\nLAND CRUISER PRADO\nSANTA FE\nVIOS\nVehicle year\nSteering\nAny\nLHD\nRHD\n\nConfiguration options verified 12 November 2026. Catalog coverage is not a guarantee that every part fits.\n\nBrowse selected catalog\nClear VIN\n\nEntered VIN: BAD\n\nEnter a 17-character VIN without I, O or Q. Use Part number mode for a part identifier.\n\nRetry\nANY PARTS CATALOG\nBRAND / OEM\tMODEL\tYEAR\tVIN / VEHICLE ID\tSERIES\tASSEMBLY GROUPS\tTOTAL PARTS\tINFO\n\nANY\n\t\tNot available\tBAD\tNot available\t0 Categories\t0 catalog records\t\nGROUPS ON THIS PAGE (0)\nLOADED PARTS (0)\nFilter these results by part number or nameApply filter\nPart-number order\nDefault order\nAscending\nDescending\nGROUPS ON THIS PAGE\nAll groups\n0\nALL CATALOG COMPONENTS\nThe lookup could not be completed. Please retry.\nRequest Custom Parts Sourcing\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories"
+      ],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "French and Amharic search messages",
+      "url": "http://127.0.0.1:5175/parts-search?q=JACK&mode=name",
+      "text": "Africa\nAutoParts\n🇬🇧 ENGLISH\n🇫🇷 FRANÇAIS\n🇪🇹 አማርኛ\n🇸🇦 العربية\nUSD\nKES\nSAR\nEUR\nAED\nእንዴት ይሠራል\nዕቃ ጠይቅ\nShop\nTrack Order\nLog In\nSign Up\n0\n•\nGenuine Parts Catalogs\n•\nሁሉም\n•\nJACK\n•\nALL GROUPS\nመለዋወጫ ይፈልጉ ወይም የተሽከርካሪ ካታሎግ ይመልከቱ\nየፍለጋ አይነት\nራስ-ሰር\nVIN\nየመለዋወጫ ቁጥር\nየመለዋወጫ ስም\nየስዕል ኮድ (PNC)\nVIN፣ የመለዋወጫ ቁጥር ወይም ስም\nፈልግ\n\nራስ-ሰር ሁነታ VIN ወይም ቁጥር ሊያውቅ ይችላል። ካስፈለገ ሁነታውን ይቀይሩ።\n\nአማራጭ የተሽከርካሪ ዝርዝሮች\n\nየቃል ፍለጋ ውጤቶች በብራንድ ይመደባሉ፤ ቅደም ተከተል በእያንዳንዱ ብራንድ ውስጥ ነው።\n\n63 የካታሎግ መዝገቦች\n\nበሁሉም ተሽከርካሪዎች መለዋወጫ በመፈለግ ላይ። ከማዘዝዎ በፊት ተስማሚነትን ያረጋግጡ።\n\nየዚህ ገጽ ቡድኖች (4)\nLOADED PARTS (48)\nበመለዋወጫ ቁጥር ወይም ስም አጣራማጣሪያ ተግብር\nየመለዋወጫ ቁጥር ቅደም ተከተል\nመደበኛ ቅደም ተከተል\nከትንሽ ወደ ትልቅ\nከትልቅ ወደ ትንሽ\nየዚህ ገጽ ቡድኖች\nሁሉም ቡድኖች\n63\nEngine\nTool/Engine/Fuel Group\nBody Group\nElectrical Group\nALL CATALOG COMPONENTS\nPage 1 of 2 (63 parts total)\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n091102W000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nስዕሉ አይገኝም\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 58118E\n58118KK010: BRACKET, JACK SET\nBody Group › FRONT FLOOR PANEL & FRONT FLOOR MEMBER\nPNC 64766B\n64766KK010C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nPNC 58709A\n587090K090: CARRIER SUB-ASSY, JACK\nBody Group › TOOL BOX & LICENSE PLATE BRACKET\nስዕሉ አይገኝም\nPNC 86190C\n861900K030: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nስዕሉ አይገኝም\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 58118E\n58118KK010: BRACKET, JACK SET\nBody Group › FRONT FLOOR PANEL & FRONT FLOOR MEMBER\nPNC 64766B\n64766KK010C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nPNC 58709A\n587090K090: CARRIER SUB-ASSY, JACK\nBody Group › TOOL BOX & LICENSE PLATE BRACKET\nስዕሉ አይገኝም\nPNC 86190C\n861900K030: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nስዕሉ አይገኝም\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09116\n0911660020: LEVER, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 58766A\n5876660030: COVER, JACK BOX HOLE\nBody Group › REAR BUMPER & BUMPER STAY\nስዕሉ አይገኝም\nPNC 64766B\n6476660091C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nስዕሉ አይገኝም\nPNC 86190C\n8619012040: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nስዕሉ አይገኝም\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09110\n091110K081: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n091140K100: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09115\n091150K080: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 86190C\n861900K010: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nስዕሉ አይገኝም\nPNC 09110\n091110K082: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 58766A\n5876660030: COVER, JACK BOX HOLE\nBody Group › REAR BUMPER & BUMPER STAY\nስዕሉ አይገኝም\nPNC 64766B\n6476660091C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nስዕሉ አይገኝም\nPNC 86190C\n8619042031: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nስዕሉ አይገኝም\nPNC 86190C\n8619071020: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nስዕሉ አይገኝም\nPNC 09113\n091130D090: HANDLE, JACK\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09110\n091110D230: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 11445\n114450Y020: SPACER, CYLINDER BLOCK WATER JACKET\nTool/Engine/Fuel Group › CYLINDER BLOCK\nስዕሉ አይገኝም\nPNC 58791B\n587910D140: CARRIER, JACK\nBody Group › FLOOR PAN & LOWER BACK PANEL\nPNC 58442F\n584420D170: COVER, JACK\nBody Group › MAT & CARPET\nስዕሉ አይገኝም\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nስዕሉ አይገኝም\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nShowing Page 1 of 2 (63 total parts)\nPrevious\n1\n2\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "Arabic RTL mobile search layout",
+      "url": "http://127.0.0.1:5175/parts-search?q=JACK&mode=name",
+      "text": "Africa\nAutoParts\n0\n•\nGenuine Parts Catalogs\n•\nالكل\n•\nJACK\n•\nALL GROUPS\nابحث عن قطع أو تصفح كتالوج مركبة\nالبحث بواسطة\nتلقائي\nرقم الهيكل VIN\nرقم القطعة\nاسم القطعة\nرمز المخطط PNC\nرقم الهيكل أو رقم القطعة أو اسمها\nبحث\n\nقد يتعرف الوضع التلقائي على رقم الهيكل أو القطعة. غيّر الوضع عند الحاجة.\n\nتفاصيل المركبة الاختيارية\n\nنتائج الكلمات مجمعة حسب ماركة المركبة، والترتيب داخل كل ماركة.\n\n63 سجلات الكتالوج\n\nالبحث عن قطع لجميع المركبات. تحقق من الملاءمة قبل الطلب.\n\nمجموعات هذه الصفحة (4)\nLOADED PARTS (48)\nتصفية النتائج برقم القطعة أو اسمهاتطبيق الفلتر\nترتيب رقم القطعة\nالترتيب الافتراضي\nتصاعدي\nتنازلي\nمجموعات هذه الصفحة\nكل المجموعات\n63\nEngine\nTool/Engine/Fuel Group\nBody Group\nElectrical Group\nALL CATALOG COMPONENTS\nPage 1 of 2 (63 parts total)\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n09110A0000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nPNC 09110\n091102W000: JACK ASSEMBLY\nEngine › 09-091 - Service Tools\nالمخطط غير متاح\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 58118E\n58118KK010: BRACKET, JACK SET\nBody Group › FRONT FLOOR PANEL & FRONT FLOOR MEMBER\nPNC 64766B\n64766KK010C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nPNC 58709A\n587090K090: CARRIER SUB-ASSY, JACK\nBody Group › TOOL BOX & LICENSE PLATE BRACKET\nالمخطط غير متاح\nPNC 86190C\n861900K030: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nالمخطط غير متاح\nPNC 09110\n091110K190: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n091140K160: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09115\n091150K230: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 58118E\n58118KK010: BRACKET, JACK SET\nBody Group › FRONT FLOOR PANEL & FRONT FLOOR MEMBER\nPNC 64766B\n64766KK010C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nPNC 58709A\n587090K090: CARRIER SUB-ASSY, JACK\nBody Group › TOOL BOX & LICENSE PLATE BRACKET\nالمخطط غير متاح\nPNC 86190C\n861900K030: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nالمخطط غير متاح\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09116\n0911660020: LEVER, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 58766A\n5876660030: COVER, JACK BOX HOLE\nBody Group › REAR BUMPER & BUMPER STAY\nالمخطط غير متاح\nPNC 64766B\n6476660091C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nالمخطط غير متاح\nPNC 86190C\n8619012040: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nالمخطط غير متاح\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09110\n091110K081: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n091140K100: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09115\n091150K080: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 86190C\n861900K010: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nالمخطط غير متاح\nPNC 09110\n091110K082: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09110\n0911160132: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 58766A\n5876660030: COVER, JACK BOX HOLE\nBody Group › REAR BUMPER & BUMPER STAY\nالمخطط غير متاح\nPNC 64766B\n6476660091C0: COVER, QUARTER TRIM JACK\nBody Group › INSIDE TRIM BOARD\nالمخطط غير متاح\nPNC 86190C\n8619042031: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nالمخطط غير متاح\nPNC 86190C\n8619071020: ADAPTER ASSY, STEREO JACK, NO.1\nElectrical Group › RADIO RECEIVER & AMPLIFIER & CONDENSER\nالمخطط غير متاح\nPNC 09113\n091130D090: HANDLE, JACK\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09110\n091110D230: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 11445\n114450Y020: SPACER, CYLINDER BLOCK WATER JACKET\nTool/Engine/Fuel Group › CYLINDER BLOCK\nالمخطط غير متاح\nPNC 58791B\n587910D140: CARRIER, JACK\nBody Group › FLOOR PAN & LOWER BACK PANEL\nPNC 58442F\n584420D170: COVER, JACK\nBody Group › MAT & CARPET\nالمخطط غير متاح\nPNC 09110\n0911160131: JACK ASSY\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n0911435040: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09114\n0911435050: EXTENSION SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nالمخطط غير متاح\nPNC 09115\n0911535110: ROD SUB-ASSY, JACK HANDLE\nTool/Engine/Fuel Group › STANDARD TOOL\nShowing Page 1 of 2 (63 total parts)\nPrevious\n1\n2\nNext\nCustomer Service\nContact Us\nFAQ\nArticles\nInformation\nAbout Us\nSuppliers\nBecome a Supplier\nDatabase Seeding\nPolicies\nTerms & Conditions\nNews\nMy Account\nOrders\nWishlist\nGarage\nProfile\nSocial Links\nFacebook\nInstagram\nTwitter\nWhatsapp\nPayPal\nVISA\nMasterCard\nAMEX\nApple Pay\nBitcoin\nFedEx\nDHL\nUPS\nAFRICA AUTOPART WHOLESALERS L.L.C.\n© 2026 Africa Autopart. All rights reserved.",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK"
+      ],
+      "responses": [
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "failed": "net::ERR_ABORTED"
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/categories",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=1&make=TOYOTA&keyword=JACK",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=HYUNDAI&keyword=Jack",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?page=1&pageSize=48&make=TOYOTA&keyword=JACK",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    }
+  ]
+}

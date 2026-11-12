@@ -24,6 +24,10 @@ export async function resolveVin(value: string, client: VinClient, pageSize = 48
   const vehicle = decode.status === 'fulfilled' ? decode.value : undefined
   const decoded = vehicle?.decoded
   const first = catalog.items[0]
+  const decodedYear = decoded?.modelYear ? String(decoded.modelYear) : null
+  const ambiguousYear = !!decoded?.alternateModelYear && decoded.alternateModelYear !== decoded.modelYear
+  const supportedYear = !ambiguousYear || decoded?.nhtsa?.modelYear === decodedYear
+    ? decodedYear || decoded?.nhtsa?.modelYear : null
   const warnings = [...new Set([
     ...(decoded?.errors || []),
     ...(decoded?.isValidFormat === false ? ['The decoder could not validate this VIN format.'] : []),
@@ -37,9 +41,9 @@ export async function resolveVin(value: string, client: VinClient, pageSize = 48
     warnings,
     meta: {
       vin,
-      make: decoded?.make || decoded?.nhtsa?.make || first?.make || first?.oem || null,
-      model: decoded?.model || decoded?.nhtsa?.model || vehicle?.model || first?.model || null,
-      modelYear: decoded?.modelYear ? String(decoded.modelYear) : decoded?.nhtsa?.modelYear || vehicle?.modelYear || first?.modelYear || null,
+      make: first?.make || first?.oem || decoded?.make || decoded?.nhtsa?.make || null,
+      model: first?.model || decoded?.model || decoded?.nhtsa?.model || vehicle?.model || null,
+      modelYear: first?.modelYear || vehicle?.modelYear || supportedYear || null,
       manufacturer: decoded?.nhtsa?.manufacturer,
       series: vehicle?.series || first?.vehicleSeries || first?.series,
       fuel: first?.fuel,

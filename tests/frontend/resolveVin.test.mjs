@@ -80,11 +80,19 @@ test('unknown valid-format VIN has no invented vehicle identity', async () => {
   assert.equal(result.matched, false)
 })
 
-test('catalog metadata cannot overwrite decoded identity', async () => {
+test('exact catalog identity takes precedence over a conflicting generic decode', async () => {
   const result = await resolveVin(kia, {
     getVehicleByVin: async () => decoded,
     searchVehicles: async () => ({ ...empty, items: [{ vin: kia, make: 'TOYOTA', model: 'FORTUNER' }], totalCount: 1 }),
   })
-  assert.equal(result.meta.make, 'Kia')
-  assert.equal(result.meta.model, 'Sportage')
+  assert.equal(result.meta.make, 'TOYOTA')
+  assert.equal(result.meta.model, 'FORTUNER')
+})
+
+test('ambiguous decoded years stay unknown without supporting year evidence', async () => {
+  const result = await resolveVin(kia, {
+    getVehicleByVin: async () => ({ decoded: { modelYear: 1990, alternateModelYear: 2020 } }),
+    searchVehicles: async () => empty,
+  })
+  assert.equal(result.meta.modelYear, null)
 })

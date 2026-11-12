@@ -43,6 +43,7 @@ export default function NewRequestPage() {
   const location = useLocation()
   const { t } = useTranslation('requests')
   const prefill = location.state as { year?: string; make?: string; partName?: string } | null
+  const search = new URLSearchParams(location.search)
 
   const conditionOptions = [
     { value: ConditionPreference.AnyCondition, label: t('condition_any') },
@@ -73,9 +74,12 @@ export default function NewRequestPage() {
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      vehicleMake: prefill?.make ?? '',
-      year: prefill?.year ?? '',
-      partName: prefill?.partName ?? '',
+      vehicleMake: search.get('make') || prefill?.make || '',
+      model: search.get('model') || '',
+      chassisNumber: search.get('vin') || '',
+      partNumber: search.get('partNumber') || '',
+      year: search.get('year') || prefill?.year || '',
+      partName: search.get('partName') || prefill?.partName || '',
       email: auth?.email ?? '',
     },
   })

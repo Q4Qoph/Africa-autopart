@@ -1,14 +1,13 @@
 // src/frontend/src/pages/HomePage.tsx
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
-  Search,
-  Menu,
   Mail,
   Phone,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { catalogApi } from '@/api/catalogApi'
+import { CatalogSearchForm } from '@/components/catalog/CatalogSearchForm'
+import { readSearch, writeSearch } from '@/lib/catalogSearch'
 import { cn } from '@/lib/utils'
 import { getBrandLogoPath } from '@/lib/brandUtils'
 import { VehicleCoveragePanel } from '@/components/catalog/VehicleCoveragePanel'
@@ -35,122 +34,14 @@ const TwitterIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 
-const YoutubeIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M23.5 6.2c-.3-1.1-1.1-2-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12 0 12s0 3.8.5 5.8c.3 1.1 1.1 2 2.2 2.2 2 .5 9.3.5 9.3.5s7.3 0 9.3-.5c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-5.8.5-5.8s0-3.8-.5-5.8z" />
-    <polygon points="9.8,8 9.8,16 16.6,12" fill="white" />
-  </svg>
-)
-
 export default function HomePage() {
   const navigate = useNavigate()
   const { t } = useTranslation('home')
   const coverage = getVehicleCoverageSnapshot()
   const coveredModelCount = coverage.makes.reduce((count, make) => count + make.models.length, 0)
 
-  // Search States
-  const [vin, setVin] = useState('')
-  const [searching, setSearching] = useState(false)
-  const [error, setError] = useState('')
-  const [availableModels, setAvailableModels] = useState<string[]>([])
-
   // UI States
   const [activeTab, setActiveTab] = useState<'easy' | 'catalog' | 'prices' | 'range' | 'shipping'>('easy')
-
-  useEffect(() => {
-    catalogApi.getVehicleModels()
-      .then((models) => {
-        if (models && models.length > 0) {
-          setAvailableModels(models)
-        }
-      })
-      .catch(() => {})
-  }, [])
-
-  async function handleSearch(termToSearch: string) {
-    const trimmed = termToSearch.trim()
-    if (!trimmed) {
-      setError(t('vin_error_short') ?? 'Please enter a search term, part number, or VIN')
-      return
-    }
-    setError('')
-    setSearching(true)
-
-    // Standard VINs are 17 characters alphanumeric without spaces
-    const isVinPattern = /^[A-HJ-NPR-Za-hj-npr-z0-9]{17}$/.test(trimmed)
-
-    const PAGE_SIZE = 48
-
-    if (isVinPattern) {
-      navigate(`/parts-search?vin=${encodeURIComponent(trimmed.toUpperCase())}`)
-      setSearching(false)
-      return
-    }
-
-    // Step 3: Regular keyword, make, model, or part number search using GET /api/vehicles/search
-    try {
-      const searchRes = await catalogApi.searchVehicles({
-        keyword: trimmed,
-        page: 1,
-        pageSize: PAGE_SIZE,
-      })
-
-      if (searchRes.totalCount > 0) {
-        navigate('/parts-search', {
-          state: {
-            searchResults: {
-              items: searchRes.items || [],
-              pageNumber: searchRes.page || 1,
-              pageSize: searchRes.pageSize || PAGE_SIZE,
-              totalCount: searchRes.totalCount || 0,
-              totalPages: searchRes.totalPages || 1,
-            },
-            searchTerm: trimmed,
-          },
-        })
-        return
-      }
-
-      // Fallback exact partNumber search
-      const partNumRes = await catalogApi.searchVehicles({
-        partNumber: trimmed,
-        page: 1,
-        pageSize: PAGE_SIZE,
-      })
-
-      const finalRes = partNumRes.totalCount > 0 ? partNumRes : searchRes
-      navigate('/parts-search', {
-        state: {
-          searchResults: {
-            items: finalRes.items || [],
-            pageNumber: finalRes.page || 1,
-            pageSize: finalRes.pageSize || PAGE_SIZE,
-            totalCount: finalRes.totalCount || 0,
-            totalPages: finalRes.totalPages || 1,
-          },
-          searchTerm: trimmed,
-        },
-      })
-    } catch {
-      setError(t('vin_error_invalid') ?? 'Could not find matching parts or vehicle. Check the input and try again.')
-    } finally {
-      setSearching(false)
-    }
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    handleSearch(vin)
-  }
-
-  // Helper scroll function to direct to video
-  const scrollToVideo = (e: React.MouseEvent) => {
-    e.preventDefault()
-    const element = document.getElementById('how-to-order-video')
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
 
   // Render proper tabs contents
   const renderTabContent = () => {
@@ -262,88 +153,7 @@ export default function HomePage() {
       <div className="mb-10 grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
         {/* ── SEARCH BAR CONTAINER ───────────────────────────────────────────────── */}
         <section className="bg-white dark:bg-brand-card/50 border border-slate-200 dark:border-slate-800 shadow-sm rounded-xl p-4 sm:p-6 font-sans min-w-0">
-          <form onSubmit={handleSubmit} className="w-full">
-            <div className="flex items-center bg-white dark:bg-brand-ink border border-slate-300 dark:border-slate-800 rounded overflow-hidden shadow-inner focus-within:border-slate-500 dark:focus-within:border-[#00C853] transition-colors">
-              <input
-                type="text"
-                value={vin}
-                onChange={(e) => {
-                  setVin(e.target.value.toUpperCase())
-                  setError('')
-                }}
-                placeholder={t('vin_placeholder') ?? 'Part Number, Model, or 17-digit VIN'}
-                className="min-w-0 flex-1 h-12 px-4 outline-none bg-transparent text-slate-800 dark:text-slate-100 text-base font-bold tracking-wide"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if (availableModels.length > 0) {
-                    handleSearch(availableModels[0])
-                  }
-                }}
-                className="h-12 px-3.5 border-l border-slate-200 dark:border-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-                title="Catalog Index"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-              <button
-                type="submit"
-                disabled={searching || !vin.trim()}
-                className="h-12 px-6 bg-[#5cb85c] hover:bg-[#4cae4c] text-white flex items-center justify-center font-extrabold transition-colors disabled:opacity-65"
-              >
-                {searching ? (
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <Search className="w-5 h-5" />
-                )}
-              </button>
-            </div>
-
-            {error && <p className="text-red-600 text-xs mt-2 text-center font-semibold">{error}</p>}
-
-            {/* Clickable Examples */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs text-slate-500 mt-3 font-medium">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span>Example:</span>
-                {[
-                  { label: 'MALC281CBLM594521', val: 'MALC281CBLM594521' },
-                  { label: 'JTEEB71J31F007215', val: 'JTEEB71J31F007215' },
-                  { label: '4405060490', val: '4405060490' },
-                  { label: 'CRETA', val: 'CRETA' },
-                ].map((ex) => (
-                  <button
-                    key={ex.val}
-                    type="button"
-                    onClick={() => {
-                      setVin(ex.val)
-                      handleSearch(ex.val)
-                    }}
-                    className="text-blue-600 hover:underline cursor-pointer"
-                  >
-                    {ex.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-4 mt-2 sm:mt-0">
-                <a
-                  href="#how-to-order-video"
-                  onClick={scrollToVideo}
-                  className="text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <YoutubeIcon className="w-3.5 h-3.5 text-red-500 fill-current" />
-                  How to make order ?
-                </a>
-                <button
-                  type="button"
-                  onClick={() => alert('VIN (Vehicle Identification Number) is a 17-digit code found on your vehicle registration document, door pillar, or windshield edge.')}
-                  className="text-blue-600 hover:underline cursor-pointer"
-                >
-                  Where is VIN/Frame ?
-                </button>
-              </div>
-            </div>
-          </form>
+          <CatalogSearchForm state={readSearch(new URLSearchParams())} onSearch={state => navigate(`/parts-search?${writeSearch(state)}`)} />
         </section>
 
         <VehicleCoveragePanel coverage={coverage} />

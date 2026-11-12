@@ -13,6 +13,7 @@ import type {
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '',
+  timeout: 20000,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -72,7 +73,7 @@ export const catalogApi = {
    * 5. GET /api/vehicles/search
    * High-power unified REST query endpoint across all automotive dimensions.
    */
-  searchVehicles: async (params: VehicleSearchParams): Promise<PaginatedResponse<CatalogPartItem>> => {
+  searchVehicles: async (params: VehicleSearchParams, signal?: AbortSignal): Promise<PaginatedResponse<CatalogPartItem>> => {
     const cleanParams: Record<string, string | number | boolean> = {}
     for (const [key, value] of Object.entries(params)) {
       if (value !== undefined && value !== null && value !== '') {
@@ -81,7 +82,18 @@ export const catalogApi = {
     }
     const response = await api.get<PaginatedResponse<CatalogPartItem>>('/api/vehicles/search', {
       params: cleanParams,
+      signal,
     })
+    return response.data
+  },
+
+  getCategories: async () => {
+    const response = await api.get<import('@/lib/catalogSearch').SearchCategory[]>('/api/vehicles/categories')
+    return response.data
+  },
+
+  getPart: async (id: number) => {
+    const response = await api.get<CatalogPartItem>(`/api/vehicles/parts/${id}`)
     return response.data
   },
 

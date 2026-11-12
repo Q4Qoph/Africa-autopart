@@ -1,0 +1,1533 @@
+{
+  "startedUTC": "2026-11-12T12:05:45.952405+00:00",
+  "completedUTC": "2026-11-12T12:06:03.097685+00:00",
+  "results": [
+    {
+      "label": "Toyota Land Cruiser 70",
+      "vin": "JTEEB71J907020704",
+      "kind": "published-claim",
+      "suppliedYear": null,
+      "seed": "JTEEB71J31F007215",
+      "prefixMatchesSeed": true,
+      "prefix": "JTEEB71J",
+      "seedPrefix": "JTEEB71J",
+      "yearCode": "0",
+      "plantCode": "7",
+      "checksumExpected": "9",
+      "checksumActual": "9",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/JTEEB71J907020704?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "JTEEB71J907020704",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "JTE",
+            "vds": "EB71J",
+            "checkDigitChar": "9",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "7",
+            "serialNumber": "020704",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": "TOYOTA",
+              "model": "Land Cruiser",
+              "modelYear": null,
+              "manufacturer": "TOYOTA MOTOR CORPORATION",
+              "vehicleType": "MULTIPURPOSE PASSENGER VEHICLE (MPV)",
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": "STD",
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEEB71J907020704&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS&engineFamily=1HZ&steering=LHD&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 29984,
+              "vin": "JTEEB71J31F007215",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "LAND CRUISER",
+              "modelYear": "2019",
+              "vehicleSeries": "HZJ76L-RKMRS - LAND CRUISER 70 (2007-)",
+              "groupName": "Body Group",
+              "subgroupName": "FRONT BUMPER & BUMPER STAY",
+              "pnc": "9011912200",
+              "partNumber": "9011912200",
+              "partName": "**StdPart",
+              "quantity": null,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2007,
+              "compatibilityEndYear": 2026,
+              "fuel": "DIESEL",
+              "displacementCC": "4200 CC",
+              "engineFamily": "1HZ",
+              "engineType": "SOHC - IDI",
+              "transmission": "MANUAL - 5 SPEED 4WD",
+              "body": "WAGON - 5DR",
+              "marketSpec": "GEN - GENERAL COUNTRIES (CBU)",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 3744,
+          "totalPages": 3744
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Land Cruiser 70",
+      "vin": "JTEEB71JX07041318",
+      "kind": "published-claim",
+      "suppliedYear": null,
+      "seed": "JTEEB71J31F007215",
+      "prefixMatchesSeed": true,
+      "prefix": "JTEEB71J",
+      "seedPrefix": "JTEEB71J",
+      "yearCode": "0",
+      "plantCode": "7",
+      "checksumExpected": "X",
+      "checksumActual": "X",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/JTEEB71JX07041318?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "JTEEB71JX07041318",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "JTE",
+            "vds": "EB71J",
+            "checkDigitChar": "X",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "7",
+            "serialNumber": "041318",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": "TOYOTA",
+              "model": "Land Cruiser",
+              "modelYear": null,
+              "manufacturer": "TOYOTA MOTOR CORPORATION",
+              "vehicleType": "MULTIPURPOSE PASSENGER VEHICLE (MPV)",
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": "STD",
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEEB71JX07041318&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=LAND+CRUISER&vehicleSeries=HZJ76L-RKMRS&engineFamily=1HZ&steering=LHD&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 29984,
+              "vin": "JTEEB71J31F007215",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "LAND CRUISER",
+              "modelYear": "2019",
+              "vehicleSeries": "HZJ76L-RKMRS - LAND CRUISER 70 (2007-)",
+              "groupName": "Body Group",
+              "subgroupName": "FRONT BUMPER & BUMPER STAY",
+              "pnc": "9011912200",
+              "partNumber": "9011912200",
+              "partName": "**StdPart",
+              "quantity": null,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2007,
+              "compatibilityEndYear": 2026,
+              "fuel": "DIESEL",
+              "displacementCC": "4200 CC",
+              "engineFamily": "1HZ",
+              "engineType": "SOHC - IDI",
+              "transmission": "MANUAL - 5 SPEED 4WD",
+              "body": "WAGON - 5DR",
+              "marketSpec": "GEN - GENERAL COUNTRIES (CBU)",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 3744,
+          "totalPages": 3744
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Prado 3.0",
+      "vin": "JTEBH3FJ20K216810",
+      "kind": "published-claim",
+      "suppliedYear": 2020,
+      "seed": "JTEBH3FJ20K223806",
+      "prefixMatchesSeed": true,
+      "prefix": "JTEBH3FJ",
+      "seedPrefix": "JTEBH3FJ",
+      "yearCode": "0",
+      "plantCode": "K",
+      "checksumExpected": "2",
+      "checksumActual": "2",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/JTEBH3FJ20K216810?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "JTEBH3FJ20K216810",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "JTE",
+            "vds": "BH3FJ",
+            "checkDigitChar": "2",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "K",
+            "serialNumber": "216810",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": "TOYOTA",
+              "model": "Land Cruiser",
+              "modelYear": null,
+              "manufacturer": "TOYOTA MOTOR CORPORATION",
+              "vehicleType": "MULTIPURPOSE PASSENGER VEHICLE (MPV)",
+              "bodyClass": "Sport Utility Vehicle [SUV]/Multipurpose Vehicle [MPV]",
+              "engineCylinders": "4",
+              "displacementCC": "2000.0",
+              "fuelTypePrimary": "Gasoline",
+              "driveType": "4WD/4-Wheel Drive/4x4",
+              "trim": null,
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEBH3FJ20K216810&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=LAND+CRUISER+PRADO&vehicleSeries=KDJ150L-GKAEY&engineFamily=1KD-FTV&steering=LHD&pageSize=1&year=2020",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 8979,
+              "vin": "JTEBH3FJ20K223806",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "LAND CRUISER PRADO",
+              "modelYear": "2019",
+              "vehicleSeries": "KDJ150L-GKAEY - LAND CRUISER PRADO 150 (2017-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "0911160131",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2017,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "3000 CC",
+              "engineFamily": "1KD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL TURBO",
+              "transmission": "AUTO - 5 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GEN - GENERAL COUNTRIES",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 4423,
+          "totalPages": 4423
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Prado 3.0",
+      "vin": "JTEBH3FJ20K206276",
+      "kind": "published-claim",
+      "suppliedYear": 2019,
+      "seed": "JTEBH3FJ20K223806",
+      "prefixMatchesSeed": true,
+      "prefix": "JTEBH3FJ",
+      "seedPrefix": "JTEBH3FJ",
+      "yearCode": "0",
+      "plantCode": "K",
+      "checksumExpected": "2",
+      "checksumActual": "2",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/JTEBH3FJ20K206276?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "JTEBH3FJ20K206276",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "JTE",
+            "vds": "BH3FJ",
+            "checkDigitChar": "2",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "K",
+            "serialNumber": "206276",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": "TOYOTA",
+              "model": "Land Cruiser",
+              "modelYear": null,
+              "manufacturer": "TOYOTA MOTOR CORPORATION",
+              "vehicleType": "MULTIPURPOSE PASSENGER VEHICLE (MPV)",
+              "bodyClass": "Sport Utility Vehicle [SUV]/Multipurpose Vehicle [MPV]",
+              "engineCylinders": "4",
+              "displacementCC": "2000.0",
+              "fuelTypePrimary": "Gasoline",
+              "driveType": "4WD/4-Wheel Drive/4x4",
+              "trim": null,
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEBH3FJ20K206276&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=LAND+CRUISER+PRADO&vehicleSeries=KDJ150L-GKAEY&engineFamily=1KD-FTV&steering=LHD&pageSize=1&year=2019",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 8979,
+              "vin": "JTEBH3FJ20K223806",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "LAND CRUISER PRADO",
+              "modelYear": "2019",
+              "vehicleSeries": "KDJ150L-GKAEY - LAND CRUISER PRADO 150 (2017-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "0911160131",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2017,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "3000 CC",
+              "engineFamily": "1KD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL TURBO",
+              "transmission": "AUTO - 5 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GEN - GENERAL COUNTRIES",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 4423,
+          "totalPages": 4423
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Prado 2.8",
+      "vin": "JTEBR3FJ50K270518",
+      "kind": "published-claim",
+      "suppliedYear": 2023,
+      "seed": "JTEBR3FJX0K300676",
+      "prefixMatchesSeed": true,
+      "prefix": "JTEBR3FJ",
+      "seedPrefix": "JTEBR3FJ",
+      "yearCode": "0",
+      "plantCode": "K",
+      "checksumExpected": "5",
+      "checksumActual": "5",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/JTEBR3FJ50K270518?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "JTEBR3FJ50K270518",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "JTE",
+            "vds": "BR3FJ",
+            "checkDigitChar": "5",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "K",
+            "serialNumber": "270518",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": "TOYOTA",
+              "model": "Land Cruiser",
+              "modelYear": null,
+              "manufacturer": "TOYOTA MOTOR CORPORATION",
+              "vehicleType": "MULTIPURPOSE PASSENGER VEHICLE (MPV)",
+              "bodyClass": "Sport Utility Vehicle [SUV]/Multipurpose Vehicle [MPV]",
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": "4WD/4-Wheel Drive/4x4",
+              "trim": null,
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEBR3FJ50K270518&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=LAND+CRUISER+PRADO&vehicleSeries=J150&engineFamily=1GD-FTV&steering=LHD&pageSize=1&year=2023",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 18943,
+              "vin": "JTEBR3FJX0K300676",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "LAND CRUISER PRADO",
+              "modelYear": "2023",
+              "vehicleSeries": "J150 - LAND CRUISER PRADO 150 (2020-2024)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "VACUUM PIPING",
+              "pnc": "9099992002",
+              "partNumber": "9099992002",
+              "partName": "**StdPart",
+              "quantity": null,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2020,
+              "compatibilityEndYear": 2024,
+              "fuel": "DIESEL",
+              "displacementCC": "2800 CC",
+              "engineFamily": "1GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR",
+              "marketSpec": "GEN - GENERAL COUNTRIES",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 4305,
+          "totalPages": 4305
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Prado 2.8",
+      "vin": "JTEBR3FJ70K270620",
+      "kind": "published-claim",
+      "suppliedYear": 2023,
+      "seed": "JTEBR3FJX0K300676",
+      "prefixMatchesSeed": true,
+      "prefix": "JTEBR3FJ",
+      "seedPrefix": "JTEBR3FJ",
+      "yearCode": "0",
+      "plantCode": "K",
+      "checksumExpected": "7",
+      "checksumActual": "7",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/JTEBR3FJ70K270620?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "JTEBR3FJ70K270620",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "JTE",
+            "vds": "BR3FJ",
+            "checkDigitChar": "7",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "K",
+            "serialNumber": "270620",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": "TOYOTA",
+              "model": "Land Cruiser",
+              "modelYear": null,
+              "manufacturer": "TOYOTA MOTOR CORPORATION",
+              "vehicleType": "MULTIPURPOSE PASSENGER VEHICLE (MPV)",
+              "bodyClass": "Sport Utility Vehicle [SUV]/Multipurpose Vehicle [MPV]",
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": "4WD/4-Wheel Drive/4x4",
+              "trim": null,
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEBR3FJ70K270620&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=LAND+CRUISER+PRADO&vehicleSeries=J150&engineFamily=1GD-FTV&steering=LHD&pageSize=1&year=2023",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 18943,
+              "vin": "JTEBR3FJX0K300676",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "LAND CRUISER PRADO",
+              "modelYear": "2023",
+              "vehicleSeries": "J150 - LAND CRUISER PRADO 150 (2020-2024)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "VACUUM PIPING",
+              "pnc": "9099992002",
+              "partNumber": "9099992002",
+              "partName": "**StdPart",
+              "quantity": null,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2020,
+              "compatibilityEndYear": 2024,
+              "fuel": "DIESEL",
+              "displacementCC": "2800 CC",
+              "engineFamily": "1GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR",
+              "marketSpec": "GEN - GENERAL COUNTRIES",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 4305,
+          "totalPages": 4305
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Fortuner",
+      "vin": "MHFKB8FS1L0087491",
+      "kind": "synthetic",
+      "suppliedYear": 2019,
+      "seed": "MHFKB8FS8L0087472",
+      "prefixMatchesSeed": true,
+      "prefix": "MHFKB8FS",
+      "seedPrefix": "MHFKB8FS",
+      "yearCode": "L",
+      "plantCode": "0",
+      "checksumExpected": "1",
+      "checksumActual": "1",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFKB8FS1L0087491?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "MHFKB8FS1L0087491",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "MHF",
+            "vds": "KB8FS",
+            "checkDigitChar": "1",
+            "modelYearCode": "L",
+            "modelYear": 2020,
+            "plantCode": "0",
+            "serialNumber": "087491",
+            "make": null,
+            "nhtsa": {
+              "success": false,
+              "make": null,
+              "model": null,
+              "modelYear": null,
+              "manufacturer": null,
+              "vehicleType": null,
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": null,
+              "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+            },
+            "errors": [],
+            "alternateModelYear": 1990
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS1L0087491&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=FORTUNER&vehicleSeries=GUN155L-SDTSHV&engineFamily=2GD-FTV&steering=LHD&pageSize=1&year=2019",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 1,
+              "vin": "MHFKB8FS8L0087472",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "FORTUNER",
+              "modelYear": "2019",
+              "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K190",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2020,
+              "fuel": "DIESEL",
+              "displacementCC": "2400 CC",
+              "engineFamily": "2GD-FTV",
+              "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+              "transmission": "AUTO - 6 SPEED 4WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 8978,
+          "totalPages": 8978
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Hilux",
+      "vin": "AHTFK226203081823",
+      "kind": "synthetic",
+      "suppliedYear": 2013,
+      "seed": "AHTFK22G003081805",
+      "prefixMatchesSeed": false,
+      "prefix": "AHTFK226",
+      "seedPrefix": "AHTFK22G",
+      "yearCode": "0",
+      "plantCode": "3",
+      "checksumExpected": "3",
+      "checksumActual": "2",
+      "checksumMatches": false,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/AHTFK226203081823?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "AHTFK226203081823",
+            "isValidFormat": true,
+            "checkDigitValid": false,
+            "wmi": "AHT",
+            "vds": "FK226",
+            "checkDigitChar": "2",
+            "modelYearCode": "0",
+            "modelYear": null,
+            "plantCode": "3",
+            "serialNumber": "081823",
+            "make": "Toyota",
+            "nhtsa": {
+              "success": false,
+              "make": null,
+              "model": null,
+              "modelYear": null,
+              "manufacturer": null,
+              "vehicleType": null,
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": null,
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information; 11 - Incorrect Model Year - Position 10 does not match valid model year codes (I, O, Q, U, Z, 0). Decoded data may not be accurate.; 400 - Invalid Characters Present"
+            },
+            "errors": [
+              "Check digit does not match \u2014 VIN may be mistyped or non-North-American format.",
+              "Could not resolve model year from VIN."
+            ],
+            "alternateModelYear": null
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=AHTFK226203081823&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=HILUX&vehicleSeries=LAN25L-PRMDEN&engineFamily=5L-E&steering=LHD&pageSize=1&year=2013",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 13402,
+              "vin": "AHTFK22G003081805",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "HILUX",
+              "modelYear": "2013",
+              "vehicleSeries": "LAN25L-PRMDEN - HILUX (2011-2015)",
+              "groupName": "Tool/Engine/Fuel Group",
+              "subgroupName": "STANDARD TOOL",
+              "pnc": "09110",
+              "partNumber": "091110K081",
+              "partName": "JACK ASSY",
+              "quantity": 1,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2011,
+              "compatibilityEndYear": 2015,
+              "fuel": "DIESEL",
+              "displacementCC": "3000 CC",
+              "engineFamily": "5L-E",
+              "engineType": "SOHC - IDI NATURALLY ASPIRATED",
+              "transmission": "MANUAL - 5 SPEED 4WD",
+              "body": "DOUBLE CAB PICKUP - 4DR 5P",
+              "marketSpec": "SA - SOUTH AFRICA (CBU)",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 3271,
+          "totalPages": 3271
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Toyota Vios",
+      "vin": "MHFB29F36H2016927",
+      "kind": "synthetic",
+      "suppliedYear": 2017,
+      "seed": "MHFB29F34H2016909",
+      "prefixMatchesSeed": true,
+      "prefix": "MHFB29F3",
+      "seedPrefix": "MHFB29F3",
+      "yearCode": "H",
+      "plantCode": "2",
+      "checksumExpected": "6",
+      "checksumActual": "6",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MHFB29F36H2016927?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "MHFB29F36H2016927",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "MHF",
+            "vds": "B29F3",
+            "checkDigitChar": "6",
+            "modelYearCode": "H",
+            "modelYear": 2017,
+            "plantCode": "2",
+            "serialNumber": "016927",
+            "make": null,
+            "nhtsa": {
+              "success": false,
+              "make": null,
+              "model": null,
+              "modelYear": null,
+              "manufacturer": null,
+              "vehicleType": null,
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": null,
+              "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+            },
+            "errors": [],
+            "alternateModelYear": 1987
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFB29F36H2016927&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=TOYOTA&model=VIOS&vehicleSeries=NSP15%23&engineFamily=2NR-FE&steering=LHD&pageSize=1&year=2017",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 23248,
+              "vin": "MHFB29F34H2016909",
+              "oem": "TOYOTA",
+              "make": "TOYOTA",
+              "model": "VIOS",
+              "modelYear": "2017",
+              "vehicleSeries": "NSP15# - YARIS / VIOS / LIMO (2016-2017)",
+              "groupName": "Power Chain/Chassis Group",
+              "subgroupName": "BRAKE TUBE & CLAMP",
+              "pnc": "90119T0199",
+              "partNumber": "90119T0199",
+              "partName": "**StdPart",
+              "quantity": null,
+              "replacePart": null,
+              "steering": "LHD",
+              "compatibilityStartYear": 2016,
+              "compatibilityEndYear": 2017,
+              "fuel": "GASOLINE - UNLEADED",
+              "displacementCC": "1500 CC",
+              "engineFamily": "2NR-FE",
+              "engineType": "DOHC - DUAL VVT-I",
+              "transmission": "CVT - 2WD",
+              "body": "SEDAN - 4DR",
+              "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+              "imageUrl": null,
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 2309,
+          "totalPages": 2309
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Hyundai Creta General",
+      "vin": "MALC281C4LM594545",
+      "kind": "synthetic",
+      "suppliedYear": 2020,
+      "seed": "MALC281CBLM594521",
+      "prefixMatchesSeed": true,
+      "prefix": "MALC281C",
+      "seedPrefix": "MALC281C",
+      "yearCode": "L",
+      "plantCode": "M",
+      "checksumExpected": "5",
+      "checksumActual": "4",
+      "checksumMatches": false,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MALC281C4LM594545?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "MALC281C4LM594545",
+            "isValidFormat": true,
+            "checkDigitValid": false,
+            "wmi": "MAL",
+            "vds": "C281C",
+            "checkDigitChar": "4",
+            "modelYearCode": "L",
+            "modelYear": 1990,
+            "plantCode": "M",
+            "serialNumber": "594545",
+            "make": null,
+            "nhtsa": {
+              "success": false,
+              "make": null,
+              "model": null,
+              "modelYear": null,
+              "manufacturer": null,
+              "vehicleType": null,
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": null,
+              "errorText": "1 - Check Digit (9th position) does not calculate properly; 7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+            },
+            "errors": [
+              "Check digit does not match \u2014 VIN may be mistyped or non-North-American format."
+            ],
+            "alternateModelYear": 2020
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MALC281C4LM594545&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=HYUNDAI&model=CRETA&vehicleSeries=IGENPA018&engineFamily=GAMMA&steering=LHD&pageSize=1&year=2020",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 16673,
+              "vin": "MALC281CBLM594521",
+              "oem": "HYUNDAI",
+              "make": "HYUNDAI",
+              "model": "CRETA",
+              "modelYear": "2020",
+              "vehicleSeries": "IGENPA018 - CRETA 18 (2018-2021)",
+              "groupName": "Engine",
+              "subgroupName": "09-091 - Service Tools",
+              "pnc": "09110",
+              "partNumber": "09110A0000",
+              "partName": "Jack Assembly",
+              "quantity": 1,
+              "replacePart": "[ ]",
+              "steering": "LHD",
+              "compatibilityStartYear": 2018,
+              "compatibilityEndYear": 2021,
+              "fuel": "GASOLINE - UNLEADED",
+              "displacementCC": "1600 CC",
+              "engineFamily": "GAMMA",
+              "engineType": "DOHC - MPI",
+              "transmission": "AUTO - 6 SPEED 2WD",
+              "body": "WAGON - 5DR 5P",
+              "marketSpec": "GEN - GENERAL SPEC",
+              "imageUrl": "https://pub-fe521ed9c6f443aa86b837606ac2fbf2.r2.dev/africaautopart/153294.png",
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 2270,
+          "totalPages": 2270
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Hyundai Creta Middle East",
+      "vin": "MALC281C9LM591356",
+      "kind": "synthetic",
+      "suppliedYear": 2020,
+      "seed": "MALC281C7LM591338",
+      "prefixMatchesSeed": true,
+      "prefix": "MALC281C",
+      "seedPrefix": "MALC281C",
+      "yearCode": "L",
+      "plantCode": "M",
+      "checksumExpected": "9",
+      "checksumActual": "9",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/MALC281C9LM591356?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "MALC281C9LM591356",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "MAL",
+            "vds": "C281C",
+            "checkDigitChar": "9",
+            "modelYearCode": "L",
+            "modelYear": 1990,
+            "plantCode": "M",
+            "serialNumber": "591356",
+            "make": null,
+            "nhtsa": {
+              "success": false,
+              "make": null,
+              "model": null,
+              "modelYear": null,
+              "manufacturer": null,
+              "vehicleType": null,
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": null,
+              "errorText": "7 - Manufacturer is not registered with NHTSA for sale or importation in the U.S. for use on U.S roads; Please contact the manufacturer directly for more information"
+            },
+            "errors": [],
+            "alternateModelYear": 2020
+          },
+          "matchedInCatalog": false,
+          "parts": {
+            "items": [],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 0,
+            "totalPages": 0
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MALC281C9LM591356&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=HYUNDAI&model=CRETA&vehicleSeries=IMESPA018&engineFamily=GAMMA&steering=LHD&pageSize=1&year=2020",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 33728,
+              "vin": "MALC281C7LM591338",
+              "oem": "HYUNDAI",
+              "make": "HYUNDAI",
+              "model": "CRETA",
+              "modelYear": "2020",
+              "vehicleSeries": "IMESPA018 - CRETA 18 (2018-2020)",
+              "groupName": "Engine",
+              "subgroupName": "09-091 - Service Tools",
+              "pnc": "09110",
+              "partNumber": "09110A0000",
+              "partName": "Jack Assembly",
+              "quantity": 1,
+              "replacePart": "[ ]",
+              "steering": "LHD",
+              "compatibilityStartYear": 2018,
+              "compatibilityEndYear": 2020,
+              "fuel": "GASOLINE - UNLEADED",
+              "displacementCC": "1600 CC",
+              "engineFamily": "GAMMA",
+              "engineType": "DOHC - MPI",
+              "transmission": "AUTO - 6 SPEED 2WD",
+              "body": "WAGON - 5DR 5P",
+              "marketSpec": "MES - MIDDLE EAST SPEC",
+              "imageUrl": "https://pub-fe521ed9c6f443aa86b837606ac2fbf2.r2.dev/africaautopart/62472.png",
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 2279,
+          "totalPages": 2279
+        },
+        "error": ""
+      }
+    },
+    {
+      "label": "Hyundai Santa Fe",
+      "vin": "KMHS281D0LU290963",
+      "kind": "synthetic",
+      "suppliedYear": 2020,
+      "seed": "KMHS281D9LU290945",
+      "prefixMatchesSeed": true,
+      "prefix": "KMHS281D",
+      "seedPrefix": "KMHS281D",
+      "yearCode": "L",
+      "plantCode": "U",
+      "checksumExpected": "0",
+      "checksumActual": "0",
+      "checksumMatches": true,
+      "decoder": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/vin/KMHS281D0LU290963?page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "decoded": {
+            "vin": "KMHS281D0LU290963",
+            "isValidFormat": true,
+            "checkDigitValid": true,
+            "wmi": "KMH",
+            "vds": "S281D",
+            "checkDigitChar": "0",
+            "modelYearCode": "L",
+            "modelYear": 1990,
+            "plantCode": "U",
+            "serialNumber": "290963",
+            "make": "Hyundai",
+            "nhtsa": {
+              "success": false,
+              "make": null,
+              "model": null,
+              "modelYear": "1990",
+              "manufacturer": "HYUNDAI MOTOR CO",
+              "vehicleType": "PASSENGER CAR",
+              "bodyClass": null,
+              "engineCylinders": null,
+              "displacementCC": null,
+              "fuelTypePrimary": null,
+              "driveType": null,
+              "trim": null,
+              "errorText": "5 - VIN has errors in few positions; 14 - Unable to provide information for some of the characters in the VIN, based on the manufacturer submission."
+            },
+            "errors": [],
+            "alternateModelYear": 2020
+          },
+          "matchedInCatalog": true,
+          "parts": {
+            "items": [
+              {
+                "id": 16673,
+                "vin": "MALC281CBLM594521",
+                "oem": "HYUNDAI",
+                "make": "HYUNDAI",
+                "model": "CRETA",
+                "modelYear": "2020",
+                "vehicleSeries": "IGENPA018 - CRETA 18 (2018-2021)",
+                "groupName": "Engine",
+                "subgroupName": "09-091 - Service Tools",
+                "pnc": "09110",
+                "partNumber": "09110A0000",
+                "partName": "Jack Assembly",
+                "quantity": 1,
+                "replacePart": "[ ]",
+                "steering": "LHD",
+                "compatibilityStartYear": 2018,
+                "compatibilityEndYear": 2021,
+                "fuel": "GASOLINE - UNLEADED",
+                "displacementCC": "1600 CC",
+                "engineFamily": "GAMMA",
+                "engineType": "DOHC - MPI",
+                "transmission": "AUTO - 6 SPEED 2WD",
+                "body": "WAGON - 5DR 5P",
+                "marketSpec": "GEN - GENERAL SPEC",
+                "imageUrl": "https://pub-fe521ed9c6f443aa86b837606ac2fbf2.r2.dev/africaautopart/153294.png",
+                "price": 5.0
+              }
+            ],
+            "page": 1,
+            "pageSize": 1,
+            "totalCount": 7300,
+            "totalPages": 7300
+          }
+        },
+        "error": ""
+      },
+      "exact": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=KMHS281D0LU290963&page=1&pageSize=1",
+        "http": "200",
+        "body": {
+          "items": [],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 0,
+          "totalPages": 0
+        },
+        "error": ""
+      },
+      "configuration": {
+        "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?make=HYUNDAI&model=SANTA+FE&vehicleSeries=KMESPS118&engineFamily=THETA+2&steering=LHD&pageSize=1&year=2020",
+        "http": "200",
+        "body": {
+          "items": [
+            {
+              "id": 36007,
+              "vin": "KMHS281D9LU290945",
+              "oem": "HYUNDAI",
+              "make": "HYUNDAI",
+              "model": "SANTA FE",
+              "modelYear": "2020",
+              "vehicleSeries": "KMESPS118 - SANTA FE 18 (2018-2020)",
+              "groupName": "Engine",
+              "subgroupName": "09-091 - Service Tools",
+              "pnc": "09110",
+              "partNumber": "091102W000",
+              "partName": "Jack Assembly",
+              "quantity": 1,
+              "replacePart": "[ ]",
+              "steering": "LHD",
+              "compatibilityStartYear": 2018,
+              "compatibilityEndYear": 2020,
+              "fuel": "GASOLINE - UNLEADED",
+              "displacementCC": "2400 CC",
+              "engineFamily": "THETA 2",
+              "engineType": "DOHC - GDI",
+              "transmission": "AUTO - 6 SPEED 2WD",
+              "body": "WAGON - 5DR 7P",
+              "marketSpec": "MES - MIDDLE EAST SPEC",
+              "imageUrl": "https://pub-fe521ed9c6f443aa86b837606ac2fbf2.r2.dev/africaautopart/133839.png",
+              "price": 5.0
+            }
+          ],
+          "page": 1,
+          "pageSize": 1,
+          "totalCount": 2751,
+          "totalPages": 2751
+        },
+        "error": ""
+      }
+    }
+  ],
+  "controls": [
+    {
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MHFKB8FS8L0087472&pageSize=1",
+      "http": "200",
+      "body": {
+        "items": [
+          {
+            "id": 1,
+            "vin": "MHFKB8FS8L0087472",
+            "oem": "TOYOTA",
+            "make": "TOYOTA",
+            "model": "FORTUNER",
+            "modelYear": "2019",
+            "vehicleSeries": "GUN155L-SDTSHV - FORTUNER (2016-2020)",
+            "groupName": "Tool/Engine/Fuel Group",
+            "subgroupName": "STANDARD TOOL",
+            "pnc": "09110",
+            "partNumber": "091110K190",
+            "partName": "JACK ASSY",
+            "quantity": 1,
+            "replacePart": null,
+            "steering": "LHD",
+            "compatibilityStartYear": 2016,
+            "compatibilityEndYear": 2020,
+            "fuel": "DIESEL",
+            "displacementCC": "2400 CC",
+            "engineFamily": "2GD-FTV",
+            "engineType": "DOHC - D-4D COMMON RAIL VNT TURBO",
+            "transmission": "AUTO - 6 SPEED 4WD",
+            "body": "WAGON - 5DR 7P",
+            "marketSpec": "GCC - GULF COOPERATION COUNCIL",
+            "imageUrl": null,
+            "price": 5.0
+          }
+        ],
+        "page": 1,
+        "pageSize": 1,
+        "totalCount": 4489,
+        "totalPages": 4489
+      },
+      "error": ""
+    },
+    {
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=JTEBH3FJ20K223806&pageSize=1",
+      "http": "200",
+      "body": {
+        "items": [
+          {
+            "id": 8979,
+            "vin": "JTEBH3FJ20K223806",
+            "oem": "TOYOTA",
+            "make": "TOYOTA",
+            "model": "LAND CRUISER PRADO",
+            "modelYear": "2019",
+            "vehicleSeries": "KDJ150L-GKAEY - LAND CRUISER PRADO 150 (2017-2020)",
+            "groupName": "Tool/Engine/Fuel Group",
+            "subgroupName": "STANDARD TOOL",
+            "pnc": "09110",
+            "partNumber": "0911160131",
+            "partName": "JACK ASSY",
+            "quantity": 1,
+            "replacePart": null,
+            "steering": "LHD",
+            "compatibilityStartYear": 2017,
+            "compatibilityEndYear": 2020,
+            "fuel": "DIESEL",
+            "displacementCC": "3000 CC",
+            "engineFamily": "1KD-FTV",
+            "engineType": "DOHC - D-4D COMMON RAIL TURBO",
+            "transmission": "AUTO - 5 SPEED 4WD",
+            "body": "WAGON - 5DR 7P",
+            "marketSpec": "GEN - GENERAL COUNTRIES",
+            "imageUrl": null,
+            "price": 5.0
+          }
+        ],
+        "page": 1,
+        "pageSize": 1,
+        "totalCount": 4423,
+        "totalPages": 4423
+      },
+      "error": ""
+    },
+    {
+      "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/search?vin=MALC281CBLM594521&pageSize=1",
+      "http": "200",
+      "body": {
+        "items": [
+          {
+            "id": 16673,
+            "vin": "MALC281CBLM594521",
+            "oem": "HYUNDAI",
+            "make": "HYUNDAI",
+            "model": "CRETA",
+            "modelYear": "2020",
+            "vehicleSeries": "IGENPA018 - CRETA 18 (2018-2021)",
+            "groupName": "Engine",
+            "subgroupName": "09-091 - Service Tools",
+            "pnc": "09110",
+            "partNumber": "09110A0000",
+            "partName": "Jack Assembly",
+            "quantity": 1,
+            "replacePart": "[ ]",
+            "steering": "LHD",
+            "compatibilityStartYear": 2018,
+            "compatibilityEndYear": 2021,
+            "fuel": "GASOLINE - UNLEADED",
+            "displacementCC": "1600 CC",
+            "engineFamily": "GAMMA",
+            "engineType": "DOHC - MPI",
+            "transmission": "AUTO - 6 SPEED 2WD",
+            "body": "WAGON - 5DR 5P",
+            "marketSpec": "GEN - GENERAL SPEC",
+            "imageUrl": "https://pub-fe521ed9c6f443aa86b837606ac2fbf2.r2.dev/africaautopart/153294.png",
+            "price": 5.0
+          }
+        ],
+        "page": 1,
+        "pageSize": 1,
+        "totalCount": 2270,
+        "totalPages": 2270
+      },
+      "error": ""
+    }
+  ]
+}

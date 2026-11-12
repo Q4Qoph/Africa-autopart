@@ -1,9 +1,10 @@
+import { PartImage } from '@/components/catalog/PartImage'
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { partsApi } from '@/api/partsApi'
 import { useExternalCart } from '@/context/ExternalCartContext'
-import { ShoppingCart, ArrowLeft, ShieldCheck, Tag, Loader2, Award, Layers } from 'lucide-react'
+import { ShoppingCart, ArrowLeft, ShieldCheck, Loader2, Award, Layers } from 'lucide-react'
 
 export default function PartDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -102,22 +103,7 @@ export default function PartDetailPage() {
           
           {/* Left Column: Picture frame */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center bg-white dark:bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200 dark:border-slate-800 aspect-square max-h-[500px] shadow-xs">
-            {part.imageUrl ? (
-              <img
-                src={part.imageUrl}
-                alt={part.partName}
-                className="w-full h-full object-contain max-h-[400px] hover:scale-105 transition-transform duration-300"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    'https://placehold.co/400x400/e2e8f0/475569?text=No+Image'
-                }}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center text-slate-300 dark:text-slate-700">
-                <Tag className="w-20 h-20 mb-3 stroke-[1.1]" />
-                <span className="text-xs font-mono uppercase tracking-widest">Image Unavailable</span>
-              </div>
-            )}
+            <PartImage src={part.imageUrl} alt={part.partName} className="h-full max-h-96 w-full object-contain" />
           </div>
 
           {/* Right Column: Title, pricing details and dynamic specs */}

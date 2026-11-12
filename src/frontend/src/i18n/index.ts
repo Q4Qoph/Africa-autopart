@@ -1,3 +1,4 @@
+import searchMessages from './searchMessages'
 // src/frontend/src/i18n/index.ts
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
@@ -64,6 +65,7 @@ i18n
     resources: {
       en: {
         common: enCommon,
+        search: searchMessages.en,
         nav: enNav,
         home: enHome,
         auth: enAuth,
@@ -77,6 +79,7 @@ i18n
       },
       fr: {
         common: frCommon,
+        search: searchMessages.fr,
         nav: frNav,
         home: frHome,
         auth: frAuth,
@@ -90,6 +93,7 @@ i18n
       },
       am: {
         common: amCommon,
+        search: searchMessages.am,
         nav: amNav,
         home: amHome,
         auth: amAuth,
@@ -103,6 +107,7 @@ i18n
       },
       ar: {
         common: arCommon,
+        search: searchMessages.ar,
         nav: arNav,
         home: arHome,
         auth: arAuth,
