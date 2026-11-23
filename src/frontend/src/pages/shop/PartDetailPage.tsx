@@ -1,3 +1,4 @@
+import { formatCheckoutPrice } from '@/lib/checkoutPrice'
 import { PartImage } from '@/components/catalog/PartImage'
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -27,17 +28,19 @@ export default function PartDetailPage() {
     staleTime: 10 * 60 * 1000, // 10 minutes cache
   })
 
+  const price = formatCheckoutPrice(part?.price)
+
   const handleQuantityChange = (val: number) => {
     if (val < 1) return
     setQuantity(val)
   }
 
   const handleAddToCart = () => {
-    if (!part) return
+    if (!part || !price) return
     addItem({
       name: part.partName,
       partNumber: part.partCode,
-      price: `$${(part.price ?? 0).toFixed(2)}`,
+      price,
       originalPrice: '',
       supplier: part.supplier,
       availability: true,
@@ -123,9 +126,8 @@ export default function PartDetailPage() {
               </h1>
 
               <div className="flex items-baseline gap-1 py-2 text-[#00C853]">
-                <span className="text-sm font-mono font-bold">$</span>
-                <span className="text-3xl font-black tracking-tight">{(part.price ?? 0).toFixed(2)}</span>
-                <span className="text-xs text-slate-400 dark:text-slate-500 font-mono ml-2">Excl. Shipping costs</span>
+                <span className="text-3xl font-black tracking-tight">{price ?? 'Price unavailable'}</span>
+                {price && <span className="text-xs text-slate-400 dark:text-slate-500 font-mono ml-2">Excl. Shipping costs</span>}
               </div>
             </div>
 
@@ -151,7 +153,8 @@ export default function PartDetailPage() {
 
               <button
                 onClick={handleAddToCart}
-                className="flex-grow w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] font-extrabold rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
+                disabled={!price}
+                className="flex-grow w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-[#00C853] hover:bg-[#39FF88] text-[#07110A] font-extrabold rounded-xl transition-all duration-200 disabled:opacity-50 shadow-lg shadow-emerald-500/20 active:scale-[0.98]"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {addedFeedback ? 'Added to Cart!' : 'Add to Cart'}

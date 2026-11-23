@@ -15,6 +15,7 @@ export interface CatalogPartItem {
   pnc: string | null
   partNumber: string
   partName: string
+  price?: number | null
   quantity: number
   replacePart: string | null
   steering?: string | null

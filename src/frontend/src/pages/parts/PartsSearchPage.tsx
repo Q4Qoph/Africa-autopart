@@ -2,7 +2,7 @@ import { PartImage } from '@/components/catalog/PartImage'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useLocation, useParams, useSearchParams, Link } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams, Link } from 'react-router-dom'
 import {
   Package,
   X,
@@ -28,6 +28,8 @@ import { useCatalogSearch } from '@/hooks/useCatalogSearch'
 import { CatalogSearchForm } from '@/components/catalog/CatalogSearchForm'
 import { useTranslation } from 'react-i18next'
 import type { CatalogPartItem } from '@/types/catalog'
+import { useExternalCart } from '@/context/ExternalCartContext'
+import { formatCheckoutPrice } from '@/lib/checkoutPrice'
 import { cn } from '@/lib/utils'
 import { getBrandLogoPath } from '@/lib/brandUtils'
 import {
@@ -248,6 +250,8 @@ const getPageNumbers = (current: number, total: number) => {
 
 export default function PartsSearchPage({ browseAll = false }: { browseAll?: boolean }) {
   const { t } = useTranslation('search')
+  const navigate = useNavigate()
+  const { addItem } = useExternalCart()
   const location = useLocation()
   const route = useParams<{ make?: string; model?: string }>()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -302,6 +306,24 @@ export default function PartsSearchPage({ browseAll = false }: { browseAll?: boo
     staleTime: 300_000, retry: false,
   })
   const selectedPart = detail.data || selectedPreview
+  const selectedPrice = formatCheckoutPrice(selectedPart?.price)
+
+  function addSelectedPartToCart() {
+    if (!selectedPart || !selectedPrice) return
+
+    addItem({
+      name: selectedPart.partName,
+      partNumber: selectedPart.partNumber,
+      price: selectedPrice,
+      isEstimated: true,
+      originalPrice: '',
+      supplier: selectedPart.oem || selectedPart.make || '',
+      availability: false,
+      location: selectedPart.model || '',
+      imageURL: selectedPart.imageUrl || '',
+    })
+    navigate('/cart')
+  }
 
   function handlePartClick(part: CatalogPartItem, idx: number) {
     setSelectedPart(part)
@@ -629,6 +651,7 @@ export default function PartsSearchPage({ browseAll = false }: { browseAll?: boo
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                   {displayParts.map((part, index) => {
+                    const price = formatCheckoutPrice(part.price)
                     return (
                       <div
                         key={`${part.id}-${part.partNumber}-${index}`}
@@ -655,6 +678,12 @@ export default function PartsSearchPage({ browseAll = false }: { browseAll?: boo
                           {part.groupName && (
                             <span className="text-[10px] text-slate-400 mt-1 font-semibold truncate block">
                               {part.groupName} {part.subgroupName ? `› ${part.subgroupName}` : ''}
+                            </span>
+                          )}
+                          {price && (
+                            <span className="mt-2 flex flex-wrap items-baseline gap-x-2">
+                              <span className="text-sm font-bold">{price}</span>
+                              <em className="text-xs text-slate-600 dark:text-slate-300">{t('estimateNote')}</em>
                             </span>
                           )}
                           {part.replacePart && part.replacePart !== '[ ]' && (
@@ -1029,10 +1058,20 @@ export default function PartsSearchPage({ browseAll = false }: { browseAll?: boo
                 {/* Bottom Pricing & Action */}
                 <div>
                   {detail.isError && <p role="alert" className="mb-3 text-sm text-red-600">{t('partError')}</p>}
-                  <p className="mb-3 text-sm text-slate-500">{t('priceNote')}</p>
+                  {selectedPrice ? (
+                    <div className="mb-3">
+                      <div className="mb-2 flex flex-wrap items-baseline gap-x-2">
+                        <span className="text-xl font-bold">{selectedPrice}</span>
+                        <em className="text-xs text-slate-600 dark:text-slate-300">{t('estimateNote')}</em>
+                      </div>
+                      <button type="button" onClick={addSelectedPartToCart} className="min-h-12 w-full rounded-lg bg-emerald-600 px-3 text-sm font-bold text-white hover:bg-emerald-700">
+                        {t('addToCart')}
+                      </button>
+                    </div>
+                  ) : <p className="mb-3 text-sm text-slate-500">{t('priceNote')}</p>}
                   <Link
                     to={`/requests/new?${new URLSearchParams({ vin: requestedVin, make: state.make || selectedPart.make || selectedPart.oem || '', model: state.model || '', year: state.year, partNumber: selectedPart.partNumber, partName: selectedPart.partName })}`}
-                    className="flex min-h-12 items-center justify-center rounded-lg bg-emerald-600 px-3 text-center text-sm font-bold text-white hover:bg-emerald-700"
+                    className={cn("flex min-h-12 items-center justify-center rounded-lg px-3 text-center text-sm font-bold", selectedPrice ? "text-emerald-700 underline dark:text-emerald-400" : "bg-emerald-600 text-white hover:bg-emerald-700")}
                   >{t('quotation')}</Link>
                 </div>
               </div>

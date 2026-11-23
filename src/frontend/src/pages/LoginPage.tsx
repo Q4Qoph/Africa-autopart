@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -21,6 +21,7 @@ type FormValues = z.infer<typeof schema>
 export default function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { t } = useTranslation('auth')
   const [apiError, setApiError] = useState('')
 
@@ -43,7 +44,7 @@ export default function LoginPage() {
       login(data)
       if (data.role === UserRole.Admin) navigate('/admin')
       else if (data.role === UserRole.Supplier) navigate('/supplier/dashboard')
-      else navigate('/dashboard')
+      else navigate(searchParams.get('returnTo') === '/cart' ? '/cart' : '/dashboard', { replace: true })
     } catch {
       setApiError(t('login_error'))
     }

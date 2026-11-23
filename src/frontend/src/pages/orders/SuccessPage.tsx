@@ -1,5 +1,6 @@
 // src/frontend/src/pages/orders/SuccessPage.tsx
 import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/context/AuthContext'
@@ -9,29 +10,33 @@ import { paymentApi } from '@/api/paymentApi'
 export default function SuccessPage() {
   const { auth } = useAuth()
   const { t } = useTranslation('orders')
-  const [status, setStatus] = useState<'verifying' | 'success' | 'failed'>('verifying')
+  const [payment] = useState(() => ({
+    sessionId: sessionStorage.getItem('pendingStripeSessionId'),
+    isNew: sessionStorage.getItem('isNewOrder') === 'true',
+  }))
+  const { isSuccess, isError } = useQuery({
+    queryKey: ['stripe-validation', payment.sessionId, payment.isNew, auth?.userId],
+    enabled: Boolean(payment.sessionId && auth),
+    retry: false,
+    staleTime: Infinity,
+    queryFn: async () => {
+      if (!payment.sessionId || !auth) throw new Error('Missing checkout session.')
+      return payment.isNew
+        ? (await paymentApi.validateNewPayment(payment.sessionId, auth.token)).data
+        : (await paymentApi.validatePayment(payment.sessionId, auth.token)).data
+    },
+  })
+  const status = !payment.sessionId || !auth || isError
+    ? 'failed'
+    : isSuccess ? 'success' : 'verifying'
 
   useEffect(() => {
-    const sessionId = sessionStorage.getItem('pendingStripeSessionId')
-    if (!sessionId || !auth) {
-      setStatus('failed')
-      return
-    }
+    if (!isSuccess || sessionStorage.getItem('pendingStripeSessionId') !== payment.sessionId) return
 
-    const isNew = sessionStorage.getItem('isNewOrder') === 'true'
-
-    // Clear immediately so it can’t be reused
     sessionStorage.removeItem('pendingStripeSessionId')
+    sessionStorage.removeItem('pendingOrderId')
     sessionStorage.removeItem('isNewOrder')
-
-    const validatePromise = isNew
-      ? paymentApi.validateNewPayment(sessionId, auth.token)
-      : paymentApi.validatePayment(sessionId, auth.token)
-
-    validatePromise
-      .then(() => setStatus('success'))
-      .catch(() => setStatus('failed'))
-  }, [auth])
+  }, [isSuccess, payment.sessionId])
 
   return (
     <div className="flex-grow font-sans text-[#07110A] dark:text-[#E8F0E9]">

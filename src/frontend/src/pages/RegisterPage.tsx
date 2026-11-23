@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -21,6 +21,8 @@ type FormValues = z.infer<typeof schema>
 
 export default function RegisterPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const fromCheckout = searchParams.get('returnTo') === '/cart'
   const { t } = useTranslation('auth')
   const [apiError, setApiError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -41,6 +43,10 @@ export default function RegisterPage() {
     setApiError('')
     try {
       await userApi.register(values)
+      if (fromCheckout) {
+        navigate('/cart', { replace: true })
+        return
+      }
       setSuccess(true)
       setTimeout(() => navigate('/login'), 2000)
     } catch {
@@ -218,7 +224,7 @@ export default function RegisterPage() {
               <div className="mt-6 pt-6 border-t border-[rgba(0,0,0,0.07)] dark:border-[rgba(255,255,255,0.06)] space-y-3 text-center">
                 <p className="text-sm text-[#4A6B50] dark:text-[#7A9A80]">
                   {t('register_already_have')}{' '}
-                  <Link to="/login" className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
+                  <Link to={fromCheckout ? '/cart' : '/login'} className="text-[#00C853] hover:text-[#39FF88] font-medium transition-colors">
                     {t('register_sign_in')}
                   </Link>
                 </p>

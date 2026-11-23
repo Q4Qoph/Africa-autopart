@@ -1,5 +1,6 @@
 const en = {
   catalogShop: 'Shop catalog', browseAll: 'Browse all catalog records',
+  estimateNote: 'Estimated price in USD.', addToCart: 'Add to cart',
   catalogQuantity: 'Quantity in catalog',
   groupedMakes: 'Keyword results are grouped by vehicle make; sorting applies within each make.',
   diagramUnavailable: 'Diagram unavailable',
@@ -13,6 +14,7 @@ const en = {
 type Messages = typeof en
 const fr: Messages = {
   catalogShop: 'Catalogue de la boutique', browseAll: 'Parcourir toutes les entrées du catalogue',
+  estimateNote: 'Prix estimatif en USD.', addToCart: 'Ajouter au panier',
   catalogQuantity: 'Quantité dans le catalogue',
   groupedMakes: 'Les résultats sont regroupés par marque ; le tri s’applique dans chaque marque.',
   diagramUnavailable: 'Schéma indisponible',
@@ -21,6 +23,7 @@ const fr: Messages = {
 }
 const ar: Messages = {
   catalogShop: 'كتالوج المتجر', browseAll: 'تصفح جميع سجلات الكتالوج',
+  estimateNote: 'السعر تقديري بالدولار الأمريكي.', addToCart: 'أضف إلى السلة',
   catalogQuantity: 'الكمية في الكتالوج',
   groupedMakes: 'نتائج الكلمات مجمعة حسب ماركة المركبة، والترتيب داخل كل ماركة.',
   diagramUnavailable: 'المخطط غير متاح',
@@ -29,6 +32,7 @@ const ar: Messages = {
 }
 const am: Messages = {
   catalogShop: 'የሱቅ ካታሎግ', browseAll: 'ሁሉንም የካታሎግ መዝገቦች እይ',
+  estimateNote: 'ግምታዊ ዋጋ በአሜሪካ ዶላር።', addToCart: 'ወደ ቅርጫት አክል',
   catalogQuantity: 'በካታሎግ ያለው ብዛት',
   groupedMakes: 'የቃል ፍለጋ ውጤቶች በብራንድ ይመደባሉ፤ ቅደም ተከተል በእያንዳንዱ ብራንድ ውስጥ ነው።',
   diagramUnavailable: 'ስዕሉ አይገኝም',

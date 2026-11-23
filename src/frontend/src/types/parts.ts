@@ -57,6 +57,7 @@ export interface PartSearchRequest {
 // ─── Grouped parts search response ──────────────────────────────────────────
 
 export interface SearchPart {
+  isEstimated?: boolean
   name: string
   partNumber: string
   price: string
