@@ -155,6 +155,27 @@ export function CatalogDiagrams({ onClose, customerVin, choices }: {
   )
 }
 
+type DetectedSheet = {
+  width: number
+  height: number
+  labels: { pnc: string; box: number[] }[]
+}
+
+async function loadDetectedSheet(url: string) {
+  const filename = url.slice(imageOrigin.length)
+  if (!url.startsWith(imageOrigin) || !/^\d+\.png$/.test(filename)) return null
+  const { default: index } = await import('@/data/detectedPncRegions.json')
+  const sheet = (index as Record<string, DetectedSheet>)[filename]
+  if (!sheet) return null
+
+  // The legacy image API exposes no diagram revision. Check the artwork dimensions
+  // before using detected coordinates and keep reviewed sheets on pinned assets.
+  const drawing = new Image()
+  drawing.src = url
+  await drawing.decode()
+  return drawing.naturalWidth === sheet.width && drawing.naturalHeight === sheet.height ? sheet : null
+}
+
 function AssemblyViewer({ catalog, assembly, customerVin }: { catalog: DiagramCatalog; assembly: Assembly; customerVin: string }) {
   const { addItem } = useExternalCart()
   const navigate = useNavigate()
@@ -167,11 +188,21 @@ function AssemblyViewer({ catalog, assembly, customerVin }: { catalog: DiagramCa
   const [zoom, setZoom] = useState(1)
   const [activePnc, setActivePnc] = useState<string | null>(null)
 
+  const images = [...new Set((result.data ?? []).flatMap(row => row.imageUrl?.startsWith(imageOrigin) ? [row.imageUrl] : []))]
+  const image = sheet !== null ? images.find(value => value === sheet) : images[0]
+  const reviewedSheet = image ? getReviewedSheet(image, catalog.vin) : undefined
+  const hasToolsMapping = catalog.vin === santaFeVin && image === toolsUrl
+  const detected = useQuery({
+    queryKey: ['detected-diagram-labels', image],
+    queryFn: () => image ? loadDetectedSheet(image) : null,
+    enabled: !!image && !reviewedSheet && !hasToolsMapping,
+    staleTime: 300_000,
+    retry: false,
+  })
+
   if (result.isPending) return <p role="status">Loading parts…</p>
   if (result.isError) return <div role="alert">Could not load parts. <button className="underline" onClick={() => void result.refetch()}>Retry</button></div>
 
-  const images = [...new Set(result.data.flatMap(row => row.imageUrl?.startsWith(imageOrigin) ? [row.imageUrl] : []))]
-  const image = sheet !== null ? images.find(value => value === sheet) : images[0]
   const rows = image ? result.data.filter(row => row.imageUrl === image) : result.data
   const part = rows.find(row => row.id === selected)
   const price = formatCheckoutPrice(part?.price)
@@ -193,17 +224,17 @@ function AssemblyViewer({ catalog, assembly, customerVin }: { catalog: DiagramCa
   }
   const toolsMapped = catalog.vin === santaFeVin && image === toolsUrl && rows.length === hotspots.length && hotspots.every(hotspot =>
     rows.some(row => row.id === hotspot.id && row.pnc === hotspot.pnc && row.partNumber === hotspot.number))
-  const reviewedSheet = image ? getReviewedSheet(image, catalog.vin) : undefined
-  const labels = reviewedSheet?.labels ?? []
+  const detectedSheet = !reviewedSheet && !hasToolsMapping ? detected.data : null
+  const labels = reviewedSheet?.labels ?? detectedSheet?.labels ?? []
   const regions = toolsMapped ? hotspots.map(({ id, pnc, box }) => ({
     pnc, box, matches: rows.filter(row => row.id === id),
   })) : labels.map(label => ({
     ...label, matches: rows.filter(row => row.pnc === label.pnc),
   })).filter(region => region.matches.length > 0)
-  const mapped = (toolsMapped || !!reviewedSheet) && regions.length > 0
-  const width = reviewedSheet?.width ?? 1656
-  const height = reviewedSheet?.height ?? 2260
-  const drawing = reviewedSheet?.image ?? toolsImage
+  const mapped = regions.length > 0
+  const width = reviewedSheet?.width ?? detectedSheet?.width ?? 1656
+  const height = reviewedSheet?.height ?? detectedSheet?.height ?? 2260
+  const drawing = reviewedSheet?.image ?? (detectedSheet ? image : toolsImage)
   const viewBox = toolsMapped ? '80 520 1430 1260' : `0 0 ${width} ${height}`
   const alternatives = activePnc ? rows.filter(row => row.pnc === activePnc) : []
   const selectedRegion = (matches: CatalogPartItem[]) => matches.some(row => row.id === selected)
@@ -259,6 +290,9 @@ function AssemblyViewer({ catalog, assembly, customerVin }: { catalog: DiagramCa
               <PartImage src={image} alt={assembly.name} className={`mx-auto block w-full object-contain ${zoom === 1 ? 'max-h-[65vh]' : ''}`} />
             </div>}
           </div>
+        {detectedSheet && mapped && <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+          Detected PNC labels. Check the printed code before choosing a part.
+        </p>}
       </section>}
       <section aria-label="Parts in assembly" className="min-w-0">
         <p className="mb-2 text-sm font-medium" role="status">{alternatives.length > 1 ? `Choose a part number for PNC ${activePnc}` : `${rows.length} parts`}</p>
@@ -273,7 +307,7 @@ function AssemblyViewer({ catalog, assembly, customerVin }: { catalog: DiagramCa
             </button>
           </li>)}
         </ul>
-        {part && image && (!mapped || !regions.some(region => selectedRegion(region.matches))) &&
+        {part && image && !detected.isFetching && (!mapped || !regions.some(region => selectedRegion(region.matches))) &&
           <p className="mt-2 text-sm">PNC highlight unavailable on this drawing.</p>}
         {part && <div className="sticky bottom-0 z-10 mt-3 flex flex-wrap items-center gap-2 rounded-lg border bg-white p-3 dark:bg-slate-900">
           <p role="status" className="min-w-0 flex-1 break-words text-sm">
