@@ -1,4 +1,14 @@
 export default {
+  finder_title: "ለተሽከርካሪዎ ትክክለኛውን መለዋወጫ ያግኙ",
+  finder_example: "ለምሳሌ 091102W000",
+  finder_browse: "በተሽከርካሪ ይፈልጉ",
+  finder_lhd: "የታዩት ካታሎጎች የግራ መሪ ላላቸው ተሽከርካሪዎች ናቸው።",
+  finder_missing: "መለዋወጫውን አላገኙም?",
+  finder_help: "የተሽከርካሪውን እና የሚፈልጉትን መለዋወጫ ይግለጹ።",
+  finder_order: "እንዴት ማዘዝ ይቻላል?",
+  finder_step_search: "በVIN ይፈልጉ ወይም የተሽከርካሪ ካታሎግ ይክፈቱ።",
+  finder_step_select: "የክፍል ቡድን ወይም ተዛማጅ የመለዋወጫ ቁጥር ይምረጡ።",
+  finder_step_order: "መለዋወጫውን ወደ ጋሪ ያክሉ፣ ዋጋ ከሌለ ደግሞ ይጠይቁ።",
   // Verified vehicle coverage
   coverage_heading: 'በአሁኑ ጊዜ የሚሸፈኑ ተሽከርካሪዎች',
   coverage_description: 'ለእነዚህ የተሽከርካሪ ምድቦች መለዋወጫዎችን በአሁኑ ጊዜ መፈለግ ይቻላል።',

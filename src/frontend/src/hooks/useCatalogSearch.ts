@@ -5,7 +5,7 @@ import { resolveVin } from '@/lib/resolveVin'
 import { identifyInput, searchCatalog, validVin, writeSearch } from '@/lib/catalogSearch'
 import type { CatalogSearchState } from '@/lib/catalogSearch'
 
-export function useCatalogSearch(state: CatalogSearchState, browseAll = false) {
+export function useCatalogSearch(state: CatalogSearchState, browseAll = false, referenceVin?: string) {
   const categories = useQuery({ queryKey: ['vehicle-categories'], queryFn: catalogApi.getCategories, staleTime: 300_000, retry: false })
   const exact = state.scope === 'vin'
   const vinQuery = useQuery({
@@ -17,15 +17,17 @@ export function useCatalogSearch(state: CatalogSearchState, browseAll = false) {
   const conflict = state.scope === 'catalog' && !!state.make && !!vinQuery.data?.meta.make && state.make.toUpperCase() !== vinQuery.data.meta.make.toUpperCase()
   const hasInput = browseAll || !!(state.q || state.filter || state.vin || state.make || state.model)
   const resultQuery = useQuery({
-    queryKey: ['catalog-search', browseAll, writeSearch(state), categories.data?.map(c => c.make).filter((m, i, all) => all.indexOf(m) === i).sort().join(',') || 'HYUNDAI,TOYOTA'],
+    queryKey: ['catalog-search', browseAll, referenceVin, writeSearch(state), categories.data?.map(c => c.make).filter((m, i, all) => all.indexOf(m) === i).sort().join(',') || 'HYUNDAI,TOYOTA'],
     queryFn: ({ signal }) => {
       if (exact && !state.filter && !state.group && !state.sort && state.page === 1 && (!state.q || identifyInput(state.q, state.mode) === 'vin') && vinQuery.data) return vinQuery.data.catalog
-      return searchCatalog(state, { browseAll, makes: categories.data?.length ? categories.data.map(c => c.make) : undefined, vinMake: exact ? vinQuery.data?.meta.make : undefined, searchVehicles: params => {
+      return searchCatalog(state, { browseAll, makes: categories.data?.length ? categories.data.map(c => c.make) : undefined, vinMake: exact ? vinQuery.data?.meta.make : undefined, searchVehicles: async params => {
         // Search's model filter is substring-based: keep Land Cruiser 70 separate from Prado.
         const overlaps = catalogConfigurations.some(c => c.model !== state.model && c.model.includes(state.model))
         const contexts = catalogConfigurations.filter(c => (!state.make || c.make === state.make) && c.model === state.model)
         if (state.model && overlaps && !params.vehicleSeries && contexts.length === 1) params.vehicleSeries = contexts[0].vehicleSeries
-        return catalogApi.searchVehicles(params, signal)
+        const response = await catalogApi.searchVehicles(referenceVin ? { ...params, vin: referenceVin } : params, signal)
+        if (referenceVin && response.items.some(part => part.vin !== referenceVin)) throw new Error('error')
+        return response
       } })
     },
     enabled: hasInput && !identityPending && !conflict && (!exact || !!vinQuery.data?.matched),

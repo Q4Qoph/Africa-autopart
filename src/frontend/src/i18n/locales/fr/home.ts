@@ -1,4 +1,14 @@
 export default {
+  finder_title: "Trouvez la pièce adaptée à votre véhicule",
+  finder_example: "Ex. 091102W000",
+  finder_browse: "Parcourir par véhicule",
+  finder_lhd: "Les catalogues affichés concernent les véhicules avec volant à gauche.",
+  finder_missing: "Vous ne trouvez pas votre pièce ?",
+  finder_help: "Indiquez le véhicule et la pièce recherchée.",
+  finder_order: "Comment commander",
+  finder_step_search: "Recherchez par VIN ou ouvrez un catalogue véhicule.",
+  finder_step_select: "Choisissez un ensemble ou la référence de la pièce.",
+  finder_step_order: "Ajoutez la pièce au panier ou demandez-la si le prix est indisponible.",
   // Verified vehicle coverage
   coverage_heading: 'Véhicules actuellement couverts',
   coverage_description: 'Des pièces sont actuellement consultables pour ces catégories de véhicules.',

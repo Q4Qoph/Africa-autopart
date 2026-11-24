@@ -1,0 +1,284 @@
+{
+  "checkedUTC": "2026-11-17T12:57:35.058Z",
+  "results": [
+    {
+      "name": "Seven mapped parts render with bundled image and no initial API dependency",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "List selection frames corresponding physical object",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nTraction Hook\n091471C000 · Callout 09147A\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Clicking physical diagram object highlights corresponding list row",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nWheel Nut Wrench\n091313B010 · Callout 09131\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Keyboard Enter selects accessible SVG region",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nScrew Blade\n0914611110 · Callout 09146\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Callout mode uses independent label geometry with synchronized selection",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Hidden idle hotspots retain selected red frame",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Session annotation editing, bounds validation and reset",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nClose review tools\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nREVIEW TOGETHER\nMake the decisions visible.\n\nChange the highlight mode above to compare object framing with callout framing. Adjust this rectangle, then export the proposed mapping for Joe. Edits stay in this browser session.\n\nSelected mapping\n\nJack Assembly · Callout number\n\nx\ny\nwidth\nheight\n\nImage pixels from top-left · API row 16673 · Raw API price: 5.00 · Currency: not supplied\n\nReset selected annotations\nConfirm for the next iteration\nPM / stakeholders: physical-part or callout frame? Is the stacked mobile view clear?\nJoe / data partner: provide reviewed geometry, stable diagram membership and image revision IDs.\nCommercial team: confirm price, currency and required-quantity meaning.\nExport review JSON\n\nSelected part annotations reset.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Review export contains explicit demo status and all mappings",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nClose review tools\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nREVIEW TOGETHER\nMake the decisions visible.\n\nChange the highlight mode above to compare object framing with callout framing. Adjust this rectangle, then export the proposed mapping for Joe. Edits stay in this browser session.\n\nSelected mapping\n\nJack Assembly · Callout number\n\nx\ny\nwidth\nheight\n\nImage pixels from top-left · API row 16673 · Raw API price: 5.00 · Currency: not supplied\n\nReset selected annotations\nConfirm for the next iteration\nPM / stakeholders: physical-part or callout frame? Is the stacked mobile view clear?\nJoe / data partner: provide reviewed geometry, stable diagram membership and image revision IDs.\nCommercial team: confirm price, currency and required-quantity meaning.\nExport review JSON\n\nReview JSON exported. No backend records were changed.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Zoom and reset retain image-space coordinates",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Zoomed panning moves the view without triggering accidental selection",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n200%\nFind selected\n\nDrag to pan · Reset to see the complete diagram\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "Fullscreen opens and closes with shared selection",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\nUsing saved public catalog data from 17 Nov 2026. The demo works without the API.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [],
+      "responses": [],
+      "retried": 0
+    },
+    {
+      "name": "All seven live catalog rows refresh through read-only detail endpoints",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\n7/7 rows refreshed from the live API. Image regions remain local demo annotations.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+          "status": 200
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "API failure preserves usable snapshot and explains refresh result",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nJack Assembly\n09110A0000 · Callout 09110\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\n0/7 rows refreshed. Failed or changed rows keep the saved snapshot; their mapping was not reassigned.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+          "status": 200
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        }
+      ],
+      "retried": 0
+    },
+    {
+      "name": "Mobile stacked layout, no horizontal overflow and touch-to-list selection",
+      "url": "http://127.0.0.1:5175/demo/parts-diagram",
+      "text": "Back to catalog\nINTERACTIVE DEMO · FOR REVIEW\nSee the part. Select with confidence.\n\nChoose a part on the illustration or in the list. Both views stay connected.\n\nHyundai Creta\nService tools · Diagram 153294\nReference catalog: IGENPA018 · LHD\n\nReal catalog, demo annotations. Seven catalog rows and the supplied illustration, with hand-drawn selection regions for review. Prices and vehicle fitment are not confirmed by this demo.\n\nReview & adjust\nHighlight\nPhysical part\nCallout number\nShow all clickable regions\nAssembly illustration\n600 × 820\n100%\nFind selected\n\nClick or tap a part · Use + to inspect the smaller tools\n\nTool Box\n09149A0100 · Callout 09149C\nSelected\nParts in this diagram\n7 parts\n\nSelect a name or part number to frame it in red.\n\n09110\nJack Assembly\n09110A0000\nQty 1\nRequest price\n09127B\nLabel\n0912726500\nQty 1\nRequest price\n09131\nWheel Nut Wrench\n091313B010\nQty 1\nRequest price\n09132\nRod\n091323B000\nQty 1\nRequest price\n09146\nScrew Blade\n0914611110\nQty 1\nRequest price\n09147A\nTraction Hook\n091471C000\nQty 1\nRequest price\n09149C\nTool Box\n09149A0100\nQty 1\nRequest price\nPrice column ready for confirmed offers.\n\nThe API snapshot returns 5.00 for each row without a currency. We show “Request price” until pricing is verified. Quantity means required per catalog, not stock.\n\nRefresh live part data\n\n0/7 rows refreshed. Failed or changed rows keep the saved snapshot; their mapping was not reassigned.\n\nReview prototype · One illustration, seven parts · No backend writes or ordering",
+      "network": [
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+        "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679"
+      ],
+      "responses": [
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16676",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16675",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16673",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16677",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16679",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16678",
+          "status": 200
+        },
+        {
+          "url": "https://africaautopart-api.frankotieno254.workers.dev/api/vehicles/parts/16674",
+          "status": 200
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        },
+        {
+          "failed": ""
+        }
+      ],
+      "retried": 0
+    }
+  ]
+}

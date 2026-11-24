@@ -1,5 +1,15 @@
 // src/frontend/src/i18n/locales/en/home.ts   
 export default {
+  finder_title: "Find the right part for your vehicle",
+  finder_example: "e.g. 091102W000",
+  finder_browse: "Browse by vehicle",
+  finder_lhd: "Listed catalogs are for left-hand-drive vehicles.",
+  finder_missing: "Can’t find your part?",
+  finder_help: "Tell us which vehicle and part you need.",
+  finder_order: "How to order",
+  finder_step_search: "Search by VIN or open a vehicle catalog.",
+  finder_step_select: "Choose an assembly or select a matching part number.",
+  finder_step_order: "Add the part to your cart, or request it if a price is unavailable.",
   // Verified vehicle coverage
   coverage_heading: 'Currently covered vehicles',
   coverage_description: 'These vehicle categories currently have searchable parts.',
