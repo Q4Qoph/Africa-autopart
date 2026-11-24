@@ -1,4 +1,14 @@
 export default {
+  finder_title: "اعثر على القطعة المناسبة لمركبتك",
+  finder_example: "مثال: 091102W000",
+  finder_browse: "تصفح حسب المركبة",
+  finder_lhd: "الكتالوجات المعروضة لمركبات بمقود على اليسار.",
+  finder_missing: "لم تجد القطعة المطلوبة؟",
+  finder_help: "أخبرنا بالمركبة والقطعة التي تحتاجها.",
+  finder_order: "طريقة الطلب",
+  finder_step_search: "ابحث برقم الهيكل أو افتح كتالوج مركبة.",
+  finder_step_select: "اختر مجموعة أو رقم القطعة المطابق.",
+  finder_step_order: "أضف القطعة إلى السلة أو اطلبها إذا لم يتوفر السعر.",
   // Verified vehicle coverage
   coverage_heading: 'المركبات المشمولة حاليًا',
   coverage_description: 'تتوفر حاليًا قطع قابلة للبحث لهذه الفئات من المركبات.',

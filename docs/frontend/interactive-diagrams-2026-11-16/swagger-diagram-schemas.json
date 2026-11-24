@@ -1,0 +1,177 @@
+{
+  "AfricaAutoPart.Model.CalloutMapping": {
+    "type": "object",
+    "properties": {
+      "callout_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "part_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "callout_code": {
+        "type": "string",
+        "nullable": true
+      },
+      "label_text": {
+        "type": "string",
+        "nullable": true
+      },
+      "coordinate_x_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "coordinate_y_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "bounding_box_x_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "bounding_box_y_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "bounding_box_width_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "bounding_box_height_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "pointer_line_start_x_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "pointer_line_start_y_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "pointer_line_end_x_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "pointer_line_end_y_percent": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "visual_group": {
+        "type": "string",
+        "nullable": true
+      },
+      "notes": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram": {
+        "$ref": "#/components/schemas/AfricaAutoPart.Model.CatalogDiagram"
+      },
+      "part": {
+        "$ref": "#/components/schemas/AfricaAutoPart.Model.ThePart"
+      }
+    },
+    "additionalProperties": false
+  },
+  "AfricaAutoPart.Model.CatalogDiagram": {
+    "type": "object",
+    "properties": {
+      "diagram_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "vin_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "category_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_code": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_title": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_description": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_revision": {
+        "type": "string",
+        "nullable": true
+      },
+      "production_date_from": {
+        "type": "string",
+        "format": "date",
+        "nullable": true
+      },
+      "production_date_to": {
+        "type": "string",
+        "format": "date",
+        "nullable": true
+      },
+      "applicability_note": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_thumbnail_image_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_full_image_id": {
+        "type": "string",
+        "nullable": true
+      },
+      "diagram_image_path": {
+        "type": "string",
+        "nullable": true
+      },
+      "sort_order": {
+        "type": "integer",
+        "format": "int32",
+        "nullable": true
+      },
+      "vehicle": {
+        "$ref": "#/components/schemas/AfricaAutoPart.Model.Vehicle"
+      },
+      "category": {
+        "$ref": "#/components/schemas/AfricaAutoPart.Model.CatalogCategory"
+      },
+      "parts": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AfricaAutoPart.Model.ThePart"
+        },
+        "nullable": true
+      },
+      "callout_mappings": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AfricaAutoPart.Model.CalloutMapping"
+        },
+        "nullable": true
+      }
+    },
+    "additionalProperties": false
+  }
+}

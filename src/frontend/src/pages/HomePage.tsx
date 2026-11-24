@@ -1,249 +1,111 @@
-// src/frontend/src/pages/HomePage.tsx
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {
-  Mail,
-  Phone,
-} from 'lucide-react'
+import { ArrowDown, ArrowRight, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { CatalogSearchForm } from '@/components/catalog/CatalogSearchForm'
-import { readSearch, writeSearch } from '@/lib/catalogSearch'
-import { cn } from '@/lib/utils'
 import { getBrandLogoPath } from '@/lib/brandUtils'
-import { VehicleCoveragePanel } from '@/components/catalog/VehicleCoveragePanel'
 import { getVehicleCoverageSnapshot } from '@/data/vehicleCoverage'
+import { buildSearchQuery, prepareSearch, readSearch, writeSearch } from '@/lib/catalogSearch'
 
-// Custom SVG Brand Icons
-const FacebookIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M9 8H7v3h2v9h4v-9h3.6l.4-3H13V6c0-.5.5-1 1-1h3V1h-4c-2.8 0-5 2.2-5 5v2z" />
-  </svg>
-)
-
-const InstagramIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-  </svg>
-)
-
-const TwitterIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
-    <path d="M18.2 2.4h3.3L14.3 11l8.5 11.3h-6.7L11 15.8l-6 6.5H1.6l7.7-8.9L1.3 2.4h6.9l4.6 6.1 5.4-6.1zM17 20.3h1.8L7.1 4H5.1l11.9 16.3z" />
-  </svg>
-)
+const coverage = getVehicleCoverageSnapshot()
+const categories = coverage.makes.flatMap(make => make.models.map(model => ({
+  make: make.make, model: model.model, variants: [], partCount: 0,
+})))
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const { t } = useTranslation('home')
-  const coverage = getVehicleCoverageSnapshot()
-  const coveredModelCount = coverage.makes.reduce((count, make) => count + make.models.length, 0)
+  const { t } = useTranslation(['home', 'search'])
+  const [query, setQuery] = useState('')
+  const [error, setError] = useState('')
 
-  // UI States
-  const [activeTab, setActiveTab] = useState<'easy' | 'catalog' | 'prices' | 'range' | 'shipping'>('easy')
-
-  // Render proper tabs contents
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'easy':
-        return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
-            <p>
-              First of all we take care of comfort for our customers. With{' '}
-              <strong>Africa Autopart</strong>, purchasing OEM body parts, engine parts, etc. will be fluent and
-              pleasant process. It will be no problem for you to find and order, for example, OEM Subaru parts,
-              Honda Civic OEM parts, Toyota UK parts or any other auto spare parts. If you need bearings, for
-              instance, it will be easy for you to find the necessary ones in our Toyota catalog or catalogs of
-              other manufacturers.
-            </p>
-            <p>
-              Why is it so easy to buy with Africa Autopart? Easy-to-use online catalogue will help you quickly
-              find needed parts. Sourcing components on our website is simple and intuitive. For your information
-              we have prepared a detailed help section. If necessary, our online support team will personally
-              help with the selection and ordering of parts.
-            </p>
-          </div>
-        )
-      case 'catalog':
-        return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
-            <p>
-              Our online catalog offers access to millions of unique, high-quality auto parts catalogued logically by
-              makes, categories, models, and assembly groups. With integrated VIN decoding and part number search,
-              locating correct replacement parts takes seconds.
-            </p>
-            <p>
-              We provide detail specifications, compatibility lists, and real-time inventory updates so you never
-              order the wrong component. Whether you drive a Toyota, BMW, or Suzuki, find any spare part across any border.
-            </p>
-          </div>
-        )
-      case 'prices':
-        return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
-            <p>
-              By direct collaboration with leading parts distributors and manufacturers, Africa Autopart bypasses
-              traditional middle-man markup chains to deliver wholesale pricing directly to workshops, fleets, and
-              private vehicle owners.
-            </p>
-            <p>
-              Compare different pricing tiers side-by-side: Choose OEM parts for absolute reliability, or high-grade
-              aftermarket parts for affordable maintenance. Get structural price clarity in every order.
-            </p>
-          </div>
-        )
-      case 'range':
-        return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
-            <p>
-              Over 17,000,000 spare parts catalogued. We supply parts for all primary systems: brake rotors and pads,
-              engine assemblies, transmission components, radiators, filtration systems, electrical accessories, and
-              outer body panels.
-            </p>
-            <p>
-              We stock parts for common vehicles as well as rare, vintage, or high-performance models. No matter how rare
-              the component is, our regional and global supplier networks can secure it for you.
-            </p>
-          </div>
-        )
-      case 'shipping':
-        return (
-          <div className="space-y-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
-            <p>
-              We offer fast shipping across Africa, the Middle East, and worldwide. Through partnerships with top-tier
-              freight services and courier networks (DHL, FedEx, UPS), we guarantee fast and secure parcel dispatch.
-            </p>
-            <p>
-              Enjoy live shipping milestone updates and custom declarations handling. Your parts are packed to meet strict
-              safeguard standards, assuring they reach your garage in pristine condition.
-            </p>
-          </div>
-        )
+  function search(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const next = prepareSearch(query, 'auto', readSearch(new URLSearchParams()), categories)
+    try {
+      buildSearchQuery(next)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'error')
+      return
     }
+    navigate(`/parts-search?${writeSearch(next)}`)
   }
 
   return (
-    <div className="px-6 md:px-8 py-8">
-
-      {/* Headline Subbar */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-300 dark:border-slate-800 pb-3 mb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-200 font-sans">
-          Auto Parts Around the World
-        </h1>
-        <div className="flex items-center gap-1.5 mt-3 sm:mt-0">
-          <a href="mailto:info@africa-autopart.com" className="w-7 h-7 rounded bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-colors" title="Email">
-            <Mail className="w-4 h-4" />
-          </a>
-          <a href="https://wa.me/25377577016" className="w-7 h-7 rounded bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-colors" title="WhatsApp">
-            <Phone className="w-4 h-4" />
-          </a>
-          <a href="https://facebook.com" className="w-7 h-7 rounded bg-[#1877f2] hover:bg-[#166fe5] text-white flex items-center justify-center transition-colors" title="Facebook">
-            <FacebookIcon className="w-4 h-4" />
-          </a>
-          <a href="https://instagram.com" className="w-7 h-7 rounded bg-[#c13584] hover:bg-[#b13079] text-white flex items-center justify-center transition-colors" title="Instagram">
-            <InstagramIcon className="w-4 h-4" />
-          </a>
-          <a href="https://twitter.com" className="w-7 h-7 rounded bg-black hover:bg-neutral-800 text-white flex items-center justify-center transition-colors" title="Twitter/X">
-            <TwitterIcon className="w-4 h-4" />
-          </a>
-        </div>
-      </div>
-
-      <div className="mb-10 grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_21rem]">
-        {/* ── SEARCH BAR CONTAINER ───────────────────────────────────────────────── */}
-        <section className="bg-white dark:bg-brand-card/50 border border-slate-200 dark:border-slate-800 shadow-sm rounded-xl p-4 sm:p-6 font-sans min-w-0">
-          <CatalogSearchForm state={readSearch(new URLSearchParams())} onSearch={state => navigate(`/parts-search?${writeSearch(state)}`)} />
-        </section>
-
-        <VehicleCoveragePanel coverage={coverage} />
-
-        {/* ── STATS COUNTER GRID ─────────────────────────────────────────────────── */}
-        <section className="grid min-w-0 grid-cols-2 gap-3 font-sans lg:col-start-1">
-          {[
-            { value: '199,985', label: 'SATISFIED CLIENTS' },
-            { value: '190', label: 'COUNTRIES WE SHIP' },
-            { value: String(coveredModelCount), label: t('coverage_models_stat') },
-            { value: '2 DAYS', label: 'AVERAGE DISPATCH' },
-          ].map((stat) => (
-            <div key={stat.label} className="bg-white/80 dark:bg-brand-card/80 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded p-4 text-center shadow-sm">
-              <p className="text-2xl font-black text-slate-800 dark:text-slate-200">{stat.value}</p>
-              <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wider mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="min-w-0 lg:col-start-1" aria-labelledby="covered-catalogs-title">
-          <h2 id="covered-catalogs-title" className="mb-4 border-b border-slate-200 pb-2 text-lg font-bold text-slate-800 dark:border-slate-800 dark:text-slate-200">
-            {t('coverage_catalogs_heading')}
-          </h2>
-          <div className="grid grid-cols-2 gap-4">
-            {coverage.makes.map((make) => (
-              <Link
-                key={make.make}
-                to={`/brands/${encodeURIComponent(make.make)}`}
-                className="group flex flex-col items-center justify-center rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 dark:border-slate-800 dark:bg-brand-card dark:hover:border-emerald-400"
-              >
-                <img src={getBrandLogoPath(make.label)} alt="" className="h-14 w-24 object-contain" />
-                <bdi className="mt-3 text-sm font-semibold text-slate-700 group-hover:text-emerald-700 dark:text-slate-200 dark:group-hover:text-emerald-400">{make.label}</bdi>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* ── HOW TO ORDER VIDEO ─────────────────────────────────────────────────── */}
-      <section id="how-to-order-video" className="mb-12 scroll-mt-20">
-        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-4 text-center font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
-          How to make order
-        </h2>
-        <div className="w-full max-w-4xl mx-auto bg-slate-950 aspect-video rounded overflow-hidden shadow-lg relative border-4 border-white dark:border-slate-800">
-          <iframe
-            className="w-full h-full border-0"
-            src="https://www.youtube.com/embed/H8lCcr4T_D8"
-            title="Auto parts ordering guide"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-      </section>
-
-      {/* ── ABOUT AFRICA AUTOPART TABS SECTION ───────────────────────────────────────── */}
-      <section className="bg-white dark:bg-brand-card border border-slate-200 dark:border-slate-800 shadow-sm rounded p-6 mb-8 font-sans">
-        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-5 font-sans border-b border-slate-200 dark:border-slate-800 pb-2">
-          About Africa Autopart
-        </h2>
-
-        {/* Tab buttons */}
-        <div className="flex flex-wrap gap-1 bg-slate-100 dark:bg-brand-ink p-1.5 rounded mb-5">
-          {[
-            { id: 'easy', label: 'Easy to Use' },
-            { id: 'catalog', label: 'Online catalogue' },
-            { id: 'prices', label: 'Best prices' },
-            { id: 'range', label: 'Extensive Range' },
-            { id: 'shipping', label: 'World Wide Shipping' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as typeof activeTab)}
-              className={cn(
-                'flex-1 min-w-[120px] py-2 px-3 text-xs font-bold rounded transition-colors text-center',
-                activeTab === tab.id
-                  ? 'bg-[#374151] dark:bg-brand-green text-white dark:text-brand-ink shadow-sm'
-                  : 'text-slate-600 dark:text-brand-muted hover:bg-slate-200 dark:hover:bg-brand-card-2 hover:text-slate-800 dark:hover:text-white'
-              )}
-            >
-              {tab.label}
+    <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-6 sm:px-8 sm:py-10">
+      <section aria-labelledby="home-title" className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-6 dark:border-emerald-900 dark:bg-emerald-950/40 sm:p-9">
+        <h1 id="home-title" className="text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">{t('finder_title')}</h1>
+        <form role="search" onSubmit={search} className="mt-5 max-w-3xl space-y-2">
+          <label htmlFor="home-query" className="block text-sm font-medium">{t('search:query')}</label>
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+            <input id="home-query" data-testid="catalog-query" type="search" dir="auto" autoComplete="off" spellCheck={false}
+              maxLength={80} value={query} placeholder={t('finder_example')} aria-invalid={!!error}
+              aria-describedby={error ? 'home-search-error' : undefined}
+              onChange={event => { setQuery(event.target.value); setError('') }}
+              className="min-h-12 w-full rounded-lg border border-slate-400 bg-white px-3 text-base text-slate-950 focus-visible:outline-2 focus-visible:outline-emerald-700 dark:border-slate-500 dark:bg-slate-900 dark:text-white" />
+            <button type="submit" className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-emerald-700 px-4 font-semibold text-white hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">
+              <Search size={18} aria-hidden="true" className="hidden sm:block" /> {t('search:submit')}
             </button>
-          ))}
-        </div>
+          </div>
+          {error && <p id="home-search-error" role="alert" className="text-sm text-red-700 dark:text-red-300">{t(`search:${error}`, { defaultValue: t('search:error') })}</p>}
+        </form>
+        <a href="#vehicle-catalogs" className="mt-2 inline-flex min-h-11 items-center gap-2 font-semibold text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+          {t('finder_browse')} <ArrowDown size={16} aria-hidden="true" />
+        </a>
+      </section>
 
-        {/* Dynamic text block */}
-        <div className="border border-slate-100 dark:border-slate-800 p-4 rounded bg-slate-50/50 dark:bg-[#07110A]/50 min-h-[160px]">
-          {renderTabContent()}
+      <section id="vehicle-catalogs" aria-labelledby="vehicle-catalogs-title" className="scroll-mt-28">
+        <h2 id="vehicle-catalogs-title" className="text-xl font-bold">{t('coverage_catalogs_heading')}</h2>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t('coverage_years_note')} {t('finder_lhd')}</p>
+        <div className="mt-4 grid items-start gap-4 sm:grid-cols-2">
+          {coverage.makes.map(make => (
+            <section key={make.make} className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-brand-card">
+              <h3 className="flex items-center gap-3 px-4 py-3 font-semibold">
+                <span className="grid h-9 w-12 shrink-0 place-items-center rounded-md bg-slate-50 dark:bg-slate-200">
+                  <img src={getBrandLogoPath(make.label)} alt="" width={36} height={24} className="h-6 w-9 object-contain" />
+                </span>
+                <bdi>{make.label}</bdi>
+              </h3>
+              <ul className="divide-y divide-slate-200 border-t border-slate-200 dark:divide-slate-700 dark:border-slate-700">
+                {make.models.map(model => (
+                  <li key={model.model}>
+                    <Link to={`/brands/${encodeURIComponent(make.make)}/models/${encodeURIComponent(model.model)}/parts`}
+                      className="flex min-h-11 items-center gap-3 px-4 py-2 hover:bg-emerald-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-emerald-700 dark:hover:bg-emerald-950/50">
+                      <bdi className="flex-1 font-medium">{model.label}</bdi>
+                      <span className="shrink-0 text-end text-xs text-slate-600 dark:text-slate-300">
+                        {model.ranges.map(({ startYear, endYear, steering }) => (
+                          <bdi key={`${startYear}-${endYear}-${steering}`} className="block">
+                            {startYear === null || endYear === null ? t('coverage_years_unknown') : startYear === endYear ? startYear : `${startYear}–${endYear}`}
+                          </bdi>
+                        ))}
+                      </span>
+                      <ArrowRight size={16} aria-hidden="true" className="shrink-0 text-emerald-700 rtl:rotate-180 dark:text-emerald-300" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </div>
       </section>
 
+      <section className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-5 dark:border-slate-700">
+        <div>
+          <h2 className="font-semibold">{t('finder_missing')}</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300">{t('finder_help')}</p>
+        </div>
+        <Link to="/requests/new" className="inline-flex min-h-11 items-center rounded-lg border border-emerald-700 px-4 font-semibold text-emerald-800 hover:bg-emerald-50 dark:text-emerald-300 dark:hover:bg-emerald-950/50">
+          {t('search:request')}
+        </Link>
+      </section>
+
+      <details className="border-t border-slate-200 dark:border-slate-700">
+        <summary className="min-h-11 cursor-pointer py-3 font-semibold">{t('finder_order')}</summary>
+        <ol className="list-decimal space-y-2 pb-4 ps-6 text-sm text-slate-700 dark:text-slate-300">
+          <li>{t('finder_step_search')}</li>
+          <li>{t('finder_step_select')}</li>
+          <li>{t('finder_step_order')}</li>
+        </ol>
+      </details>
     </div>
   )
 }

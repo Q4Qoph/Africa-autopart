@@ -58,6 +58,7 @@ function SupplierRoute() {
 }
 
 export const router = createBrowserRouter([
+  { path: '/demo/parts-diagram', lazy: async () => ({ Component: (await import('@/pages/parts/DiagramDemoPage')).default }) },
   {
     element: <RootLayout />,
     children: [
