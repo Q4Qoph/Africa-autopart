@@ -58,6 +58,17 @@ export default {
   // Images
   images_upload_label: 'Cliquez pour télécharger des images de la pièce endommagée ou de référence',
   images_format_hint: 'PNG, JPG acceptés',
+  section_contact: 'Coordonnées',
+  additional_details: 'Détails supplémentaires (facultatif)',
+  photo_retry: 'Réessayer',
+  photo_remove: 'Retirer',
+  photo_number: 'Photo {{number}}',
+  success_reference: 'Demande n° {{id}}',
+  view_details: 'Voir les détails',
+  success_matches: 'Voir les pièces correspondantes',
+  error_review: 'Vérifiez les champs signalés et renvoyez la demande.',
+  optional_field: '{{label}} (facultatif)',
+  images_sign_in_hint: 'Connectez-vous pour joindre des images. Vous pouvez envoyer cette demande sans photos.',
   images_uploading: 'Téléchargement…',
 
   // Submit
@@ -76,7 +87,7 @@ export default {
 
   // Guest success
   success_heading: 'Demande soumise !',
-  success_text: 'Votre demande a été envoyée aux fournisseurs. Ils vous contacteront à',
+  success_text: 'Nous examinerons votre demande et vous répondrons à cette adresse :',
   success_track_label: 'Vous souhaitez suivre votre demande ?',
   success_track_desc: 'Créez un compte gratuit avec la même adresse e-mail pour suivre l\'état de votre demande, consulter les devis et gérer les commandes.',
   success_create_account: 'Créer un compte gratuit',

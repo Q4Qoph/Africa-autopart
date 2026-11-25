@@ -130,6 +130,7 @@ export default {
   requests_panel_all_parts: 'Toutes les pièces — {{count}} disponibles',
   requests_panel_result_one: '{{count}} résultat pour "{{term}}"',
   requests_panel_results: '{{count}} résultats pour "{{term}}"',
+  requests_panel_supplier_error: 'Les pièces des fournisseurs sont indisponibles. Réessayez ou contactez le support si le problème persiste.',
   requests_panel_no_match: 'Aucune pièce correspondant à "{{term}}"',
   requests_panel_col_part: 'Pièce',
   requests_panel_col_supplier: 'Fournisseur',

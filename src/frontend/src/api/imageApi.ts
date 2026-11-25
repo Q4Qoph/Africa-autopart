@@ -6,11 +6,11 @@ const api = axios.create({
 })
 
 export const imageApi = {
-  upload: (file: File) => {
+  upload: (file: File, token: string) => {
     const form = new FormData()
     form.append('file', file)
     return api.post<string>('/api/Image/upload', form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: { Authorization: `Bearer ${token}` },
     })
   },
 }

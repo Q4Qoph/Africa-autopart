@@ -49,6 +49,17 @@ export default {
   // Images
   images_upload_label: 'የተበላሸ ወይም የማጣቀሻ ዕቃ ምስሎችን ለመጫን ጠቅ ያድርጉ',
   images_format_hint: 'PNG፣ JPG ይደገፋሉ',
+  section_contact: 'የመገናኛ መረጃ',
+  additional_details: 'ተጨማሪ ዝርዝሮች (አማራጭ)',
+  photo_retry: 'እንደገና ይሞክሩ',
+  photo_remove: 'አስወግድ',
+  photo_number: 'ፎቶ {{number}}',
+  success_reference: 'ጥያቄ #{{id}}',
+  view_details: 'ዝርዝሮችን ይመልከቱ',
+  success_matches: 'ተዛማጅ መለዋወጫዎችን ይመልከቱ',
+  error_review: 'የደመቁትን መስኮች ይገምግሙና እንደገና ያስገቡ።',
+  optional_field: '{{label}} (አማራጭ)',
+  images_sign_in_hint: 'ምስሎችን ለማያያዝ ይግቡ። ጥያቄውን ያለ ፎቶ መላክ ይችላሉ።',
   images_uploading: 'በመጫን ላይ…',
   // Submit
   submit_btn: 'ጥያቄ አስገባ',
@@ -63,7 +74,7 @@ export default {
   empty_cta: 'የመጀሪያ ዕቃዎን ይጠይቁ',
   // Guest success
   success_heading: 'ጥያቄ ተልኳል!',
-  success_text: 'ጥያቄዎ ለአቅራቢዎች ተልኳል። ወደዚህ ያድርሱዎታል',
+  success_text: 'ጥያቄዎን ገምግመን በዚህ ኢሜይል እናነጋግርዎታለን፦',
   success_track_label: 'ጥያቄዎን ለመከታተል ይፈልጋሉ?',
   success_track_desc: 'ጥያቄዎን ሁኔታ ለመከታተል፣ ጥቅሶችን ለማየትና ትዕዛዞችን ለማስተዳደር በተመሳሳይ ኢሜይል አድራሻ ነፃ መለያ ይፍጠሩ።',
   success_create_account: 'ነፃ መለያ ፍጠር',

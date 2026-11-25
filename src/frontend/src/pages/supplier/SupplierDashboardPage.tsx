@@ -242,11 +242,11 @@ export default function SupplierDashboardPage() {
   ) {
     return async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (!file) return;
+      if (!file || !auth?.token) return;
       setUploading(true);
       setError("");
       try {
-        const { data: url } = await imageApi.upload(file);
+        const { data: url } = await imageApi.upload(file, auth.token);
         setForm((f) => ({ ...f, imageURL: url }));
       } catch {
         setError(t("supplier_add_error"));

@@ -49,6 +49,17 @@ export default {
   // Images
   images_upload_label: 'انقر لرفع صور القطعة التالفة أو المرجعية',
   images_format_hint: 'يدعم PNG وJPG',
+  section_contact: 'بيانات الاتصال',
+  additional_details: 'تفاصيل إضافية (اختياري)',
+  photo_retry: 'إعادة المحاولة',
+  photo_remove: 'إزالة',
+  photo_number: 'الصورة {{number}}',
+  success_reference: 'الطلب رقم {{id}}',
+  view_details: 'عرض التفاصيل',
+  success_matches: 'عرض القطع المطابقة',
+  error_review: 'راجع الحقول المحددة وأرسل الطلب مرة أخرى.',
+  optional_field: '{{label}} (اختياري)',
+  images_sign_in_hint: 'سجّل الدخول لإرفاق الصور. يمكنك إرسال هذا الطلب بدون صور.',
   images_uploading: 'جارٍ الرفع…',
   // Submit
   submit_btn: 'إرسال الطلب',
@@ -63,7 +74,7 @@ export default {
   empty_cta: 'اطلب أول قطعة',
   // Guest success
   success_heading: 'تم إرسال الطلب!',
-  success_text: 'تم إرسال طلبك إلى الموردين. سيتواصلون معك على',
+  success_text: 'سنراجع طلبك ونتابع معك عبر هذا البريد الإلكتروني:',
   success_track_label: 'هل تريد تتبع طلبك؟',
   success_track_desc: 'أنشئ حسابًا مجانيًا بنفس البريد الإلكتروني لتتبع حالة الطلب وعرض عروض الموردين وإدارة الطلبات في مكان واحد.',
   success_create_account: 'إنشاء حساب مجاني',

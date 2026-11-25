@@ -124,6 +124,7 @@ export default {
   requests_panel_all_parts: 'جميع القطع — {{count}} متاح',
   requests_panel_result_one: '{{count}} نتيجة لـ "{{term}}"',
   requests_panel_results: '{{count}} نتائج لـ "{{term}}"',
+  requests_panel_supplier_error: 'قطع الموردين غير متاحة. أعد المحاولة أو تواصل مع الدعم إذا استمرت المشكلة.',
   requests_panel_no_match: 'لا توجد قطع مطابقة لـ "{{term}}"',
   requests_panel_col_part: 'القطعة',
   requests_panel_col_supplier: 'المورد',

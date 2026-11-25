@@ -59,6 +59,17 @@ export default {
   // Images
   images_upload_label: 'Click to upload images of the damaged or reference part',
   images_format_hint: 'PNG, JPG supported',
+  section_contact: 'Contact',
+  additional_details: 'Additional details (optional)',
+  photo_retry: 'Retry',
+  photo_remove: 'Remove',
+  photo_number: 'Photo {{number}}',
+  success_reference: 'Request #{{id}}',
+  view_details: 'View details',
+  success_matches: 'View matching parts',
+  error_review: 'Review the highlighted fields and submit again.',
+  optional_field: '{{label}} (optional)',
+  images_sign_in_hint: 'Sign in to attach images. You can submit this request without photos.',
   images_uploading: 'Uploading…',
 
   // Submit
@@ -77,7 +88,7 @@ export default {
 
   // Guest success
   success_heading: 'Request submitted!',
-  success_text: 'Your request has been sent to suppliers. They will reach out to you at',
+  success_text: 'We’ll review your request and use this email to follow up:',
   success_track_label: 'Want to track your request?',
   success_track_desc: 'Create a free account with the same email address to track your request status, view supplier quotes, and manage orders in one place.',
   success_create_account: 'Create Free Account',

@@ -124,6 +124,7 @@ export default {
   requests_panel_all_parts: 'ሁሉም ዕቃዎች — {{count}} ዝግጁ',
   requests_panel_result_one: '{{count}} ውጤት ለ"{{term}}"',
   requests_panel_results: '{{count}} ውጤቶች ለ"{{term}}"',
+  requests_panel_supplier_error: 'የአቅራቢዎች መለዋወጫዎች አይገኙም። እንደገና ይሞክሩ ወይም ችግሩ ከቀጠለ ድጋፍ ያግኙ።',
   requests_panel_no_match: 'ለ"{{term}}" ምንም ዕቃ አልተዛመደም',
   requests_panel_col_part: 'ዕቃ',
   requests_panel_col_supplier: 'አቅራቢ',

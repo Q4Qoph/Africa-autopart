@@ -131,6 +131,7 @@ export default {
   requests_panel_all_parts: 'All parts — {{count}} available',
   requests_panel_result_one: '{{count}} result for "{{term}}"',
   requests_panel_results: '{{count}} results for "{{term}}"',
+  requests_panel_supplier_error: 'Supplier parts are unavailable. Try again or contact support if the problem continues.',
   requests_panel_no_match: 'No parts matched "{{term}}"',
   requests_panel_col_part: 'Part',
   requests_panel_col_supplier: 'Supplier',

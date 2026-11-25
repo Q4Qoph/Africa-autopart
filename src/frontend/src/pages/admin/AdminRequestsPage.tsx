@@ -7,13 +7,15 @@ import { supplierApi } from "@/api/supplierApi";
 import { orderApi } from "@/api/orderApi";
 import type { PartRequest } from "@/types/request";
 import type { Supplier } from "@/types/supplier";
-import { Urgency } from "@/types/request";
+import { ConditionPreference, Urgency } from "@/types/request";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogTrigger,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -25,6 +27,14 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+
+const conditionKeys = {
+  [ConditionPreference.AnyCondition]: "condition_any",
+  [ConditionPreference.OEM]: "condition_oem",
+  [ConditionPreference.Aftermarket]: "condition_aftermarket",
+  [ConditionPreference.Second_Hand]: "condition_secondHand",
+  [ConditionPreference.Open_To_All]: "condition_openToAll",
+} as const;
 
 const urgencyClass: Record<number, string> = {
   [Urgency.Standard]:
@@ -61,6 +71,8 @@ export default function AdminRequestsPage() {
   const [panel, setPanel] = useState<CreateOrderPanel | null>(null);
   const [allParts, setAllParts] = useState<FlatPart[]>([]);
   const [loadingAll, setLoadingAll] = useState(false);
+  const [supplierListFailed, setSupplierListFailed] = useState(false);
+  const [supplierSearchFailed, setSupplierSearchFailed] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<FlatPart[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
@@ -147,6 +159,8 @@ export default function AdminRequestsPage() {
     setPrice("");
     setCreateError("");
     setOrderRef("");
+    setSupplierListFailed(false);
+    setSupplierSearchFailed(false);
     setLoadingAll(true);
     setPickUpLocation("");
     setPickUpPhone("");
@@ -155,6 +169,7 @@ export default function AdminRequestsPage() {
       setAllParts(flattenSuppliers(data));
     } catch {
       setAllParts([]);
+      setSupplierListFailed(true);
     } finally {
       setLoadingAll(false);
     }
@@ -170,6 +185,7 @@ export default function AdminRequestsPage() {
   async function handleSearch() {
     if (!auth || !searchTerm.trim()) return;
     setSearching(true);
+    setSupplierSearchFailed(false);
     setSearchResults([]);
     setSelectedPart(null);
     setHasSearched(true);
@@ -190,6 +206,7 @@ export default function AdminRequestsPage() {
       setSearchResults(flat);
     } catch {
       setSearchResults([]);
+      setSupplierSearchFailed(true);
     } finally {
       setSearching(false);
     }
@@ -228,13 +245,12 @@ export default function AdminRequestsPage() {
         },
         auth.token,
       )
-      setOrderRef(String(ref));
+      setOrderRef(typeof ref === "object" && ref ? String(ref.trackingNumber || ref.orderId) : String(ref));
       setSelectedPart(null);
       setSearchResults([]);
       setSearchTerm("");
       setHasSearched(false);
-      const { data } = await requestApi.getAll(auth.token);
-      setRequests(data);
+      void requestApi.getAll(auth.token).then(({ data }) => setRequests(data)).catch(() => {});
     } catch {
       setCreateError(t("requests_panel_create_error"));
     } finally {
@@ -243,6 +259,7 @@ export default function AdminRequestsPage() {
   }
 
   const displayParts = hasSearched ? searchResults : allParts;
+  const supplierLookupFailed = hasSearched ? supplierSearchFailed : supplierListFailed;
 
   const filtered = requests.filter((r) => {
     if (filter === "open") return !r.isSorted;
@@ -343,6 +360,7 @@ export default function AdminRequestsPage() {
                   </TableCell>
                   <TableCell className="px-4 py-3">
                     <div className="flex items-center gap-2 flex-wrap">
+                      <RequestDetails request={r} />
                       {!r.isSorted && (
                         <Button
                           size="sm"
@@ -433,6 +451,11 @@ export default function AdminRequestsPage() {
               </div>
 
               {/* Status/Header text */}
+              {supplierLookupFailed ? (
+                <p role="alert" className="text-sm text-red-700 dark:text-red-400">
+                  {t("requests_panel_supplier_error")}
+                </p>
+              ) : (
               <p className="text-xs font-mono text-[#7A9A80] dark:text-[#3D5942]">
                 {hasSearched
                   ? t(
@@ -450,6 +473,7 @@ export default function AdminRequestsPage() {
                       count: allParts.length,
                     })}
               </p>
+              )}
 
               {/* Parts selection list */}
               {!loadingAll && displayParts.length > 0 && (
@@ -503,7 +527,7 @@ export default function AdminRequestsPage() {
                 </div>
               )}
 
-              {hasSearched && searchResults.length === 0 && !searching && (
+              {hasSearched && searchResults.length === 0 && !searching && !supplierLookupFailed && (
                 <p className="text-[#4A6B50] dark:text-[#7A9A80] text-xs py-4 text-center">
                   {t("requests_panel_no_match", { term: searchTerm })}
                 </p>
@@ -623,3 +647,59 @@ export default function AdminRequestsPage() {
 }
 
 
+
+function RequestDetails({ request }: { request: PartRequest }) {
+  const { t } = useTranslation("requests");
+  const fields = [
+    [t("field_make"), request.vehicleMake],
+    [t("field_model"), request.model],
+    [t("field_year"), request.year],
+    [t("field_engine"), request.engineType],
+    [t("field_chassis"), request.chassisNumber],
+    [t("field_partNumber"), request.partNumber],
+    [t("field_condition"), conditionKeys[request.conditionPreference] && t(conditionKeys[request.conditionPreference])],
+    [t("field_urgency"), {
+      [Urgency.Standard]: t("urgency_standard_short"),
+      [Urgency.Express]: t("urgency_express_short"),
+      [Urgency.Urgent]: t("urgency_urgent_short"),
+    }[request.urgency]],
+    [t("field_country"), request.country],
+    [t("field_phone"), request.phone],
+    [t("field_email"), request.email],
+    [t("field_description"), request.description],
+  ];
+
+  return (
+    <Dialog>
+      <DialogTrigger render={<Button size="sm" variant="outline" />}>
+        {t("view_details")}
+      </DialogTrigger>
+      <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>{t("success_reference", { id: request.id })}</DialogTitle>
+          <DialogDescription>{request.partName || t("field_partName")}</DialogDescription>
+        </DialogHeader>
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {fields.map(([label, value]) => (
+            <div key={label} className="min-w-0">
+              <dt className="text-sm font-medium text-muted-foreground">{label.replace(/\s*\*$/, "")}</dt>
+              <dd className="whitespace-pre-wrap break-words">{value || "—"}</dd>
+            </div>
+          ))}
+        </dl>
+        {request.partImages?.length > 0 && (
+          <section aria-labelledby="admin-request-photos">
+            <h3 id="admin-request-photos" className="mb-2 font-semibold">{t("section_images")}</h3>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {request.partImages.map((photo, index) => (
+                <img key={photo.id ?? index} src={photo.imageUrl}
+                  alt={t("photo_number", { number: index + 1 })}
+                  className="h-32 w-full rounded border border-border object-contain" />
+              ))}
+            </div>
+          </section>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
